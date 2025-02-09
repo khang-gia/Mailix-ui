@@ -1,0 +1,114 @@
+.scp-color-- {
+    @apply bg-slate-100;
+}
+.scp-color--- {
+    @apply bg-yellow-100;
+}
+.scp-color--0 {
+    @apply bg-red-50;
+}
+.scp-color--1 {
+    @apply bg-red-100;
+}
+.scp-color--2 {
+    @apply bg-red-200;
+}
+.scp-color--3 {
+    @apply bg-red-300;
+}
+.scp-color--4 {
+    @apply bg-red-400;
+}
+.scp-color--5 {
+    @apply bg-red-500;
+}
+.scp-color--6 {
+    @apply bg-cyan-300;
+}
+.scp-color--7 {
+    @apply bg-cyan-400;
+}
+.scp-color-0 {
+    @apply bg-green-100;
+}
+.scp-color-1 {
+    @apply bg-green-200;
+}
+.scp-color-2 {
+    @apply bg-green-300;
+}
+.scp-color-3 {
+    @apply bg-green-400;
+}
+.scp-color-4 {
+    @apply bg-green-500;
+}
+.scp-color-5 {
+    @apply bg-green-600;
+}
+.scp-color-6 {
+    @apply bg-purple-300;
+}
+.scp-color-7 {
+    @apply bg-purple-400;
+}
+.scp-color-NaN {
+    @apply bg-slate-300;
+}
+.w-56 {
+    width: 14rem;
+}
+.scp-text-color-- {
+    @apply text-slate-100;
+}
+.scp-text-color--- {
+    @apply text-yellow-100;
+}
+.scp-text-color--0 {
+    @apply text-red-50;
+}
+.scp-text-color--1 {
+    @apply text-red-100;
+}
+.scp-text-color--2 {
+    @apply text-red-200;
+}
+.scp-text-color--3 {
+    @apply text-red-300;
+}
+.scp-text-color--4 {
+    @apply text-red-400;
+}
+.scp-text-color--5 {
+    @apply text-red-500;
+}
+.scp-text-color--6 {
+    @apply text-cyan-300;
+}
+.scp-text-color--7 {
+    @apply text-cyan-400;
+}
+.scp-text-color-0 {
+    @apply text-green-100;
+}
+.scp-text-color-1 {
+    @apply text-green-200;
+}
+.scp-text-color-2 {
+    @apply text-green-300;
+}
+.scp-text-color-3 {
+    @apply text-green-400;
+}
+.scp-text-color-4 {
+    @apply text-green-500;
+}
+.scp-text-color-5 {
+    @apply text-green-600;
+}
+.scp-text-color-6 {
+    @apply text-purple-300;
+}
+.scp-text-color-7 {
+    @apply text-purple-400;
+}
