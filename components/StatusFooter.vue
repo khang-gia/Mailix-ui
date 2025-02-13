@@ -1,7 +1,7 @@
 <template>
     <div class="fixed bottom-0 left-0 right-0 h-5 bg-white border-t border-slate-200 dark:bg-[#182235] dark:border-slate-700 flex justify-between px-4 py-px">    
         <span class="text-xs pl-14">
-            &copy; {{ year }} <Icon class="text-red-500" name="heroicons:heart"></Icon> SCP
+            &copy; {{ year }} <Icon class="text-red-500" name="heroicons:heart"></Icon> TITACA
         </span>
         
         <div class="flex space-x-2">
