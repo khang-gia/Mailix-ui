@@ -26,7 +26,7 @@
             class="w-full text-white bg-primary-600 enabled:hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm dark:bg-primary-600 enabled:dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:opacity-75"
             text="Tiếp theo"></BaseButton>
         
-        <GoogleSigninButton />
+        <!-- <GoogleSigninButton /> -->
 
         <div class="text-sm font-light text-gray-500 dark:text-gray-400">
             Bạn đã có tài khoản? <button type="button" @click.stop="onSignin"
@@ -62,11 +62,13 @@ const onSubmit = async () => {
             first_name: first_name.value
         })
         console.log(res)
-        snackbar.success('Một Email đã được gửi tới hộp thư của bạn. Vui lòng kiểm tra và nhập mã OTP để hoàn tất đăng ký.')
-        emit('on-otp-verify', {
-            username: username.value,
-            password: password.value,
-        })
+        // snackbar.success('Một Email đã được gửi tới hộp thư của bạn. Vui lòng kiểm tra và nhập mã OTP để hoàn tất đăng ký.')
+        // emit('on-otp-verify', {
+        //     username: username.value,
+        //     password: password.value,
+        // })
+        snackbar.success('Đăng ký thành công')
+        emit('on-signin')
     }
     catch (err) {
         console.log('## error', err)

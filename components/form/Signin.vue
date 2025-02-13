@@ -33,7 +33,7 @@
             text="Đăng nhập"></BaseButton>
         
 
-        <GoogleSigninButton />
+        <!-- <GoogleSigninButton /> -->
 
         <div class="text-sm font-light text-gray-500 dark:text-gray-400">
             Bạn chưa có tài khoản? 
