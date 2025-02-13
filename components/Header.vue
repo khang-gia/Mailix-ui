@@ -141,10 +141,10 @@ if (hotEvents.value && hotEvents.value.results.length) {
     hotEvent.value = hotEvents.value.results[0]
 }
 
-const { open, destroy } = useModal({
-    keepAlive: true,
-    component: defineAsyncComponent(() => import('@/components/DraggableModal2.vue')),
-})
+// const { open, destroy } = useModal({
+//     keepAlive: true,
+//     component: defineAsyncComponent(() => import('@/components/DraggableModal2.vue')),
+// })
 
 onBeforeUnmount(() => {
     destroy()
