@@ -6,7 +6,7 @@
             <img src="/images/404-illustration-dark.svg" alt="Error 404" width="186" height="186" />
           </span>
           <h1 class="text-lg text-gray-300"> 
-            Trang này có thể không tồn tại, vui lòng thử lại hoặc liên hệ với Team SCP!
+            Trang này có thể không tồn tại, vui lòng thử lại hoặc liên hệ với TITACA!
           </h1>
         </template>
         <template v-else-if="error.statusCode === 500">
@@ -14,12 +14,12 @@
             <img src="/images/404-illustration-dark.svg" alt="Error 500" width="186" height="186" />
           </span>
           <h1 class="text-lg text-gray-300">Đã có lỗi xảy, yêu cầu của bạn không thể thực hiện thành công.</h1>
-          <h1 class="text-lg text-gray-300">Hãy thử lại lần nữa, nếu lỗi vẫn xuất hiện vui lòng<UButton variant="link" @click.stop="handleError">gửi thông báo lỗi</UButton> cho Team SCP nhé!</h1>
+          <h1 class="text-lg text-gray-300">Hãy thử lại lần nữa, nếu lỗi vẫn xuất hiện vui lòng<UButton variant="link" @click.stop="handleError">gửi thông báo lỗi</UButton> cho TITTACA nhé!</h1>
         </template>
         <template v-else>
           <h1 class="text-4xl text-gray-700 dark:text-indigo-600 pb-4">Lỗi không xác định</h1>
           <h1 class="text-lg text-gray-300">Đã có lỗi xảy, yêu cầu của bạn không thể thực hiện thành công.</h1>
-          <h1 class="text-lg text-gray-300">Hãy thử lại lần nữa, nếu lỗi vẫn xuất hiện hãy liên hệ với Team SCP nhé!</h1>
+          <h1 class="text-lg text-gray-300">Hãy thử lại lần nữa, nếu lỗi vẫn xuất hiện hãy liên hệ với TITACA nhé!</h1>
         </template>
         <p class="mt-8 space-x-2">
           <UButton to="/dashboard" color="primary" variant="outline">Trở lại trang chủ</UButton>

@@ -206,7 +206,7 @@
                         snackbar.success('Dữ liệu được cập nhật nền, hãy thử lại trong vài phút tới nhé!','Cập nhật thành công')
                     })
                     .catch(() => {
-                        snackbar.error('Đã có lỗi xảy ra, hãy thử lại hoặc liên hệ Team SCP nhé!', 'Cập nhật không thành công')
+                        snackbar.error('Đã có lỗi xảy ra, hãy thử lại hoặc liên hệ TITACA nhé!', 'Cập nhật không thành công')
                     })
                 }
                 unwatch();
