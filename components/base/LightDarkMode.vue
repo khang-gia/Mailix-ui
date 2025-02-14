@@ -3,7 +3,7 @@
         <UButton variant="link" color="gray" @click.stop="toggleDarkMode()" class="p-[6px]" :title="colorModeTitle">
             <Icon v-if="$colorMode.preference==='light'" name="iconamoon:mode-light" size="20" />
             <Icon v-else-if="$colorMode.preference==='dark'" name="heroicons:moon-16-solid" size="20" />
-            <Icon v-else name="mdi:sun-moon-stars" size="20" />
+            <Icon v-else name="tabler:sun-moon" size="20" />
         </UButton>
     </div>
 </template>
@@ -11,6 +11,7 @@
 <script setup>
     const colorMode = useColorMode()
     const toggleDarkMode = () => {
+        console.log('ToggleTheme')
         const MAPS = {
             'light': 'dark',
             'dark': 'system',
