@@ -1,10 +1,10 @@
 <template>
     <form class="space-y-4 md:space-y-6" @submit.prevent="onSubmit">
         <div class="text-slate-800 dark:text-white text-sm">
-            <p>Cám ơn bạn đã tham gia TTT MAILSERVER - nền tảng cung cấp, quản lý và gửi email hàng đầu Việt Nam.</p>
+            <p>Cám ơn bạn đã tham gia TITACA - nền tảng cung cấp, quản lý và gửi email hàng đầu Việt Nam.</p>
             <p>
                 Để trao đổi, đóng góp, thảo luận cũng như nhận các tin thông báo biến động mã cổ phiếu, mời bạn 
-                tham gia đóng góp vào nhóm cộng đồng TTTMAILSERVER trên Telegram nhé!
+                tham gia đóng góp vào nhóm cộng đồng TITACA trên Telegram nhé!
             </p>
             <div class="text-center">
                 <img :src="TelegramQR" class="w-2/3 inline-block">

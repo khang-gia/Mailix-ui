@@ -33,11 +33,11 @@
                 <div @click.right.prevent @keydown="keydown" @copy.prevent @paste.prevent v-html="item.message" />
                 <div class="mt-4 border rounded-lg p-4 min-h-20 text-center">
                     <div v-if="!isAuthenticated">
-                        Bài viết do đội ngũ TTTMAILSERVER biên soạn, chỉ dành cho thành viên. <br/>
+                        Bài viết do đội ngũ TITACA biên soạn, chỉ dành cho thành viên. <br/>
                         Vui lòng<UButton variant="link" @click.stop="openAuthModal">đăng nhập</UButton>để xem đầy đủ.
                     </div>
                     <div v-else>
-                        Bài viết do đội ngũ TTTMAILSERVER biên soạn dành riêng cho thành viên đã mở tài khoản.<br/>
+                        Bài viết do đội ngũ TITACA biên soạn dành riêng cho thành viên đã mở tài khoản.<br/>
                         Các bạn có thể ủng hộ team theo thông tin tại trang ...
                         <!-- <NuxtLink class="text-blue-500" to="/mo-tkck"> mở tài khoản</NuxtLink>. -->
                     </div>
