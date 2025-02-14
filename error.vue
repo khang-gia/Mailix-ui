@@ -23,7 +23,7 @@
         </template>
         <p class="mt-8 space-x-2">
           <UButton to="/dashboard" color="primary" variant="outline">Trở lại trang chủ</UButton>
-          <UButton to="https://t.me/sieucophieu_official" target="_blank" color="blue" variant="outline">Nhóm Telegram</UButton>
+          <UButton to="https://t.me/+pU3YBdP7MRhlMDI1" target="_blank" color="blue" variant="outline">Nhóm Telegram</UButton>
         </p>
       </div>
     </NuxtLayout>

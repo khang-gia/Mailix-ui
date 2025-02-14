@@ -118,5 +118,5 @@ const date = new Date().toLocaleDateString('en-US', {
     day: 'numeric',
 })
 
-const conatct = 'SieuCoPhieu.VN'
+const conatct = 'TITACA.COM'
 </script>

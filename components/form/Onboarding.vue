@@ -12,7 +12,7 @@
         </div>
         <div class="text-center">
             <a 
-                href="https://t.me/sieucophieu_official"
+                href="https://t.me/+pU3YBdP7MRhlMDI1"
                 class="px-5 py-2.5 w-full text-white bg-sky-500 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800"
                 target="_blank"
                 @click.stop="onOpenTelegram">

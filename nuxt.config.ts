@@ -147,11 +147,11 @@ export default defineNuxtConfig({
       srcDir: 'public/worker',
       filename: 'sw.ts',
       manifest: {
-          name: 'SIEUCOPHIEU.VN',
+          name: 'TITACA.COM',
           short_name: 'SCP',
-          description: 'SIEUCOPHIEU.VN (Siêu Cổ Phiếu) là một công cụ hỗ trợ nhà đầu tư cá nhân với nhiều tính năng độc quyền: bảng điện thông minh, sức mạnh ngành, tâm lý thị trường, chờ mua chờ bán, cổ phiếu dẫn dắt,... giúp nhà đầu tư dễ dàng chọn lọc cổ phiếu tốt và an toàn.',
+          description: 'TITACA.COM là 1 công cụ...',
           theme_color: '#ffffff',
-          start_url: '/bang-dien',
+          start_url: '/dashboard',
           icons: [{
               src: 'images/pwa-192x192.png',
               sizes: '192x192',
