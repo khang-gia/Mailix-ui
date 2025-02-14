@@ -46,7 +46,7 @@ const { $pwa } = useNuxtApp()
 const gtm = useGtm()
 const route = useRoute()
 const pageTitle = computed(() => {
-  return `${route.meta.title} | SieuCoPhieu.VN`
+  return `${route.meta.title} | TITACA.COM`
 })
 
 // const _isTradeTime = computed(() => {
