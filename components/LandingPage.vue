@@ -40,7 +40,7 @@ const articleCount = ref(0)
 const getArticles = (query={}) => {
         query.latest_landing_article = true
         // query.page = currentPage.value
-        query.page_size = 3
+        query.page_size = 6
         useAPI().get('/consult/articles/', query)
             .then(({data}) => {
                 if (data.value) {
