@@ -19,6 +19,7 @@ export const useModalStore = defineStore('modalStore', () => {
 
   const feedbackModal = ref(false)
   const searchModal = ref(false)
+  const articleTypeModal = ref(false)
   const draggableModal = ref(false)
   const draggableModalInfo = ref({
     embed_url: '',
@@ -72,6 +73,9 @@ export const useModalStore = defineStore('modalStore', () => {
   function setSearchModal(value) {
     searchModal.value = value
   }
+  function setCreateArticleTypeModal(value) {
+    articleTypeModal.value = value
+  }
   return { 
     setStockListModal, stockListModal,
     setStockInfoModal, stockInfoModal, stockInfoSymbol,
@@ -79,6 +83,7 @@ export const useModalStore = defineStore('modalStore', () => {
     setIndexInfoModal, indexInfoModal, indexInfo, setAlertModal, alertModal, alertProps, alertConfirm,
     setAuthModal, authModalMode, authModalOpen,
     setFeedbackModal, feedbackModal,
-    setSearchModal, searchModal, draggableModal, toggleDraggableModal, draggableModalInfo, setDraggableModalInfo, setDraggableModal, isLive
+    setSearchModal, searchModal, draggableModal, toggleDraggableModal, draggableModalInfo, setDraggableModalInfo, setDraggableModal, isLive,
+    setCreateArticleTypeModal, articleTypeModal
   }
 })

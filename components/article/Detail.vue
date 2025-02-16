@@ -2,12 +2,14 @@
     <div class="mx-auto flex flex-col lg:flex-row space-x-0 md:space-x-4">
         <div class="flex-1">
             <div class="mb-6">
-                <NuxtLink class="btn-sm px-3 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-600 dark:text-slate-300" to="/bai-viet">
+                <!-- <NuxtLink class="btn-sm px-3 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-600 dark:text-slate-300" to="/bai-viet"> -->
+
+                <UButton variant="variant" class="px-3 bg-white dark:bg-slate-800  hover:border-slate-300 dark:hover:border-slate-600 text-slate-600 dark:text-slate-300" @click.prevent="goBack">
                     <svg class="fill-current text-slate-400 dark:text-slate-500 mr-2" width="7" height="12" viewBox="0 0 7 12">
                         <path d="M5.4.6 6.8 2l-4 4 4 4-1.4 1.4L0 6z" />
                     </svg>
                     <span>Trở lại</span>
-                </NuxtLink>
+                </UButton>
             </div>
             <div class="text-sm font-semibold text-indigo-500 uppercase mb-2">{{ formatDate(new Date(item.published_at), "DD/MM/YYYY HH:mm") }}</div>
             <header class="mb-4">
@@ -89,7 +91,10 @@ const { setAuthModal } = modalStore
 
 const { status, data } = useAuth()
 const isAuthenticated = computed(() => status.value === 'authenticated')
-
+const router = useRouter()
+const goBack = () => {
+    router.go(-1)
+}
 const props = defineProps({
     item: Object
 })

@@ -42,7 +42,7 @@
 
 <script setup>
     definePageMeta({
-        title: 'Bài viết ✨'
+        title: 'Bài viết'
     })
 
     const { data: articleTypes } = await useAPI().get('/consult/article_types/') 
@@ -91,10 +91,10 @@
 
     
     useSeoMeta({
-        title: 'Bài viết ✨',
-        ogTitle: 'Bài viết ✨',
-        description: 'Các bài biết mới nhất từ team TTT',
-        ogDescription: 'Các bài biết mới nhất từ team TTT',
+        title: 'Bài viết',
+        ogTitle: 'Bài viết',
+        description: 'Các bài biết mới nhất từ team TITACA',
+        ogDescription: 'Các bài biết mới nhất từ team TITACA',
     })
 
 </script>

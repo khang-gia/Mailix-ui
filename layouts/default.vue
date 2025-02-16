@@ -30,6 +30,7 @@
     <LazyBaseAlert />
     <FeedbackModal />
     <ModalSearch />
+    <ModalCreateAT/>
     <ModalsContainer />
   </div>
 </template>

@@ -3,27 +3,15 @@
         <div class="px-2 sm:px-3 lg:px-4">
             <div class="flex items-center justify-between h-16 -mb-px">
                 <div class="flex h-16 my-auto py-4">
-                    <button 
-                        class="text-slate-500 hover:text-slate-600 lg:hidden"
-                        @click.stop="openSidebar"
-                        aria-controls="sidebar"
-                        :aria-expanded="sidebarOpen"
-                        aria-label="Open Sidebar">
-                        <span class="sr-only">Open sidebar</span>
-                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="4" y="5" width="16" height="2" />
-                            <rect x="4" y="11" width="16" height="2" />
-                            <rect x="4" y="17" width="16" height="2" />
-                        </svg>
-                    </button>
-                    <span class="text-xl font-semibold hidden lg:flex dark:text-slate-400 mr-3">{{ appTitle || route.meta.title }}</span>
+                    <UButton v-if="route.name === 'bai-viet' || route.name === 'nhan-su'" icon="i-heroicons-plus" variant="outline" size="xs" class="mr-2" @click.stop="onPageAction"/>
+                    <span class="text-xl font-bold font-sans lg:flex dark:text-slate-400 mr-3">{{ appTitle || route.meta.title }}</span>
                 </div>
 
                 <div class="flex items-center space-x-2">
-                    <a v-if="isLive && !draggableModal" href="#" class="text-orange-600 text-sm" @click="setDraggableModal(true)">
+                    <!-- <a v-if="isLive && !draggableModal" href="#" class="text-orange-600 text-sm" @click="setDraggableModal(true)">
                         <Icon name="streamline:live-video" size="20" class="animate-pulse" />
                         Livestream
-                    </a>
+                    </a> -->
                     <NuxtLink 
                         v-if="hotEvent" 
                         :to="hotEvent.url"
@@ -38,7 +26,7 @@
                     </NuxtLink>
 
                     <div>
-                        <UTooltip text="Tìm nhanh cổ phiếu" :shortcuts="[metaSymbol, 'K']">
+                        <UTooltip text="Tìm nhanh" :shortcuts="[metaSymbol, 'K']">
                             <span class="sm:hidden">
                                 <UButton variant="link" color="gray" @click.stop="openSearchModal" class="p-[6px]">
                                     <Icon name="heroicons:magnifying-glass-20-solid" size="20" />
@@ -92,7 +80,7 @@ import { storeToRefs } from 'pinia'
 import { useModalStore } from '@/stores/modal'
 import { useAppStore } from '@/stores/app'
 const modalStore = useModalStore()
-const { setAuthModal, setSearchModal, setDraggableModal, setDraggableModalInfo } = modalStore
+const { setAuthModal, setSearchModal, setCreateArticleTypeModal } = modalStore
 const { searchModal, isLive, draggableModal } = storeToRefs(modalStore)
 const appStore = useAppStore()
 
@@ -128,8 +116,8 @@ const openAuthModal = (mode) => {
 }
 
 
-const openSidebar = () => {
-    emit('open-sidebar', true)
+const onPageAction = () => {
+    if (route.name == 'bai-viet') setCreateArticleTypeModal(true)
 }
 const openSearchModal = () => {
     setSearchModal(true)
