@@ -73,9 +73,6 @@
               </div>
           </article> -->
       </div>
-      <div v-else>
-          Hiện tại chưa có bài viết !
-      </div>
     </div>
   </template>
   

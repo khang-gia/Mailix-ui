@@ -1,5 +1,5 @@
 <template>
-  <div class="relative inline-flex">
+  <div class="relative inline-flex hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-900 rounded-lg">
     <UPopover v-model:open="isOpen">
       <UChip :show="hasNewNotification || hasNewSysNotification">
         <UButton variant="link" color="gray" icon="i-heroicons-bell" aria-label="notification" />

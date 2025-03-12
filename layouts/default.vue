@@ -11,7 +11,7 @@
         <!-- Site header -->
         <Header :sidebarOpen="isSidebarExpanded" @open-sidebar="openSidebar" />
 
-        <main class="main-container w-full relative mx-auto transition-all duration-300 ease-in-out text-slate-500 dark:text-slate-400 font-medium dark:bg-slate-900">
+        <main class="main-container w-full relative mx-auto transition-all duration-300 ease-in-out text-slate-500 dark:text-slate-400 font-medium dark:bg-[#121212]">
           <!-- <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto"> -->
             <div class="main-wrapper pb-5">
               <slot />

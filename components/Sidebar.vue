@@ -5,11 +5,12 @@
     <div
         id="sidebar"
         ref="sidebar"
-        class="flex flex-col absolute z-50 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-48 lg:w-16 lg:sidebar-expanded:!w-48 shrink-0 bg-white dark:bg-slate-800 py-4 transition-all duration-200 ease-in-out border-r dark:border-slate-700"
+        class="flex flex-col absolute z-50 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-48 lg:w-16 lg:sidebar-expanded:!w-48 shrink-0 bg-[#FFFFFF] 
+        dark:bg-titaca-sb-dark-bg py-4 transition-all duration-200 ease-in-out border-r dark:border-slate-700 dark:text-titaca-sb-dark-text"
         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-64'"
       >
   
-      <div class="flex justify-between mb-10 pr-3 sm:px-2">
+      <div class="flex justify-between mb-2 pr-3 sm:px-2">
         <button
             ref="trigger"
             class="lg:hidden text-slate-500 hover:text-slate-400"
@@ -29,31 +30,31 @@
         </NuxtLink>
       </div>
 
-      <div v-if="!blank" class="space-y-8 ml-0">
+      <div v-if="!blank" class="space-y-4 ml-0">
         <div>
           <ul>
-            <SidebarLink link="/dashboard" icon="i-si-dashboard-vert-line" text="Trang chủ" :sidebarExpanded="sidebarOpen" />
-            <SidebarLink link="/nhan-su" icon="heroicons:users" text="Nhân sự" :sidebarExpanded="sidebarOpen"/>
-            <SidebarLink link="/bai-viet" icon="heroicons:newspaper" text="Bài viết" :sidebarExpanded="sidebarOpen"/>
-            <SidebarLink link="https://abcd" icon="bi:book" text="Diễn đàn 123" :sidebarExpanded="sidebarOpen" target="_blank"/>
+            <SidebarLink link="/dashboard" icon="mage:dashboard-chart" activeIcon="mage:dashboard-chart-fill" text="Trang chủ" />
+            <SidebarLink link="/nhan-su" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Nhân sự"/>
+            <!-- <SidebarLink link="/bai-viet" icon="heroicons:newspaper" activeIcon="heroicons-solid:newspaper" text="Bài viết" :sidebarExpanded="sidebarOpen"/> -->
+            <SidebarLink link="/hr-insurance" icon="healthicons:insurance-card-outline" activeIcon="healthicons:insurance-card" text="Bảo hiểm"/>
+            <SidebarLink link="/hr-contract" icon="material-symbols:contract-outline-rounded" activeIcon="material-symbols:contract-rounded" text="Hợp đồng"/>
+            <SidebarLink link="/hr-decision" icon="mdi:approval" activeIcon="mdi:approval" text="Quyết định"/>
+            <SidebarLink link="/hr-timekeeping" icon="healthicons:i-schedule-school-date-time-outline" activeIcon="healthicons:i-schedule-school-date-time" text="Chấm công" />
             
+            <SidebarLink link="https://abcd" icon="heroicons:envelope" activeIcon="heroicons-solid:envelope" text="Email" target="_blank"/>
           </ul>
         </div>
       </div>
 
       <div class="pt-3 hidden lg:inline-flex mt-auto text-slate-400 hover:text-slate-300 -translate-y-6">
-        <div class="px-4 py-2">
+        <!-- <div class="px-4 py-2">
           <button @click.prevent="toggleSidebar">
             <span class="sr-only">Expand / collapse sidebar</span>
             <UIcon name="mynaui:sidebar-solid" class="w-6 h-6">
 
             </UIcon>
-            <!-- <svg class="w-6 h-6 fill-current sidebar-expanded:rotate-180" viewBox="0 0 24 24">
-              <path class="" d="M19.586 11l-5-5L16 4.586 23.414 12 16 19.414 14.586 18l5-5H7v-2z" />
-              <path class="" d="M3 23H1V1h2z" />
-            </svg> -->
           </button>
-        </div>
+        </div> -->
       </div>
       <!-- <Footer v-show="sidebarOpen"></Footer> -->
     </div>

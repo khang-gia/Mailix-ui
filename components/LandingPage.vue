@@ -8,7 +8,7 @@
                 icon="i-heroicons-outline-login" trailing>{{$t('Sign in')}}</UButton>
             </div>
         </UContainer>
-        <div class="py-10">
+        <!-- <div class="py-10">
             <UCarousel ref="carouselRef" v-slot="{ item }" :items="articles.results" :ui="{ 
                     item: 'basis-full md:basis-1/2 lg:basis-1/3 mx-3',
                     wrapper: 'h-80'
@@ -24,7 +24,7 @@
         </div>
         <div class="py-10">
             <LandingArticleList v-if="articles" :articles="articles.results" />
-        </div>
+        </div> -->
     </div>
 </template>
 <script setup>

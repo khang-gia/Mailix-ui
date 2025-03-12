@@ -1,10 +1,10 @@
 <template>
-    <header class="sticky top-0 bg-white border-b border-slate-200 z-30 dark:bg-[#182235] dark:border-slate-700">
+    <header class="sticky top-0 bg-[#FFFFFF] border-b border-slate-200 z-30 text-[#222222] dark:bg-[#1E1E2E] dark:text-[#E0E0E0] dark:border-slate-700">
         <div class="px-2 sm:px-3 lg:px-4">
             <div class="flex items-center justify-between h-16 -mb-px">
-                <div class="flex h-16 my-auto py-4">
-                    <UButton v-if="route.name === 'bai-viet' || route.name === 'nhan-su'" icon="i-heroicons-plus" variant="outline" size="xs" class="mr-2" @click.stop="onPageAction"/>
-                    <span class="text-xl font-bold font-sans lg:flex dark:text-slate-400 mr-3">{{ appTitle || route.meta.title }}</span>
+                <div class="flex h-16 my-auto pt-5">
+                    <UButton v-if="route.name === 'bai-viet' || route.name === 'nhan-su'" icon="i-heroicons-plus" variant="outline" color="none" size="xs" class="mr-2 w-7 h-7 bounce-animation text-titaca-primary dark:text-titaca-primary" @click.stop="onPageAction"/>
+                    <span class="text-lg font-semi-bold font-sans lg:flex mr-3">{{ appTitle || route.meta.title }}</span>
                 </div>
 
                 <div class="flex items-center space-x-2">
@@ -26,27 +26,27 @@
                     </NuxtLink>
 
                     <div>
-                        <UTooltip text="Tìm nhanh" :shortcuts="[metaSymbol, 'K']">
+                        <UTooltip text="Tìm kiếm" :shortcuts="[metaSymbol, 'K']">
                             <span class="sm:hidden">
                                 <UButton variant="link" color="gray" @click.stop="openSearchModal" class="p-[6px]">
                                     <Icon name="heroicons:magnifying-glass-20-solid" size="20" />
                                 </UButton>
                             </span>
                             <button
-                                class="hidden sm:flex px-2 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:text-white transition duration-150 rounded-full ml-3"
+                                class="hidden sm:flex px-2 h-8 flex items-center justify-center dark:hover:bg-slate-900 hover:bg-slate-100 dark:hover:text-white transition duration-150 rounded-lg ml-3"
                                 :class="{ 'bg-slate-200': searchModal }" @click.stop="openSearchModal"
                                 aria-controls="search-modal">
                                 
-                                <svg class="w-3 h-3" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="w-4 h-4" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                     <path class="fill-current text-slate-500"
                                         d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z" />
                                     <path class="fill-current text-slate-400"
                                         d="M15.707 14.293L13.314 11.9a8.019 8.019 0 01-1.414 1.414l2.393 2.393a.997.997 0 001.414 0 .999.999 0 000-1.414z" />
                                 </svg>
-                                <span class="text-xs ml-1 flex items-center gap-0.5">
+                                <!-- <span class="text-xs ml-1 flex items-center gap-0.5">
                                     <span class="w-2"></span>
                                     <span>{{ metaSymbol }} + K</span>
-                                </span>
+                                </span> -->
                             </button>
                         </UTooltip>
                         
@@ -73,7 +73,23 @@
         
     </header>
 </template>
+<style scoped>
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
 
+.bounce-animation:hover {
+  animation: bounce 2s infinite;
+}
+</style>
 <script setup>
 import { useModal } from 'vue-final-modal'
 import { storeToRefs } from 'pinia'

@@ -7,14 +7,14 @@
         aria-label="profile"
       >
         <Avatar :size="32" variant="beam" :name="userInfo.email || userInfo.username" />
-        <div class="flex items-center truncate">
+        <!-- <div class="flex items-center truncate">
           <span class="truncate ml-2 text-sm font-medium sm:max-w-12 md:max-w-20">
             {{ userInfo.display_name }}
           </span>
           <svg class="w-3 h-3 shrink-0 ml-1 fill-current" viewBox="0 0 12 12">
             <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
           </svg>
-        </div>
+        </div> -->
         <!-- <div class="flex items-center truncate" :class="vipColor">
           <span class="truncate ml-2 text-sm font-medium sm:max-w-12 md:max-w-20">
             <Icon  v-if="userInfo.profile.vip_level>0" name="solar:medal-ribbons-star-bold-duotone" size="20"></Icon>

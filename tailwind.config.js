@@ -1,5 +1,6 @@
 const plugin = require('tailwindcss/plugin');
 const colors = require("tailwindcss/colors");
+const defaultTheme = require('tailwindcss/defaultTheme'); 
 module.exports = {
   content: [
     "./components/**/*.{js,vue,ts}",
@@ -15,6 +16,13 @@ module.exports = {
       colors: {
         "vtd-primary": colors.sky,
         "vtd-secondary": colors.gray,
+        "titaca-primary": '#FFC107',
+        "titaca-sb-dark-bg": '#1E1E2E',
+        "titaca-sb-dark-text": '#E0E0E0',
+        "titaca-hd-dark-bg": '#2A2A40',
+        "titaca-hd-dark-text": '#FFD700',
+        "titaca-bd-dark-bg": '#121212',
+        "titaca-bd-dark-text": '#F5F5F5',
         primary: {
           50: '#f5f3ff',
           100: '#ede9fe',
@@ -40,6 +48,7 @@ module.exports = {
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
+        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
       },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1.5' }],
