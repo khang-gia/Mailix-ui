@@ -1,14 +1,21 @@
 <template>
-  <nav class="relative w-full flex items-center justify-between border-b border-gray-200 dark:border-gray-800">
+  <nav class="px-2 relative w-full flex items-center border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1E1E2E]">
+    <div>
+      <!-- <UButton v-if="routeCreate.includes(route.name) " icon="i-heroicons-plus" variant="outline" color="none" size="xs" class="mr-2 w-7 h-7 text-[#147FE0] dark:text-[#7FC1FC]"/> -->
+      <UDropdown />
+    </div>
     <ul class="flex items-center min-w-0">
       <li class="min-w-0" v-for="(link, index) in links" :key="index">
-        <button type="button"
-          class="transition-all outline-none group relative w-full flex items-center gap-1.5 px-2.5 py-3.5 rounded-md font-medium text-sm focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-75 before:absolute before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-500 dark:text-gray-400"
-          :class="current === index ? 'active' : 'inactive'" @click="current = index">
+        <UButton color="" variant="ghost"
+          class="transition-all  outline-none group relative w-full flex items-center gap-1.5 px-2.5 py-3.5 rounded-md font-medium text-sm
+           focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2
+            focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-75 before:absolute
+             before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-500 dark:text-gray-400"
+             :class="current === index ? 'active' : 'inactive'" @click="current = index">
           <UIcon v-if="link.icon" :name="link.icon" class="icon" :class="current === index ? 'active' : 'inactive'" />
           <span class="text-xs font-sans">{{ link.label }}</span>
           <!-- <UBadge color="gray" variant="solid" size="xs" class="px-1 py-0" :ui="{ rounded: 'rounded' }">{{ useUserStore() }}</UBadge> -->
-        </button>
+        </UButton>
       </li>
     </ul>
   </nav>
@@ -38,7 +45,7 @@ const links = [{
 
 <style scoped>
 .active {
-  @apply text-gray-900 dark:text-white after:bg-primary-500 dark:after:bg-primary-400 after:rounded-full
+  @apply text-gray-900 dark:text-white after:bg-[#147FE0] dark:after:bg-[#147FE0] after:rounded-full
 }
 
 .active.icon {

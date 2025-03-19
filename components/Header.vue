@@ -3,7 +3,7 @@
         <div class="px-2 sm:px-3 lg:px-4">
             <div class="flex items-center justify-between h-16 -mb-px">
                 <div class="flex h-16 my-auto pt-5">
-                    <UButton v-if="route.name === 'bai-viet' || route.name === 'nhan-su'" icon="i-heroicons-plus" variant="outline" color="none" size="xs" class="mr-2 w-7 h-7 bounce-animation text-titaca-primary dark:text-titaca-primary" @click.stop="onPageAction"/>
+                    <UButton v-if="routeCreate.includes(route.name) " icon="i-heroicons-plus" variant="outline" color="none" size="xs" class="mr-2 w-7 h-7 bounce-animation text-[#147FE0] dark:text-[#7FC1FC]" @click.stop="onPageAction"/>
                     <span class="text-lg font-semi-bold font-sans lg:flex mr-3">{{ appTitle || route.meta.title }}</span>
                 </div>
 
@@ -33,7 +33,7 @@
                                 </UButton>
                             </span>
                             <button
-                                class="hidden sm:flex px-2 h-8 flex items-center justify-center dark:hover:bg-slate-900 hover:bg-slate-100 dark:hover:text-white transition duration-150 rounded-lg ml-3"
+                                class="hidden sm:flex px-2 h-8 items-center justify-center dark:hover:bg-slate-900 hover:bg-slate-100 dark:hover:text-white transition duration-150 rounded-lg ml-3"
                                 :class="{ 'bg-slate-200': searchModal }" @click.stop="openSearchModal"
                                 aria-controls="search-modal">
                                 
@@ -105,6 +105,10 @@ const { appTitle } = storeToRefs(appStore)
 
 const route = useRoute()
 const emit = defineEmits(['open-sidebar'])
+const routeCreate = [
+    'hr',
+    'system'
+]
 const props = defineProps({
     sidebarOpen: {
         type: Boolean,

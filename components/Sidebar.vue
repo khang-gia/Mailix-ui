@@ -34,7 +34,7 @@
         <div>
           <ul>
             <SidebarLink link="/dashboard" icon="mage:dashboard-chart" activeIcon="mage:dashboard-chart-fill" text="Trang chủ" />
-            <SidebarLink link="/nhan-su" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Nhân sự"/>
+            <SidebarLink link="/hr" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Nhân sự"/>
             <!-- <SidebarLink link="/bai-viet" icon="heroicons:newspaper" activeIcon="heroicons-solid:newspaper" text="Bài viết" :sidebarExpanded="sidebarOpen"/> -->
             <SidebarLink link="/hr-insurance" icon="healthicons:insurance-card-outline" activeIcon="healthicons:insurance-card" text="Bảo hiểm"/>
             <SidebarLink link="/hr-contract" icon="material-symbols:contract-outline-rounded" activeIcon="material-symbols:contract-rounded" text="Hợp đồng"/>
