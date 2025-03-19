@@ -2,7 +2,9 @@
   <nav class="px-2 relative w-full flex items-center border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1E1E2E]">
     <div>
       <!-- <UButton v-if="routeCreate.includes(route.name) " icon="i-heroicons-plus" variant="outline" color="none" size="xs" class="mr-2 w-7 h-7 text-[#147FE0] dark:text-[#7FC1FC]"/> -->
-      <UDropdown />
+      <UDropdown :items="sortItemDropDown" :popper="{ placement: 'bottom-start' }">
+
+      </UDropdown>
     </div>
     <ul class="flex items-center min-w-0">
       <li class="min-w-0" v-for="(link, index) in links" :key="index">
@@ -41,6 +43,23 @@ const links = [{
 }, {
   label: t('Pending for recruitment')
 }]
+const sortItemDropDown = ref([
+    [{
+      label: userInfo.value.display_name,
+    }], [{
+      label: t('Sort'),
+      icon: 'i-heroicons-hand-thumb-up',
+      click: () => {
+        setFeedbackModal(true)
+      }
+    }], [{
+      label: 'Đăng xuất',
+      icon: 'i-heroicons-arrow-left-start-on-rectangle',
+      click: () => {
+        signOut()
+      }
+    }]
+  ])
 </script>
 
 <style scoped>
