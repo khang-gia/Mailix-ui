@@ -1,5 +1,5 @@
 <template>
-    <header class="sticky top-0 bg-[#FFFFFF] border-b border-slate-200 z-30 text-[#222222] dark:bg-[#1E1E2E] dark:text-[#E0E0E0] dark:border-slate-700">
+    <header class="sticky top-0 bg-[#FFFFFF] border-b border-slate-100 z-30 text-[#222222] dark:bg-[#1E1E2E] dark:text-[#E0E0E0] dark:border-slate-700">
         <div class="px-2 sm:px-3 lg:px-4">
             <div class="flex items-center justify-between h-16 -mb-px">
                 <div class="flex h-16 my-auto pt-5">

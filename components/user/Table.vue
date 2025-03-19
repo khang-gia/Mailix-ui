@@ -1,33 +1,140 @@
 <template>
-    <div>
-        <UTable :columns :rows="users">
+    <div class="bg-white dark:bg-[#1E1E2E] rounded-md">
+        <div class="flex justify-between ">
+            <div class="p-2 flex items-center gap-1.5">
+                <span class="text-sm leading-5">{{$t('profile rows per page')}}:</span>
+                    <USelect
+                        v-model="pageCount"
+                        :options="[3, 5, 10, 20, 50, 80, 100]"
+                        class="me-2 w-fit"
+                        size="xs"
+                    />
+            </div>
+            <div class="flex items-center px-2">
+                <UPagination :size="xs" :max="1" :page-count="pageCount" :total="pageTotal" v-model="_page" />
+            </div>
+        </div>
+        
+        <UTable :columns :rows="users" 
+        :sortButton="{icon:'none',type:'string', color: 'none', variant: 'ghost', size: '2xs', square: true } "
+        :ui="{
+            th: {
+                base: 'text-left rtl:text-right ',
+                padding: 'px-4 py-3.5',
+                color: 'text-gray-900 dark:text-white',
+                font: 'font-bold',
+                size: 'text-sm'
+            },
+            td: {
+                base: 'whitespace-nowrap',
+                padding: 'px-4 py-4',
+                color: 'text-gray-800 dark:text-gray-300',
+                font: '',
+                size: 'text-sm'
+            },
+        }"
+        >
 
         </UTable>
     </div>
+
 </template>
+<style scoped>
+.hidden-button {
+  display: none;
+}
+</style>
 <script setup>
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+// const userStore = useUserStore()
+const emit = defineEmits(['update:pageSize', 'update:page'])
+ 
+const props = defineProps({
+  users: {
+    type: Array,
+    default: []
+  },
+  pageSize:{
+    type: Number,
+    required: true
+  },
+  pageTotal:{
+    type: Number,
+    required: true
+  },
+  page:{
+    type: Number,
+    required: true
+  }
+})
+const pageCount = computed({
+  get: () => props.pageSize,
+  set: (val) => {
+    emit('update:pageSize', val)
+  }
+})
+const _page = computed({
+  get: () => props.page,
+  set: (val) => {
+    emit('update:page', val)
+  }
+})
 const columns = [
     {   
-        key: 'code',
-        label: t('User Code'),
+        key: 'employee_code',
+        label: t('Employee Code'),
         sortable: true,
     },
     {
-        key: 'name',
-        label: t('Name'),
+        key: 'timekeeping_id',
+        label: t('TK code'),
         sortable: true,
     },
     {
-        key: 'name',
-        label: t('Name'),
+        key: 'full_name',
+        label: t('Full Name'),
+        sortable: true,
+    },
+    {
+        key: 'department_name',
+        label: t('Department'),
+        sortable: true,
+    },
+    {
+        key: 'position',
+        label: t('Position'),
+        sortable: true,
+    },
+    {
+        key: 'title',
+        label: t('Title'),
+        sortable: true,
+    },
+    {
+        key: 'level',
+        label: t('Level'),
+        sortable: true,
+    },
+    {
+        key: 'join_date',
+        label: t('Join Date'),
+        sortable: true,
+    },
+    {
+        key: 'dob',
+        label: t('Dob'),
+        sortable: true,
+    },
+    {
+        key: 'gender',
+        label: t('Gender'),
+        sortable: true,
+    },
+    {
+        key: 'account_created_at',
+        label: t('Date create account'),
         sortable: true,
     },
 ]
-const users = computedAsync(async () => {
-  const data = await useAPI().get('core/profile_hrs/', { customer_company_id: userStore.company.id, search: search.value, page: page.value, page_size: pageSize.value })
-  total.value = data.count
-  return data.results
-})
 </script>

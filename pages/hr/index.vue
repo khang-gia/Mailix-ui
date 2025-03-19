@@ -1,8 +1,8 @@
 <template>
     <div class="">
         <UserTabs v-model="tab" />
-        <div class="mt-4 px-2">
-
+        <div class="">
+          <UserHrTab/>
         </div>
     </div>
     

@@ -24,16 +24,15 @@
             </svg>
           </button>
         <NuxtLink class="block" to="/">
-          <img v-if="sidebarOpen"  class="block max-h-12 h-12 h-auto" src="/images/tttmailserver-wide.webp" alt="Logo" />
+          <img v-if="sidebarOpen"  class="block max-h-12 h-auto" src="/images/tttmailserver-wide.webp" alt="Logo" />
           <img v-else class="block max-h-12 h-auto" src="/images/tttmailserver.webp" alt="Logo Small" />
-          
         </NuxtLink>
       </div>
 
       <div v-if="!blank" class="space-y-4 ml-0">
         <div>
           <ul>
-            <SidebarLink link="/dashboard" icon="mage:dashboard-chart" activeIcon="mage:dashboard-chart-fill" text="Trang chủ" />
+            <SidebarLink link="/dashboard" icon="mage:dashboard-chart" activeIcon="mage:dashboard-chart-fill" text="Dashboard" />
             <SidebarLink link="/hr" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Nhân sự"/>
             <!-- <SidebarLink link="/bai-viet" icon="heroicons:newspaper" activeIcon="heroicons-solid:newspaper" text="Bài viết" :sidebarExpanded="sidebarOpen"/> -->
             <SidebarLink link="/hr-insurance" icon="healthicons:insurance-card-outline" activeIcon="healthicons:insurance-card" text="Bảo hiểm"/>

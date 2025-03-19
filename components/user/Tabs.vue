@@ -1,10 +1,20 @@
 <template>
   <nav class="px-2 relative w-full flex items-center border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1E1E2E]">
     <div>
-      <!-- <UButton v-if="routeCreate.includes(route.name) " icon="i-heroicons-plus" variant="outline" color="none" size="xs" class="mr-2 w-7 h-7 text-[#147FE0] dark:text-[#7FC1FC]"/> -->
-      <UDropdown :items="sortItemDropDown" :popper="{ placement: 'bottom-start' }">
-
-      </UDropdown>
+      <!-- <UDropdown :items="sortItemDropDown" :popper="{ placement: 'bottom-start' }"
+      :ui="{
+        height: 'h-64',
+        container: 'relative z-20 group',
+      }"
+      >
+        <UButton color="gray" variant="ghost" icon="i-heroicons-bars-4" />
+        <template #item="{ item }">
+          <span class="p-2">{{ item.label }}</span>
+        </template>
+        <template #action="{ item }">
+          <span class="fixed bottom-0 left-0 p-6 bg-white w-full">{{ item.label }}</span>
+        </template>
+      </UDropdown> -->
     </div>
     <ul class="flex items-center min-w-0">
       <li class="min-w-0" v-for="(link, index) in links" :key="index">
@@ -15,7 +25,7 @@
              before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-500 dark:text-gray-400"
              :class="current === index ? 'active' : 'inactive'" @click="current = index">
           <UIcon v-if="link.icon" :name="link.icon" class="icon" :class="current === index ? 'active' : 'inactive'" />
-          <span class="text-xs font-sans">{{ link.label }}</span>
+          <span class="text-sm font-sans">{{ link.label }}</span>
           <!-- <UBadge color="gray" variant="solid" size="xs" class="px-1 py-0" :ui="{ rounded: 'rounded' }">{{ useUserStore() }}</UBadge> -->
         </UButton>
       </li>
@@ -38,25 +48,83 @@ const links = [{
   // userCount: true
 }, {
   label: t('Wait for approval'),
+},{
+  label: t('Temporary leave'),
 }, {
-  label: t('Retired')
+  label: t('Resignation')
+},{
+  label: t('Providing service'),
 }, {
   label: t('Pending for recruitment')
 }]
-const sortItemDropDown = ref([
-    [{
-      label: userInfo.value.display_name,
-    }], [{
-      label: t('Sort'),
-      icon: 'i-heroicons-hand-thumb-up',
+
+const sortItemDropDown = ref([ 
+  [{
+      label: t('Working'),
       click: () => {
-        setFeedbackModal(true)
+        console.log('hehe')
       }
-    }], [{
-      label: 'Đăng xuất',
-      icon: 'i-heroicons-arrow-left-start-on-rectangle',
+    },{
+      label: t('Wait for approval'),
       click: () => {
-        signOut()
+        console.log('hehe')
+      }
+    },{
+      label: t('Temporary leave'),
+      click: () => {
+        console.log('hehe')
+      }
+    },{
+      label: t('Resignation'),
+      click: () => {
+        console.log('hehe')
+      }
+    },{
+      label: t('Providing service'),
+      click: () => {
+        console.log('hehe')
+      }
+    },{
+      label: t('Pending for recruitment'),
+      click: () => {
+        console.log('hehe')
+      }
+    },{
+      label: t('Pending for recruitment'),
+      click: () => {
+        console.log('hehe')
+      }
+    },{
+      label: t('Pending for recruitment'),
+      click: () => {
+        console.log('hehe')
+      }
+    },{
+      label: t('Pending for recruitment'),
+      click: () => {
+        console.log('hehe')
+      }
+    },{
+      label: t('Pending for recruitment'),
+      click: () => {
+        console.log('hehe')
+      }
+    },{
+      label: t('Pending for recruitment'),
+      click: () => {
+        console.log('hehe')
+      }
+    },{
+      label: t('Pending for recruitments'),
+      click: () => {
+        console.log('hehe')
+      }
+    },{
+      label: t('Customize'),
+      icon: 'fluent:column-triple-edit-24-regular',
+      slot: 'action',
+      click: () => {
+        console.log('hi')
       }
     }]
   ])
