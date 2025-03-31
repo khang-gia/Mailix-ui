@@ -1,5 +1,6 @@
 <template>
-    <div class="py-2 px-4 bg-white dark:bg-[#1E1E2E] flex justify-start items-center space-x-2">
+    <div class="py-2 px-4 grid grid-flow-col bg-white dark:bg-[#1E1E2E] space-x-2 w-full">
+      <div class="flex items-center">
         <UDropdown :items="listViewDropdown" :popper="{ placement: 'bottom-start' }" 
         :ui="{
             container:'w-fit',
@@ -37,7 +38,7 @@
                 <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
             </template>
         </UDropdown>
-        <!-- <div class="px-2 flex items-center gap-1.5 border-l border-slate-300">
+        <div class="px-2 flex items-center gap-1.5 border-l border-slate-300">
             <span class="text-sm leading-5">{{$t('profile rows per page')}}:</span>
             <USelect
                 v-model="pageSize"
@@ -45,7 +46,7 @@
                 class="me-2 w-fit"
                 size="xs"
             />
-        </div> -->
+        </div>
 
         <div class="flex items-center gap-3 border-l border-slate-300">
             <span class="text-sm leading-5 pl-2">
@@ -57,11 +58,24 @@
                 <span class="font-medium">{{ pageTotal }}</span>
                 {{$t('profiles')}}
             </span>
-            <!-- <UPagination :max="3" :page-count="pageSize" :total="pageTotal" v-model="page" /> -->
         </div>
+      </div>
+      <div class="flex justify-end">
+          <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'hr-upload'}"/>
+          <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs"/>
+          <UButton color="gray" variant="ghost" icon="i-heroicons-cog-6-tooth" :label="$t('Setting')" size="xs" :to="{name: 'hr-setting'}"/>
+      </div>
     </div>
+    
     <div class="p-2">
-        <UserTable :users="users" :page-size="pageSize" @update:page-size="pageSize=$event" :page-total="pageTotal" :page="page" @update:page="page=$event"/>
+      <UCard :ui="{body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700'}, divide: 'divide-y divide-gray-200 dark:divide-gray-700',}">
+        <UserTable :users="users" :page-total="pageTotal" :page="page" @update:page="page=$event"/>
+        <template #footer>
+          <div class="flex justify-end items-center space-x-2">
+            <UPagination :max="3" :page-count="pageSize" :total="pageTotal" v-model="page"/>
+          </div>
+        </template>
+      </UCard>
     </div>
 </template>
 
@@ -91,7 +105,7 @@ const users = computedAsync(async () => {
     
     page: page.value, page_size: pageSize.value })
   console.log('data',data.value)
-//   total.value = data.value.count
+  pageTotal.value = data.value.count
   return data.value.results
 })
 const displayColumns = ref([

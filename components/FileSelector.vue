@@ -1,7 +1,7 @@
 <template>
     <section>
       <div
-        class="min-h-28 border-dashed border-2 border-green-600 text-muted px-3 py-2 block"
+        class="min-h-28 border-dashed border-2 border-[#147FE0] text-muted px-3 py-2 block"
         v-bind:class="{'border-primary': fileDragOver, 'border-danger': hasError}"
         @drop.prevent="addFile" 
         @dragover.prevent="fileDragOver=true"
@@ -11,7 +11,7 @@
         <h4 v-if="!filesCount && !readonly" class="block mt-4 text-center text-muted">Thả tệp vào đây hoặc bấm để chọn.</h4>
         <span v-if="filesCount" class="block">
           <span v-for="(selectedFile, $index) in selectedFiles" :key="$index"
-            class="flex text-green-600 justify-center mt-3">
+            class="flex text-titaca-text-primary justify-center mt-3">
             <span v-text="selectedFile.info" class="mx-2 truncate"></span>
             <span @click.prevent="removeFile($index, $event)" class="text-red-500 pointer ml-auto" v-if="!readonly">
               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zM7 6h10v13H7zm2 2v9h2V8zm4 0v9h2V8z"/></svg>

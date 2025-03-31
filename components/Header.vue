@@ -154,9 +154,7 @@ if (hotEvents.value && hotEvents.value.results.length) {
 //     component: defineAsyncComponent(() => import('@/components/DraggableModal2.vue')),
 // })
 
-onBeforeUnmount(() => {
-    destroy()
-})
+
 
 // const {data:happeningEvents} = await useAPI().get('/core/happening_events/')
 // const happeningEvent = ref(null)

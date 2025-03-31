@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <UserTabs v-model="tab" />
+        <UserListTabs v-model="tab" />
         <div class="">
           <UserHrTab/>
         </div>

@@ -36,5 +36,16 @@
     "of":"/",
     "profiles": "hồ sơ",
     "profile rows per page": "Số hồ sơ mỗi trang",
-    "Page": "Trang"
+    "Page": "Trang",
+    "Import": "Tải lên",
+    "Export": "Xuất",
+    "Setting": "Cài đặt",
+    "Profile HR": "Hồ sơ nhân sự",
+    "Certification": "Bằng cấp",
+    "Salary": "Lương",
+    "ID Card": "Chứng minh nhân dân",
+    "HR ID Cards": "CCCD/CC/CCCD nhân sự",
+    "Avatar": "Ảnh đại diện",
+    "Import Profile HR": "Tải lên hồ sơ nhân sự",
+    "Import note": "Lưu ý: File import phải đúng định dạng, vui lòng tải và xem mẫu file"
 }

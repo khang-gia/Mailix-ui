@@ -23,6 +23,10 @@ module.exports = {
         "titaca-hd-dark-text": '#FFD700',
         "titaca-bd-dark-bg": '#121212',
         "titaca-bd-dark-text": '#F5F5F5',
+        "titaca-border-primary": '#147FE0',
+        "titaca-button-primary": '#0C72CE',
+        "titaca-text-primary": '#147FE0',
+        "titaca-text-secondary": '#0C72CE',
         primary: {
           50: '#f5f3ff',
           100: '#ede9fe',

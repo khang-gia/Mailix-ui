@@ -1,27 +1,13 @@
 <template>
     <div class="bg-white dark:bg-[#1E1E2E] rounded-md">
-        <div class="flex justify-between ">
-            <div class="p-2 flex items-center gap-1.5">
-                <span class="text-sm leading-5">{{$t('profile rows per page')}}:</span>
-                    <USelect
-                        v-model="pageCount"
-                        :options="[3, 5, 10, 20, 50, 80, 100]"
-                        class="me-2 w-fit"
-                        size="xs"
-                    />
-            </div>
-            <div class="flex items-center px-2">
-                <UPagination :size="xs" :max="1" :page-count="pageCount" :total="pageTotal" v-model="_page" />
-            </div>
-        </div>
-        
         <UTable :columns :rows="users" 
         :sortButton="{icon:'none',type:'string', color: 'none', variant: 'ghost', size: '2xs', square: true } "
         :ui="{
+            base: 'w-64',
             th: {
-                base: 'text-left rtl:text-right ',
+                base: 'text-left rtl:text-right',
                 padding: 'px-4 py-3.5',
-                color: 'text-gray-900 dark:text-white',
+                color: 'text-black dark:text-white',
                 font: 'font-bold',
                 size: 'text-sm'
             },
@@ -48,16 +34,12 @@
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 // const userStore = useUserStore()
-const emit = defineEmits(['update:pageSize', 'update:page'])
+const emit = defineEmits(['update:page'])
  
 const props = defineProps({
   users: {
     type: Array,
     default: []
-  },
-  pageSize:{
-    type: Number,
-    required: true
   },
   pageTotal:{
     type: Number,
@@ -66,12 +48,6 @@ const props = defineProps({
   page:{
     type: Number,
     required: true
-  }
-})
-const pageCount = computed({
-  get: () => props.pageSize,
-  set: (val) => {
-    emit('update:pageSize', val)
   }
 })
 const _page = computed({
