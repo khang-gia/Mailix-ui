@@ -60,12 +60,12 @@ const onSelectFiles = (files) => {
     totalSize.value = uploadFile.value.size
 }
 const importFile = async (value) => {
-    const data = {
-        ...value,
-        type: 'hr'
-    }
+    const data = new FormData()
+    const upload_type = 1
+    data.append('file', value)
+    data.append('upload_type', upload_type)
     const { data: invoice, error } = await useAPI().post(
-        `analyzer/upload/`, {...value}
+        `upload/uploads/`, data
     );
     if (error) {
         throw error
@@ -78,24 +78,17 @@ const onSubmit = async() => {
     const res = await importFile(uploadFile.value)
     if (res){
         busy.value = true
-        isUploading.value = true
-        const formData = new FormData()
-        formData.append('file', uploadFile.value)
-        const config = {
-            onUploadProgress: (progressEvent) => {
-                const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                uploadedPercent.value = percentCompleted
-            }
-        }
-        const { data, error } = await useAPI().post(
-            `core/profile_hrs/import/`, formData, config
-        );
-        if (error) {
-            throw error
-        }
-        isUploading.value = false
+        // isUploading.value = true
+        
+        // const config = {
+        //     onUploadProgress: (progressEvent) => {
+        //         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        //         uploadedPercent.value = percentCompleted
+        //     }
+        // }
+        // isUploading.value = false
         busy.value = false
-        uploadedPercent.value = 0
+        // uploadedPercent.value = 0
         uploadFile.value = null
         fileSelectors.value.removeAllFiles()
         useToast().add({
