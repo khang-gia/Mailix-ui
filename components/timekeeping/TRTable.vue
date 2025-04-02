@@ -6,10 +6,10 @@
             wrapper: 'relative overflow-x-auto',
             thead: 'sticky top-0',
             th: {
-                base: 'text-center border whitespace-nowrap',
-                padding: 'px-4 my-3.5',
-                color: 'text-black dark:text-white',
-                font: 'font-bold',
+                base: 'text-center border whitespace-nowrap items-center ',
+                padding: 'px-6 my-6',
+                color: 'text-slate-600 dark:text-white',
+                font: 'font-semibold',
                 size: 'text-sm'
             },
             td: {
@@ -22,8 +22,8 @@
         }"
         >
         <template v-for="idday in daysInMonth" :key="idday" #[`${idday}-header`]="{column}">
-            <div class="grid grid-flow-row -mx-4">
-                <span >
+            <div class="grid grid-flow-row -mx-6 space-y-3">
+                <span>
                     {{ column.label }}
                 </span>
                 <UDivider class="w-full"/>
