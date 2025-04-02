@@ -37,7 +37,7 @@
             <SidebarLink link="/hr-insurance" icon="healthicons:insurance-card-outline" activeIcon="healthicons:insurance-card" text="Bảo hiểm"/>
             <SidebarLink link="/hr-contract" icon="material-symbols:contract-outline-rounded" activeIcon="material-symbols:contract-rounded" text="Hợp đồng"/>
             <SidebarLink link="/hr-decision" icon="mdi:approval" activeIcon="mdi:approval" text="Quyết định"/>
-            <SidebarLink link="/hr-timekeeping" icon="healthicons:i-schedule-school-date-time-outline" activeIcon="healthicons:i-schedule-school-date-time" text="Chấm công" />
+            <SidebarLink link="/timekeeping" icon="healthicons:i-schedule-school-date-time-outline" activeIcon="healthicons:i-schedule-school-date-time" text="Chấm công" />
             
             <SidebarLink link="https://abcd" icon="heroicons:envelope" activeIcon="heroicons-solid:envelope" text="Email" target="_blank"/>
           </ul>

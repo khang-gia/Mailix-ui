@@ -44,7 +44,7 @@
   const links = [{
     label: t('Profile HR')
   }, {
-    label: t('Insurance'),
+    label: t('Insurance history'),
     // userCount: true
   }, {
     label: t('HR ID Cards'),
