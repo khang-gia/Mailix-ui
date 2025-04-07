@@ -64,18 +64,19 @@ const importFile = async (value) => {
     const upload_type = 1
     data.append('file', value)
     data.append('upload_type', upload_type)
-    const { data: invoice, error } = await useAPI().post(
+    const { data: upload, error } = await useAPI().post(
         `upload/uploads/`, data
     );
-    if (error) {
-        throw error
+    if (error.value) {
+        throw error.value
     }
-    return invoice
+    return upload
 }
 const onSubmit = async() => {
     console.log('uploadFile', uploadFile.value)
     if (!uploadFile) return
     const res = await importFile(uploadFile.value)
+    // console.log('res',res)
     if (res){
         busy.value = true
         // isUploading.value = true
@@ -92,16 +93,16 @@ const onSubmit = async() => {
         uploadFile.value = null
         fileSelectors.value.removeAllFiles()
         useToast().add({
-            title: 'Success',
-            description: 'Import successfully, please wait for the system to process',
+            title: t('Success'),
+            description: t('Import successfully'),
             icon: 'i-heroicons-check-circle',
             color: 'green',
         })
     }
     else {
         useToast().add({
-            title: 'Error',
-            description: 'Error while uploading file',
+            title: t('Error'),
+            description: t('Import failed'),
             icon: 'i-heroicons-x-circle',
             color: 'red',
         })
