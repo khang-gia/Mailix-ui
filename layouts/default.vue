@@ -16,7 +16,7 @@
             <div class="main-wrapper pb-5">
               <slot />
             </div>
-            <StatusFooter />
+            <!-- <StatusFooter /> -->
         </main>
       </div> 
     </div>
