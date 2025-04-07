@@ -3,16 +3,16 @@
         <UTable :columns :rows="users" 
         :sortButton="{icon:'none',type:'string', color: 'none', variant: 'ghost', size: '2xs', square: true } "
         :ui="{
-            base: 'w-64',
+            base: 'w-max',
             th: {
-                base: 'text-left rtl:text-right',
+                base: 'text-center rtl:text-right border whitespace-nowrap items-center',
                 padding: 'px-4 py-3.5',
                 color: 'text-black dark:text-white',
                 font: 'font-bold',
                 size: 'text-sm'
             },
             td: {
-                base: 'whitespace-nowrap',
+                base: 'whitespace-nowrap border',
                 padding: 'px-4 py-4',
                 color: 'text-gray-800 dark:text-gray-300',
                 font: '',
