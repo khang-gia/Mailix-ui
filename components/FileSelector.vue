@@ -1,7 +1,7 @@
 <template>
     <section>
       <div
-        class="min-h-28 border-dashed border-2 border-[#147FE0] text-muted px-3 py-2 block"
+        class="min-h-28 rounded-md border-dashed border-2 border-[#147FE0] text-muted px-3 py-2 block"
         v-bind:class="{'border-primary': fileDragOver, 'border-danger': hasError}"
         @drop.prevent="addFile" 
         @dragover.prevent="fileDragOver=true"
