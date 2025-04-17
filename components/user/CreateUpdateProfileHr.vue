@@ -12,208 +12,225 @@
             :items="items"
             :ui="{
                 base: 'w-full',
+                wrapper: 'pb-4'
             }">
             <template #personal-info>
-                <UForm :schema="schema" :state="userInfo" class="mx-4 py-2 lg:w-3/5 grid grid-cols-3 gap-4 ">
-                    <UFormGroup
-                        v-slot="{ error }"
-                        :label="$t('Employee Code')"
-                        name="employee_code"
-                        :error="errors.employee_code"
-                        required>
-                        <UInput
-                            v-model="userInfo.employee_code"
-                            :disabled="busy"
-                            :placeholder="$t('Employee Code')"
-                            :ui="{ base: 'w-full rounded-lg' }"
-                            :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Profile code')"
-                        name="profile_code"
-                        >
-                        <template #label>
-                            <span class="mr-1">
-                                {{ $t('Profile code') }}
-                            </span>
-                            <UTooltip :text="$t('Profile code tooltip')" :popper="{ placement: 'right' }" 
-                            :ui="{
-                                base: 'text-xs font-normal overflow-x-visible',
-                            }">
-                                <UIcon name="i-heroicons-exclamation-circle" class="text-yellow-500"/>
-                            </UTooltip>
-                            
-                        </template>
-                        <UInput
-                            :disabled="busy"
-                            v-model="userInfo.profile_code"
-                            :placeholder="$t('Profile code')"
-                            :ui="{ base: 'w-full rounded-lg' }"/>
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Dob')"
-                        name='dob'>
-                        <BaseDatePicker
-                            v-model="userInfo.dob"
-                            ref="dobpicker"
-                            :required="true"
-                            class="w-full"
-                            buttonType="outline"
-                            :place-holder="$t('Dob')"
-                        />
-                    </UFormGroup>
-                    <UFormGroup
-                        v-slot="{error}"
-                        class="col-span-2"
-                        :label="$t('Full Name')" 
-                        name="full_name"
-                        :error="errors.full_name"
+                <div class="flex">
+                    <UForm :schema="schema" :state="userInfo" class="mx-4 py-2 lg:w-3/5 grid grid-cols-3 gap-4">
+                        <UFormGroup
+                            v-slot="{ error }"
+                            :label="$t('Employee Code')"
+                            name="employee_code"
+                            :error="errors.employee_code"
+                            required>
+                            <UInput
+                                v-model="userInfo.employee_code"
+                                :disabled="busy"
+                                :placeholder="$t('Employee Code')"
+                                :ui="{ base: 'w-full rounded-lg' }"
+                                :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Profile code')"
+                            name="profile_code"
+                            >
+                            <template #label>
+                                <span class="mr-1">
+                                    {{ $t('Profile code') }}
+                                </span>
+                                <UTooltip :text="$t('Profile code tooltip')" :popper="{ placement: 'right' }" 
+                                :ui="{
+                                    base: 'text-xs font-normal overflow-x-visible',
+                                }">
+                                    <UIcon name="i-heroicons-exclamation-circle" class="text-yellow-500"/>
+                                </UTooltip>
+                                
+                            </template>
+                            <UInput
+                                :disabled="busy"
+                                v-model="userInfo.profile_code"
+                                :placeholder="$t('Profile code')"
+                                :ui="{ base: 'w-full rounded-lg' }"/>
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Dob')"
+                            name='dob'>
+                            <BaseDatePicker
+                                v-model="userInfo.dob"
+                                ref="dobpicker"
+                                :required="true"
+                                class="w-full"
+                                buttonType="outline"
+                                :place-holder="$t('Dob')"
+                            />
+                        </UFormGroup>
+                        <UFormGroup
+                            v-slot="{error}"
+                            class="col-span-2"
+                            :label="$t('Full Name')" 
+                            name="full_name"
+                            :error="errors.full_name"
 
-                        required>
-                        <UInput
-                            :disabled="busy"
-                            v-model="userInfo.full_name"
-                            :placeholder="$t('Full Name')"
-                            :ui="{ base: 'w-full rounded-lg' }"
-                            :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Gender')"
-                        name='gender'>
-                        <USelectMenu
-                            :disabled="busy"
-                            class="w-full"
-                            v-model="userInfo.gender"
-                            :options="genders"
-                            :placeholder="$t('Gender')"
-                            valueAttribute="value"
-                            option-attribute="label"
-                            :is-dark="colorMode.value === 'dark'"
-                        />
-                    </UFormGroup>
-                    
-                    <UFormGroup
-                        class="col-span-2"
-                        :label="$t('Pob')"
-                        name='pob'>
-                        <CoreLocationSelect
-                            v-model="userInfo.pob" :placeholder="$t('Pob')"/>
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Marital Status')"
-                        name="marital_status">
-                        <USelectMenu
-                            class="w-full"
-                            :disabled="busy"
-                            v-model="userInfo.marital_status"
-                            :options="MaritalStatus"
-                            :placeholder="$t('Marital Status')"
-                            valueAttribute="value"
-                            option-attribute="label"
-                        />
-                    </UFormGroup>
-                    <UFormGroup
-                        class="col-span-2"
-                        :label="$t('Place of origin')"
-                        name="place_of_origin">
-                        <CoreLocationSelect
-                            v-model="userInfo.place_of_origin" :placeholder="$t('Place of origin')"/>
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Nationality')"
-                        name="nationality">
-                        <CoreNationalitySelect
-                            v-model="userInfo.nationality" :placeholder="$t('Nationality')"/>
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Personal tax code')"
-                        name="tax_code">
-                        <UInput
-                            :disabled="busy"
-                            v-model="userInfo.tax_code"
-                            :placeholder="$t('Personal tax code')"
-                            :ui="{ base: 'w-full rounded-lg' }"
-                        />
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Ethnicity')"
-                        name="ethnicity">
-                        <CoreEthnicitySelect
-                            v-model="userInfo.ethnicity" :placeholder="$t('Ethnicity')"/>
-                    </UFormGroup>
-                    
-                    <UFormGroup
-                        :label="$t('Education level')"
-                        name="educaional_level">
-                        <USelectMenu
-                            :disabled="busy"
-                            class="w-full"
-                            v-model="userInfo.educaional_level"
-                            :options="EducationLevel"
-                            :placeholder="$t('Education level')"
-                            valueAttribute="value"
-                            option-attribute="label"
-                        />
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Highest Professional Qualification')"
-                        name="highest_qualification">
-                        <USelectMenu
-                            :disabled="busy"
-                            class="w-full"
-                            v-model="userInfo.highest_qualification"
-                            :options="HighestProfessionalQualification"
-                            :placeholder="$t('Highest Professional Qualification')"
-                            valueAttribute="value"
-                            option-attribute="label"
-                        />
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Years of experience')"
-                        name="years_of_experience">
-                        <UInput
-                            :disabled="busy"
-                            v-model="userInfo.years_of_experience"
-                            :placeholder="$t('Years of experience')"
-                            :ui="{ base: 'w-full rounded-lg' }"
-                        />
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Direct manager')"
-                        name="direct_manager">
-                        <CoreUserSelect v-model="userInfo.direct_manager" :placeholder="$t('Direct manager')"/>
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Join date')"
-                        name='join_date'>
-                        <BaseDatePicker
-                            v-model="userInfo.join_date"
-                            ref="dobpicker"
-                            :required="true"
-                            class="w-full"
-                            buttonType="outline"
+                            required>
+                            <UInput
+                                :disabled="busy"
+                                v-model="userInfo.full_name"
+                                :placeholder="$t('Full Name')"
+                                :ui="{ base: 'w-full rounded-lg' }"
+                                :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Gender')"
+                            name='gender'>
+                            <USelectMenu
+                                :disabled="busy"
+                                class="w-full"
+                                v-model="userInfo.gender"
+                                :options="genders"
+                                :placeholder="$t('Gender')"
+                                valueAttribute="value"
+                                option-attribute="label"
+                                :is-dark="colorMode.value === 'dark'"
                             />
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Actual sign date')"
-                        name='actual_sign_date'>
-                        <BaseDatePicker
-                            v-model="userInfo.actual_sign_date"
-                            ref="dobpicker"
-                            :required="true"
-                            class="w-full"
-                            buttonType="outline"
+                        </UFormGroup>
+                        
+                        <UFormGroup
+                            class="col-span-2"
+                            :label="$t('Pob')"
+                            name='pob'>
+                            <CoreLocationSelect
+                                v-model="userInfo.pob" :placeholder="$t('Pob')"/>
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Marital Status')"
+                            name="marital_status">
+                            <USelectMenu
+                                class="w-full"
+                                :disabled="busy"
+                                v-model="userInfo.marital_status"
+                                :options="MaritalStatus"
+                                :placeholder="$t('Marital Status')"
+                                valueAttribute="value"
+                                option-attribute="label"
                             />
-                    </UFormGroup>
-                    
-                </UForm>
+                        </UFormGroup>
+                        <UFormGroup
+                            class="col-span-2"
+                            :label="$t('Place of origin')"
+                            name="place_of_origin">
+                            <CoreLocationSelect
+                                v-model="userInfo.place_of_origin" :placeholder="$t('Place of origin')"/>
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Nationality')"
+                            name="nationality">
+                            <CoreNationalitySelect
+                                v-model="userInfo.nationality" :placeholder="$t('Nationality')"/>
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Personal tax code')"
+                            name="tax_code">
+                            <UInput
+                                :disabled="busy"
+                                v-model="userInfo.tax_code"
+                                :placeholder="$t('Personal tax code')"
+                                :ui="{ base: 'w-full rounded-lg' }"
+                            />
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Ethnicity')"
+                            name="ethnicity">
+                            <CoreEthnicitySelect
+                                v-model="userInfo.ethnicity" :placeholder="$t('Ethnicity')"/>
+                        </UFormGroup>
+                        
+                        <UFormGroup
+                            :label="$t('Education level')"
+                            name="educaional_level">
+                            <USelectMenu
+                                :disabled="busy"
+                                class="w-full"
+                                v-model="userInfo.educaional_level"
+                                :options="EducationLevel"
+                                :placeholder="$t('Education level')"
+                                valueAttribute="value"
+                                option-attribute="label"
+                            />
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Highest Professional Qualification')"
+                            name="highest_qualification">
+                            <USelectMenu
+                                :disabled="busy"
+                                class="w-full"
+                                v-model="userInfo.highest_qualification"
+                                :options="HighestProfessionalQualification"
+                                :placeholder="$t('Highest Professional Qualification')"
+                                valueAttribute="value"
+                                option-attribute="label"
+                            />
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Years of experience')"
+                            name="years_of_experience">
+                            <UInput
+                                :disabled="busy"
+                                v-model="userInfo.years_of_experience"
+                                :placeholder="$t('Years of experience')"
+                                :ui="{ base: 'w-full rounded-lg' }"
+                            />
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Direct manager')"
+                            name="direct_manager">
+                            <CoreUserSelect v-model="userInfo.direct_manager" :placeholder="$t('Direct manager')"/>
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Join date')"
+                            name='join_date'>
+                            <BaseDatePicker
+                                v-model="userInfo.join_date"
+                                ref="dobpicker"
+                                :required="true"
+                                class="w-full"
+                                buttonType="outline"
+                                />
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Actual sign date')"
+                            name='actual_sign_date'>
+                            <BaseDatePicker
+                                v-model="userInfo.actual_sign_date"
+                                ref="dobpicker"
+                                :required="true"
+                                class="w-full"
+                                buttonType="outline"
+                                />
+                        </UFormGroup>
+                        
+                    </UForm>
+                    <UForm :schema="schema" :state="userInfo" class="py-2 lg:w-2/5 grid grid-cols-2 gap-4">
+                        <UFormGroup
+                            :label="$t('Avatar')"
+                            name="avatar"
+                            >
+                            <CoreImageUpload 
+                                :multiple="false" 
+                                fileTypes=".png, .jpeg, .jpg, image/* "
+                                @on-select="onUploadImage($event, 'avatar')"
+                                height="185px"
+                                width="210px"
+                            />
+                        </UFormGroup>
+                    </UForm>
+                </div>
+                
             </template>
             <template #id-card-info>
                 <UForm :schema="schema" :state="userInfo" class="mx-4 py-2 lg:w-3/5 grid grid-cols-3 gap-4 ">
                     <UFormGroup
                         :label="$t('Id no')"
-                        name="id_number"
-                        required>
+                        name="id_number">
                         <UInput
                             :disabled="busy"
                             v-model="userInfo.id_number"
@@ -222,8 +239,7 @@
                     </UFormGroup>
                     <UFormGroup
                         :label="$t('Date of issue')"
-                        name="date_of_issue"
-                        required>
+                        name="date_of_issue">
                         <BaseDatePicker
                             v-model="userInfo.date_of_issue"
                             ref="date_of_issue"
@@ -235,12 +251,11 @@
                     </UFormGroup>
                     <UFormGroup
                         :label="$t('Place of issue')"
-                        name="place_of_issue"
-                        required>
+                        name="place_of_issue">
                         <CorePlaceOfIssueSelect
                             v-model="userInfo.place_of_issue" :placeholder="$t('Place of issue')"/>
                     </UFormGroup>
-                    <div class="col-span-3 grid grid-flow-col gap-4">
+                    <div class="col-span-3 grid grid-cols-2 gap-4">
                         <UFormGroup
                             :label="$t('Front id card')"
                             name="front_id_card"
@@ -248,8 +263,9 @@
                             <CoreImageUpload 
                                 :multiple="false" 
                                 fileTypes=".png, .jpeg, .jpg, image/* "
-                                @on-select="onSelectFrontId"
+                                @on-select="onUploadImage($event,'front_id_card')"
                                 ref="fileSelectors"
+                                width="inherit"
                             />
                         </UFormGroup>
                         <UFormGroup
@@ -259,8 +275,9 @@
                             <CoreImageUpload 
                                 :multiple="false" 
                                 fileTypes=".png, .jpeg, .jpg, image/* "
-                                @on-select="onSelectBackId"
+                                @on-select="onUploadImage($event, 'back_id_card')"
                                 ref="fileSelectors"
+                                width="inherit"
                             />
                         </UFormGroup>
                     </div>
@@ -322,14 +339,14 @@
                 </UForm>
             </template>
             </UAccordion>
-        <template #footer>
+        <!-- <template #footer>
             <div class="flex justify-end items-center space-x-2">
                 <UButton color="white" variant="solid" icon="i-heroicons-x-mark" :label="$t('Cancel')" size="sm" @click="useRouter().back()"/>
                 <UButton color="primary" variant="solid" icon="i-heroicons-check-circle" :label="$t('Save')" size="sm" @click="onSubmit"/>
             </div>
-        </template>
+        </template> -->
     </UCard>
-    <!-- <UserProfileStepFooter /> -->
+    <UserProfileStepFooter @on-submit="onSubmit"/>
 </template>
 <script setup>
 import * as yup from 'yup'
@@ -450,14 +467,10 @@ const HighestProfessionalQualification =  [
     { label: t('Specialist Level 2'), value: 'specialistLevel2' },
     { label: t('Primary School'), value: 'primarySchool' }
 ]
-const onSelectFrontId = (files) => {
-    if (!files.value || !files.value.length) return
-    userInfo.value.front_id_card = files.value[0]
-}
-const onSelectBackId = (files) => {
-    if (!files.value || !files.value.length) return
-    userInfo.value.back_id_card = files.value[0]
-}
+const onUploadImage = (files, key) => {
+    if (!files.value || !files.value.length) return;
+    userInfo.value[key] = files.value[0];
+};
 const formatData = () => {
     const formData = new FormData();
     Object.entries(userInfo.value).forEach(([key, value]) => {

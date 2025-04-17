@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-slate-200 dark:bg-[#182235] dark:border-slate-700 flex justify-between px-4 py-px">    
+    <!-- <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-slate-200 dark:bg-[#182235] dark:border-slate-700 flex justify-between px-4 py-px">    
         <nav class="pl-14 relative w-full flex items-center border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1E1E2E]">
             <ul class="items-center grid grid-flow-col w-full">
                 <li class="w-auto flex" v-for="(link, index) in links" :key="index">
@@ -10,9 +10,9 @@
                               focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-75 before:absolute
                                 before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-500 dark:text-gray-400"
                                 :class="current >= index ? 'active' : 'inactive'" @click="current = index" :trailing-icon="link.icon" :label="link.label">
-                            <!-- <span class="text-sm font-sans">{{ link.label }}</span> -->
-                            <!-- <UIcon v-if="link.icon" :name="link.icon" class="icon" :class="current === index ? 'active' : 'inactive'" /> -->
-                            <!-- <UBadge color="gray" variant="solid" size="xs" class="px-1 py-0" :ui="{ rounded: 'rounded' }">{{ useUserStore() }}</UBadge> -->
+                            //<span class="text-sm font-sans">{{ link.label }}</span>
+                            //<UIcon v-if="link.icon" :name="link.icon" class="icon" :class="current === index ? 'active' : 'inactive'" />
+                            //<UBadge color="gray" variant="solid" size="xs" class="px-1 py-0" :ui="{ rounded: 'rounded' }">{{ useUserStore() }}</UBadge>
                         </UButton>
                     </div>
                     
@@ -25,12 +25,20 @@
                 
             </ul>
         </nav>
+    </div> -->
+    <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-slate-200 dark:bg-[#182235] dark:border-slate-700 flex justify-start px-4 py-px">
+
+      <div class="pl-16 flex items-center space-x-2">
+          <UButton color="primary" variant="solid" icon="i-heroicons-check-circle" :label="$t('Save')" size="sm" @click="emit('on-submit')"/>
+          <UButton color="white" variant="solid" icon="i-heroicons-x-mark" :label="$t('Cancel')" size="sm" @click="useRouter().back()"/>
+      </div>
     </div>
 </template>
   
 <script setup>
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+const emit = defineEmits(['on-submit'])
 const current = defineModel({ default: 0 })
 const links = [{
   label: t('Curriculum Vitae'),
