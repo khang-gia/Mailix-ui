@@ -1,10 +1,10 @@
 <template>
-    <header class="sticky top-0 bg-[#FFFFFF] border-b border-slate-100 z-30 text-[#222222] dark:bg-[#1E1E2E] dark:text-[#E0E0E0] dark:border-slate-700">
+    <header class="sticky top-0 bg-white border-b border-slate-100 z-30 text-[#222222] dark:bg-[#1E1E2E] dark:text-[#E0E0E0] dark:border-slate-700">
         <div class="px-2 sm:px-3 lg:px-4">
             <div class="flex items-center justify-between h-16 -mb-px">
                 <div class="flex h-16 my-auto pt-5">
                     <UButton v-if="routeCreate.includes(route.name) " icon="i-heroicons-plus" variant="outline" color="none" size="xs" class="mr-2 w-7 h-7 bounce-animation text-[#147FE0] dark:text-[#7FC1FC] hover:bg-[#e3eef8] dark:hover:bg-[#1B1B29]" @click.stop="onPageAction"/>
-                    <span class="text-lg font-semi-bold font-sans lg:flex mr-3">{{ appTitle || route.meta.title }}</span>
+                    <span class="text-lg font-medium font-sans lg:flex mr-3">{{ appTitle || route.meta.title }}</span>
                 </div>
 
                 <div class="flex items-center space-x-2">

@@ -87,23 +87,6 @@ module.exports = {
       zIndex: {
         60: '60',
       },
-      // safelist: [{
-      //     pattern: /bg-(red|green|blue|orange)-(100|200|300|400|500|600)/, // You can display all the colors that you need
-      //   }, {
-      //     pattern: /text-(red|green|blue|orange)-(100|200|300|400|500|600)/, // You can display all the colors that you need
-      //   }
-      // ],
     },
   },
-  plugins: [
-    // eslint-disable-next-line global-require
-    require('@tailwindcss/forms'),
-    // add custom variant for expanding sidebar
-    plugin(({ addVariant, e }) => {
-      addVariant('sidebar-expanded', ({ modifySelectors, separator }) => {
-        modifySelectors(({ className }) => `.sidebar-expanded .${e(`sidebar-expanded${separator}${className}`)}`);
-      });
-    }),
-  ],
-  darkMode: 'class',
 };

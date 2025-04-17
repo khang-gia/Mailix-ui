@@ -110,7 +110,22 @@ export const useAPI = () => {
     })
     )
   }
-
+  function getLocation(url: string, query: any = {}) {
+    return useFetch(url, {
+      baseURL: config.public.locationUrl,
+      method: 'GET',
+      query: getQuery(query),
+      headers: getHeaders(),
+    })
+  }
+  function getNationality(url:string, query: any = {}){
+    return useFetch(url, {
+      baseURL: config.public.nationalityUrl,
+      method: 'GET',
+      query: getQuery(query),
+      headers: getHeaders(),
+    })
+  }
   return {
     get,
     post,
@@ -119,6 +134,8 @@ export const useAPI = () => {
     del,
     getAsync,
     $get,
-    $post
+    $post,
+    getLocation,
+    getNationality
   }
 }

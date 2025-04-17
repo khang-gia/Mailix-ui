@@ -1,7 +1,7 @@
 <template>
     <div>
         <UPopover :popper="{ placement: 'bottom-start' }">
-            <UButton icon="i-heroicons-calendar-days-20-solid" :label="label" :variant="buttonType" />
+            <UButton icon="i-heroicons-calendar-days-20-solid" :label="label" :variant="buttonType" color="blue" class="w-full"/>
             <template #panel="{ close }">
                 <VDatePicker
                     :model-value="props.dateValue"
@@ -12,21 +12,17 @@
                     :maxDate="maxDate"
                     locale="vi"
                     @close="close"
-                    @update:model-value="close();onUpdate($event)"
+                    @update:model-value="close();dateValue = $event"
                 />
             </template>
         </UPopover>
     </div>
 </template>
 <script setup>
-
 const emit = defineEmits(["onUpdate"]);
 const colorMode = useColorMode()
+const dateValue = defineModel({default: ''})
 const props = defineProps({
-    dateValue: {
-        type: Date,
-        default: new Date()
-    },
     mode: {
         type: String,
         default: 'date'
@@ -50,20 +46,20 @@ const props = defineProps({
     minDate: {
         type: Date,
         default: undefined
+    },
+    placeHolder:{
+        type: String,
+        default: ''
     }
-    
 });
 
 const label = computed(() => {
     if (props.labelType == 'short') {
-        if (!props.dateValue) return ''
-        if (props.dateValue.toDateString() == new Date().toDateString()) return 'Hôm nay'
-        return props.dateValue.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric' })
+        if (!dateValue.value) return ''
+        if (dateValue.value.toDateString() == new Date().toDateString()) return 'Hôm nay'
+        return dateValue.value.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric' })
     } 
-    return props.dateValue ?props.dateValue.toLocaleDateString('vi-vi', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }):''
+    return dateValue.value ?dateValue.value.toLocaleDateString('vi-vi', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }): props.placeHolder
     
 })
-const onUpdate = (value) => {
-    emit("onUpdate", value)
-}
 </script>

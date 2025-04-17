@@ -9,7 +9,6 @@
                                 focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2
                               focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-75 before:absolute
                                 before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-500 dark:text-gray-400"
-
                                 :class="current >= index ? 'active' : 'inactive'" @click="current = index" :trailing-icon="link.icon" :label="link.label">
                             <!-- <span class="text-sm font-sans">{{ link.label }}</span> -->
                             <!-- <UIcon v-if="link.icon" :name="link.icon" class="icon" :class="current === index ? 'active' : 'inactive'" /> -->
@@ -17,7 +16,11 @@
                         </UButton>
                     </div>
                     
-                    <UDivider v-if="index < links.length -1 " class="w-full"/>
+                    <UDivider v-if="index < links.length -1 " class="w-full transition-all ease-in-out duration-500" :ui="{
+                      border: {
+                        base: current > index ? 'border-[#147FE0] dark:border-gray-200 transition-all ease-in-out duration-300' : 'transition-all ease-in-out duration-500 border-gray-200 dark:border-gray-800',
+                      }
+                    }"/>
                 </li>
                 
             </ul>

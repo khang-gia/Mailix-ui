@@ -67,6 +67,8 @@ export default defineNuxtConfig({
       },
       public: {
           apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+          locationUrl: process.env.NUXT_PUBLIC_LOCATION_URL,
+          nationalityUrl: process.env.NUXT_PUBLIC_NATIONALITY_URL,
           sseUrl: process.env.NUXT_PUBLIC_SSE_URL,
           udfUrl: process.env.NUXT_PUBLIC_UDF_URL,
           providers: {

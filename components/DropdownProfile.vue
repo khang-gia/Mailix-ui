@@ -6,7 +6,10 @@
         aria-haspopup="true"
         aria-label="profile"
       >
-        <Avatar :size="32" variant="beam" :name="userInfo.email || userInfo.username" />
+        <UAvatar
+          :src="userInfo.avatar"
+          :alt='userInfo.display_name'
+        />
         <!-- <div class="flex items-center truncate">
           <span class="truncate ml-2 text-sm font-medium sm:max-w-12 md:max-w-20">
             {{ userInfo.display_name }}

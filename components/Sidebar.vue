@@ -1,27 +1,15 @@
 <template>
-  <div class="drop-shadow-xl z-10">
+  <div class="z-10">
     
     <div
         id="sidebar"
         ref="sidebar"
-        class="flex flex-col z-50 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-48 lg:w-16 lg:sidebar-expanded:!w-48 shrink-0 bg-[#FFFFFF] 
+        class="flex flex-col z-50 left-0 top-0 static translate-x-0 h-screen overflow-y-scroll no-scrollbar w-16 shrink-0 bg-[#FFFFFF] 
         dark:bg-titaca-sb-dark-bg py-4 transition-all duration-200 ease-in-out border-r dark:border-slate-700 dark:text-titaca-sb-dark-text"
         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-64'"
       >
   
       <div class="flex justify-between mb-2 pr-3 sm:px-2">
-        <button
-            ref="trigger"
-            class="lg:hidden text-slate-500 hover:text-slate-400"
-            @click.stop="$emit('close-sidebar')"
-            aria-controls="sidebar"
-            :aria-expanded="sidebarOpen"
-          >
-            <span class="sr-only">Close sidebar</span>
-            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10.7 18.7l1.4-1.4L7.8 13H20v-2H7.8l4.3-4.3-1.4-1.4L4 12z" />
-            </svg>
-          </button>
         <NuxtLink class="block" to="/">
           <img v-if="sidebarOpen"  class="block max-h-12 h-auto" src="/images/tttmailserver-wide.webp" alt="Logo" />
           <img v-else class="block max-h-12 h-auto" src="/images/tttmailserver.webp" alt="Logo Small" />
