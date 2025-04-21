@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white dark:bg-[#1E1E2E] rounded-md">
-        <UTable :columns :rows="users" 
+        <UTable v-model="_selected" v-model:sort="sort" sort-mode="manual" @update:sort="page = 1" :columns :rows="users" 
         :sortButton="{icon:'none',type:'string', color: 'none', variant: 'ghost', size: '2xs', square: true } "
         :ui="{
             base: 'w-max',
@@ -26,15 +26,12 @@
 
 </template>
 <style scoped>
-.hidden-button {
-  display: none;
-}
+
 </style>
 <script setup>
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
-// const userStore = useUserStore()
-const emit = defineEmits(['update:page'])
+const emit = defineEmits(['update:page', 'update:selected'])
  
 const props = defineProps({
   users: {
@@ -113,4 +110,13 @@ const columns = [
         sortable: true,
     },
 ]
+
+const selected = ref([])
+const _selected = computed({
+  get: () => selected.value,
+  set: (val) => {
+    selected.value = val; 
+    emit('update:selected', val); 
+  }
+});
 </script>

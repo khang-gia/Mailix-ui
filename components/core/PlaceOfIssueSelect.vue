@@ -6,7 +6,7 @@
         :placeholder="placeholder"
         :is-dark="colorMode.value === 'dark'"
         option-attribute="label"
-        by="id"
+        value-attribute="value"
         trailing
         debounce='300'
         :ui="{

@@ -13,9 +13,7 @@
         <div class="px-5 py-4 border-t-2 border-slate-200 dark:border-slate-700">
             <div class="flex justify-end gap-2">
                 <UButton color="gray" type="button" @click="close"> {{alertProps.denyButton || 'Đóng'}} </UButton>
-                <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white" @click="confirm" >
-                    {{ alertProps.confirmButton || 'OK' }}
-                </button>
+                <UButton color="blue" type="button" @click="confirm"> {{alertProps.confirmButton || 'OK'}} </UButton>
             </div>
         </div>
     </BaseModal>
