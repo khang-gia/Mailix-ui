@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { title } from 'process'
 
 export const useModalStore = defineStore('modalStore', () => {
   const stockListModal = ref(false)

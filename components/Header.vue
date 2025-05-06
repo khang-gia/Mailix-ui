@@ -156,20 +156,6 @@ if (hotEvents.value && hotEvents.value.results.length) {
     hotEvent.value = hotEvents.value.results[0]
 }
 
-// const { open, destroy } = useModal({
-//     keepAlive: true,
-//     component: defineAsyncComponent(() => import('@/components/DraggableModal2.vue')),
-// })
-
-
-
-// const {data:happeningEvents} = await useAPI().get('/core/happening_events/')
-// const happeningEvent = ref(null)
-// if (happeningEvents.value && happeningEvents.value.results.length) {
-//     happeningEvent.value = happeningEvents.value.results[0]
-//     setDraggableModalInfo(happeningEvent.value)
-//     setDraggableModal(true)
-// }
 
 watchEffect(() => {
     if (draggableModal.value && isLive.value) {

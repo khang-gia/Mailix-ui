@@ -6,7 +6,6 @@
             <FormForgotPassword v-if="authMode==='forgot-password'" @on-signin="changeMode('signin')" @after-submit="closeModal()" @on-reset-password="onResetPassword"/>
             <FormResetPassword v-if="authMode==='reset-password'" @after-submit="changeMode('signin')" :data="data"/>
             <FormOTPVerify v-if="authMode==='otp-verify'" @on-signin="changeMode('signin')" @after-submit="changeMode('onboarding')" :data="data"/>
-            <FormOnboarding v-if="authMode==='onboarding'" @after-submit="closeModal()" />
         </div>
     </BaseModal>
 </template>
@@ -45,8 +44,6 @@
                 return 'Đăng ký'
             case 'otp-verify':
                 return 'Xác thực OTP'
-            case 'onboarding':
-                return 'Tuyệt vời!'
             case 'forgot-password' || 'reset-password':
                 return 'Đặt lại mật khẩu'
             default:
