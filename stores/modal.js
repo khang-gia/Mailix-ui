@@ -25,6 +25,13 @@ export const useModalStore = defineStore('modalStore', () => {
     embed_url: '',
     title: ''
   })
+  const expandImageModal = ref(false)
+  const imageData = ref({
+    src: '',
+    title: '',
+    imageWidth: 0,
+    imageHeight: 0
+  })
   const isLive = computed(() => draggableModalInfo.value.embed_url !== '')
   function setStockListModal(value) {
     stockListModal.value = value
@@ -76,6 +83,13 @@ export const useModalStore = defineStore('modalStore', () => {
   function setCreateArticleTypeModal(value) {
     articleTypeModal.value = value
   }
+  function setExpandImageModal(value, data) {
+    expandImageModal.value = value
+    imageData.value = data
+  }
+  function setImageData(data) {
+    imageData.value = data
+  }
   return { 
     setStockListModal, stockListModal,
     setStockInfoModal, stockInfoModal, stockInfoSymbol,
@@ -84,6 +98,7 @@ export const useModalStore = defineStore('modalStore', () => {
     setAuthModal, authModalMode, authModalOpen,
     setFeedbackModal, feedbackModal,
     setSearchModal, searchModal, draggableModal, toggleDraggableModal, draggableModalInfo, setDraggableModalInfo, setDraggableModal, isLive,
-    setCreateArticleTypeModal, articleTypeModal
+    setCreateArticleTypeModal, articleTypeModal, imageData, setExpandImageModal, expandImageModal,
+    setImageData
   }
 })

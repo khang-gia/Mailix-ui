@@ -338,6 +338,26 @@
                 </div>
                 
             </template>
+            <template #contract-info>
+                <div class="flex">
+                    <UForm :schema="schema" :state="userInfo" class="mx-4 py-2 lg:w-3/5 grid grid-cols-2 gap-4 ">
+                        <UFormGroup
+                            :label="$t('Title')"
+                            name="title">
+                            <USelectMenu
+                                :disabled="busy"
+                                class="w-full"
+                                v-model="userInfo.title"
+                                :options="genders"
+                                :placeholder="$t('Title')"
+                                valueAttribute="value"
+                                option-attribute="label"
+                                :is-dark="colorMode.value === 'dark'"
+                            />
+                        </UFormGroup>
+                    </UForm>
+                </div>
+            </template>
             </UAccordion>
         <!-- <template #footer>
             <div class="flex justify-end items-center space-x-2">
@@ -387,10 +407,10 @@ const items = [
         label: t('Contact Information'),
         slot: 'contact-info',
     },
-    // {
-    //     label: t('Contract Information'),
-    //     slot: 'contract-info',
-    // },
+    {
+        label: t('Contract Information'),
+        slot: 'contract-info',
+    },
     // {
     //     label: t('Salary & Allowance'),
     //     slot: 'salary-allowance',
@@ -439,6 +459,41 @@ const genders = [
     {label: t('Female'), value: 'Female'},
     {label: t('Other'), value: 'Other'},
 ]
+const loadData = async () => {
+    try {
+        const {data: response} = await useAPI().get('core/profile_hrs/');
+        console.log('response', response.value)
+        if (response.value && response.value.id) {
+            return true;
+        } else {
+            throw new Error(t('Unexpected response status'));
+        }
+    } catch (error) {
+        console.error('Error creating profile:', error);
+        throw error;
+    }
+}
+// const titles = [
+//     {label: t('Specialist'), value: 'Specialist'},
+//     {label: t('Apprentice'), value: 'Apprentice'},
+//     {label: t('Intern'), value: 'Intern'},
+//     {label: t('Staff'), value: 'Staff'},
+//     {label: t('Manager'), value: 'Manager'},
+//     {label: t('Director'), value: 'Director'},
+//     {label: t('Collaborator'), value: 'Collaborator'},
+//     {label: t('Leader'), value: 'Leader'},
+//     {label: t('Team Leader'), value: 'Team Leader'},
+//     {label: t('Deputy'), value: 'Deputy'},
+//     {label: t('Vice'), value: 'Vice'},
+//     {label: t('Chief'), value: 'Chief'},
+//     {label: t('Head'), value: 'Head'},
+//     {label: t('Head clerk'), value: 'Head clerk'},
+// ]
+// const positions = [
+//     {label: t('Manager'), value: 'Manager'},
+//     {label: t('Staff'), value: 'Staff'},
+//     {label: t('Intern'), value: 'Intern'},
+// ]
 const MaritalStatus = [
     {label: t('Single'), value: 'Single'},
     {label: t('Married'), value: 'Married'},

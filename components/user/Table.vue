@@ -20,7 +20,11 @@
             },
         }"
         >
-
+        <template #full_name-data="{ row }">
+            <div class="flex items-center space-x-2">
+                <span class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer" @click="selectUser(row)">{{ row.full_name }}</span>
+            </div>
+        </template>
         </UTable>
     </div>
 
@@ -119,4 +123,8 @@ const _selected = computed({
     emit('update:selected', val); 
   }
 });
+const selectUser =  (row) => {
+  const userId = row.id
+  useRouter().push({ name: 'hr-id', params: { id:userId } });
+}
 </script>

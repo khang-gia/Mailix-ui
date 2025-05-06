@@ -62,7 +62,7 @@
         if (selectedFiles.value.length > 0) {
           const temporarySelectedFiles = getDroppedFiles(e.dataTransfer.files)
           setAlertModal(true, {
-            message: `Thay thế tập tin hiện tại bằng tập tin này?`,
+            message: `Tha tyhế tập tin hiện tại bằng tập tin này?`,
             confirmButton: 'OK',
             denyButton: 'KHÔNG',
           }) 

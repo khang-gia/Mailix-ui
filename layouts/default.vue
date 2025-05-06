@@ -32,6 +32,7 @@
     <ModalSearch />
     <ModalCreateAT/>
     <ModalsContainer />
+    <ModalExpandImg />
   </div>
 </template>
 
