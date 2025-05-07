@@ -8,7 +8,7 @@
         option-attribute="label"
         value-attribute="value"
         trailing
-        debounce='300'
+        debounce=300
     >
     </UInputMenu>
 </template>

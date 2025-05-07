@@ -8,7 +8,7 @@
         option-attribute="full_name"
         value-attribute="id"
         trailing
-        debounce='300'
+        debounce=300
     >
     </UInputMenu>
 </template>

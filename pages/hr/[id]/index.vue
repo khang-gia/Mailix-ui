@@ -211,7 +211,7 @@
         </div>
 
         <UCard class="my-4 mr-4 w-2/6">
-            <div class="h-full">
+            <div class="h-full -m-2">
                 <div class="rounded-lg w-full h-1/2 bg-blue-100 flex items-center py-16">
                     <div class="flex flex-col items-center">
                         <img 
@@ -222,7 +222,7 @@
                         <h3 class="text-xl font-medium text-gray-700 dark:text-gray-200 p-2">
                             {{ userInfo.full_name }} 
                         </h3>
-                        <p class=" text-gray-600 dark:text-gray-400">
+                        <p class=" text-gray-600 dark:text-gray-400 px-2">
                             {{userInfo.title? userInfo.title_name:''  }} {{ userInfo.department? '- ' + userInfo.department.name:'' }}
                         </p>
                         <UBadge v-if="userInfo.status" class="mt-2" color="primary" variant="solid">{{$t(userInfo.status) }}</UBadge>

@@ -31,12 +31,12 @@
                         <!-- <button @click="decrementYear" class="px-2 py-1 text-sm font-medium rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
                           &lt;
                         </button> -->
-                        <UButton color="none" variant="ghost" icon="i-heroicons-chevron-left" @click="decrementYear"/>
+                        <UButton color="" variant="ghost" icon="i-heroicons-chevron-left" @click="decrementYear"/>
                         <span class="text-lg font-medium dark:text-white">{{ selectedYear }}</span>
                         <!-- <button @click="incrementYear" class="px-2 py-1 text-sm font-medium rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
                           &gt;
                         </button> -->
-                        <UButton color="none" variant="ghost" icon="i-heroicons-chevron-right" @click="incrementYear"/>
+                        <UButton color="" variant="ghost" icon="i-heroicons-chevron-right" @click="incrementYear"/>
 
                       </div>
                       <div class="p-4 grid grid-cols-3 gap-2">
