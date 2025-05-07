@@ -24,7 +24,6 @@
                         required>
                         <UInput
                             v-model="userInfo.employee_code"
-                            :disabled="busy"
                             :placeholder="$t('Employee Code')"
                             :ui="{ base: 'w-full rounded-lg' }"
                             :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
@@ -46,7 +45,6 @@
                             
                         </template>
                         <UInput
-                            :disabled="busy"
                             v-model="userInfo.profile_code"
                             :placeholder="$t('Profile code')"
                             :ui="{ base: 'w-full rounded-lg' }"/>
@@ -72,7 +70,6 @@
 
                         required>
                         <UInput
-                            :disabled="busy"
                             v-model="userInfo.full_name"
                             :placeholder="$t('Full Name')"
                             :ui="{ base: 'w-full rounded-lg' }"
@@ -82,7 +79,6 @@
                         :label="$t('Gender')"
                         name='gender'>
                         <USelectMenu
-                            :disabled="busy"
                             class="w-full"
                             v-model="userInfo.gender"
                             :options="genders"
@@ -105,7 +101,6 @@
                         name="marital_status">
                         <USelectMenu
                             class="w-full"
-                            :disabled="busy"
                             v-model="userInfo.marital_status"
                             :options="MaritalStatus"
                             :placeholder="$t('Marital Status')"
@@ -130,7 +125,6 @@
                         :label="$t('Personal tax code')"
                         name="tax_code">
                         <UInput
-                            :disabled="busy"
                             v-model="userInfo.tax_code"
                             :placeholder="$t('Personal tax code')"
                             :ui="{ base: 'w-full rounded-lg' }"
@@ -147,7 +141,6 @@
                         :label="$t('Education level')"
                         name="educaional_level">
                         <USelectMenu
-                            :disabled="busy"
                             class="w-full"
                             v-model="userInfo.educaional_level"
                             :options="EducationLevel"
@@ -160,7 +153,6 @@
                         :label="$t('Highest Professional Qualification')"
                         name="highest_qualification">
                         <USelectMenu
-                            :disabled="busy"
                             class="w-full"
                             v-model="userInfo.highest_qualification"
                             :options="HighestProfessionalQualification"
@@ -173,7 +165,6 @@
                         :label="$t('Years of experience')"
                         name="years_of_experience">
                         <UInput
-                            :disabled="busy"
                             v-model="userInfo.years_of_experience"
                             :placeholder="$t('Years of experience')"
                             :ui="{ base: 'w-full rounded-lg' }"
@@ -184,28 +175,7 @@
                         name="direct_manager">
                         <CoreUserSelect v-model="userInfo.direct_manager" :placeholder="$t('Direct manager')"/>
                     </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Join date')"
-                        name='join_date'>
-                        <BaseDatePicker
-                            v-model="userInfo.join_date"
-                            ref="dobpicker"
-                            :required="true"
-                            class="w-full"
-                            buttonType="outline"
-                            />
-                    </UFormGroup>
-                    <UFormGroup
-                        :label="$t('Actual sign date')"
-                        name='actual_sign_date'>
-                        <BaseDatePicker
-                            v-model="userInfo.actual_sign_date"
-                            ref="dobpicker"
-                            :required="true"
-                            class="w-full"
-                            buttonType="outline"
-                            />
-                    </UFormGroup>
+                    
                     
                 </UForm>
             </template>
@@ -215,7 +185,6 @@
                         :label="$t('Id no')"
                         name="id_number">
                         <UInput
-                            :disabled="busy"
                             v-model="userInfo.id_number"
                             :placeholder="$t('Id no')"
                             :ui="{ base: 'w-full rounded-lg' }"/>
@@ -274,7 +243,6 @@
                             :label="$t('Phone')"
                             name="phone">
                             <UInput
-                                :disabled="busy"
                                 v-model="userInfo.phone"
                                 :placeholder="$t('Phone')"
                                 icon="i-heroicons-phone"
@@ -294,7 +262,6 @@
                                 
                             </template>
                             <UInput
-                                :disabled="busy"
                                 v-model="userInfo.phone_other"
                                 :placeholder="$t('Phone other')"
                                 icon="i-heroicons-phone"
@@ -305,7 +272,6 @@
                             name="permanent_address"
                             class="col-span-2">
                             <UInput
-                                :disabled="busy"
                                 v-model="userInfo.permanent_address"
                                 :placeholder="$t('Permanent address')"
                                 :ui="{ base: 'w-full rounded-lg' }"/>
@@ -315,7 +281,6 @@
                             name="current_address"
                             class="col-span-2">
                             <UInput
-                                :disabled="busy"
                                 v-model="userInfo.current_address"
                                 :placeholder="$t('Current address')"
                                 :ui="{ base: 'w-full rounded-lg' }"/>
@@ -340,25 +305,91 @@
             </template>
             <template #contract-info>
                 <div class="flex">
-                    <UForm :schema="schema" :state="userInfo" class="mx-4 py-2 lg:w-3/5 grid grid-cols-2 gap-4 ">
+                    <UForm :schema="schema" :state="userInfo" class="mx-4 py-2 lg:w-3/5 grid grid-cols-3 gap-4 ">
                         <UFormGroup
                             :label="$t('Title')"
                             name="title">
                             <USelectMenu
-                                :disabled="busy"
                                 class="w-full"
                                 v-model="userInfo.title"
-                                :options="genders"
+                                :options="titles"
                                 :placeholder="$t('Title')"
+                                valueAttribute="id"
+                                option-attribute="name"
+                                :is-dark="colorMode.value === 'dark'"
+                            />
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Department')"
+                            name="department">
+                            <USelectMenu
+                                class="w-full"
+                                v-model="userInfo.department"
+                                :options="departments"
+                                :placeholder="$t('Department')"
+                                option-attribute="name"
+                                value-attribute="id"
+                                :is-dark="colorMode.value === 'dark'"
+                            >
+                            <!-- <template #label>
+                                <template v-if="labels">
+                                <span>{{ departmentLabels.name }}</span>
+                                </template>
+                                <template v-else>
+                                    <span class="text-gray-500 dark:text-gray-400 truncate">Select a label</span>
+                                </template>
+                            </template>
+                            <template #option="{ option }">
+                                <span class="truncate">{{ option.name }}</span>
+                            </template>
+
+                            <template #option-create="{ option }">
+                                <span class="flex-shrink-0">{{$t('New department')}}:</span>
+                                <span class="block truncate">{{ option.name }}</span>
+                            </template> -->
+                        </USelectMenu>
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Type of labour')"
+                            name="department">
+                            <USelectMenu
+                                class="w-full"
+                                v-model="userInfo.type_of_labor"
+                                :options="type_of_labors"
+                                :placeholder="$t('Type of labour')"
                                 valueAttribute="value"
                                 option-attribute="label"
                                 :is-dark="colorMode.value === 'dark'"
                             />
                         </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Join date')"
+                            name='join_date'>
+                            <BaseDatePicker
+                                v-model="userInfo.join_date"
+                                ref="dobpicker"
+                                :required="true"
+                                class="w-full"
+                                buttonType="outline"
+                                />
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Actual sign date')"
+                            name='actual_sign_date'>
+                            <BaseDatePicker
+                                v-model="userInfo.actual_sign_date"
+                                ref="dobpicker"
+                                :required="true"
+                                class="w-full"
+                                buttonType="outline"
+                                />
+                        </UFormGroup>
                     </UForm>
                 </div>
             </template>
             </UAccordion>
+            {{departments  }}
+
         <!-- <template #footer>
             <div class="flex justify-end items-center space-x-2">
                 <UButton color="white" variant="solid" icon="i-heroicons-x-mark" :label="$t('Cancel')" size="sm" @click="useRouter().back()"/>
@@ -420,7 +451,17 @@ const items = [
     //     slot: 'insurance-info',
     // }
 ]
-const userInfo = ref({
+const props = defineProps({
+    isUpdate: {
+        type: Boolean,
+        default: false
+    },
+    userId: {
+        type: Object,
+        default: () => ({}),
+    },
+})
+const defaultUserInfo = {
     full_name: '',
     avatar:'',
     employee_code: '',
@@ -453,26 +494,55 @@ const userInfo = ref({
     email:'',
     permanent_address:'',
     current_address:''
-})
+}
+const userInfo = ref(defaultUserInfo)
 const genders = [
     {label: t('Male'), value: 'Male'},
     {label: t('Female'), value: 'Female'},
     {label: t('Other'), value: 'Other'},
 ]
+const titles = ref([])
+const departments = ref([])
 const loadData = async () => {
     try {
-        const {data: response} = await useAPI().get('core/profile_hrs/');
-        console.log('response', response.value)
-        if (response.value && response.value.id) {
-            return true;
-        } else {
-            throw new Error(t('Unexpected response status'));
+        const {data:titleData}= await useAPI().get("core/titles/",{});
+        titles.value = titleData.value.results
+        const {data:departmentData}= await useAPI().get("system/departments/",{});
+        departments.value = departmentData.value.results
+        console.log('departmentData', departmentData.value.results)
+        if (props.isUpdate){
+            const {data: response} = await useAPI().get('core/profile_hrs/');
+            console.log('response', response.value)
         }
     } catch (error) {
-        console.error('Error creating profile:', error);
-        throw error;
+        console.error('Error loading data:', error);
     }
-}
+};
+loadData()
+// const departmentLabels = computed({
+//   get: () => userInfo.value.department,
+//   set: async (label) => {  
+//     if (label?.id) {
+//       userInfo.value.department = label
+//       return
+//     }
+//     // console.log('label', label)
+//     const response = {
+//       id: departments.value.length + 1,
+//       name: label.name,
+//     }
+
+//     departments.value.push(response)
+//     userInfo.value.department = response
+//   }
+// })
+const type_of_labors = [
+    {label: t('Full-time'), value: 'Full-time'},
+    {label: t('Part-time'), value: 'Part-time'},
+    {label: t('Internship'), value: 'Internship'},
+    {label: t('Temporary'), value: 'Temporary'},
+]
+    
 // const titles = [
 //     {label: t('Specialist'), value: 'Specialist'},
 //     {label: t('Apprentice'), value: 'Apprentice'},
