@@ -73,11 +73,17 @@ export const useAPI = () => {
 
 
   function put(url: string, body: any = {}) {
+    const headers = getHeaders() as { [key: string]: string }
+    if (!(body instanceof FormData)) {
+      body = JSON.stringify(body)
+    } else {
+      delete headers['Content-Type']
+    }
     return useFetch(url, {
       baseURL: config.public.apiBaseUrl,
       method: 'PUT',
       body,
-      headers: getHeaders(),
+      headers: headers,
     })
   }
 

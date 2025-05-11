@@ -24,6 +24,7 @@
                         required>
                         <UInput
                             v-model="userInfo.employee_code"
+                            :disabled="props.isUpdate"
                             :placeholder="$t('Employee Code')"
                             :ui="{ base: 'w-full rounded-lg' }"
                             :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
@@ -215,7 +216,7 @@
                             <CoreImageUpload 
                                 :multiple="false" 
                                 fileTypes=".png, .jpeg, .jpg, image/* "
-                                @on-select="onUploadImage($event,'front_id_card')"
+                                v-model="userInfo.front_id_card"
                                 ref="fileSelectors"
                                 width="inherit"
                             />
@@ -227,7 +228,7 @@
                             <CoreImageUpload 
                                 :multiple="false" 
                                 fileTypes=".png, .jpeg, .jpg, image/* "
-                                @on-select="onUploadImage($event, 'back_id_card')"
+                                v-model="userInfo.back_id_card"
                                 ref="fileSelectors"
                                 width="inherit"
                             />
@@ -294,7 +295,7 @@
                             <CoreImageUpload 
                                 :multiple="false" 
                                 fileTypes=".png, .jpeg, .jpg, image/* "
-                                @on-select="onUploadImage($event, 'avatar')"
+                                v-model="userInfo.avatar"
                                 height="185px"
                                 width="210px"
                             />
@@ -388,7 +389,6 @@
                 </div>
             </template>
             </UAccordion>
-            {{departments  }}
 
         <!-- <template #footer>
             <div class="flex justify-end items-center space-x-2">
@@ -412,10 +412,10 @@ const schema = yup.object({
     employee_code: yup.string()
         .required(t('This field is required'))
         .test('check-employee-code-exists', t('Employee code already exists'), async (value) => {
-            if (!value) return true;
+            if (!value || props.isUpdate) return true;
             try {
-                const { data: exists } = await useAPI().get('core/profile_hrs/', {employee_code: value});
-                console.log('data',exists.value.results)
+                const { data: exists } = await useAPI().get('core/profile_hrs/', { employee_code: value });
+                console.log('data', exists.value.results);
                 return exists.value.results.length == 0;
             } catch (error) {
                 console.error('Error checking employee code:', error);
@@ -493,7 +493,7 @@ const defaultUserInfo = {
     phone:'',
     email:'',
     permanent_address:'',
-    current_address:''
+    current_address:'',
 }
 const userInfo = ref(defaultUserInfo)
 const genders = [
@@ -511,8 +511,31 @@ const loadData = async () => {
         departments.value = departmentData.value.results
         console.log('departmentData', departmentData.value.results)
         if (props.isUpdate){
-            const {data: response} = await useAPI().get('core/profile_hrs/');
-            console.log('response', response.value)
+            const {data: response} = await useAPI().get(`core/profile_hrs/${useRoute().params.id}/`);
+            userInfo.value = response.value
+            userInfo.value.join_date = userInfo.value.join_date ? new Date(userInfo.value.join_date) : null
+            userInfo.value.actual_sign_date = userInfo.value.actual_sign_date ? new Date(userInfo.value.actual_sign_date) : null
+            userInfo.value.dob = userInfo.value.dob ? new Date(userInfo.value.dob) : null
+            userInfo.value.date_of_issue = userInfo.value.date_of_issue ? new Date(userInfo.value.date_of_issue) : null
+            userInfo.value.front_id_card = userInfo.value.front_id_card 
+                ? [{ 
+                    preview: userInfo.value.front_id_card, 
+                }] 
+                : '';
+            userInfo.value.back_id_card = userInfo.value.back_id_card 
+                ? [{ 
+                    preview: userInfo.value.back_id_card, 
+                }] 
+                : '';
+            userInfo.value.avatar = userInfo.value.avatar 
+                ? [{ 
+                    preview: userInfo.value.avatar, 
+                }] 
+                : '';
+
+            userInfo.value.direct_manager = userInfo.value.direct_manager ? userInfo.value.direct_manager.id: '',
+            userInfo.value.department = userInfo.value.department ? userInfo.value.department.id: '',
+            console.log('response', userInfo.value)
         }
     } catch (error) {
         console.error('Error loading data:', error);
@@ -604,21 +627,37 @@ const HighestProfessionalQualification =  [
     { label: t('Specialist Level 2'), value: 'specialistLevel2' },
     { label: t('Primary School'), value: 'primarySchool' }
 ]
-const onUploadImage = (files, key) => {
-    if (!files.value || !files.value.length) return;
-    userInfo.value[key] = files.value[0];
-};
+// const onUploadImage = (files, key) => {
+//     if (!files.value || !files.value.length) return;
+//     userInfo.value[key] = files.value[0];
+
+//     console.log('key', userInfo.value[key])
+// };
 const formatData = () => {
     const formData = new FormData();
     Object.entries(userInfo.value).forEach(([key, value]) => {
         if (!value) return;
 
         if (['front_id_card', 'back_id_card'].includes(key)) {
-            formData.append(key, value);
+            console.log('value',value)
+            if (value[0] instanceof File) {
+                formData.append(key, value[0])
+            }
+            else if (value.length == 0){
+                formData.append(key, '')
+            }
         } else if (['dob', 'join_date', 'actual_sign_date', 'date_of_issue'].includes(key)) {
             formData.append(key, dayjs(value).format('YYYY-MM-DD'));
         }else if(['pob','place_of_origin', 'nationality'].includes(key)) {
             formData.append(key, value.id)
+        }else if (['avatar'].includes(key)) {
+            console.log('ava',value)
+            if (value[0] instanceof File) {
+                formData.append(key, value[0])
+            }
+            else if (value.length == 0){
+                formData.append(key, '')
+            }
         } else {
             formData.append(key, value);
         }
@@ -641,6 +680,23 @@ const createProfile = async () => {
         throw error;
     }
 }
+const updateProfile = async () => {
+    const profileData = formatData()
+    console.log('update profile Data', profileData)
+    try {
+        const {data: response} = await useAPI().put(`core/profile_hrs/${useRoute().params.id}/`, profileData);
+        console.log('response', response.value)
+        if (response.value && response.value.id) {
+            return true;
+        } else {
+            throw new Error(t('Unexpected response status'));
+        }
+    } catch (error) {
+        console.error('Error creating profile:', error);
+        throw error;
+    }
+}
+
 const validateSchema = async () => {
     try {
         await schema.validate(userInfo.value, { abortEarly: false });
@@ -657,25 +713,41 @@ const validateSchema = async () => {
 };
 const onSubmit = async () => {
     const isValid = await validateSchema(); 
+    console.log('isValid',isValid)
     if (!isValid) return;
     try {
         busy.value = true;
-        const isCreated = await createProfile();
-        if (isCreated) {
-            useToast().add({
-                title: t('Success'),
-                description: t('The profile was successfully created.'),
-                icon: 'i-heroicons-check-circle',
-                color: 'green',
-                duration: 5000,
-                position: 'top-right',
-            });
-            useRouter().push({ name: 'hr' });
+        if (props.isUpdate) {
+            const isUpdated = await updateProfile();
+            if (isUpdated) {
+                useToast().add({
+                    title: t('Success'),
+                    description: t('The profile was successfully updated.'),
+                    icon: 'i-heroicons-check-circle',
+                    color: 'green',
+                    duration: 5000,
+                    position: 'top-right',
+                });
+                useRouter().push({ name: 'hr' });
+            }
+        } else {
+            const isCreated = await createProfile();
+            if (isCreated) {
+                useToast().add({
+                    title: t('Success'),
+                    description: t('The profile was successfully created.'),
+                    icon: 'i-heroicons-check-circle',
+                    color: 'green',
+                    duration: 5000,
+                    position: 'top-right',
+                });
+                useRouter().push({ name: 'hr' });
+            }
         }
     } catch (error) {
         useToast().add({
             title: t('Error'),
-            description: error.message || t('An error occurred while creating the profile. Please try again later.'),
+            description: error.message || t('An error occurred while processing the profile. Please try again later.'),
             icon: 'i-heroicons-exclamation-circle',
             color: 'red',
             duration: 7000,

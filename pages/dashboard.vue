@@ -1,9 +1,10 @@
 <template>
     <div v-if="isLoggedIn">
-        <div class="dark:text-gray-400 text-gray-800 flex justify-center items-center space-x-2 text-lg h-screen">
+        <CoreInfoProfile :userInfo="userInfo"/>
+        <!-- <div class="dark:text-gray-400 text-gray-800 flex justify-center items-center space-x-2 text-lg h-screen">
         <p>In progress </p>
         <Icon name="svg-spinners:3-dots-scale-middle" size="24" />
-        </div>
+        </div> -->
     </div>
     <!-- <UContainer v-else class="mt-24 bg-gray-50 dark:bg-gray-900 py-10 rounded-md dark:text-white text-slate-700" :ui="{ constrained: 'max-w-2xl' }">
       <p class="font-bold text-4xl">TITACA WELCOME</p>
@@ -19,6 +20,7 @@
 import { useModalStore } from '@/stores/modal'
 const modalStore = useModalStore()
 const { setAuthModal} = modalStore
+const { data: userStore } = useAuth()
 
 definePageMeta({
   title: 'Trang chủ'
@@ -31,4 +33,7 @@ const isLoggedIn = computedAsync( () => {
   const data =  useAuth()
   return data.status.value == 'authenticated'
 })
+const userInfo = ref({})
+const {data:userData} = await useAPI().get(`core/profile_hrs/${userStore.value.id}/`);
+userInfo.value = userData.value;
 </script>

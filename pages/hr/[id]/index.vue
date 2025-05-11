@@ -1,4 +1,13 @@
 <template>
+    <div class="py-2 px-4 grid grid-flow-col bg-white dark:bg-[#1E1E2E] space-x-2 w-full">
+        <div class="flex items-center">
+        </div>
+        <div class="flex justify-end">
+            <UButton color="gray" variant="ghost" icon="i-heroicons-pencil-square" :label="$t('Update')" size="sm" :to="{name: 'hr-id-update'}"/>
+            <UButton color="gray" variant="ghost" icon="ph:user-circle-plus-light" :label="$t('Create account')" size="sm"/>
+        </div>
+
+    </div>
     <div class="flex w-full">
         <div class="m-4 w-4/6 space-y-4">
             <UCard>
@@ -79,7 +88,6 @@
                     <div class="flex flex-col">
                         <label class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{$t('Direct manager')}}</label>
                         <p class="text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
-                            <!-- {{ userInfo.direct_manager? userInfo.direct_manager.full_name:'--' }} -->
                               <NuxtLink 
                                 v-if="userInfo.direct_manager" 
                                 :to="`/hr/${userInfo.direct_manager.id}`"
@@ -394,6 +402,7 @@ const { setExpandImageModal } = modalStore
 const userInfo = ref({});
 const userData = await useAPI().get(`core/profile_hrs/${useRoute().params.id}/`);
 userInfo.value = userData.data.value;
+console.log('userInfo',userData.data)
 definePageMeta({
     title: 'Hồ sơ nhân sự',
     header: userInfo.value.full_name || '',

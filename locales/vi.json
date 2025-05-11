@@ -136,6 +136,7 @@
     "Employee code already exists": "Mã nhân sự đã tồn tại",
     "System will auto-generate another code, use new system's code?": "Hệ thống sẽ tự động tạo mã mới, bạn có muốn dùng mã của hệ thống ??",
     "The profile was successfully created.": "Hồ sơ đã được tạo thành công.",
+    "The profile was successfully updated.": "Hồ sơ đã được cập nhật thành công",
     "An error occurred while creating the profile. Please try again later.": "Đã xảy ra lỗi khi tạo hồ sơ. Vui lòng thử lại sau.",
     "Delete": "Xoá",
     "Are you sure you want to delete these profiles?": "Bạn có chắc chắn muốn xóa những hồ sơ này không?",
@@ -155,5 +156,7 @@
     "Temporary": "Thời vụ",
     "Internship": "Thực tập sinh",
     "Job": "Công việc",
-    "Group user": "Nhóm người dùng"
+    "Group user": "Nhóm người dùng",
+    "Update": "Cập nhật",
+    "Create account": "Tạo tài khoản Mailix"
 }

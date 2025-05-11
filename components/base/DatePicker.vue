@@ -1,10 +1,10 @@
 <template>
     <div>
         <UPopover :popper="{ placement: 'bottom-start' }">
-            <UButton icon="i-heroicons-calendar-days-20-solid" :label="label" :variant="buttonType" color="blue" class="w-full"/>
+            <UButton icon="i-heroicons-calendar-days-20-solid" :label="label" :variant="buttonType" color="blue" class="w-full truncate"/>
             <template #panel="{ close }">
                 <VDatePicker
-                    :model-value="props.dateValue"
+                    :model-value="dateValue"
                     :is-required="required" transparent
                     :is-dark="colorMode.value === 'dark'"
                     :mode="mode"
@@ -59,7 +59,7 @@ const label = computed(() => {
         if (dateValue.value.toDateString() == new Date().toDateString()) return 'Hôm nay'
         return dateValue.value.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric' })
     } 
-    return dateValue.value ?dateValue.value.toLocaleDateString('vi-vi', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }): props.placeHolder
+    return dateValue.value ?dateValue.value.toLocaleDateString('vi-vi', { year: 'numeric', month: 'short', day: 'numeric' }): props.placeHolder
     
 })
 </script>

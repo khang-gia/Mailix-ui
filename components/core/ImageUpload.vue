@@ -49,8 +49,9 @@
         width: { type: String, default: '400px' }, // New prop for width
         height: { type: String, default: '200px' } // New prop for height
     })
+    const selectedFiles = defineModel({ default: () => [] })
     const emit = defineEmits(['on-select', 'on-remove'])
-    const selectedFiles= ref([])
+    // const selectedFiles= ref([])
     const fileDragOver= ref(false)
     const filesCount= computed(() => selectedFiles.value.length)
     const fileInput = ref(null)
