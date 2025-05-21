@@ -19,7 +19,9 @@
       <div v-if="!blank" class="space-y-4 ml-0">
         <div>
           <ul>
-            <SidebarLink link="/dashboard" icon="mage:dashboard-chart" activeIcon="mage:dashboard-chart-fill" text="Dashboard" />
+            <!-- <SidebarLink link="/dashboard" icon="mage:dashboard-chart" activeIcon="mage:dashboard-chart-fill" text="Dashboard" /> -->
+            <SidebarLink link="/me" icon="weui:me-outlined" activeIcon="weui:me-filled" text="Me" />
+
             <SidebarLink link="/hr" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Nhân sự"/>
             <!-- <SidebarLink link="/hr-insurance" icon="healthicons:insurance-card-outline" activeIcon="healthicons:insurance-card" text="Bảo hiểm"/> -->
             <!-- <SidebarLink link="/hr-contract" icon="material-symbols:contract-outline-rounded" activeIcon="material-symbols:contract-rounded" text="Hợp đồng"/> -->
