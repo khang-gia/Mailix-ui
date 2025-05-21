@@ -16,8 +16,6 @@
             <div class="flex items-start">
                 
             </div>
-            <!-- <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
-                Quên mật khẩu?</a> -->
             <button
                 id="btnForgotPassword"
                 type="button"
@@ -53,32 +51,28 @@ const emit = defineEmits(['on-signup', 'after-submit', 'on-forgot-password', 'on
 const username = ref('')
 const password = ref('')
 const busy = ref(false)
-const { signIn, status, data } = useAuth()
 const snackbar = useMySnackBar()
+
+const preSignIn = async (username, password) => {
+    const { data, error } = await useAPI().post('/auth/pre_login/', {
+        username,
+        password
+    })
+    busy.value = false
+    if (error.value) {
+        throw error.value
+    }
+    return data.value
+}
 
 const onSubmit = async () => {
     try {
         busy.value = true
-        const res = await signIn({
+        const res = await preSignIn(username.value, password.value)
+        emit('on-otp-verify', {
             username: username.value,
             password: password.value,
-        }, {
-            redirect: false
         })
-        snackbar.success('Đăng nhập thành công')
-        // if (data.value.profile.email_verified === false) {
-        //     emit('on-otp-verify', {
-        //         username: username.value,
-        //         password: password.value,
-        //     })
-        // }
-        // else{
-        //     
-        //     emit('after-submit')
-        // }
-        // reloadNuxtApp()
-        reloadNuxtApp()
-        emit('after-submit')
         clearForm()
     } catch (err) {
         console.log(err)

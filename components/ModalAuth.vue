@@ -2,10 +2,10 @@
     <BaseModal :title="title" :modalOpen="modalOpen" :closeOnClick="false" :closeOnEsc="false" @close-modal="closeModal">
         <div class="p-5">
             <FormSignin v-if="authMode==='signin'" ref="signInForm" @on-signup="changeMode('signup')" @on-otp-verify="onOtpVerify" @after-submit="closeModal()" @on-forgot-password="changeMode('forgot-password')"/>
-            <FormSignup v-if="authMode==='signup'" ref="signUpForm" @on-signin="changeMode('signin')" @on-otp-verify="onOtpVerify" @after-submit="closeModal()"/>
+            <!-- <FormSignup v-if="authMode==='signup'" ref="signUpForm" @on-signin="changeMode('signin')" @on-otp-verify="onOtpVerify" @after-submit="closeModal()"/> -->
             <FormForgotPassword v-if="authMode==='forgot-password'" @on-signin="changeMode('signin')" @after-submit="closeModal()" @on-reset-password="onResetPassword"/>
             <FormResetPassword v-if="authMode==='reset-password'" @after-submit="changeMode('signin')" :data="data"/>
-            <FormOTPVerify v-if="authMode==='otp-verify'" @on-signin="changeMode('signin')" @after-submit="changeMode('onboarding')" :data="data"/>
+            <FormOTPVerify v-if="authMode==='otp-verify'" @on-signin="changeMode('signin')" @after-submit="closeModal()" :data="data"/>
         </div>
     </BaseModal>
 </template>
@@ -30,6 +30,7 @@
     }
 
     const onOtpVerify = (param) => {
+        console.log('onOtpVerify', param)
         emit('change-mode', 'otp-verify', param)
     }
     const onResetPassword = (param) => {
