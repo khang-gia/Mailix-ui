@@ -27,6 +27,7 @@ module.exports = {
         "titaca-button-primary": '#0C72CE',
         "titaca-text-primary": '#147FE0',
         "titaca-text-secondary": '#0C72CE',
+        "mailix-primary": '#020B51',
         primary: {
           50: '#f5f3ff',
           100: '#ede9fe',

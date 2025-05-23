@@ -26,7 +26,7 @@
                     </NuxtLink>
 
                     <div>
-                        <UTooltip text="Tìm kiếm" :shortcuts="[metaSymbol, 'K']">
+                        <!-- <UTooltip text="Tìm kiếm" :shortcuts="[metaSymbol, 'K']">
                             <span class="sm:hidden">
                                 <UButton variant="link" color="gray" @click.stop="openSearchModal" class="p-[6px]">
                                     <Icon name="heroicons:magnifying-glass-20-solid" size="20" />
@@ -43,12 +43,8 @@
                                     <path class="fill-current text-slate-400"
                                         d="M15.707 14.293L13.314 11.9a8.019 8.019 0 01-1.414 1.414l2.393 2.393a.997.997 0 001.414 0 .999.999 0 000-1.414z" />
                                 </svg>
-                                <!-- <span class="text-xs ml-1 flex items-center gap-0.5">
-                                    <span class="w-2"></span>
-                                    <span>{{ metaSymbol }} + K</span>
-                                </span> -->
                             </button>
-                        </UTooltip>
+                        </UTooltip> -->
                         
                     </div>
                     <!-- <hr class="w-px h-6 bg-slate-200 dark:bg-slate-600 border-slate-200 dark:border-slate-600" /> -->

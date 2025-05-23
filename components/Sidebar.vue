@@ -12,7 +12,7 @@
       <div class="flex justify-between mb-2 pr-3 sm:px-2">
         <NuxtLink class="block" to="/">
           <img v-if="sidebarOpen"  class="block max-h-12 h-auto" src="/images/tttmailserver-wide.webp" alt="Logo" />
-          <img v-else class="block max-h-12 h-auto" src="/images/tttmailserver.webp" alt="Logo Small" />
+          <img v-else class="block max-h-12 h-auto" src="/images/logo/positive/logo.png" alt="Logo Small" />
         </NuxtLink>
       </div>
 

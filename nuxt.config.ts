@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   app: {
       baseURL: '/hrm/',
       head: {
-          title: 'TITACA',
+          title: 'MAILIX.VN',
           meta: [
               { charset: 'utf-8' },
               { name: 'viewport', content: 'width=device-width,initial-scale=1' },
@@ -25,7 +25,6 @@ export default defineNuxtConfig({
           }
       },
   },
-
   css: [
       '@/assets/css/style.css',
       'overlayscrollbars/styles/overlayscrollbars.css',
@@ -115,9 +114,9 @@ export default defineNuxtConfig({
               signUp: { path: '/auth/register/', method: 'post' },
               getSession: { path: '/core/users/me/', method: 'get' }
           },
-          // pages: {
-          //     login: '/signin'
-          // },
+          pages: {
+              login: '/login'
+          },
           token: {
               signInResponseTokenPointer: '/access',
               maxAgeInSeconds: 30 * 24 * 3600 // 30 days
@@ -150,11 +149,11 @@ export default defineNuxtConfig({
       srcDir: 'public/worker',
       filename: 'sw.ts',
       manifest: {
-          name: 'TITACA.COM',
-          short_name: 'SCP',
-          description: 'TITACA.COM là 1 công cụ...',
+          name: 'MAILIX.VN',
+          short_name: 'MAILIX',
+          description: 'MAILIX.VN là 1 công cụ...',
           theme_color: '#ffffff',
-          start_url: '/dashboard',
+          start_url: '/me',
           icons: [{
               src: 'images/pwa-192x192.png',
               sizes: '192x192',

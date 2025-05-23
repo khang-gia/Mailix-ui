@@ -10,6 +10,6 @@
   </template>
   
   <script setup>
-  
-  navigateTo('/dashboard')
+
+  // navigateTo('/me')
   </script>

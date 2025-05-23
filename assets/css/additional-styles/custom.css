@@ -22,10 +22,10 @@
     @apply bg-blue-400 dark:bg-blue-500;
 }
 .bg-primary-500 {
-    @apply bg-blue-500 dark:bg-blue-400;
+    @apply bg-[#0313B0] dark:bg-blue-400;
 }
 .bg-primary-600 {
-    @apply bg-blue-600 dark:bg-blue-300;
+    @apply bg-[#020B51] dark:bg-blue-300;
 }
 .bg-primary-700 {
     @apply bg-blue-700 dark:bg-blue-200;

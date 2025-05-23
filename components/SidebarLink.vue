@@ -1,14 +1,14 @@
 <template>
   <NuxtLink :to="link" custom v-slot="{ href, navigate, isExactActive }">
-    <li class="group rounded-md mb-0.5 last:mb-0 mx-1 my-3" :class="isExactActive ? 'bg-[#EAF5FE] ':'hover:bg-[#EAF5FE] hover:text-[#147FE0] hover:dark:bg-[#34344A]'" :title="sidebarExpanded ? '' : text">
+    <li class="group rounded-md mb-0.5 last:mb-0 mx-1 my-3" :class="isExactActive ? 'bg-[#e3e5f5] ':'hover:bg-[#e3e5f5] hover:text-[#0313B0] hover:dark:bg-[#34344A]'" :title="sidebarExpanded ? '' : text">
       <a
         class="pt-2 block truncate rounded-md"
-        :class="isExactActive ? 'text-[#147FE0] bg-[#EAF5FE] dark:bg-[#34344A] dark:text-[#E0E0E0]': 'text-[#707070] dark:text-[#E0E0E0] hover:text-[#147FE0] '" 
+        :class="isExactActive ? 'text-[#0313B0] bg-[#e3e5f5] dark:bg-[#34344A] dark:text-[#E0E0E0]': 'text-[#707070] dark:text-[#E0E0E0] hover:text-[#0313B0] '" 
         :href="href"
         :target="target"
         :aria-label="text"
         @click="!target && navigate()">
-        <div class="grid grid-rows-2 justify-items-center group-hover:text-[#147FE0] group-hover:dark:text-[#E0E0E0]">
+        <div class="grid grid-rows-2 justify-items-center group-hover:text-[#0313B0] group-hover:dark:text-[#E0E0E0]">
           <div :class="{'hidden': isExactActive, 'group-hover:hidden': !isExactActive}">
             <Icon :name="icon" size="20" :class="iconColor"/>
           </div>

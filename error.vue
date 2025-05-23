@@ -22,7 +22,7 @@
           <h1 class="text-lg text-gray-300">Hãy thử lại lần nữa, nếu lỗi vẫn xuất hiện hãy liên hệ với TITACA nhé!</h1>
         </template>
         <p class="mt-8 space-x-2">
-          <UButton to="/dashboard" color="primary" variant="outline">Trở lại trang chủ</UButton>
+          <UButton to="/me" color="primary" variant="outline">Trở lại trang chủ</UButton>
           <UButton to="https://t.me/+pU3YBdP7MRhlMDI1" target="_blank" color="blue" variant="outline">Nhóm Telegram</UButton>
         </p>
       </div>
