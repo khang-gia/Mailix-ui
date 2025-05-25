@@ -72,13 +72,13 @@
 }
 @font-face {
   font-family: 'Averta';
-  src: url('~/assets/fonts/averta/Averta-SemiBold.otf') format('opentype');
+  src: url('~/assets/fonts/averta/Averta-Semibold.otf') format('opentype');
   font-weight: 600;
   font-style: normal;
 }
 @font-face {
   font-family: 'Averta';
-  src: url('~/assets/fonts/averta/Averta-SemiBoldItalic.otf') format('opentype');
+  src: url('~/assets/fonts/averta/Averta-SemiboldItalic.otf') format('opentype');
   font-weight: 600;
   font-style: italic;
 }
