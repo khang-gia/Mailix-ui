@@ -4,7 +4,7 @@
     <div
         id="sidebar"
         ref="sidebar"
-        class="flex flex-col z-50 left-0 top-0 static translate-x-0 h-screen overflow-y-scroll no-scrollbar w-16 shrink-0 bg-[#FFFFFF] 
+        class="flex flex-col z-50 left-0 top-0 static translate-x-0 h-screen overflow-y-scroll no-scrollbar w-fit shrink-0 bg-[#FFFFFF] 
         dark:bg-titaca-sb-dark-bg py-4 transition-all duration-200 ease-in-out border-r dark:border-slate-700 dark:text-titaca-sb-dark-text"
         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-64'"
       >
@@ -23,7 +23,7 @@
             <SidebarLink link="/me" icon="weui:me-outlined" activeIcon="weui:me-filled" text="Me" />
 
             <SidebarLink link="/hr" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Nhân sự"/>
-            <SidebarLink link="/customer" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Khách hàng"/>
+            <SidebarLink link="/customers" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Khách hàng"/>
             <!-- <SidebarLink link="/hr-insurance" icon="healthicons:insurance-card-outline" activeIcon="healthicons:insurance-card" text="Bảo hiểm"/> -->
             <!-- <SidebarLink link="/hr-contract" icon="material-symbols:contract-outline-rounded" activeIcon="material-symbols:contract-rounded" text="Hợp đồng"/> -->
             <SidebarLink link="/hr-decision" icon="mdi:approval" activeIcon="mdi:approval" text="Quyết định"/>

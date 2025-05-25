@@ -70,13 +70,13 @@
                     <div class="flex flex-col">
                         <label class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{$t('Education level')}}</label>
                         <p class="text-sm text-gray-600 dark:text-gray-400">
-                            {{ userInfo.educaional_level? userInfo.educaional_level:'--' }}
+                            {{ userInfo.educaional_level? userInfo.educaional_level + '/12':'--' }}
                         </p>
                     </div>
                     <div class="flex flex-col">
                         <label class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{$t('Highest Professional Qualification')}}</label>
                         <p class="text-sm text-gray-600 dark:text-gray-400">
-                            {{ userInfo.highest_qualification? userInfo.highest_qualification:'--' }}
+                            {{ userInfo.highest_qualification? $t(userInfo.highest_qualification):'--' }}
                         </p>
                     </div>
                     <div class="flex flex-col">
