@@ -15,7 +15,7 @@
           <div :class="{'inline': isExactActive, 'hidden group-hover:inline ': !isExactActive}">
             <Icon :name="activeIcon" size="20" :class="iconColor"/>
           </div>
-          <span class="text-[11px] font-medium duration-100 font-sans">
+          <span class="text-[11px] font-medium duration-100 font-averta">
             {{text}}
           </span>
         </div>

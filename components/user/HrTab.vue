@@ -12,15 +12,15 @@
             <UButton color="gray" variant="ghost" icon="i-heroicons-adjustments-vertical" />
             <!-- <template #unsort="{item}">
                 <UIcon :name="item.icon" class="h-4 w-4 ml-1" />
-                <span class="px-2 font-sans font-medium">{{ item.label }}</span>
+                <span class="px-2 font-averta font-medium">{{ item.label }}</span>
             </template>
             <template #ungroup="{item}">
                 <UIcon :name="item.icon" class="h-4 w-4 ml-1"/>
-                <span class="px-2 font-sans font-medium">{{ item.label }}</span>
+                <span class="px-2 font-averta font-medium">{{ item.label }}</span>
             </template>
             <template #remove_column="{item}">
                 <UIcon :name="item.icon" class="h-4 w-4 ml-1" />
-                <span class="px-2 font-sans font-medium">{{ item.label }}</span>
+                <span class="px-2 font-averta font-medium">{{ item.label }}</span>
             </template> -->
         </UDropdown>
         <UDropdown :items="detailViewDropDown" :popper="{ placement: 'bottom-start' }">

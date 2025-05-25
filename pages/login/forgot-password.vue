@@ -1,6 +1,6 @@
 <template>
     <div class=" h-full transition-all duration-500 hover:scale-[1.02] space-y-12">
-        <h1 class="text-2xl font-medium text-left font-sans text-black">Lấy lại mật khẩu.</h1>
+        <h1 class="text-2xl font-medium text-left font-averta text-black">Lấy lại mật khẩu.</h1>
         <p class="text-center text-gray-500 mb-5"></p>
         <form v-if="viewMode ==='forgot-password'" novalidate="novalidate" class="space-y-4 md:space-y-6" @submit.prevent="onSubmitEmail">
             <div>

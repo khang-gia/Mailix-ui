@@ -3,7 +3,7 @@
         <!-- <div class="p-2">
             <img src="/images/logo/positive/name.png" alt="Logo" class="h-20">
         </div> -->
-        <h1 class="text-2xl font-medium text-left font-sans text-black">Đăng nhập.</h1>
+        <h1 class="text-2xl font-medium text-left font-averta text-black">Đăng nhập.</h1>
         <p class="text-center text-gray-500 mb-5"></p>
         <form v-if="authMode === 'signin'" @submit.stop.prevent="onLoginSubmit" novalidate="novalidate" @submit="onPreLogin">
             <div class="relative mb-4">

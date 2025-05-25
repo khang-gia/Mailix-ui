@@ -25,7 +25,7 @@
                before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-500 dark:text-gray-400"
                :class="current === index ? 'active' : 'inactive'" @click="current = index">
             <UIcon v-if="link.icon" :name="link.icon" class="icon" :class="current === index ? 'active' : 'inactive'" />
-            <span class="text-sm font-sans">{{ link.label }}</span>
+            <span class="text-sm font-averta">{{ link.label }}</span>
             <!-- <UBadge color="gray" variant="solid" size="xs" class="px-1 py-0" :ui="{ rounded: 'rounded' }">{{ useUserStore() }}</UBadge> -->
           </UButton>
         </li>

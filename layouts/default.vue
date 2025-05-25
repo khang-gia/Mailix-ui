@@ -1,5 +1,5 @@
 <template>
-  <div v-if="status === 'authenticated'" class="font-inter antialiased bg-slate-100 text-slate-500 dark:text-slate-400">
+  <div v-if="status === 'authenticated'" class="font-averta antialiased bg-slate-100 text-slate-500 dark:text-slate-400">
     <div class="flex h-screen overflow-hidden">
 
       <!-- Sidebar -->
@@ -31,7 +31,7 @@
     <ModalsContainer />
     <ModalExpandImg />
   </div>
-  <div v-else>
+  <div v-else class="font-averta">
     <main class="h-screen w-full relative transition-all duration-300 ease-in-out">
       <!-- <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto"> -->
         <div class="">

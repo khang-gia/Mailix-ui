@@ -27,6 +27,7 @@ export default defineNuxtConfig({
   },
   css: [
       '@/assets/css/style.css',
+      '@/assets/css/fonts.css',
       'overlayscrollbars/styles/overlayscrollbars.css',
       'vue-final-modal/style.css',
   ],

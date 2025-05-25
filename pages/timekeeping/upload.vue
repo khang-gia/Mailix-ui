@@ -7,7 +7,7 @@
             </template>
             <div class="grid grid-flow-row ">
                 <div class="pb-4">
-                    <h2 class="text-titaca-text-primary font-bold text-lg font-sans">
+                    <h2 class="text-titaca-text-primary font-bold text-lg font-averta">
                     Hệ thống sẽ bắt đầu import từ dòng thứ 3. Các cột import của file excel bao gồm:
                     </h2>
                     <ul class="mt-4 space-y-2">
@@ -28,7 +28,7 @@
                         </li>
                         
                     </ul>
-                    <h2 class="text-red-600 font-sans font-bold text-md pt-4">
+                    <h2 class="text-red-600 font-averta font-bold text-md pt-4">
                         Lưu ý: Công của từng ngày làm việc có thể nhập số, ký hiệu x hoặc bỏ trống:
                     </h2>
                     <ul class="mt-4 pl-2 space-y-2">
@@ -44,7 +44,7 @@
                     </ul>
                 </div>
                 <div class="flex justify-start items-center space-x-4">
-                    <span class="font-sans text-md text-slate-700 dark:text-slate-200">Tải file mẫu
+                    <span class="font-averta text-md text-slate-700 dark:text-slate-200">Tải file mẫu
                         <a href="/downloads/timekeeping/timekeeping_import_template_v1.xlsx" class="text-titaca-text-primary dark">
                             tại đây
                         </a>

@@ -1,5 +1,5 @@
 <template>
-  <div class="font-inter antialiased bg-slate-100 text-slate-600">
+  <div class="font-averta antialiased bg-slate-100 text-slate-600">
     <div class="flex h-screen overflow-hidden">
 
       <!-- Sidebar -->

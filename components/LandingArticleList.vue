@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="text-center py-12 relative">
-            <p class="text-green-600 font-bold font-sans tracking-widest uppercase">
+            <p class="text-green-600 font-bold font-averta tracking-widest uppercase">
                 Dịch Vụ Của Titaca
             </p>
-            <h1 class="text-3xl md:text-4xl font-bold font-sans text-gray-900 mt-2 dark:text-white">
+            <h1 class="text-3xl md:text-4xl font-bold font-averta text-gray-900 mt-2 dark:text-white">
                 Giải Pháp Cho Doanh Nghiệp <br /> Trong Thời Đại 4.0
             </h1>
             <!-- <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-16 bg-gradient-to-t from-white to-transparent"></div> -->
@@ -19,15 +19,15 @@
                 <!-- <div class="p-2 bg-green-100 rounded-lg">
                 <Icon name="heroicons-outline:globe-alt" class="text-green-600 w-6 h-6" />
                 </div> -->
-                <h3 class="text-lg font-bold font-sans text-gray-900 dark:text-white uppercase">{{ item.title }}</h3>
+                <h3 class="text-lg font-bold font-averta text-gray-900 dark:text-white uppercase">{{ item.title }}</h3>
                 <p class="text-sm text-gray-600">{{ formatDate(new Date(item.published_at), "DD/MM/YYYY HH:mm") }}</p>
             </div>
 
-            <p class="text-gray-700 text-sm mt-3 dark:text-white truncate font-sans">
+            <p class="text-gray-700 text-sm mt-3 dark:text-white truncate font-averta">
                 {{ item.message }}
             </p>
 
-            <div class="mt-auto flex justify-between items-center pt-4 font-sans">
+            <div class="mt-auto flex justify-between items-center pt-4 font-averta">
                 <NuxtLink :to="`/bai-viet/${item.slug}/${item.id}`">
                     <UButton variant="solid" class="group rounded-full bg-emerald-400 hover:bg-emerald-600 transition-all duration-500 transform hover:scale-105">
                         Liên hệ tư vấn

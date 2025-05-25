@@ -23,6 +23,7 @@
             <SidebarLink link="/me" icon="weui:me-outlined" activeIcon="weui:me-filled" text="Me" />
 
             <SidebarLink link="/hr" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Nhân sự"/>
+            <SidebarLink link="/customer" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Khách hàng"/>
             <!-- <SidebarLink link="/hr-insurance" icon="healthicons:insurance-card-outline" activeIcon="healthicons:insurance-card" text="Bảo hiểm"/> -->
             <!-- <SidebarLink link="/hr-contract" icon="material-symbols:contract-outline-rounded" activeIcon="material-symbols:contract-rounded" text="Hợp đồng"/> -->
             <SidebarLink link="/hr-decision" icon="mdi:approval" activeIcon="mdi:approval" text="Quyết định"/>
