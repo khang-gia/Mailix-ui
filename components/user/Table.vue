@@ -25,6 +25,9 @@
                 <span class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer" @click="selectUser(row)">{{ row.full_name }}</span>
             </div>
         </template>
+        <template #gender-data="{ row }">
+            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.gender?$t(row.gender):'' }}</span>
+        </template>
         </UTable>
     </div>
 
@@ -64,38 +67,13 @@ const columns = [
         sortable: true,
     },
     {
-        key: 'timekeeping_id',
-        label: t('TK code'),
+        key: 'profile_code',
+        label: t('Profile code'),
         sortable: true,
     },
     {
         key: 'full_name',
         label: t('Full Name'),
-        sortable: true,
-    },
-    {
-        key: 'department_name',
-        label: t('Department'),
-        sortable: true,
-    },
-    {
-        key: 'position',
-        label: t('Position'),
-        sortable: true,
-    },
-    {
-        key: 'title',
-        label: t('Title'),
-        sortable: true,
-    },
-    {
-        key: 'level',
-        label: t('Level'),
-        sortable: true,
-    },
-    {
-        key: 'join_date',
-        label: t('Join Date'),
         sortable: true,
     },
     {
@@ -108,6 +86,32 @@ const columns = [
         label: t('Gender'),
         sortable: true,
     },
+    {
+        key: 'department_name',
+        label: t('Department'),
+        sortable: true,
+    },
+    // {
+    //     key: 'position',
+    //     label: t('Position'),
+    //     sortable: true,
+    // },
+    {
+        key: 'title_name',
+        label: t('Title'),
+        sortable: true,
+    },
+    // {
+    //     key: 'level',
+    //     label: t('Level'),
+    //     sortable: true,
+    // },
+    {
+        key: 'join_date',
+        label: t('Join Date'),
+        sortable: true,
+    },
+    
     {
         key: 'account_created_at',
         label: t('Date create account'),

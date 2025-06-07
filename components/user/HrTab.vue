@@ -45,6 +45,7 @@
                 :options="[3, 5, 10, 20, 50, 80, 100]"
                 class="me-2 w-fit"
                 size="xs"
+                @change="page = 1"
             />
         </div>
 
@@ -108,6 +109,12 @@ const pageSize = ref(10)
 const pageFrom = computed(() => (page.value - 1) * pageSize.value + 1)
 const pageTo = computed(() => Math.min(page.value * pageSize.value, pageTotal.value))
 const selectedUsers = ref([])
+const props = defineProps({
+  status: {
+    type: Number,
+    default: 0
+  }
+})
 const userFilter = ref(
   {
     status: 'Working',
@@ -123,7 +130,10 @@ const users = computedAsync(async () => {
     // customer_company_id: userStore.company.id, 
     // search: userStore.search, 
     reload: reload.value,
-    page: page.value, page_size: pageSize.value })
+    page: page.value,
+    page_size: pageSize.value,
+    status: props.status,
+  })
   console.log('data',data.value)
   pageTotal.value = data.value.count
   return data.value.results

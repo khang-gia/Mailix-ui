@@ -47,8 +47,6 @@ const links = [{
   label: t('All'),
   // userCount: true
 }, {
-  label: t('Wait for approval'),
-},{
   label: t('Temporary leave'),
 }, {
   label: t('Resignation')

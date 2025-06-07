@@ -2,7 +2,7 @@
     <div class="">
         <UserListTabs v-model="tab" />
         <div class="">
-          <UserHrTab/>
+          <UserHrTab :status="mappingStatus[tab]" />
         </div>
     </div>
     
@@ -12,4 +12,12 @@ definePageMeta({
   title: 'Danh sách nhân sự'
 })
 const tab = ref(0)
+const mappingStatus = {
+  0: 0,
+  1: null,
+  2: 1,
+  3: 2,
+  4: 3,
+  5: 4,
+}
 </script>
