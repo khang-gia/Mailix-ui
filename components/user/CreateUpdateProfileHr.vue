@@ -637,7 +637,6 @@ const formatData = () => {
     const formData = new FormData();
     Object.entries(userInfo.value).forEach(([key, value]) => {
         if (!value) return;
-
         if (['front_id_card', 'back_id_card'].includes(key)) {
             console.log('value',value)
             if (value[0] instanceof File) {
@@ -649,7 +648,12 @@ const formatData = () => {
         } else if (['dob', 'join_date', 'actual_sign_date', 'date_of_issue'].includes(key)) {
             formData.append(key, dayjs(value).format('YYYY-MM-DD'));
         }else if(['pob','place_of_origin', 'nationality'].includes(key)) {
-            formData.append(key, value.id)
+            if (!value ) {
+                formData.append(key, '');
+            }
+            else if (value) {
+                formData.append(key, value.name? value.name : value);
+            }
         }else if (['avatar'].includes(key)) {
             console.log('ava',value)
             if (value[0] instanceof File) {

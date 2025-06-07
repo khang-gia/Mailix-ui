@@ -250,7 +250,7 @@
                         <div class="flex flex-col">
                             <label class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{$t('Gender')}}</label>
                             <p class="text-sm text-gray-600 dark:text-gray-400">
-                                {{ userInfo.gender? userInfo.gender:'--' }}
+                                {{ userInfo.gender? $t(userInfo.gender):'--' }}
                             </p>
                         </div>
                     </div>
