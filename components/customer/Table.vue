@@ -40,7 +40,9 @@
         <template #assigned_to-data="{row}">
             <div v-if="row.assigned_to && row.assigned_to.profile_hr">
                 <NuxtLink :to="{ name: 'hr-id', params: { id: row.assigned_to.profile_hr.id } }">
-                    <UAvatar :src="row.assigned_to.avatar" :alt="row.display_name" />
+                    <UTooltip :text="row.assigned_to.display_name">
+                        <UAvatar :src="row.assigned_to.avatar" :alt="row.assigned_to.display_name" />
+                    </UTooltip>
                 </NuxtLink>
             </div>
         </template>
