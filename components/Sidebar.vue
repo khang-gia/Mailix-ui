@@ -24,8 +24,8 @@
 
             <SidebarLink link="/hr" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Nhân sự"/>
             <SidebarLink link="/customers" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Khách hàng"/>
-            <SidebarLink link="/works" icon="heroicons:briefcase" activeIcon="heroicons-solid:briefcase" text="Công việc"/>
             <SidebarLink link="/contacts" icon="heroicons:phone" activeIcon="heroicons-solid:phone" text="Liên hệ"/>
+            <SidebarLink link="/works" icon="heroicons:briefcase" activeIcon="heroicons-solid:briefcase" text="Công việc"/>
             <!-- <SidebarLink link="/projects" icon="heroicons:folder" activeIcon="heroicons-solid:folder" text="Dự án"/> -->
 
             <!-- <SidebarLink link="/hr-insurance" icon="healthicons:insurance-card-outline" activeIcon="healthicons:insurance-card" text="Bảo hiểm"/> -->

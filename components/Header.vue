@@ -107,6 +107,9 @@ const router = useRouter()
 const emit = defineEmits(['open-sidebar'])
 const routeCreate = [
     'hr',
+    'contacts',
+    'works',
+    'customers',
     'system'
 ]
 const props = defineProps({

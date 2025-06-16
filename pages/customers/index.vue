@@ -1,8 +1,8 @@
 <template>
     <div class="">
-        <UserListTabs v-model="tab" />
+        <CustomerListTabs v-model="tab" />
         <div class="">
-          <UserHrTab :status="mappingStatus[tab]" />
+          <CustomerViewTabs :filter="mappingStatus[tab]" />
         </div>
     </div>
     
@@ -13,11 +13,14 @@ definePageMeta({
 })
 const tab = ref(0)
 const mappingStatus = {
-  0: 0,
-  1: null,
+  0: null,
+  1: 1,
   2: 1,
   3: 2,
   4: 3,
   5: 4,
+  6: 5,
+  7: 6,
+  8: 7,
 }
 </script>

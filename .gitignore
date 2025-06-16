@@ -134,3 +134,4 @@ dist
 dump.rdb
 ecosystem.config.js
 ecosystem.config.cjs
+.vscode
