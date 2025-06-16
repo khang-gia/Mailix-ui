@@ -5,7 +5,6 @@ export const useModalStore = defineStore('modalStore', () => {
   const stockInfoModal = ref(false)
   const indexInfoModal = ref(false)
   const indexInfo = ref(null)
-  const stockInfoSymbol = ref(null)
   const modalType = ref('')
   const stockListInfo = ref(null)
 
@@ -31,6 +30,13 @@ export const useModalStore = defineStore('modalStore', () => {
     imageWidth: 0,
     imageHeight: 0
   })
+  const createAccountModal = ref(false)
+  const accountData = ref({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    username: ''
+  })
   const isLive = computed(() => draggableModalInfo.value.embed_url !== '')
   function setStockListModal(value) {
     stockListModal.value = value
@@ -46,7 +52,6 @@ export const useModalStore = defineStore('modalStore', () => {
 
   function setStockInfoModal(value, symbol) {
     stockInfoModal.value = value
-    stockInfoSymbol.value = symbol
   }
 
   function setIndexInfoModal(value, idx) {
@@ -89,15 +94,24 @@ export const useModalStore = defineStore('modalStore', () => {
   function setImageData(data) {
     imageData.value = data
   }
+  function setCreateAccountModal(value, data) {
+    createAccountModal.value = value
+    if (data) {
+      accountData.value = data
+    }
+  }
+  function setAccountData(data) {
+    accountData.value = data
+  }
   return { 
     setStockListModal, stockListModal,
-    setStockInfoModal, stockInfoModal, stockInfoSymbol,
+    setStockInfoModal, stockInfoModal,
     modalType, stockListInfo, setModalType, setStockListInfo,
     setIndexInfoModal, indexInfoModal, indexInfo, setAlertModal, alertModal, alertProps, alertConfirm,
     setAuthModal, authModalMode, authModalOpen,
     setFeedbackModal, feedbackModal,
     setSearchModal, searchModal, draggableModal, toggleDraggableModal, draggableModalInfo, setDraggableModalInfo, setDraggableModal, isLive,
     setCreateArticleTypeModal, articleTypeModal, imageData, setExpandImageModal, expandImageModal,
-    setImageData
+    setImageData,setCreateAccountModal, createAccountModal, accountData, setAccountData
   }
 })

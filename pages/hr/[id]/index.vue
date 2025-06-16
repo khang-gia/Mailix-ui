@@ -4,7 +4,7 @@
         </div>
         <div class="flex justify-end">
             <UButton color="gray" variant="ghost" icon="i-heroicons-pencil-square" :label="$t('Update')" size="sm" :to="{name: 'hr-id-update'}"/>
-            <UButton color="gray" variant="ghost" icon="ph:user-circle-plus-light" :label="$t('Create account')" size="sm"/>
+            <UButton color="gray" variant="ghost" icon="ph:user-circle-plus-light" :label="$t('Create account')" size="sm" @click="setCreateAccountModal(true) "/>
         </div>
 
     </div>
@@ -398,7 +398,7 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 import { useModalStore } from '@/stores/modal'
 const modalStore = useModalStore()
-const { setExpandImageModal } = modalStore
+const { setExpandImageModal, setCreateAccountModal } = modalStore
 const userInfo = ref({});
 const userData = await useAPI().get(`core/profile_hrs/${useRoute().params.id}/`);
 userInfo.value = userData.data.value;

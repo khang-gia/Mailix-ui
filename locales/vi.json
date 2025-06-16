@@ -158,5 +158,13 @@
     "Job": "Công việc",
     "Group user": "Nhóm người dùng",
     "Update": "Cập nhật",
-    "Create account": "Tạo tài khoản Mailix"
+    "Create account": "Kích hoạt tài khoản Mailix",
+    "Username": "Tên đăng nhập",
+    "Password": "Mật khẩu",
+    "Confirm password": "Xác nhận mật khẩu",
+    "Invalid email format": "Định dạng email không hợp lệ",
+    "Password must be at least 6 characters": "Mật khẩu phải có ít nhất 6 ký tự",
+    "Create": "Tạo",
+    "The system account was successfully created.": "Tài khoản hệ thống đã được tạo thành công.",
+    "An error occurred while creating the account. Please try again later.": "Đã xảy ra lỗi khi tạo tài khoản. Vui lòng thử lại sau." 
 }
