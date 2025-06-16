@@ -1,6 +1,7 @@
 <template>
     <div v-if="isLoggedIn">
-        <CoreInfoProfile :userInfo="userInfo"/>
+        <CoreInfoProfile v-if="userInfo.profile_hr" :userInfo="userInfo.profile_hr"/>
+        <!-- <CoreInfoProfileSystem v-else :userInfo="userInfo" /> -->
         <!-- <div class="dark:text-gray-400 text-gray-800 flex justify-center items-center space-x-2 text-lg h-screen">
         <p>In progress </p>
         <Icon name="svg-spinners:3-dots-scale-middle" size="24" />
@@ -11,7 +12,7 @@
 import { useModalStore } from '@/stores/modal'
 const modalStore = useModalStore()
 const { setAuthModal} = modalStore
-const { data: userStore } = useAuth()
+const { data: userInfo } = useAuth()
 
 definePageMeta({
   title: 'Trang chủ'
@@ -24,7 +25,7 @@ const isLoggedIn = computedAsync( () => {
   const data =  useAuth()
   return data.status.value == 'authenticated'
 })
-const userInfo = ref({})
-const {data:userData} = await useAPI().get(`core/profile_hrs/${userStore.value.id}/`);
-userInfo.value = userData.value;
+// const userInfo = ref({})
+// const {data:userData} = await useAPI().get(`core/profile_hrs/${userStore.value.id}/`);
+// userInfo.value = userData.value;
 </script>

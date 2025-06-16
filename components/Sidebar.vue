@@ -24,9 +24,13 @@
 
             <SidebarLink link="/hr" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Nhân sự"/>
             <SidebarLink link="/customers" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Khách hàng"/>
+            <SidebarLink link="/works" icon="heroicons:briefcase" activeIcon="heroicons-solid:briefcase" text="Công việc"/>
+            <SidebarLink link="/contacts" icon="heroicons:phone" activeIcon="heroicons-solid:phone" text="Liên hệ"/>
+            <!-- <SidebarLink link="/projects" icon="heroicons:folder" activeIcon="heroicons-solid:folder" text="Dự án"/> -->
+
             <!-- <SidebarLink link="/hr-insurance" icon="healthicons:insurance-card-outline" activeIcon="healthicons:insurance-card" text="Bảo hiểm"/> -->
             <!-- <SidebarLink link="/hr-contract" icon="material-symbols:contract-outline-rounded" activeIcon="material-symbols:contract-rounded" text="Hợp đồng"/> -->
-            <SidebarLink link="/hr-decision" icon="mdi:approval" activeIcon="mdi:approval" text="Quyết định"/>
+            <!-- <SidebarLink link="/hr-decision" icon="mdi:approval" activeIcon="mdi:approval" text="Quyết định"/> -->
             <!-- <SidebarLink link="/timekeeping" icon="healthicons:i-schedule-school-date-time-outline" activeIcon="healthicons:i-schedule-school-date-time" text="Chấm công" /> -->
             
             <SidebarLink link="https://abcd" icon="heroicons:envelope" activeIcon="heroicons-solid:envelope" text="Email" target="_blank"/>
