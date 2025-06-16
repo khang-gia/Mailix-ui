@@ -1,8 +1,8 @@
 <template>
     <div class="">
-        <UserListTabs v-model="tab" />
+        <ContactListTabs v-model="tab" />
         <div class="">
-          <UserHrTab :status="mappingStatus[tab]" />
+          <ContactViewTabs :status="mappingStatus[tab]" />
         </div>
     </div>
     
