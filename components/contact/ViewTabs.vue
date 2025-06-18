@@ -84,7 +84,7 @@
     
     <div class="p-2">
       <UCard :ui="{body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700'}, divide: 'divide-y divide-gray-200 dark:divide-gray-700',}">
-        <CustomerTable :customers="customers" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedUsers=$event"/>
+        <ContactTable :contacts="contacts" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedUsers=$event"/>
         <template #footer>
           <div class="flex justify-end items-center space-x-2">
             <UPagination :max="3" :page-count="pageSize" :total="pageTotal" v-model="page"/>
@@ -125,11 +125,11 @@ const userFilter = ref(
   }
 )
 const reload = ref(false)
-const customers = computedAsync(async () => {
+const contacts = computedAsync(async () => {
 //   const params = {
 //     props.filter
 //   }
-  const {data:data } = await useAPI().get('core/customers/', { 
+  const {data:data } = await useAPI().get('core/contacts/', { 
     // customer_company_id: userStore.company.id, 
     // search: userStore.search, 
     reload: reload.value,

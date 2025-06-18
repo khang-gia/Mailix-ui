@@ -208,5 +208,11 @@
     "Broker": "Môi giới",
     "Sale data": "Dữ liệu bán hàng",
     "contacts per page": "Số liên hệ mỗi trang",
-    "contacts": "liên hệ"
+    "contacts": "liên hệ",
+    "Contact code": "Mã liên hệ",
+    "Contact Name": "Tên liên hệ",
+    "Contact Source": "Nguồn liên hệ",
+    "Type of contact": "Loại liên hệ",
+    "Status": "Trạng thái",
+    "No curators assigned": "Không có người phụ trách"
 }

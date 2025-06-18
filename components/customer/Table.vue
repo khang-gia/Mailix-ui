@@ -37,13 +37,18 @@
         <template #created_at-data="{row}">
             <span class="text-sm font-medium text-gray-900 dark:text-white">{{ dayjs(row.created_at).format('YYYY-MM-DD') }}</span>
         </template >
-        <template #assigned_to-data="{row}">
-            <div v-if="row.assigned_to && row.assigned_to.profile_hr">
-                <NuxtLink :to="{ name: 'hr-id', params: { id: row.assigned_to.profile_hr.id } }">
-                    <UTooltip :text="row.assigned_to.display_name">
-                        <UAvatar :src="row.assigned_to.avatar" :alt="row.assigned_to.display_name" />
-                    </UTooltip>
-                </NuxtLink>
+        <template #curators-data="{row}">
+            <UAvatarGroup size="xs" :max="4" v-if="row.curators && row.curators.length">
+                <div v-for="curator in row.curators" :key="curator.id">
+                    <NuxtLink v-if="curator.profile_hr" :to="{ name: 'hr-id', params: { id: curator.profile_hr.id } }">
+                        <UTooltip :text="curator.display_name">
+                            <UAvatar :src="curator.avatar" :alt="curator.display_name" />
+                        </UTooltip>
+                    </NuxtLink>
+                </div>
+            </UAvatarGroup>
+            <div v-else>
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{$t('No curators assigned')}}</span>
             </div>
         </template>
         </UTable>
@@ -111,7 +116,7 @@ const columns = [
         sortable: true,
     },
     {
-        key: 'assigned_to',
+        key: 'curators',
         label: t('Assigned to'),
         sortable: true,
     },

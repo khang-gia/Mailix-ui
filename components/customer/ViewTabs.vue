@@ -115,31 +115,33 @@ const props = defineProps({
     default: ''
   }
 })
-const userFilter = ref(
-  {
+const userFilter = computed({
+  get: () => ({
     status: 'Working',
     ordering: undefined,
     group: undefined,
     page: page.value,
     pageSize: pageSize.value,
+    ...props.filters
+  }),
+  set: (filterValue) => {
+    Object.assign(userFilter.value, filterValue);
   }
-)
-const reload = ref(false)
+});
+const reload = ref(false);
 const customers = computedAsync(async () => {
-//   const params = {
-//     props.filter
-//   }
-  const {data:data } = await useAPI().get('core/customers/', { 
-    // customer_company_id: userStore.company.id, 
-    // search: userStore.search, 
+  const params = {
+    ...userFilter.value
+  }
+  const data = await useAPI().$get('core/customers/', { 
+    ...params,
     reload: reload.value,
     page: page.value,
     page_size: pageSize.value,
-    // status: props.status,
   })
-  console.log('data',data.value)
-  pageTotal.value = data.value.count
-  return data.value.results
+  console.log('data', data)
+  pageTotal.value = data.count
+  return data.results
 })
 const displayColumns = ref([
 ])
