@@ -174,7 +174,9 @@
                     <UFormGroup
                         :label="$t('Direct manager')"
                         name="direct_manager">
-                        <CoreUserSelect v-model="userInfo.direct_manager" :placeholder="$t('Direct manager')"/>
+                        <!-- <CoreUserSelect v-model="userInfo.direct_manager" :placeholder="$t('Direct manager')"/> -->
+                        <CustomerUserSelect v-model="userInfo.direct_manager" :placeholder="$t('Direct manager')"/>
+
                     </UFormGroup>
                     
                     
@@ -533,7 +535,7 @@ const loadData = async () => {
                 }] 
                 : '';
 
-            userInfo.value.direct_manager = userInfo.value.direct_manager ? userInfo.value.direct_manager.id: '',
+            // userInfo.value.direct_manager = userInfo.value.direct_manager ? userInfo.value.direct_manager.id: '',
             userInfo.value.department = userInfo.value.department ? userInfo.value.department.id: '',
             console.log('response', userInfo.value)
         }
@@ -662,6 +664,8 @@ const formatData = () => {
             else if (value.length == 0){
                 formData.append(key, '')
             }
+        }else if(['direct_manager'].includes(key))  {
+            formData.append(key, value ? value.id : '');
         } else {
             formData.append(key, value);
         }

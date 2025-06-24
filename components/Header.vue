@@ -140,10 +140,9 @@ const openAuthModal = (mode) => {
 
 
 const onPageAction = () => {
-    // if (route.name == 'hr') setCreateArticleTypeModal(true)
-    if (route.name == 'hr') {
-        router.push({ name: 'hr-create' })
-    } 
+    if (routeCreate.includes(route.name)) {
+        router.push({ name: `${route.name}-create` })
+    }
 }
 const openSearchModal = () => {
     setSearchModal(true)
