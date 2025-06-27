@@ -7,6 +7,7 @@
         :loading="loading"
         :searchable="search"
         option-attribute="full_name"
+        by="id"
         trailing
         debounce=300
     >

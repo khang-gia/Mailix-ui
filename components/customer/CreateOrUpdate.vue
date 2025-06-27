@@ -1,6 +1,6 @@
 <template>
     <UCard :ui="{
-        base: 'lg:w-3/5 w-full h-full mx-4 my-6',
+        base: 'lg:w-4/5 w-full h-full mx-4 my-6',
         rounded: 'rounded-sm',
     }">
         <UCard :ui="{
@@ -250,14 +250,14 @@
                 </UFormGroup>
             </UForm>
         </UCard>
-        <!-- <template #footer>
+        <template #footer>
             <div class="flex justify-end items-center space-x-2">
                 <UButton color="white" variant="solid" icon="i-heroicons-x-mark" :label="$t('Cancel')" size="sm" @click="useRouter().back()"/>
                 <UButton color="primary" variant="solid" icon="i-heroicons-check-circle" :label="$t('Save')" size="sm" @click="onSubmit"/>
             </div>
-        </template> -->
+        </template>
     </UCard>
-    <UserProfileStepFooter @on-submit="onSubmit"/>
+    <!-- <UserProfileStepFooter @on-submit="onSubmit"/> -->
 </template>
 <script setup>
 import * as yup from 'yup'
@@ -274,7 +274,7 @@ const schema = yup.object({
         .test('check-employee-code-exists', t('Employee code already exists'), async (value) => {
             if (!value || props.isUpdate) return true;
             try {
-                const { data: exists } = await useAPI().get('core/profile_hrs/', { customer_code: value });
+                const { data: exists } = await useAPI().get('core/customers/', { customer_code: value });
                 console.log('data', exists.value.results);
                 return exists.value.results.length == 0;
             } catch (error) {
@@ -317,9 +317,9 @@ const defaultUserInfo = {
     phone:'',
     email:'',
     address:'',
-    type_of_customer: '',
-    customer_group: '', 
-    customer_source: '', 
+    type_of_customer: 1,
+    customer_group: 5, 
+    customer_source: 7, 
     curators: [],
 }
 const customerInfo = ref(defaultUserInfo)
@@ -332,36 +332,10 @@ const titles = ref([])
 const departments = ref([])
 const loadData = async () => {
     try {
-        const {data:titleData}= await useAPI().get("core/titles/",{});
-        titles.value = titleData.value.results
-        const {data:departmentData}= await useAPI().get("system/departments/",{});
-        departments.value = departmentData.value.results
-        console.log('departmentData', departmentData.value.results)
         if (props.isUpdate){
-            const {data: response} = await useAPI().get(`core/profile_hrs/${useRoute().params.id}/`);
+            const {data: response} = await useAPI().get(`core/customers/${useRoute().params.id}/`);
             customerInfo.value = response.value
-            customerInfo.value.join_date = customerInfo.value.join_date ? new Date(customerInfo.value.join_date) : null
-            customerInfo.value.actual_sign_date = customerInfo.value.actual_sign_date ? new Date(customerInfo.value.actual_sign_date) : null
             customerInfo.value.dob = customerInfo.value.dob ? new Date(customerInfo.value.dob) : null
-            customerInfo.value.date_of_issue = customerInfo.value.date_of_issue ? new Date(customerInfo.value.date_of_issue) : null
-            customerInfo.value.front_id_card = customerInfo.value.front_id_card 
-                ? [{ 
-                    preview: customerInfo.value.front_id_card, 
-                }] 
-                : '';
-            customerInfo.value.back_id_card = customerInfo.value.back_id_card 
-                ? [{ 
-                    preview: customerInfo.value.back_id_card, 
-                }] 
-                : '';
-            customerInfo.value.avatar = customerInfo.value.avatar 
-                ? [{ 
-                    preview: customerInfo.value.avatar, 
-                }] 
-                : '';
-
-            customerInfo.value.direct_manager = customerInfo.value.direct_manager ? customerInfo.value.direct_manager.id: '',
-            customerInfo.value.department = customerInfo.value.department ? customerInfo.value.department.id: '',
             console.log('response', customerInfo.value)
         }
     } catch (error) {
@@ -369,23 +343,6 @@ const loadData = async () => {
     }
 };
 loadData()
-// const departmentLabels = computed({
-//   get: () => customerInfo.value.department,
-//   set: async (label) => {  
-//     if (label?.id) {
-//       customerInfo.value.department = label
-//       return
-//     }
-//     // console.log('label', label)
-//     const response = {
-//       id: departments.value.length + 1,
-//       name: label.name,
-//     }
-
-//     departments.value.push(response)
-//     customerInfo.value.department = response
-//   }
-// })
 const type_of_customers = [
     {label: t('Personal'), value: 1},
     {label: t('Organization'), value: 2},
@@ -438,63 +395,75 @@ const LINE_OF_BUSINESS_CHOICES = [
     { value: 14, label: t('Agriculture') },
     { value: 15, label: t('Other') },
 ];
-const formatData = () => {
-    const formData = new FormData();
+// const formatData = () => {
+//     const formData = new FormData();
+//     Object.entries(customerInfo.value).forEach(([key, value]) => {
+//         if (!value) return;
+//         if (Array.isArray(value)) {
+//             const ids = value.map(item => {
+//                 if (typeof item === 'object' && item !== null) {
+//                     return item.id || item;
+//                 }
+//                 return item;
+//             });
+//             formData.append(key, ids.join(','));
+//         } else if (typeof value === 'object' && value !== null && value.id) {
+//             formData.append(key, value.id);
+//         }
+//         else if (['dob'].includes(key)) {
+//             formData.append(key, dayjs(value).format('YYYY-MM-DD'));
+//         } else {
+//             formData.append(key, value);
+//         }
+//     });
+//     return formData;
+// };
+const formatData2 = () => {
+    const formattedData = {};
     Object.entries(customerInfo.value).forEach(([key, value]) => {
         if (!value) return;
-        if (['front_id_card', 'back_id_card'].includes(key)) {
-            console.log('value',value)
+        if (Array.isArray(value)) {
+            formattedData[key] = value.map(item => {
+                if (typeof item === 'object' && item !== null) {
+                    return item.id || item;
+                }
+                return item;
+            });
+        } else if (typeof value === 'object' && value !== null && value.id) {
+            formattedData[key] = value.id;
+        } else if (['dob'].includes(key)) {
+            formattedData[key] = dayjs(value).format('YYYY-MM-DD');
+        }else if (['avatar'].includes(key)){
             if (value[0] instanceof File) {
-                formData.append(key, value[0])
-            }
-            else if (value.length == 0){
-                formData.append(key, '')
-            }
-        } else if (['dob', 'join_date', 'actual_sign_date', 'date_of_issue'].includes(key)) {
-            formData.append(key, dayjs(value).format('YYYY-MM-DD'));
-        }else if(['pob','place_of_origin', 'nationality'].includes(key)) {
-            if (!value ) {
-                formData.append(key, '');
-            }
-            else if (value) {
-                formData.append(key, value.name? value.name : value);
-            }
-        }else if (['avatar'].includes(key)) {
-            console.log('ava',value)
-            if (value[0] instanceof File) {
-                formData.append(key, value[0])
-            }
-            else if (value.length == 0){
-                formData.append(key, '')
+                formattedData[key] = value[0];
+            } else if (value.length == 0) {
+                formattedData[key] = '';
             }
         } else {
-            formData.append(key, value);
+            formattedData[key] = value;
         }
     });
-    return formData;
+    return formattedData;
 };
-const createProfile = async () => {
-    const profileData = formatData()
-    console.log('profile Data', profileData)
+
+const createCustomer = async () => {
+    const profileData = formatData2()
     try {
-        const {data: response} = await useAPI().post(`core/profile_hrs/`, profileData);
-        console.log('response', response.value)
+        const {data: response} = await useAPI().post(`core/customers/`, profileData);
         if (response.value && response.value.id) {
             return true;
         } else {
             throw new Error(t('Unexpected response status'));
         }
     } catch (error) {
-        console.error('Error creating profile:', error);
+        console.error('Error creating customer:', error);
         throw error;
     }
 }
-const updateProfile = async () => {
-    const profileData = formatData()
-    console.log('update profile Data', profileData)
+const updateCustomer = async () => {
+    const profileData = formatData2()
     try {
-        const {data: response} = await useAPI().put(`core/profile_hrs/${useRoute().params.id}/`, profileData);
-        console.log('response', response.value)
+        const {data: response} = await useAPI().put(`core/customers/${useRoute().params.id}/`, profileData);
         if (response.value && response.value.id) {
             return true;
         } else {
@@ -527,36 +496,36 @@ const onSubmit = async () => {
     try {
         busy.value = true;
         if (props.isUpdate) {
-            const isUpdated = await updateProfile();
+            const isUpdated = await updateCustomer();
             if (isUpdated) {
                 useToast().add({
                     curators: t('Success'),
-                    description: t('The profile was successfully updated.'),
+                    description: t('The customer was successfully updated.'),
                     icon: 'i-heroicons-check-circle',
                     color: 'green',
                     duration: 5000,
                     position: 'top-right',
                 });
-                useRouter().push({ name: 'hr' });
+                useRouter().push({ name: 'customers' });
             }
         } else {
-            const isCreated = await createProfile();
+            const isCreated = await createCustomer();
             if (isCreated) {
                 useToast().add({
                     curators: t('Success'),
-                    description: t('The profile was successfully created.'),
+                    description: t('The customer was successfully created.'),
                     icon: 'i-heroicons-check-circle',
                     color: 'green',
                     duration: 5000,
                     position: 'top-right',
                 });
-                useRouter().push({ name: 'hr' });
+                useRouter().push({ name: 'customers' });
             }
         }
     } catch (error) {
         useToast().add({
             curators: t('Error'),
-            description: error.message || t('An error occurred while processing the profile. Please try again later.'),
+            description: error.message || t('An error occurred while processing the customer. Please try again later.'),
             icon: 'i-heroicons-exclamation-circle',
             color: 'red',
             duration: 7000,

@@ -157,6 +157,6 @@ const _selected = computed({
 });
 const selectCustomer =  (row) => {
   const userId = row.id
-  useRouter().push({ name: 'hr-id', params: { id:userId } });
+  useRouter().push({ name: 'customers-id', params: { id:userId } });
 }
 </script>
