@@ -250,5 +250,10 @@
     "The customer was successfully updated.": "Khách hàng đã được cập nhật thành công.",
     "The customer was successfully created.": "Khách hàng đã được tạo thành công.",
     "An error occurred while processing the customer. Please try again later.": "Đã xảy ra lỗi khi xử lý thông tin khách hàng. Vui lòng thử lại sau.",
-    "Unexpected response status": "Trạng thái phản hồi không mong đợi"
+    "Unexpected response status": "Trạng thái phản hồi không mong đợi",
+    "Additional Information": "Thông tin bổ sung",
+    "Contact title": "Danh xưng",
+    "Source": "Nguồn",
+    "Description": "Mô tả",
+    "Contact Code": "Mã liên hệ"
 }

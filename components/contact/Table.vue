@@ -28,22 +28,24 @@
         <template #customer_source-data="{ row }">
             <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.customer_source?$t(row.customer_source):'' }}</span>
         </template>
-        <template #customer_group-data="{ row }">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.customer_group?$t(row.customer_group):'' }}</span>
-        </template>
         <template #type_of_customer-data="{ row }">
             <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.type_of_customer?$t(row.type_of_customer):'' }}</span>
         </template>
         <template #created_at-data="{row}">
             <span class="text-sm font-medium text-gray-900 dark:text-white">{{ dayjs(row.created_at).format('YYYY-MM-DD') }}</span>
         </template >
-        <template #assigned_to-data="{row}">
-            <div v-if="row.assigned_to && row.assigned_to.profile_hr">
-                <NuxtLink :to="{ name: 'hr-id', params: { id: row.assigned_to.profile_hr.id } }">
-                    <UTooltip :text="row.assigned_to.display_name">
-                        <UAvatar :src="row.assigned_to.avatar" :alt="row.assigned_to.display_name" />
-                    </UTooltip>
-                </NuxtLink>
+        <template #curators-data="{row}">
+            <UAvatarGroup size="xs" :max="4" v-if="row.curators && row.curators.length">
+                <div v-for="curator in row.curators" :key="curator.id">
+                    <NuxtLink v-if="curator.profile_hr" :to="{ name: 'hr-id', params: { id: curator.profile_hr.id } }">
+                        <UTooltip :text="curator.display_name">
+                            <UAvatar :src="curator.avatar" :alt="curator.display_name" />
+                        </UTooltip>
+                    </NuxtLink>
+                </div>
+            </UAvatarGroup>
+            <div v-else>
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{$t('No curators assigned')}}</span>
             </div>
         </template>
         </UTable>
@@ -86,7 +88,7 @@ const columns = [
         sortable: true,
     },
     {
-        key: 'contact_code',
+        key: 'customer_code',
         label: t('Contact Code'),
         sortable: true,
     },
@@ -111,12 +113,12 @@ const columns = [
         sortable: true,
     },
     {
-        key: 'assigned_to',
+        key: 'curators',
         label: t('Assigned to'),
         sortable: true,
     },
     {
-        key: 'contact_source',
+        key: 'customer_source',
         label: t('Contact Source'),
         sortable: true,
     },
@@ -126,12 +128,7 @@ const columns = [
     //     sortable: true,
     // },
     {
-        key: 'status',
-        label: t('Status'),
-        sortable: true,
-    },
-    {
-        key: 'type_of_contact',
+        key: 'type_of_customer',
         label: t('Type of contact'),
         sortable: true,
     },
@@ -152,6 +149,6 @@ const _selected = computed({
 });
 const selectCustomer =  (row) => {
   const userId = row.id
-  useRouter().push({ name: 'hr-id', params: { id:userId } });
+  useRouter().push({ name: 'contacts-id', params: { id:userId } });
 }
 </script>

@@ -42,9 +42,9 @@
   // console.log('UserStore', useUserStore())
   const current = defineModel({ default: 0 })
   const links = [{
-    label: t('New')
+    label: t('All')
   }, {
-    label: t('All'),
+    label: t('New'),
     // userCount: true
   }, {
     label: t('1st Contacted'),

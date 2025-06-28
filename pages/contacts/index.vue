@@ -2,7 +2,7 @@
     <div class="">
         <ContactListTabs v-model="tab" />
         <div class="">
-          <ContactViewTabs :status="mappingStatus[tab]" />
+          <ContactViewTabs :filters="mappingStatus[tab]" />
         </div>
     </div>
     
@@ -13,11 +13,11 @@ definePageMeta({
 })
 const tab = ref(0)
 const mappingStatus = {
-  0: 0,
-  1: null,
-  2: 1,
-  3: 2,
-  4: 3,
-  5: 4,
+  0: null,
+  1: {'status':1},
+  2: {'status':2},
+  3: {'status':3},
+  4: {'status':4},
+  5: {'status':5},
 }
 </script>

@@ -117,7 +117,6 @@ const props = defineProps({
 })
 const userFilter = computed({
   get: () => ({
-    status: 'Working',
     ordering: undefined,
     group: undefined,
     page: page.value,
@@ -138,6 +137,7 @@ const customers = computedAsync(async () => {
     reload: reload.value,
     page: page.value,
     page_size: pageSize.value,
+    stage: 2,
   })
   console.log('data', data)
   pageTotal.value = data.count

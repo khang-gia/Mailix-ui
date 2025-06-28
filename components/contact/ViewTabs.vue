@@ -115,26 +115,31 @@ const props = defineProps({
     default: ''
   }
 })
-const userFilter = ref(
-  {
-    status: 'Working',
+const userFilter = computed({
+  get: () => ({
     ordering: undefined,
     group: undefined,
     page: page.value,
     pageSize: pageSize.value,
+    ...props.filters
+  }),
+  set: (filterValue) => {
+    Object.assign(userFilter.value, filterValue);
   }
-)
+});
 const reload = ref(false)
 const contacts = computedAsync(async () => {
-//   const params = {
-//     props.filter
-//   }
-  const {data:data } = await useAPI().get('core/contacts/', { 
+  const params = {
+    ...userFilter.value
+  }
+  const {data:data } = await useAPI().get('core/customers/', { 
     // customer_company_id: userStore.company.id, 
     // search: userStore.search, 
+    ...params,
     reload: reload.value,
     page: page.value,
     page_size: pageSize.value,
+    stage: 1,
     // status: props.status,
   })
   console.log('data',data.value)

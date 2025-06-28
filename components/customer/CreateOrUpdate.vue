@@ -320,6 +320,8 @@ const defaultUserInfo = {
     type_of_customer: 1,
     customer_group: 5, 
     customer_source: 7, 
+    stage: 2,
+    status: 1,
     curators: [],
 }
 const customerInfo = ref(defaultUserInfo)
