@@ -246,9 +246,9 @@ const detailViewDropDown = ref([
       }
     }]
 ])
-const deleteProfile = async () => {
+const deleteCustomer = async () => {
   try {
-      const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
+      const response = await useAPI().post(`core/customers/delete_customers/`, {
         profiles: selectedUsers.value.map(user => user.id)
       });
       console.log('response', response)
@@ -258,25 +258,10 @@ const deleteProfile = async () => {
           throw new Error(t('Unexpected response status'));
       }
   } catch (error) {
-      console.error('Error deleting fee:', error);
+      console.error('Error deleting customer:', error);
       throw error;
   }
-} 
-const deactivateProfile = async () => {
-  try {
-      const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
-          profiles: selectedUsers.value.map(user => user.id)
-      });
-      if (response && response.status.value === 'success') {
-          return true;
-      } else {
-          throw new Error(t('Unexpected response status'));
-      }
-  } catch (error) {
-      console.error('Error deleting fee:', error);
-      throw error;
-  }
-} 
+}
 const actionSelected = [
   [{
     key: 'delete',
@@ -285,7 +270,7 @@ const actionSelected = [
     icon: 'i-heroicons-trash',
     click: () => {
       setAlertModal(true, {
-        message: t('Are you sure you want to delete these profiles?'),
+        message: t('Are you sure you want to delete these customers?'),
         confirmButton: t('OK'),
         denyButton: t('Cancel'),
       }) 
@@ -294,19 +279,19 @@ const actionSelected = [
         async (newVal) => {
           if (!newVal) {
             if (alertConfirm.value) {
-              const isDeleted = await deleteProfile();
+              const isDeleted = await deleteCustomer();
               if (isDeleted) {
                 reload.value = !reload.value
                 useToast().add({
                   title: t('Success'),
-                  description: t('Profile deleted successfully'),
+                  description: t('Customers was deleted successfully.'),
                   icon: 'i-heroicons-check-circle',
                   color: 'green',
                 });
               } else {
                 useToast().add({
                   title: t('Error'),
-                  description: t('Profile deletion failed'),
+                  description: t('An error occurred while deleting customers, please try again later.'),
                   icon: 'i-heroicons-x-circle',
                   color: 'red',
                 });
@@ -317,48 +302,7 @@ const actionSelected = [
         }
       )
     }
-  }],[
-    {
-      key: 'deactivate',
-      label: t('Deactivate'),
-      slot: 'deactivate',
-      icon: 'i-humbleicons:lock',
-      click: () => {
-        setAlertModal(true, {
-          message: t('Are you sure you want to deactivate these profiles?'),
-          confirmButton: t('OK'),
-          denyButton: t('Cancel'),
-        }) 
-        const unwatch = watch(
-          () => alertModal.value,
-          async (newVal) => {
-            if (!newVal) {
-              if (alertConfirm.value) {
-                const isDeactivated = await deactivateProfile();
-                if (isDeactivated) {
-                  reload.value = !reload.value
-                  useToast().add({
-                    title: t('Success'),
-                    description: t('Profile deactivated successfully'),
-                    icon: 'i-heroicons-check-circle',
-                    color: 'green',
-                  });
-                } else {
-                  useToast().add({
-                    title: t('Error'),
-                    description: t('Profile deactivation failed'),
-                    icon: 'i-heroicons-x-circle',
-                    color: 'red',
-                  });
-                }
-              }
-              unwatch();
-            }
-          }
-        )
-      }
-    }
-  ]
+  }],
 ]
 
 </script>

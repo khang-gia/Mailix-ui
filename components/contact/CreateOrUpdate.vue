@@ -1,8 +1,47 @@
 <template>
-    <UCard :ui="{
-        base: 'lg:w-4/5 w-full h-full mx-4 my-6',
+    <UCard v-if="is_correct_data" :ui="{
+        base: viewMode === 'basic' ? 'lg:w-4/5 w-full h-full mx-4 my-6' : 'lg:w-full w-full h-full mx-4 my-6',
         rounded: 'rounded-sm',
     }">
+    <template #header>
+        <div class="flex items-center justify-between">
+            <UBreadcrumb
+                :ui="{ ol: 'gap-x-3', li: 'gap-x-3',active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
+                :links="[{ label: $t('Contact List'), to: '/contacts' }, { label: props.isUpdate ? contactInfo.name : $t('Create contact') }]">
+                <!-- <template #divider>
+                    <span class="w-8 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
+                </template> -->
+            </UBreadcrumb>
+            <div class="flex items-center space-x-2">
+                <USelectMenu
+                        v-if="props.isUpdate"
+                        class="w-full"
+                        :options="contact_statuses"
+                        :placeholder="$t('Change status')"
+                        valueAttribute="value"
+                        option-attribute="label"
+                        @change="onChangeStatus($event)"
+                        icon="i-heroicons-arrow-path"
+                    />
+                <UButton v-if="props.isUpdate" color="gray" variant="solid" icon="fluent:contact-card-ribbon-20-regular" :label="$t('Convert to Customer')" size="sm" @click="onConvertCustomer"/>
+                <UDropdown :items="props.isUpdate ? updateItemDropdown: createItemDropdown" :popper="{ placement: 'bottom-start' }">
+                    <UButton color="gray" variant="soft" icon="i-heroicons-ellipsis-vertical" />
+                    <template #tip="{ item }">
+                        <div class="text-left cursor-text">
+                            <p>
+                            {{$t('Choose view mode')}}
+                            </p>
+                        </div>
+                    </template>
+                    <template #item="{ item }">
+                        <span class="truncate">{{ item.label }}</span>
+
+                        <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
+                    </template>
+                </UDropdown>
+            </div>
+        </div>
+    </template>
         <UCard :ui="{
         rounded: 'rounded-sm',
     }">
@@ -378,32 +417,67 @@ const genders = [
     {label: t('Female'), value: 'Female'},
     {label: t('Other'), value: 'Other'},
 ]
+const is_correct_data = ref(true)
 const loadData = async () => {
     try {
         if (props.isUpdate){
+            is_correct_data.value = false
             const {data: response} = await useAPI().get(`core/customers/${useRoute().params.id}/`);
             contactInfo.value = response.value
             contactInfo.value.dob = contactInfo.value.dob ? new Date(contactInfo.value.dob) : null
-            console.log('response', response)
+            const stage = contactInfo.value.stage
+            if (stage === 1){
+                is_correct_data.value = true
+            }
+            console.log('currentStage', currentStage)
         }
     } catch (error) {
         console.error('Error loading data:', error);
     }
 };
 loadData()
+const viewMode = ref('basic')
+const updateItemDropdown = ref([
+    [{
+        slot: 'tip',
+        disabled: true
+    }],
+    [{
+      label: t('Basic'),
+      icon: 'bi:card-heading',
+      click: () => {
+        viewMode.value = 'basic'
+      }
+    },{
+      label: t('Full'),
+      icon: 'tdesign:frame-filled',
+      click: () => {
+        viewMode.value = 'full'
+      }
+    }]
+])
+const createItemDropdown = ref([
+    [{
+        slot: 'tip',
+        disabled: true
+    }],
+    [{
+      label: t('Basic'),
+      icon: 'bi:card-heading',
+      click: () => {
+        viewMode.value = 'basic'
+      }
+    },{
+      label: t('Standard'),
+      icon: 'ant-design:fullscreen-outlined',
+      click: () => {
+        viewMode.value = 'standard'
+      }
+    }]
+])
 const type_of_customers = [
     {label: t('Personal'), value: 1},
     {label: t('Organization'), value: 2},
-]
-const customer_groups = [
-    {label: t('Loyal Customer'), value: 1},
-    {label: t('Former Customer'), value: 2},
-    {label: t('Potential Customer'), value: 3},
-    {label: t('Casual Customer'), value: 4},
-    {label: t('Newly acquired lead'), value: 5},
-    {label: t('Nurturing customer lead'), value: 6},
-    {label: 'VIP', value: 7},
-    {label: 'VVIP', value: 8},
 ]
 const customer_sources = [
     {label: 'Facebook', value: 1},
@@ -478,6 +552,17 @@ const type_of_contacts = [
     { value: 14, label: t('WeChat') },
     { value: 15, label: t('Other') },
 ];
+const contact_statuses = [
+    { value: 1, label: t('New') },
+    { value: 2, label: t('1st Contacted') },
+    { value: 3, label: t('2nd Contacted') },
+    { value: 4, label: t('Consulting') },
+    { value: 5, label: t('Negotiating') },
+    { value: 6, label: t('Contracted') },
+    { value: 7, label: t('Quoted') },
+    { value: 8, label: t('Old Customer') },
+    { value: 10, label: t('Others') },
+];
 const onAddItem = () =>{
     contactInfo.value.additional_infos.push({
         type_of_contact: null,
@@ -515,7 +600,7 @@ const formatData2 = () => {
     return formattedData;
 };
 
-const createCustomer = async () => {
+const createContact = async () => {
     const profileData = formatData2()
     try {
         const {data: response} = await useAPI().post(`core/customers/`, profileData);
@@ -529,7 +614,7 @@ const createCustomer = async () => {
         throw error;
     }
 }
-const updateCustomer = async () => {
+const updateContact = async () => {
     const profileData = formatData2()
     try {
         const {data: response} = await useAPI().put(`core/customers/${useRoute().params.id}/`, profileData);
@@ -544,6 +629,35 @@ const updateCustomer = async () => {
     }
 }
 
+const convertToCustomer = async () => {
+    const profileData = formatData2()
+    try {
+        const {data: response} = await useAPI().post(`core/customers/${useRoute().params.id}/convert_to_customer/`, profileData);
+        if (response.value && response.value.id) {
+            return true;
+        } else {
+            throw new Error(t('Unexpected response status'));
+        }
+    } catch (error) {
+        console.error('Error creating profile:', error);
+        throw error;
+    }
+}
+const changeStatus = async (contact_status) => {
+    try {
+        const {data: response} = await useAPI().post(`core/customers/${useRoute().params.id}/contact_change_status/`, {
+            status: contact_status,
+        });
+        if (response.value && response.value.id) {
+            return true;
+        } else {
+            throw new Error(t('Unexpected response status'));
+        }
+    } catch (error) {
+        console.error('Error creating profile:', error);
+        throw error;
+    }
+}
 const validateSchema = async () => {
     try {
         await schema.validate(contactInfo.value, { abortEarly: false });
@@ -565,7 +679,7 @@ const onSubmit = async () => {
     try {
         busy.value = true;
         if (props.isUpdate) {
-            const isUpdated = await updateCustomer();
+            const isUpdated = await updateContact();
             if (isUpdated) {
                 useToast().add({
                     curators: t('Success'),
@@ -578,7 +692,7 @@ const onSubmit = async () => {
                 useRouter().push({ name: 'contacts' });
             }
         } else {
-            const isCreated = await createCustomer();
+            const isCreated = await createContact();
             if (isCreated) {
                 useToast().add({
                     curators: t('Success'),
@@ -595,6 +709,76 @@ const onSubmit = async () => {
         useToast().add({
             curators: t('Error'),
             description: error.message || t('An error occurred while processing the customer. Please try again later.'),
+            icon: 'i-heroicons-exclamation-circle',
+            color: 'red',
+            duration: 7000,
+            position: 'top-right',
+        });
+    } finally {
+        busy.value = false;
+    }
+};
+const onConvertCustomer = async () => {
+    try {
+        busy.value = true;
+        if (props.isUpdate) {
+            const isUpdated = await convertToCustomer();
+            if (isUpdated) {
+                useToast().add({
+                    curators: t('Success'),
+                    description: t('The contact was successfully converted to customer.'),
+                    icon: 'i-heroicons-check-circle',
+                    color: 'green',
+                    duration: 5000,
+                    position: 'top-right',
+                });
+            }
+            useRouter().push({ name: 'customers' });
+        } 
+    } catch (error) {
+        useToast().add({
+            curators: t('Error'),
+            description: error.message || t('An error occurred while converting the contact to customer. Please try again later.'),
+            icon: 'i-heroicons-exclamation-circle',
+            color: 'red',
+            duration: 7000,
+            position: 'top-right',
+        });
+    } finally {
+        busy.value = false;
+    }
+};
+const onChangeStatus = async (contact_status) => {
+    if (!contact_status) {
+        useToast().add({
+            curators: t('Error'),
+            description: t('Please select a contact status.'),
+            icon: 'i-heroicons-exclamation-circle',
+            color: 'red',
+            duration: 5000,
+            position: 'top-right',
+        });
+        return;
+    }
+    try {
+        busy.value = true;
+        if (props.isUpdate) {
+            const isUpdated = await changeStatus(contact_status);
+            if (isUpdated) {
+                useToast().add({
+                    curators: t('Success'),
+                    description: t('The contact status was successfully changed.'),
+                    icon: 'i-heroicons-check-circle',
+                    color: 'green',
+                    duration: 5000,
+                    position: 'top-right',
+                });
+            }
+        } 
+    } catch (error) {
+        useToast().add({
+            curators: t('Error'),
+            description: error.message || t('An error occurred while changing the contact status. Please try again later.'),
             icon: 'i-heroicons-exclamation-circle',
             color: 'red',
             duration: 7000,

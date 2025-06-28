@@ -1,8 +1,37 @@
 <template>
     <UCard :ui="{
-        base: 'lg:w-4/5 w-full h-full mx-4 my-6',
+        base: viewMode === 'basic' ? 'lg:w-4/5 w-full h-full mx-4 my-6' : 'lg:w-full w-full h-full mx-4 my-6',
         rounded: 'rounded-sm',
     }">
+        <template #header>
+            <div class="flex items-center justify-between">
+                <UBreadcrumb
+                    :ui="{ ol: 'gap-x-3', li: 'gap-x-3',active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
+                    :links="[{ label: $t('Customer List'), to: '/customers' }, { label: props.isUpdate ? customerInfo.name : $t('Create customer') }]">
+                    <!-- <template #divider>
+                        <span class="w-8 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
+                    </template> -->
+                </UBreadcrumb>
+                <div class="flex items-center space-x-2">
+                    <UDropdown :items="props.isUpdate ? updateItemDropdown: createItemDropdown" :popper="{ placement: 'bottom-start' }">
+                        <UButton color="gray" variant="soft" icon="i-heroicons-ellipsis-vertical" />
+                        <template #tip="{ item }">
+                            <div class="text-left cursor-text">
+                                <p>
+                                {{$t('Choose view mode')}}
+                                </p>
+                            </div>
+                        </template>
+                        <template #item="{ item }">
+                            <span class="truncate">{{ item.label }}</span>
+
+                            <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
+                        </template>
+                    </UDropdown>
+                </div>
+            </div>
+        </template>
+    
         <UCard :ui="{
         rounded: 'rounded-sm',
     }">
@@ -307,6 +336,45 @@ const props = defineProps({
         default: () => ({}),
     },
 })
+const viewMode = ref('basic')
+const updateItemDropdown = ref([
+    [{
+        slot: 'tip',
+        disabled: true
+    }],
+    [{
+      label: t('Basic'),
+      icon: 'bi:card-heading',
+      click: () => {
+        viewMode.value = 'basic'
+      }
+    },{
+      label: t('Full'),
+      icon: 'tdesign:frame-filled',
+      click: () => {
+        viewMode.value = 'full'
+      }
+    }]
+])
+const createItemDropdown = ref([
+    [{
+        slot: 'tip',
+        disabled: true
+    }],
+    [{
+      label: t('Basic'),
+      icon: 'bi:card-heading',
+      click: () => {
+        viewMode.value = 'basic'
+      }
+    },{
+      label: t('Standard'),
+      icon: 'ant-design:fullscreen-outlined',
+      click: () => {
+        viewMode.value = 'standard'
+      }
+    }]
+])
 const defaultUserInfo = {
     name: '',
     customer_code: '',
