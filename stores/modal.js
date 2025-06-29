@@ -1,12 +1,7 @@
 import { defineStore } from 'pinia'
 
 export const useModalStore = defineStore('modalStore', () => {
-  const stockListModal = ref(false)
-  const stockInfoModal = ref(false)
-  const indexInfoModal = ref(false)
-  const indexInfo = ref(null)
   const modalType = ref('')
-  const stockListInfo = ref(null)
 
   const alertModal = ref(false)
   const alertProps = ref({})
@@ -38,26 +33,12 @@ export const useModalStore = defineStore('modalStore', () => {
     username: ''
   })
   const isLive = computed(() => draggableModalInfo.value.embed_url !== '')
-  function setStockListModal(value) {
-    stockListModal.value = value
-  }
 
   function setModalType(type) {
     modalType.value = type
   }
 
-  function setStockListInfo(id) {
-    stockListInfo.value = id
-  }
 
-  function setStockInfoModal(value, symbol) {
-    stockInfoModal.value = value
-  }
-
-  function setIndexInfoModal(value, idx) {
-    indexInfoModal.value = value
-    indexInfo.value = idx
-  }
   function setAlertModal(value, props, confirm = false) {
     alertModal.value = value
     alertProps.value = props
@@ -104,10 +85,7 @@ export const useModalStore = defineStore('modalStore', () => {
     accountData.value = data
   }
   return { 
-    setStockListModal, stockListModal,
-    setStockInfoModal, stockInfoModal,
-    modalType, stockListInfo, setModalType, setStockListInfo,
-    setIndexInfoModal, indexInfoModal, indexInfo, setAlertModal, alertModal, alertProps, alertConfirm,
+    modalType, setModalType, setAlertModal, alertModal, alertProps, alertConfirm,
     setAuthModal, authModalMode, authModalOpen,
     setFeedbackModal, feedbackModal,
     setSearchModal, searchModal, draggableModal, toggleDraggableModal, draggableModalInfo, setDraggableModalInfo, setDraggableModal, isLive,
