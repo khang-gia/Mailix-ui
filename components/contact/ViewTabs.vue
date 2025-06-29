@@ -74,12 +74,12 @@
           </UButton>
         </UDropdown>
       </div>
-      <div class="flex justify-end">
+      <!-- <div class="flex justify-end">
           
           <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'hr-upload'}"/>
           <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs"/>
           <UButton color="gray" variant="ghost" icon="i-heroicons-cog-6-tooth" :label="$t('Setting')" size="xs" :to="{name: 'hr-setting'}"/>
-      </div>
+      </div> -->
     </div>
     
     <div class="p-2">
@@ -92,6 +92,7 @@
         </template>
       </UCard>
     </div>
+    <AdditionFilters v-model="isOpenFilter" :filters="additionalFilters" @update:addtion-filters="additionalFilters=$event" view="contacts"/>
 </template>
 
 <script setup>
@@ -109,6 +110,12 @@ const pageSize = ref(10)
 const pageFrom = computed(() => (page.value - 1) * pageSize.value + 1)
 const pageTo = computed(() => Math.min(page.value * pageSize.value, pageTotal.value))
 const selectedUsers = ref([])
+const additionalFilters = ref({
+  type_of_customers: [],
+  customer_sources: [],
+  curators: [],
+})
+const isOpenFilter = ref(false)
 const props = defineProps({
   filters: {
     type: String,
@@ -157,11 +164,11 @@ const listViewDropdown = ref([
         console.log('hehe')
       }
     },{
-      label: t('Group by'),
-      icon: 'i-heroicons-rectangle-group',
+      label: t('Filter by'),
+      icon: 'i-heroicons-funnel',
       slot:"group",
       click: () => {
-        console.log('hehe')
+        isOpenFilter.value = true
       }
     },{
       label: t('Select display columns'),

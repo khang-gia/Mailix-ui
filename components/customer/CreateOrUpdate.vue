@@ -569,7 +569,7 @@ const onSubmit = async () => {
             const isUpdated = await updateCustomer();
             if (isUpdated) {
                 useToast().add({
-                    curators: t('Success'),
+                    title: t('Success'),
                     description: t('The customer was successfully updated.'),
                     icon: 'i-heroicons-check-circle',
                     color: 'green',
@@ -582,7 +582,7 @@ const onSubmit = async () => {
             const isCreated = await createCustomer();
             if (isCreated) {
                 useToast().add({
-                    curators: t('Success'),
+                    title: t('Success'),
                     description: t('The customer was successfully created.'),
                     icon: 'i-heroicons-check-circle',
                     color: 'green',
@@ -594,7 +594,7 @@ const onSubmit = async () => {
         }
     } catch (error) {
         useToast().add({
-            curators: t('Error'),
+            title: t('Error'),
             description: error.message || t('An error occurred while processing the customer. Please try again later.'),
             icon: 'i-heroicons-exclamation-circle',
             color: 'red',

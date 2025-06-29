@@ -273,5 +273,9 @@
     "An error occurred while changing the contact status. Please try again later.": "Đã xảy ra lỗi khi thay đổi trạng thái liên hệ. Vui lòng thử lại sau.",
     "Create customer": "Tạo khách hàng",
     "Create contact": "Tạo liên hệ",
-    "Customer List": "Danh sách khách hàng"
+    "Customer List": "Danh sách khách hàng",
+    "Filter by": "Lọc theo",
+    "Additional Filters": "Bộ lọc bổ sung",
+    "Filter": "Lọc",
+    "Reset": "Đặt lại"
 }
