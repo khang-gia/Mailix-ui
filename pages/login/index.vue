@@ -29,10 +29,10 @@
             </div>
             <div class="flex justify-between items-center mt-4">
                 <div>
-                    <input class="mr-2" type="checkbox" value="" id="flexCheckDefault">
+                    <!-- <input class="mr-2" type="checkbox" value="" id="flexCheckDefault">
                     <label class="text-gray-600" for="flexCheckDefault">
                         Ghi nhớ tôi
-                    </label>
+                    </label> -->
                 </div>
                 <div>
                     <!-- <button type="button" @click="onForgotPassword" class="text-sm text-blue-500 hover:underline">
@@ -55,6 +55,10 @@
             <div>
             <FormOTPInput :length="OTP_LENGTH" @input="onOTPReady"></FormOTPInput>
             </div>
+            <UCheckbox
+                v-model="trustDevice"
+                class="text-slate-800 dark:text-white"
+                :label="$t('Trust this device')"/>
             <BaseButton
             type="submit"
             class="w-full text-white bg-primary-600 enabled:hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm dark:bg-primary-600 enabled:dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -92,6 +96,7 @@ const creds = ref({
 const inputOtp = ref('')
 const OTP_LENGTH = 6
 const busy = ref(false)
+const trustDevice = ref(false)
 const snackbar = useMySnackBar()
 const { signIn, status } = useAuth()
 const preSignIn = async (creds) => {
@@ -126,11 +131,12 @@ const onPreLogin = async () => {
 const togglePasswordVisibility = () => {
     showPassword.value = !showPassword.value
 }
-const verify = async (username, code) => {
+const verify = async (username, code, is_trust_device) => {
     busy.value = true
     const { data, error } = await useAPI().post('/auth/otp/verify/', {
       username,
-      code
+      code,
+      is_trust_device
     })
     busy.value = false
     if (error.value) {
@@ -183,7 +189,8 @@ const onSubmitOTP = async () => {
     try {
         const res = await verify(
             creds.value.username,
-            inputOtp.value
+            inputOtp.value,
+            trustDevice.value
         )
         snackbar.success('Xác thực thành công.')
         resetCountdown()

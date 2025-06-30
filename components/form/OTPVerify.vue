@@ -9,6 +9,10 @@
     <div>
       <FormOTPInput :length="OTP_LENGTH" @input="onOTPReady"></FormOTPInput>
     </div>
+    <UCheckbox
+      v-model="trustDevice"
+      class="text-slate-800 dark:text-white"
+      :label="$t('Trust this device')"/>
     <BaseButton
       type="submit"
       class="w-full text-white bg-primary-600 enabled:hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm dark:bg-primary-600 enabled:dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -40,12 +44,13 @@
   const OTP_LENGTH = 6
   const busy = ref(false)
   const inputOtp = ref('')
-
-  const verify = async (username, code) => {
+  const trustDevice = ref(false)
+  const verify = async (username, code, is_trust_device) => {
     busy.value = true
     const { data, error } = await useAPI().post('/auth/otp/verify/', {
       username,
-      code
+      code,
+      is_trust_device
     })
     busy.value = false
     if (error.value) {
@@ -101,7 +106,8 @@
     try {
       const res = await verify(
         props.data.username,
-        inputOtp.value
+        inputOtp.value,
+        trustDevice.value
       )
       snackbar.success('Xác thực thành công.')
       resetCountdown()
