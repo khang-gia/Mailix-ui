@@ -278,5 +278,18 @@
     "Additional Filters": "Bộ lọc bổ sung",
     "Filter": "Lọc",
     "Reset": "Đặt lại",
-    "Trust this device": "Tin tưởng thiết bị này"
+    "Trust this device": "Tin tưởng thiết bị này",
+    "Assigned work": "Đã được giao",
+    "Unassigned work": "Chưa được giao",
+    "In progress": "Đang thực hiện",
+    "Work Name": "Tên công việc",
+    "Work Code": "Mã công việc",
+    "Work assigned to": "Người thực hiện",
+    "Work assigned by": "Người giao",
+    "Work manage by": "Quản lý",
+    "Progress":"Tiến độ",
+    "Actual start date": "Ngày bắt đầu thực tế",
+    "Created By": "Tạo bởi",
+    "No user assigned" : "Không có người thực hiện",
+    "Assigned by me":"Được giao bởi tôi"
 }

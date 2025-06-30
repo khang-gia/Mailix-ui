@@ -1,23 +1,25 @@
 <template>
     <div class="">
-        <UserListTabs v-model="tab" />
+        <WorkListTabs v-model="tab" />
         <div class="">
-          <UserHrTab :status="mappingStatus[tab]" />
+          <WorkViewTabs :filters="mappingFilter[tab]" />
         </div>
     </div>
     
 </template>
 <script setup>
+const {  data: userInfo } = useAuth()
+
 definePageMeta({
   title: 'Danh sách công việc'
 })
 const tab = ref(0)
-const mappingStatus = {
-  0: 0,
-  1: null,
-  2: 1,
-  3: 2,
-  4: 3,
-  5: 4,
+const mappingFilter = {
+  0: null,
+  1: {'status':2},
+  2: {'assigned_to__isnull':false},
+  3: {'assigned_to__isnull':true},
+  4: {'assigned_to':userInfo.value.id},
+  5: {'type_of_customer':1},
 }
 </script>
