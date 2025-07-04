@@ -66,6 +66,16 @@
                         :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
                 </UFormGroup>
                 <UFormGroup
+                    :label="$t('Description')"
+                    name="description">
+                    <UTextarea
+                        v-model="workInfo.description"
+                        :placeholder="$t('Description')"
+                        rows="1"
+                        resize
+                    />
+                </UFormGroup>
+                <UFormGroup
                     :label="$t('Work assigned to')"
                     name="assigned_to">
                     <CustomerUserSelect v-model="workInfo.assigned_to" :placeholder="$t('Work assigned to')" :multiple="true"/>
@@ -80,20 +90,61 @@
                     name="managers">
                     <CustomerUserSelect v-model="workInfo.managers" :placeholder="$t('Work manage by')" :multiple="true"/>
                 </UFormGroup>
-                <!-- <UFormGroup
-                    :label="$t('Type of customer')"
-                    name="type_of_customer">
+                <UFormGroup
+                    :label="$t('Start date')"
+                    name='start_date'>
+                    <BaseDatePicker
+                        v-model="workInfo.start_date"
+                        ref="startdatepicker"
+                        :required="true"
+                        class="w-full"
+                        buttonType="outline"
+                        :place-holder="$t('Start date')"
+                    />
+                </UFormGroup>
+                <UFormGroup
+                    :label="$t('End date')"
+                    name='end_date'>
+                    <BaseDatePicker
+                        v-model="workInfo.end_date"
+                        ref="enddatepicker"
+                        :required="true"
+                        class="w-full"
+                        buttonType="outline"
+                        :place-holder="$t('End date')"
+                    />
+                </UFormGroup>
+                <UFormGroup
+                    :label="$t('Actual start date')"
+                    name='actual_start_date'>
+                    <BaseDatePicker
+                        v-model="workInfo.actual_start_date"
+                        ref="startdatepicker"
+                        :required="true"
+                        class="w-full"
+                        buttonType="outline"
+                        :place-holder="$t('Actual start date')"
+                    />
+                </UFormGroup>
+                <UFormGroup
+                    :label="$t('Priority')"
+                    name="priority">
                     <USelectMenu
                         class="w-full"
-                        v-model="workInfo.type_of_customer"
-                        :options="type_of_customers"
-                        :placeholder="$t('Type of customer')"
+                        v-model="workInfo.priority"
+                        :options="priorities"
+                        :placeholder="$t('Priority')"
                         valueAttribute="value"
                         option-attribute="label"
                         :is-dark="colorMode.value === 'dark'"
                     />
                 </UFormGroup>
                 <UFormGroup
+                    :label="$t('Related Work') + ' (' + $t('Parent work') + ')'"
+                    name="Related Work">
+                    <WorkRelatedSelect v-model="workInfo.related_work" :placeholder="$t('Related Work')"/>
+                </UFormGroup>
+                <!--<UFormGroup
                     :label="$t('Customer Group')"
                     name="customer_group">
                     <USelectMenu
@@ -139,6 +190,8 @@ const busy = ref(false)
 const colorMode = useColorMode()
 const dayjs = useDayjs()
 const errors = ref({})
+const { data: userInfo } = useAuth()
+
 const schema = yup.object({
     name: yup.string().required(t('This field is required')),
     code: yup.string()
@@ -223,10 +276,16 @@ const defaultWorkInfo = {
     code: '',
     assigned_to: [],
     assigned_by:[],
-    stage: 2,
     status: 1,
     managers: [],
-}
+    start_date: '',
+    end_date: '',
+    actual_start_date: '',
+    priority: 2,
+    related_work:'',
+    created_by: userInfo.value.id,
+    description: ''
+}  
 const workInfo = ref(defaultWorkInfo)
 
 const loadData = async () => {
@@ -234,6 +293,10 @@ const loadData = async () => {
         if (props.isUpdate){
             const {data: response} = await useAPI().get(`core/works/${useRoute().params.id}/`);
             workInfo.value = response.value
+            workInfo.value.start_date = workInfo.value.start_date ? new Date(workInfo.value.start_date) : null
+            workInfo.value.end_date = workInfo.value.end_date ? new Date(workInfo.value.end_date) : null
+            workInfo.value.actual_start_date = workInfo.value.actual_start_date ? new Date(workInfo.value.actual_start_date) : null
+            workInfo.value.related_work = workInfo.value.related_work ? workInfo.value.related_work.id : '',
             console.log('response', workInfo.value)
         }
     } catch (error) {
@@ -245,15 +308,12 @@ const type_of_customers = [
     {label: t('Personal'), value: 1},
     {label: t('Organization'), value: 2},
 ]
-const customer_groups = [
-    {label: t('Loyal Customer'), value: 1},
-    {label: t('Former Customer'), value: 2},
-    {label: t('Potential Customer'), value: 3},
-    {label: t('Casual Customer'), value: 4},
-    {label: t('Newly acquired lead'), value: 5},
-    {label: t('Nurturing customer lead'), value: 6},
-    {label: 'VIP', value: 7},
-    {label: 'VVIP', value: 8},
+const priorities = [
+    {label: t('Low'), value: 1},
+    {label: t('Medium'), value: 2},
+    {label: t('High'), value: 3},
+    {label: t('Urgent'), value: 4},
+    {label: t('Critical'), value: 5},
 ]
 const formatData2 = () => {
     const formattedData = {};
@@ -268,7 +328,7 @@ const formatData2 = () => {
             });
         } else if (typeof value === 'object' && value !== null && value.id) {
             formattedData[key] = value.id;
-        } else if (['dob'].includes(key)) {
+        } else if (['start_date','end_date','actual_start_date'].includes(key)) {
             formattedData[key] = dayjs(value).format('YYYY-MM-DD');
         }else if (['avatar'].includes(key)){
             if (value[0] instanceof File) {
@@ -343,7 +403,7 @@ const onSubmit = async () => {
                     duration: 5000,
                     position: 'top-right',
                 });
-                useRouter().push({ name: 'customers' });
+                useRouter().push({ name: 'works' });
             }
         } else {
             const isCreated = await createCustomer();
@@ -356,7 +416,7 @@ const onSubmit = async () => {
                     duration: 5000,
                     position: 'top-right',
                 });
-                useRouter().push({ name: 'customers' });
+                useRouter().push({ name: 'works' });
             }
         }
     } catch (error) {

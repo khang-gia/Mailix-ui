@@ -88,7 +88,7 @@
                 </NuxtLink>
             </UAvatarGroup>
             <div v-else>
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{$t('No user assigned')}}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{$t('No creator information')}}</span>
             </div>
         </template>
         </UTable>

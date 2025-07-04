@@ -291,5 +291,19 @@
     "Actual start date": "Ngày bắt đầu thực tế",
     "Created By": "Tạo bởi",
     "No user assigned" : "Không có người thực hiện",
-    "Assigned by me":"Được giao bởi tôi"
+    "Assigned by me":"Được giao bởi tôi",
+    "Work Information": "Thông tin công việc",
+    "Work List": "Danh sách công việc",
+    "Create work": "Tạo công việc",
+    "Start date": "Ngày bắt đầu",
+    "End date": "Ngày kết thúc",
+    "Priority": "Độ ưu tiên",
+    "Low": "Thấp",
+    "Medium": "Trung bình",
+    "High": "Cao",
+    "Urgent": "Khẩn cấp",
+    "Critical": "Nghiêm trọng",
+    "Related Work": "Công việc liên quan",
+    "Parent work": "Công việc cha",
+    "No creator information": "Không có thông tin người tạo"
 }
