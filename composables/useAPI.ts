@@ -43,6 +43,9 @@ export const useAPI = () => {
 
   function post(url: string, body: any = {}) {
     const headers = getHeaders() as { [key: string]: string }
+    const withCredentials = body.withCredentials || false
+    delete body.withCredentials
+
     if (!(body instanceof FormData)) {
       body = JSON.stringify(body)
     } else {
@@ -53,6 +56,7 @@ export const useAPI = () => {
       method: 'POST',
       body,
       headers: headers,
+      credentials: withCredentials ? 'include' : 'same-origin'
     })
   }
 

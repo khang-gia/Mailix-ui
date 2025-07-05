@@ -102,7 +102,8 @@ const { signIn, status } = useAuth()
 const preSignIn = async (creds) => {
     const { data, error } = await useAPI().post('/auth/pre_login/', {
         username: creds.username,
-        password: creds.password
+        password: creds.password,
+        withCredentials: true
     })
     busy.value = false
     if (error.value) {
