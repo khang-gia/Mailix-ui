@@ -305,5 +305,15 @@
     "Critical": "Nghiêm trọng",
     "Related Work": "Công việc liên quan",
     "Parent work": "Công việc cha",
-    "No creator information": "Không có thông tin người tạo"
+    "No creator information": "Không có thông tin người tạo",
+    "Create title": "Tạo chức vụ",
+    "Search title": "Tìm kiếm chức vụ",
+    "title": "chức vụ",
+    "account": "tài khoản",
+    "Name": "Tên",
+    "Code": "Mã",
+    "Company branch": "Chi nhánh công ty",
+    "Department type": "Loại phòng ban",
+    "Create department": "Tạo phòng ban",
+    "department": "phòng ban"
 }

@@ -198,6 +198,16 @@
                         :is-dark="colorMode.value === 'dark'"
                     />
                 </UFormGroup>
+                <UFormGroup
+                    :label="$t('Description')"
+                    name="description">
+                    <UTextarea
+                        v-model="contactInfo.description"
+                        :placeholder="$t('Description')"
+                        rows="1"
+                        resize
+                    />
+                </UFormGroup>
             </UForm>
         </UCard>
         <UCard :ui="{

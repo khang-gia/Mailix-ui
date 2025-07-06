@@ -312,45 +312,12 @@
                         <UFormGroup
                             :label="$t('Title')"
                             name="title">
-                            <USelectMenu
-                                class="w-full"
-                                v-model="userInfo.title"
-                                :options="titles"
-                                :placeholder="$t('Title')"
-                                valueAttribute="id"
-                                option-attribute="name"
-                                :is-dark="colorMode.value === 'dark'"
-                            />
+                            <CoreTitleSelectCreate v-model="userInfo.title" :placeholder="$t('Title')"/>
                         </UFormGroup>
-                        <UFormGroup
+                         <UFormGroup
                             :label="$t('Department')"
                             name="department">
-                            <USelectMenu
-                                class="w-full"
-                                v-model="userInfo.department"
-                                :options="departments"
-                                :placeholder="$t('Department')"
-                                option-attribute="name"
-                                value-attribute="id"
-                                :is-dark="colorMode.value === 'dark'"
-                            >
-                            <!-- <template #label>
-                                <template v-if="labels">
-                                <span>{{ departmentLabels.name }}</span>
-                                </template>
-                                <template v-else>
-                                    <span class="text-gray-500 dark:text-gray-400 truncate">Select a label</span>
-                                </template>
-                            </template>
-                            <template #option="{ option }">
-                                <span class="truncate">{{ option.name }}</span>
-                            </template>
-
-                            <template #option-create="{ option }">
-                                <span class="flex-shrink-0">{{$t('New department')}}:</span>
-                                <span class="block truncate">{{ option.name }}</span>
-                            </template> -->
-                        </USelectMenu>
+                            <CoreDeparmentSelectCreate v-model="userInfo.department" :placeholder="$t('Department')"/>
                         </UFormGroup>
                         <UFormGroup
                             :label="$t('Type of labour')"
@@ -496,6 +463,7 @@ const defaultUserInfo = {
     email:'',
     permanent_address:'',
     current_address:'',
+    title: '',
 }
 const userInfo = ref(defaultUserInfo)
 const genders = [
@@ -507,11 +475,10 @@ const titles = ref([])
 const departments = ref([])
 const loadData = async () => {
     try {
-        const {data:titleData}= await useAPI().get("core/titles/",{});
-        titles.value = titleData.value.results
-        const {data:departmentData}= await useAPI().get("system/departments/",{});
-        departments.value = departmentData.value.results
-        console.log('departmentData', departmentData.value.results)
+        // const {data:titleData}= await useAPI().get("core/titles/",{});
+        // titles.value = titleData.value.results
+        // const {data:departmentData}= await useAPI().get("system/departments/",{});
+        // departments.value = departmentData.value.results
         if (props.isUpdate){
             const {data: response} = await useAPI().get(`core/profile_hrs/${useRoute().params.id}/`);
             userInfo.value = response.value

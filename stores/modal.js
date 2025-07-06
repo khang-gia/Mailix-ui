@@ -25,13 +25,8 @@ export const useModalStore = defineStore('modalStore', () => {
     imageWidth: 0,
     imageHeight: 0
   })
-  const createAccountModal = ref(false)
-  const accountData = ref({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    username: ''
-  })
+  const createModal = ref(false)
+  const modalCreateType = ref('')
   const isLive = computed(() => draggableModalInfo.value.embed_url !== '')
 
   function setModalType(type) {
@@ -75,14 +70,9 @@ export const useModalStore = defineStore('modalStore', () => {
   function setImageData(data) {
     imageData.value = data
   }
-  function setCreateAccountModal(value, data) {
-    createAccountModal.value = value
-    if (data) {
-      accountData.value = data
-    }
-  }
-  function setAccountData(data) {
-    accountData.value = data
+  function setCreateModal(value, type) {
+    createModal.value = value
+    modalCreateType.value = type
   }
   return { 
     modalType, setModalType, setAlertModal, alertModal, alertProps, alertConfirm,
@@ -90,6 +80,6 @@ export const useModalStore = defineStore('modalStore', () => {
     setFeedbackModal, feedbackModal,
     setSearchModal, searchModal, draggableModal, toggleDraggableModal, draggableModalInfo, setDraggableModalInfo, setDraggableModal, isLive,
     setCreateArticleTypeModal, articleTypeModal, imageData, setExpandImageModal, expandImageModal,
-    setImageData,setCreateAccountModal, createAccountModal, accountData, setAccountData
+    setImageData,setCreateModal, createModal, modalCreateType
   }
 })
