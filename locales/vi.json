@@ -315,5 +315,10 @@
     "Company branch": "Chi nhánh công ty",
     "Department type": "Loại phòng ban",
     "Create department": "Tạo phòng ban",
-    "department": "phòng ban"
+    "department": "phòng ban",
+    "HR": "Nhân sự",
+    "CRM": "Bán hàng",
+    "Contact": "Liên hệ",
+    "Customer":"Khách hàng",
+    "Company":"Công ty"
 }

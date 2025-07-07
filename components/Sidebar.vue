@@ -4,9 +4,8 @@
     <div
         id="sidebar"
         ref="sidebar"
-        class="flex flex-col z-50 left-0 top-0 static translate-x-0 h-screen overflow-y-scroll no-scrollbar w-fit shrink-0 bg-[#FFFFFF] 
+        class="flex flex-col z-50 left-0 top-0 static h-screen overflow-y-scroll no-scrollbar w-full shrink-0 bg-[#FFFFFF] 
         dark:bg-titaca-sb-dark-bg py-4 transition-all duration-200 ease-in-out border-r dark:border-slate-700 dark:text-titaca-sb-dark-text"
-        :class="sidebarOpen ? 'translate-x-0' : '-translate-x-64'"
       >
   
       <div class="flex justify-between mb-2 pr-3 sm:px-2">

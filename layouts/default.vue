@@ -3,7 +3,7 @@
     <div class="flex h-screen overflow-hidden">
 
       <!-- Sidebar -->
-      <Sidebar  />
+      <NewSideBar  />
 
       <!-- Content area -->
       <div class="flex flex-col flex-1 overflow-y-auto overflow-x-hidden z-0 dark:bg-slate-800">
