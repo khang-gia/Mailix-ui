@@ -4,7 +4,8 @@
       <div
           id="sidebar"
           ref="sidebar"
-          class="flex flex-col z-50 left-0 top-0 static h-screen overflow-y-scroll no-scrollbar w-full shrink-0 bg-[#FFFFFF] 
+          :class="isSidebarOpen ? 'w-full' : 'w-14'"
+          class="flex flex-col z-50 left-0 top-0 static h-screen overflow-y-scroll no-scrollbar shrink-0 bg-[#FFFFFF] 
           dark:bg-titaca-sb-dark-bg py-4 transition-all duration-200 ease-in-out border-r dark:border-slate-700 dark:text-titaca-sb-dark-text"
         >
     
@@ -19,15 +20,14 @@
             <NewSidebarLink/>
         </div>
   
-        <div class="pt-3 hidden lg:inline-flex mt-auto text-slate-400 hover:text-slate-300 -translate-y-6">
-          <!-- <div class="px-4 py-2">
-            <button @click.prevent="toggleSidebar">
-              <span class="sr-only">Expand / collapse sidebar</span>
-              <UIcon name="mynaui:sidebar-solid" class="w-6 h-6">
+        <div class="flex justify-end pt-3 mt-auto text-slate-400 hover:text-slate-300 -translate-y-6">
+          <div class="py-2">
+            <UButton color="gray" variant="soft" @click.prevent="setSidebar">
+              <UIcon :name="isSidebarOpen ? 'heroicons:chevron-left': 'heroicons:chevron-right'" >
   
               </UIcon>
-            </button>
-          </div> -->
+            </UButton>
+          </div>
         </div>
         <!-- <Footer v-show="sidebarOpen"></Footer> -->
       </div>
@@ -36,10 +36,14 @@
   
   <script setup>
     const { status, data } = useAuth()
-   
+    import {useUserStore } from '@/stores/user'
+    const userStore = useUserStore()
+    const {setSidebar} = userStore
+    import { storeToRefs } from 'pinia'
+    const { isSidebarOpen } = storeToRefs(userStore)
+
     const trigger = ref(null)
     const sidebar = ref(null)
-    
     const props = defineProps({
       sidebarOpen: {
         type: Boolean,

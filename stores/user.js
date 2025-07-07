@@ -4,8 +4,7 @@ export const useUserStore = defineStore('user', () => {
   const info = ref({})
   const company = ref({})
   const isNullCompany = computed(() => !company.value.id)
-
-
+  const isSidebarOpen = ref(true)
   function setInfo(newInfo) {
     info.value = newInfo
   }
@@ -18,7 +17,9 @@ export const useUserStore = defineStore('user', () => {
     info.value = {}
     company.value = {}
   }
-
+  function setSidebar() {
+    isSidebarOpen.value = !isSidebarOpen.value
+  }
   return {
     clear,
     info,
@@ -26,6 +27,8 @@ export const useUserStore = defineStore('user', () => {
     company,
     setCompany,
     isNullCompany,
+    isSidebarOpen,
+    setSidebar
   }
 }, {
   persist: true,
