@@ -27,6 +27,9 @@ export const useModalStore = defineStore('modalStore', () => {
   })
   const createModal = ref(false)
   const modalCreateType = ref('')
+  const calendarCreateModal = ref(false)
+  const calendarCreateType = ref('')
+  const calendarCreateInfo = ref({})
   const isLive = computed(() => draggableModalInfo.value.embed_url !== '')
 
   function setModalType(type) {
@@ -74,12 +77,17 @@ export const useModalStore = defineStore('modalStore', () => {
     createModal.value = value
     modalCreateType.value = type
   }
+  function setCalendarCreateModal(value, type, info) {
+    calendarCreateModal.value = value
+    calendarCreateType.value = type
+    calendarCreateInfo.value = {...info}
+  }
   return { 
     modalType, setModalType, setAlertModal, alertModal, alertProps, alertConfirm,
     setAuthModal, authModalMode, authModalOpen,
     setFeedbackModal, feedbackModal,
     setSearchModal, searchModal, draggableModal, toggleDraggableModal, draggableModalInfo, setDraggableModalInfo, setDraggableModal, isLive,
     setCreateArticleTypeModal, articleTypeModal, imageData, setExpandImageModal, expandImageModal,
-    setImageData,setCreateModal, createModal, modalCreateType
+    setImageData,setCreateModal, createModal, modalCreateType, setCalendarCreateModal, calendarCreateModal, calendarCreateType, calendarCreateInfo
   }
 })

@@ -97,10 +97,10 @@ const crmSubmenu = ref([
         slot: 'tip',
         disabled: true
     }],
-    [{ link: '/contacts', label: 'Contact',click: () => {
+    [{ link: '/contacts', label: t('Contact'),click: () => {
         useRouter().push({ name: 'contacts' });
     } },
-    { link: '/customers', label: 'Customer', click: () => {
+    { link: '/customers', label: t('Customer'), click: () => {
         useRouter().push({ name: 'customers' });
     } }]
 ])
@@ -113,7 +113,10 @@ const hrmSubmenu = ref([
     }],
     [{ link: '/works', label: 'Công việc', click: () => {
         useRouter().push({ name: 'works' });
-    } },]
+    } },
+    { link: '/schedules', label: t('Schedule'), click: () => {
+        useRouter().push({ name: 'schedules' });
+    } }]
 ])
 const submenuMap = {
   crm: crmSubmenu,

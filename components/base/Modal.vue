@@ -24,7 +24,7 @@
         'bg-white dark:bg-slate-800 rounded shadow-lg overflow-auto max-h-full w-full',
         {
           'max-w-lg': props.size === 'sm',
-          'max-w-2xl': props.size === 'md',
+          'max-w-xl': props.size === 'md',
           'max-w-5xl': props.size === 'lg',
           'max-w-6xl': props.size === 'xl',
           'max-w-7xl': props.size === '2xl',

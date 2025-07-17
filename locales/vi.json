@@ -320,5 +320,14 @@
     "CRM": "Bán hàng",
     "Contact": "Liên hệ",
     "Customer":"Khách hàng",
-    "Company":"Công ty"
+    "Company":"Công ty",
+    "Schedule": "Lập lịch",
+    "today": "Hôm nay",
+    "month": "Tháng",
+    "year": "Năm",
+    "day": "Ngày",
+    "week": "Tuần",
+    "Add calendar title": "Thêm tiêu đề",
+    "All day": "Cả ngày",
+    "Participants": "Người tham gia"
 }

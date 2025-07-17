@@ -9,6 +9,7 @@ import {createI18n} from 'vue-i18n'
 import en from '~/locales/en.json'
 import vi from '~/locales/vi.json'
 import { useI18n } from "vue-i18n";
+
 export default defineNuxtPlugin(nuxtApp => {
     nuxtApp.vueApp.component('vue-tailwind-datepicker', VueTailwindDatepicker)
     nuxtApp.vueApp.use(VueDragscroll)
