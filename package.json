@@ -54,10 +54,18 @@
     "yup": "^1.6.1"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.18",
+    "@fullcalendar/daygrid": "^6.1.18",
+    "@fullcalendar/interaction": "^6.1.18",
+    "@fullcalendar/list": "^6.1.18",
+    "@fullcalendar/rrule": "^6.1.18",
+    "@fullcalendar/timegrid": "^6.1.18",
+    "@fullcalendar/vue3": "^6.1.18",
     "@zadigetvoltaire/nuxt-gtm": "^0.0.13",
     "vue-final-modal": "^4.5.4",
     "vue-i18n": "10",
-    "vue3-drag-resize": "^2.0.5"
+    "vue3-drag-resize": "^2.0.5",
+    "vue3-timepicker": "^1.0.0-beta.2"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
