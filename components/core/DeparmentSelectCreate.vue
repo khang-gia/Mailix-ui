@@ -13,7 +13,7 @@
         debounce=300
     >
     <template #option="{ option: department,  active:active}">
-        <div v-if="department.id === 0">
+        <div v-if="department.id === 0 && isCreate">
             <span class="text-[#0313B0] dark:text-[#E0E0E0] cursor-pointer">
                 <UIcon name="heroicons:plus-solid"/>
                 {{ $t('Create department') }}
@@ -28,13 +28,24 @@ const modalStore = useModalStore()
 const { setCreateModal } = modalStore
 const department = defineModel({ default: '' })
 const colorMode = useColorMode()
-const props = defineProps(['placeholder'])
+const props = defineProps({
+    placeholder: {
+        type: Object,
+        default: {}
+    },
+    isCreate: {
+        type:Boolean,
+        default: false,
+    }
+})
 const loading = ref(false)
 async function search(q) {
     loading.value = true
     const { data } = await useAPI().get('system/departments/', { search: q})
     loading.value = false
-    data.value.results.push({ id: 0, name: '' })
+    if (props.isCreate){
+        data.value.results.push({ id: 0, name: '' })
+    }
     return data.value.results
 }
 const onSelectOption = (value)=>{
