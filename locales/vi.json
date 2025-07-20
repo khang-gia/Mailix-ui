@@ -338,5 +338,10 @@
     "The event was successfully updated.": "Sự kiện đã được cập nhật thành công.",
     "An error occurred while saving the event. Please try again later.": "Đã xảy ra lỗi khi lưu sự kiện. Vui lòng thử lại sau.",
     "The event was successfully deleted.": "Sự kiện đã được xóa thành công.",
-    "An error occurred while deleting the event. Please try again later.": "Đã xảy ra lỗi khi xóa sự kiện. Vui lòng thử lại sau."
+    "An error occurred while deleting the event. Please try again later.": "Đã xảy ra lỗi khi xóa sự kiện. Vui lòng thử lại sau.",
+    "Create schedule": "Tạo lịch nhắc hẹn",
+    "Turn on this option if you want to create a schedule for this work": "Bật tùy chọn nếu bạn muốn tạo lịch nhắc cho công việc này",
+    "Schedule Information": "Thông tin lịch nhắc",
+    "Shedule title": "Tiêu đề",
+    "Add work description...": "Thêm mô tả công việc..."
 }

@@ -93,7 +93,12 @@ import Document from '@tiptap/extension-document'
 import { Placeholder } from '@tiptap/extensions'
 
 const content = defineModel({default:''})
-
+const props = defineProps({
+    placeholder: {
+        type: String,
+        default: 'Thêm nội dung mô tả...'
+    }
+})
 const editor = computed(() => 
     new Editor({
         extensions: [StarterKit, Underline, 
@@ -111,7 +116,7 @@ const editor = computed(() =>
                 },
             }), Document,
         Placeholder.configure({
-            placeholder: 'Thêm nội dung mô tả...',
+            placeholder: props.placeholder,
             showOnlyCurrent: false,
             showOnlyWhenEditable: false,
         }),

@@ -13,6 +13,14 @@
                     </template> -->
                 </UBreadcrumb>
                 <div class="flex items-center space-x-2">
+                    <UButton
+                        v-if="props.isUpdate"
+                        color="primary"
+                        variant="solid"
+                        icon="i-heroicons-calendar-date-range"
+                        :label="$t('Create schedule')"
+                        size="sm"
+                        @click="onCreateSchedule"/>
                     <UDropdown :items="props.isUpdate ? updateItemDropdown: createItemDropdown" :popper="{ placement: 'bottom-start' }">
                         <UButton color="gray" variant="soft" icon="i-heroicons-ellipsis-vertical" />
                         <template #tip="{ item }">
@@ -33,7 +41,8 @@
         </template>
     
         <UCard :ui="{
-        rounded: 'rounded-sm',
+            base: 'my-6',
+            rounded: 'rounded-sm',
     }">
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
                 {{ $t('Work Information') }}
@@ -65,16 +74,7 @@
                         :ui="{ base: 'w-full rounded-lg' }"
                         :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Description')"
-                    name="description">
-                    <UTextarea
-                        v-model="workInfo.description"
-                        :placeholder="$t('Description')"
-                        rows="1"
-                        resize
-                    />
-                </UFormGroup>
+                
                 <UFormGroup
                     :label="$t('Work assigned to')"
                     name="assigned_to">
@@ -144,6 +144,28 @@
                     name="Related Work">
                     <WorkRelatedSelect v-model="workInfo.related_work" :placeholder="$t('Related Work')"/>
                 </UFormGroup>
+                <client-only>
+                        <RickTextEditor v-model="workInfo.description" :placeholder="$t('Add work description...')" />
+                    </client-only>
+                <!-- <UFormGroup
+                    :label="$t('Description')"
+                    name="description">
+                    <client-only>
+                        <RickTextEditor v-model="workInfo.description" />
+                    </client-only>
+                </UFormGroup> -->
+                <UFormGroup
+                    v-if="!props.isUpdate"
+                    :label="$t('Create schedule')"
+                    name="isCreateSchedule">
+                    <div class="space-x-4 flex items-center">
+                        <UToggle v-model="workInfo.isCreateSchedule"/>
+                        <span class="text-sm italic text-gray-500 dark:text-gray-400">
+                            {{ $t('Turn on this option if you want to create a schedule for this work') }}
+                        </span>
+                    </div>
+                </UFormGroup>
+                
                 <!--<UFormGroup
                     :label="$t('Customer Group')"
                     name="customer_group">
@@ -172,7 +194,58 @@
                 </UFormGroup> -->
             </UForm>
         </UCard>
-        
+        <UCard v-if="workInfo.isCreateSchedule" :ui="{
+            base: 'my-6',
+            rounded: 'rounded-sm',
+        }">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                {{ $t('Schedule Information') }}
+            </h2>
+            <UForm :schema="schema" :state="workInfo" class="mx-4 py-2  grid grid-cols-2 gap-4">
+                <UFormGroup
+                    :label="$t('Shedule title')" >
+                    <UInput
+                        v-model="workInfo.schedule.title"
+                        :placeholder="$t('Shedule title')"
+                        :ui="{ base: 'w-full rounded-lg' }"/>
+                </UFormGroup>
+                <UFormGroup
+                    :label="$t('Participants')">
+                    <CustomerUserSelect v-model="workInfo.schedule.participants" :placeholder="$t('Participants')" :multiple="true"/>
+                </UFormGroup>
+                <UFormGroup
+                    :label="$t('Start date')">
+                    <BaseDatePicker
+                        v-model="workInfo.schedule.start_datetime"
+                        rref="startdatepicker"
+                        :required="true"
+                        class="w-full"
+                        :mode="dateMode"
+                        buttonType="outline"
+                    />
+                </UFormGroup>
+                <UFormGroup
+                    :label="$t('End date')"
+                    name='schedule.end_datetime'>
+                    <BaseDatePicker
+                        v-model="workInfo.schedule.end_datetime"
+                        ref="enddatepicker"
+                        :required="true"
+                        class="w-full"
+                        :mode="dateMode"
+                        buttonType="outline"
+                    />
+                </UFormGroup>
+                <UFormGroup
+                    :label="$t('All day')">
+                    <div class="space-x-4 flex items-center">
+                        <UToggle v-model="workInfo.schedule.is_all_day" color="blue"/>
+                        <!-- <span>{{ $t('All day') }}</span> -->
+                    </div>
+                </UFormGroup>
+                
+            </UForm>
+        </UCard>
         <template #footer>
             <div class="flex justify-end items-center space-x-2">
                 <UButton color="white" variant="solid" icon="i-heroicons-x-mark" :label="$t('Cancel')" size="sm" @click="useRouter().back()"/>
@@ -191,7 +264,12 @@ const colorMode = useColorMode()
 const dayjs = useDayjs()
 const errors = ref({})
 const { data: userInfo } = useAuth()
-
+import { useModalStore } from '@/stores/modal'
+const modalStore = useModalStore()
+const { setCalendarCreateModal } = modalStore
+const dateMode = computed(() => {
+    return workInfo.value.schedule.is_all_day ? 'date' : 'datetime'
+})
 const schema = yup.object({
     name: yup.string().required(t('This field is required')),
     code: yup.string()
@@ -284,7 +362,16 @@ const defaultWorkInfo = {
     priority: 2,
     related_work:'',
     created_by: userInfo.value.id,
-    description: ''
+    description: '',
+    isCreateSchedule: false,
+    schedule: {
+        title: '',
+        start_datetime: new Date(),
+        end_datetime: new Date(),
+        is_all_day: false,
+        participants: [],
+        user: userInfo.value.id,
+    }
 }  
 const workInfo = ref(defaultWorkInfo)
 
@@ -431,5 +518,46 @@ const onSubmit = async () => {
     } finally {
         busy.value = false;
     }
+};
+function formatDateInfo(dateStr) {
+  if (!dateStr) return ''
+  const date = new Date(dateStr)
+  const weekdays = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7']
+  const weekday = weekdays[date.getDay()]
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+  return `${weekday}, ${day} tháng ${month}`
+}
+// const handleDateSelect = (selectInfo)  =>{
+//   let calendarApi = selectInfo.view.calendar
+//   calendarApi.unselect() 
+//   let startInfo = formatDateInfo(selectInfo.startStr)
+//   let endDate = new Date(selectInfo.endStr)
+//   endDate.setDate(endDate.getDate() - 1)
+//   let endInfo = formatDateInfo(endDate.toISOString().split('T')[0])
+//   let dateInfo = { 
+//     startStr: startInfo, 
+//     endStr: endInfo, 
+//     start_datetime:selectInfo.start, 
+//     end_datetime:endDate,
+//     is_all_day: selectInfo.allDay,
+//   }
+//   setCalendarCreateModal(true, 'createEvent', { ...dateInfo})
+// }
+const onCreateSchedule = () => {
+    let startDate = new Date()
+    let endDate = new Date()
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+    let startStr = formatDateInfo(new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000).toISOString().split('T')[0]);
+    let endStr = formatDateInfo(endDate.toISOString().split('T')[0]);
+    setCalendarCreateModal(true, 'createEvent', { 
+        title: workInfo.value.name,
+        startStr: startStr,
+        endStr: endStr,
+        start_datetime: startDate,
+        end_datetime: endDate,
+        is_all_day: false,
+    });
 };
 </script>
