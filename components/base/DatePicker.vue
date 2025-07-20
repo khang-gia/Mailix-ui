@@ -10,6 +10,8 @@
                     :mode="mode"
                     :minDate="minDate"
                     :maxDate="maxDate"
+                    hide-time-header
+                    is24hr
                     locale="vi"
                     @close="close"
                     @update:model-value="close();dateValue = $event"

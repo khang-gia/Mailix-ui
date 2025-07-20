@@ -2,6 +2,7 @@
     <div class="flex-grow-1 p-8">
         <schedule-cal />
     </div>
+    <!-- <RickTextEditor /> -->
     
 </template>
 <script setup>

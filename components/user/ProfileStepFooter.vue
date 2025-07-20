@@ -28,7 +28,7 @@
     </div> -->
     <div class="fixed bottom-0 left-0 right-0 h-16 ml-4 bg-white border-t border-slate-200 dark:bg-[#182235] dark:border-slate-700 flex justify-start px-4 py-px">
 
-      <div class="pl-36 flex items-center space-x-2">
+      <div class="w-full flex justify-end items-center space-x-2">
           <UButton color="primary" variant="solid" icon="i-heroicons-check-circle" :label="$t('Save')" size="sm" @click="emit('on-submit')"/>
           <UButton color="white" variant="solid" icon="i-heroicons-x-mark" :label="$t('Cancel')" size="sm" @click="useRouter().back()"/>
       </div>

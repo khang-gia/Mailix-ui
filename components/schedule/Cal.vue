@@ -31,16 +31,14 @@ function formatDateInfo(dateStr) {
 }
 
 const handleDateSelect = (selectInfo)  =>{
-  console.log('selectInfo',selectInfo )
-  // let title = prompt('Please enter a new title for your event')
   let calendarApi = selectInfo.view.calendar
-  calendarApi.unselect() // clear date selection
+  calendarApi.unselect() 
   let startInfo = formatDateInfo(selectInfo.startStr)
   let endDate = new Date(selectInfo.endStr)
   endDate.setDate(endDate.getDate() - 1)
   let endInfo = formatDateInfo(endDate.toISOString().split('T')[0])
   let dateInfo = { startStr: startInfo, endStr: endInfo, start:selectInfo.start, end:endDate }
-  setCalendarCreateModal(true, 'schedules', { ...dateInfo})
+  setCalendarCreateModal(true, 'createEvent', { ...dateInfo})
   // if (title) {
   //   calendarApi.addEvent({
   //     id: createEventId(),
@@ -51,19 +49,41 @@ const handleDateSelect = (selectInfo)  =>{
   //   })
   // }
 }
-const handleEventSelect = (selectEvent)=> {
-  console.log('selectEvent',selectEvent)
+const loadEvent = async(eventId) => {
+  try {
+      if (eventId) {
+          const {data: response} = await useAPI().get(`system/schedule-events/${eventId}/`);
+          if (response && response.value) {
+              const eventInfo = {
+                  ...response.value,
+                  start_datetime: response.value.start_datetime ? response.value.start_datetime.replace(/Z$/, '') : response.value.start_datetime,
+                  end_datetime: response.value.end_datetime ? response.value.end_datetime.replace(/Z$/, '') : response.value.end_datetime,
+              }
+              return eventInfo;
+          } else {
+              return null;
+          }
+      }
+  } catch (error) {
+      console.error('Error loading event:', error);
+  }
+}
+const handleEventSelect = async (selectEvent)=> {
   const event = selectEvent.event
   let startInfo = formatDateInfo(event.startStr)
   let endInfo = formatDateInfo(event.endStr)
+  const eventInfo = await loadEvent(event.id)
   const data = {
+    ...eventInfo,
+    id: event.id,
     title: event.title,
     start: event.start,
     end: event.end,
     startStr: startInfo,
-    endStr: endInfo
+    endStr: endInfo,
+    allDay: event.allDay
   }
-  setCalendarCreateModal(true, 'schedules', { ...data })
+  setCalendarCreateModal(true, 'updateEvent', { ...data })
 }
 const calendarOptions = {
   locale:'vi',

@@ -2,7 +2,6 @@
     <BaseModal size="md" :modalOpen="calendarCreateModal" :closeOnClick="false" :closeOnEsc="true" @close-modal="onCloseModal">
         <UForm :schema="schema" :state="eventInfo" class="mx-4 py-2 space-y-4">
             <UFormGroup
-                v-if="checkView('title')"
                 v-slot="{ error }"
                 name="title"
                 :error="errors.title"
@@ -10,9 +9,10 @@
                 <UInput
                     variant="none"
                     size="xl"
+                    autofocus
                     v-model="eventInfo.title"
                     :placeholder="$t('Add calendar title')"
-                    :ui="{ base: 'w-full forcus:ring-0 border-b', rounded:'rounded-none', variant:{ none: 'forcus:ring-0'}}"
+                    :ui="{ base: 'w-full forcus:ring-0 focus:border-b-2 border-b', rounded:'rounded-none', variant:{ none: 'forcus:ring-0'}}"
                     :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
             </UFormGroup>
             
@@ -28,18 +28,20 @@
                             ref="startdatepicker"
                             :required="true"
                             class="w-full"
+                            :mode="!eventInfo.is_all_day ? 'datetime' : 'date'"
                             buttonType="outline"
                         />
-                        <Timepicker v-if="!eventInfo.is_all_day" v-model="eventInfo.start_time"/>
+                        <!-- <Timepicker v-if="!eventInfo.is_all_day" v-model="eventInfo.start_time"/> -->
                         <span class="py-2 px-2">
                             <UIcon name="fluent:subtract-24-filled"/>
                         </span>
-                        <Timepicker v-if="!eventInfo.is_all_day" v-model="eventInfo.end_time"/>
+                        <!-- <Timepicker v-if="!eventInfo.is_all_day" v-model="eventInfo.end_time"/> -->
                         <BaseDatePicker
                             v-model="eventInfo.end_datetime"
                             ref="enddatepicker"
                             :required="true"
                             class="w-full"
+                            :mode="!eventInfo.is_all_day ? 'datetime' : 'date'"
                             buttonType="outline"
                         />
                     </div>
@@ -50,12 +52,15 @@
                 </div>
                 <CustomerUserSelect v-model="eventInfo.participants" :placeholder="$t('Participants')" :multiple="true"/>
                 <UDivider/>
-                <UTextarea
+                <!-- <UTextarea
                     v-model="eventInfo.description"
                     :placeholder="$t('Description')"
                     rows="1"
                     resize
-                />
+                /> -->
+                <client-only>
+                    <RickTextEditor v-model="eventInfo.description" />
+                </client-only>
             </div>
         </UForm>
         <div class="flex justify-end gap-2 p-4">
@@ -79,8 +84,10 @@ const { setCalendarCreateModal } = modalStore
 const busy= ref(false)
 const props = defineProps(['id'])
 const emit = defineEmits(['close-modal', 'change-mode'])
+const {  data: userInfo } = useAuth()
+
 const viewAllow = ref({
-    schedules:['title','password','confirm_password','email','phone'],
+    createEvent:['title',],
     department:['name','code','description','parent','department_type', 'company', 'business_unit'],
 })
 const checkView = (key) => {
@@ -95,36 +102,31 @@ const eventInfo = computed(() => ({
     end_time:'00:00',
     start_datetime: calendarCreateInfo.value.start,
     end_datetime: calendarCreateInfo.value.end,
-    is_all_day: true,
-    participants:[],
-    password: '',
-    confirm_password: '',
-    email: '',
-    phone: '',
-    description: '',
-    department_type: '',
+    is_all_day: calendarCreateInfo.value.allDay,
+    participants: calendarCreateInfo.value.participants || [],
+    description: calendarCreateInfo.value.description || '',
+    user : calendarCreateInfo.value.user || null,
 }))
 const onCloseModal = () => {
     expandDateConfig.value = false
     setCalendarCreateModal(false, '', {})
 
 }
-const department_types = [
-    {label: t('Company branch'), value: 1},
-    {label: t('Department'), value: 2},
-]
 const errors = ref({})
 const schema = yup.object({
     // title: checkView('title') ? yup.string().required(t('This field is required')) : yup.mixed().notRequired(),
-    email: checkView('email') ? yup.string().email(t('Invalid email format')).required(t('This field is required')) : yup.mixed().notRequired(),
 })
-const createAccount = async () => {
-    console.log('create account Data', eventInfo.value)
+const updateEvent = async () => {
+    console.log('update event Data', eventInfo.value)
     try {
-        const {data: response} = await useAPI().post(`core/profile_hrs/${useRoute().params.id}/create_account/`, {
-            name: eventInfo.value.name,
-            code: eventInfo.value.code,
+        const {data: response} = await useAPI().put(`system/schedule-events/${calendarCreateInfo.value.id}/`, {
+            title: eventInfo.value.title,
+            start_datetime: eventInfo.value.start_datetime,
+            end_datetime: eventInfo.value.end_datetime,
+            is_all_day: eventInfo.value.is_all_day,
+            participants: eventInfo.value.participants.map(p => p.id),
             description: eventInfo.value.description,
+            user: eventInfo.value.user.id,
         });
         console.log('response', response.value)
         if (response.value && response.value.id) {
@@ -137,13 +139,17 @@ const createAccount = async () => {
         throw error;
     }
 }
-const createTitle = async () => {
-    console.log('create title Data', eventInfo.value)
+const createEvent = async () => {
+    console.log('create event Data', eventInfo.value)
     try {
-        const {data: response} = await useAPI().post(`core/titles/`, {
-            name: eventInfo.value.name,
-            code: eventInfo.value.code,
+        const {data: response} = await useAPI().post(`system/schedule-events/`, {
+            title: eventInfo.value.title,
+            start_datetime: eventInfo.value.start_datetime,
+            end_datetime: eventInfo.value.end_datetime,
+            is_all_day: eventInfo.value.is_all_day,
+            participants: eventInfo.value.participants.map(p => p.id),
             description: eventInfo.value.description,
+            user: userInfo.value.id,
         });
         console.log('response', response.value)
         if (response.value && response.value.id) {
@@ -156,75 +162,63 @@ const createTitle = async () => {
         throw error;
     }
 }
-const createDepartment= async () => {
-    console.log('create department Data', eventInfo.value)
-    try {
-        const {data: response} = await useAPI().post(`system/departments/`, {
-            name: eventInfo.value.name,
-            code: eventInfo.value.code,
-            description: eventInfo.value.description,
-            department_type: eventInfo.value.department_type,
+// const validateForm = async () => {
+//     try {
+//         await schema.validate(eventInfo.value, { abortEarly: false });
+//         errors.value = {};
+//         return true;
+//     } catch (err) {
+//         if (err instanceof yup.ValidationError) {
+//             errors.value = {};
+//             err.inner.forEach(error => {
+//                 errors.value[error.path] = error.message;
+//             });
+//         } else {
+//             console.error(err);
+//         }
+//         return false;
+//     }
+// }
 
-        });
-        console.log('response', response.value)
-        if (response.value && response.value.id) {
-            return true;
-        } else {
-            throw new Error(t('Unexpected response status'));
-        }
-    } catch (error) {
-        console.error('Error creating account:', error);
-        throw error;
-    }
-}
-const validateForm = async () => {
-    try {
-        await schema.validate(eventInfo.value, { abortEarly: false });
-        errors.value = {};
-        return true;
-    } catch (err) {
-        if (err instanceof yup.ValidationError) {
-            errors.value = {};
-            err.inner.forEach(error => {
-                errors.value[error.path] = error.message;
-            });
-        } else {
-            console.error(err);
-        }
-        return false;
-    }
-}
 const onSubmit = async () => {
-    const isValid = await validateForm(); 
-    console.log('isValid', isValid);
-    if (!isValid) return;
+    // const isValid = await validateForm(); 
+    // console.log('isValid', isValid);
+    // if (!isValid) return;
     try {
         busy.value = true;
-        let isCreated = false;
+        let isSuccess = false;
 
-        if (calendarCreateType.value === 'account') {
-            isCreated = await createAccount();
-        } else if (calendarCreateType.value === 'title') {
-            isCreated = await createTitle();
-        } else if (calendarCreateType.value === 'department') {
-            isCreated = await createDepartment();
-        }
-
-        if (isCreated) {
-            useToast().add({
-                title: t('Success'),
-                description: t('The entity was successfully created.'),
-                icon: 'i-heroicons-check-circle',
-                color: 'green',
-                duration: 5000,
-                position: 'top-right',
-            });
-            setCalendarCreateModal(false, '', {});
+        if (calendarCreateType.value === 'createEvent') {
+            isSuccess = await createEvent();
+            if (isSuccess) {
+                useToast().add({
+                    title: t('Success'),
+                    description: t('The event was successfully created.'),
+                    icon: 'i-heroicons-check-circle',
+                    color: 'green',
+                    duration: 5000,
+                    position: 'top-right',
+                });
+                setCalendarCreateModal(false, '', {});
+            }
+        } else if (calendarCreateType.value === 'updateEvent') {
+            isSuccess = await updateEvent();
+            if (isSuccess) {
+                useToast().add({
+                    title: t('Success'),
+                    description: t('The event was successfully updated.'),
+                    icon: 'i-heroicons-check-circle',
+                    color: 'green',
+                    duration: 5000,
+                    position: 'top-right',
+                });
+                setCalendarCreateModal(false, '', {});
+            }
         }
     } catch (error) {
         useToast().add({
             title: t('Error'),
-            description: error.message || t('An error occurred while creating the entity. Please try again later.'),
+            description: error.message || t('An error occurred while saving the event. Please try again later.'),
             icon: 'i-heroicons-exclamation-circle',
             color: 'red',
             duration: 7000,

@@ -333,5 +333,8 @@
     "Information": "Thông tin",
     "My company": "Công ty của tôi",
     "Config": "Cấu hình",
-    "Work": "Công việc"
+    "Work": "Công việc",
+    "The event was successfully created.": "Sự kiện đã được tạo thành công.",
+    "The event was successfully updated.": "Sự kiện đã được cập nhật thành công.",
+    "An error occurred while saving the event. Please try again later.": "Đã xảy ra lỗi khi lưu sự kiện. Vui lòng thử lại sau."
 }
