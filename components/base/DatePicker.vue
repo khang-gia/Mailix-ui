@@ -5,7 +5,8 @@
             <template #panel="{ close }">
                 <VDatePicker
                     :model-value="dateValue"
-                    :is-required="required" transparent
+                    :is-required="required" 
+                    transparent
                     :is-dark="colorMode.value === 'dark'"
                     :mode="mode"
                     :minDate="minDate"

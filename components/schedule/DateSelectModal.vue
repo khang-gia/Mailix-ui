@@ -1,6 +1,6 @@
 <template>
     <BaseModal size="md" :modalOpen="calendarCreateModal" :closeOnClick="false" :closeOnEsc="true" @close-modal="onCloseModal">
-        <UForm :schema="schema" :state="eventInfo" class="mx-4 py-2 space-y-4">
+        <UForm v-if="calendarCreateInfo" :schema="schema" :state="calendarCreateInfo" class="mx-4 py-2 space-y-4">
             <UFormGroup
                 v-slot="{ error }"
                 name="title"
@@ -10,7 +10,7 @@
                     variant="none"
                     size="xl"
                     autofocus
-                    v-model="eventInfo.title"
+                    v-model="calendarCreateInfo.title"
                     :placeholder="$t('Add calendar title')"
                     :ui="{ base: 'w-full forcus:ring-0 focus:border-b-2 border-b', rounded:'rounded-none', variant:{ none: 'forcus:ring-0'}}"
                     :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
@@ -18,54 +18,61 @@
             
             <div class="space-y-6">
                 <UButton v-if="!expandDateConfig" variant="soft" color="gray" size="lg" @click="expandDateConfig = true">
-                    <!-- {{ eventInfo.start_datetime  +' - '+ eventInfo.end_datetime }} -->
+                    <!-- {{ calendarCreateInfo.start_datetime  +' - '+ calendarCreateInfo.end_datetime }} -->
                       {{ calendarCreateInfo.startStr +' - '+ calendarCreateInfo.endStr }}
                 </UButton>
                 <div v-else class="space-y-2">
                     <div class="flex space-x-2">
                         <BaseDatePicker
-                            v-model="eventInfo.start_datetime"
+                            v-model="calendarCreateInfo.start_datetime"
                             ref="startdatepicker"
                             :required="true"
                             class="w-full"
-                            :mode="!eventInfo.is_all_day ? 'datetime' : 'date'"
+                            :mode="dateMode"
                             buttonType="outline"
                         />
-                        <!-- <Timepicker v-if="!eventInfo.is_all_day" v-model="eventInfo.start_time"/> -->
+                        <!-- <Timepicker v-if="!calendarCreateInfo.is_all_day" v-model="calendarCreateInfo.start_time"/> -->
                         <span class="py-2 px-2">
                             <UIcon name="fluent:subtract-24-filled"/>
                         </span>
-                        <!-- <Timepicker v-if="!eventInfo.is_all_day" v-model="eventInfo.end_time"/> -->
+                        <!-- <Timepicker v-if="!calendarCreateInfo.is_all_day" v-model="calendarCreateInfo.end_time"/> -->
                         <BaseDatePicker
-                            v-model="eventInfo.end_datetime"
+                            v-model="calendarCreateInfo.end_datetime"
                             ref="enddatepicker"
                             :required="true"
                             class="w-full"
-                            :mode="!eventInfo.is_all_day ? 'datetime' : 'date'"
+                            :mode="dateMode"
                             buttonType="outline"
                         />
                     </div>
                     <div class="space-x-4 flex items-center">
-                        <UToggle v-model="eventInfo.is_all_day" color="blue"/>
+                        <UToggle v-model="calendarCreateInfo.is_all_day" color="blue"/>
                         <span>{{ $t('All day') }}</span>
                     </div>
                 </div>
-                <CustomerUserSelect v-model="eventInfo.participants" :placeholder="$t('Participants')" :multiple="true"/>
+                <CustomerUserSelect v-if="calendarCreateInfo.participants" v-model="calendarCreateInfo.participants" :placeholder="$t('Participants')" :multiple="true"/>
                 <UDivider/>
                 <!-- <UTextarea
-                    v-model="eventInfo.description"
+                    v-model="calendarCreateInfo.description"
                     :placeholder="$t('Description')"
                     rows="1"
                     resize
                 /> -->
                 <client-only>
-                    <RickTextEditor v-model="eventInfo.description" />
+                    <RickTextEditor v-model="calendarCreateInfo.description" />
                 </client-only>
             </div>
         </UForm>
-        <div class="flex justify-end gap-2 p-4">
-            <UButton color="gray" variant="outline" @click="setCalendarCreateModal(false, '', {})">{{ $t('Cancel') }}</UButton>
-            <UButton color="primary" @click="onSubmit">{{ $t('Save') }}</UButton>
+        <div class="flex justify-between gap-2 p-4">
+            <div>
+                <UButton v-if="calendarCreateType === 'updateEvent'" color="red" variant="outline" @click="onDelete">{{ $t('Delete') }}</UButton>
+
+            </div>
+            <div class="flex space-x-2">
+                <UButton color="gray" variant="outline" @click="setCalendarCreateModal(false, '', {})">{{ $t('Cancel') }}</UButton>
+                <UButton color="primary" @click="onSubmit">{{ $t('Save') }}</UButton>
+            </div>
+
         </div>
     </BaseModal>
     
@@ -85,28 +92,20 @@ const busy= ref(false)
 const props = defineProps(['id'])
 const emit = defineEmits(['close-modal', 'change-mode'])
 const {  data: userInfo } = useAuth()
+const dayjs = useDayjs()
 
 const viewAllow = ref({
     createEvent:['title',],
-    department:['name','code','description','parent','department_type', 'company', 'business_unit'],
+    // department:['name','code','description','parent','department_type', 'company', 'business_unit'],
 })
 const checkView = (key) => {
     return viewAllow.value[calendarCreateType.value]?.includes(key);
 
 }
 const expandDateConfig = ref(false)
-const eventInfo = computed(() => ({
-    name:'',
-    title: calendarCreateInfo.value.title,
-    start_time:'00:00',
-    end_time:'00:00',
-    start_datetime: calendarCreateInfo.value.start,
-    end_datetime: calendarCreateInfo.value.end,
-    is_all_day: calendarCreateInfo.value.allDay,
-    participants: calendarCreateInfo.value.participants || [],
-    description: calendarCreateInfo.value.description || '',
-    user : calendarCreateInfo.value.user || null,
-}))
+const dateMode = computed(() => {
+    return calendarCreateInfo.value.is_all_day ? 'date' : 'datetime'
+})
 const onCloseModal = () => {
     expandDateConfig.value = false
     setCalendarCreateModal(false, '', {})
@@ -116,17 +115,20 @@ const errors = ref({})
 const schema = yup.object({
     // title: checkView('title') ? yup.string().required(t('This field is required')) : yup.mixed().notRequired(),
 })
+const localTz = 'Asia/Ho_Chi_Minh';
 const updateEvent = async () => {
-    console.log('update event Data', eventInfo.value)
+    console.log('update event Data', calendarCreateInfo.value)
     try {
         const {data: response} = await useAPI().put(`system/schedule-events/${calendarCreateInfo.value.id}/`, {
-            title: eventInfo.value.title,
-            start_datetime: eventInfo.value.start_datetime,
-            end_datetime: eventInfo.value.end_datetime,
-            is_all_day: eventInfo.value.is_all_day,
-            participants: eventInfo.value.participants.map(p => p.id),
-            description: eventInfo.value.description,
-            user: eventInfo.value.user.id,
+            ...calendarCreateInfo.value,
+            start_datetime: calendarCreateInfo.value.is_all_day 
+                ? dayjs(calendarCreateInfo.value.start_datetime).startOf('day').tz(localTz).format() 
+                : dayjs(calendarCreateInfo.value.start_datetime).tz(localTz).format(),
+            end_datetime: calendarCreateInfo.value.is_all_day 
+                ? dayjs(calendarCreateInfo.value.end_datetime).endOf('day').tz(localTz).format() 
+                : dayjs(calendarCreateInfo.value.end_datetime).tz(localTz).format(),
+            participants: calendarCreateInfo.value.participants.map(p => p.id),
+            user: calendarCreateInfo.value.user.id,
         });
         console.log('response', response.value)
         if (response.value && response.value.id) {
@@ -140,17 +142,22 @@ const updateEvent = async () => {
     }
 }
 const createEvent = async () => {
-    console.log('create event Data', eventInfo.value)
+    const data = {
+        ...calendarCreateInfo.value,
+        start_datetime: calendarCreateInfo.value.is_all_day 
+            ? dayjs(calendarCreateInfo.value.start_datetime).startOf('day').tz(localTz).format() 
+            : dayjs(calendarCreateInfo.value.start_datetime).tz(localTz).format(),
+        end_datetime: calendarCreateInfo.value.is_all_day 
+            ? dayjs(calendarCreateInfo.value.end_datetime).endOf('day').tz(localTz).format() 
+            : dayjs(calendarCreateInfo.value.end_datetime).tz(localTz).format(),
+        // start_datetime: dayjs(calendarCreateInfo.value.start_datetime).tz(localTz).format(),
+        // end_datetime: dayjs(calendarCreateInfo.value.end_datetime).tz(localTz).format(),
+        participants: calendarCreateInfo.value.participants.map(p => p.id),
+        user: userInfo.value.id,
+    }
+    console.log('create event Data', data)
     try {
-        const {data: response} = await useAPI().post(`system/schedule-events/`, {
-            title: eventInfo.value.title,
-            start_datetime: eventInfo.value.start_datetime,
-            end_datetime: eventInfo.value.end_datetime,
-            is_all_day: eventInfo.value.is_all_day,
-            participants: eventInfo.value.participants.map(p => p.id),
-            description: eventInfo.value.description,
-            user: userInfo.value.id,
-        });
+        const {data: response} = await useAPI().post(`system/schedule-events/`, data);
         console.log('response', response.value)
         if (response.value && response.value.id) {
             return true;
@@ -164,7 +171,7 @@ const createEvent = async () => {
 }
 // const validateForm = async () => {
 //     try {
-//         await schema.validate(eventInfo.value, { abortEarly: false });
+//         await schema.validate(calendarCreateInfo.value, { abortEarly: false });
 //         errors.value = {};
 //         return true;
 //     } catch (err) {
@@ -199,7 +206,7 @@ const onSubmit = async () => {
                     duration: 5000,
                     position: 'top-right',
                 });
-                setCalendarCreateModal(false, '', {});
+                setCalendarCreateModal(false, 'created', {});
             }
         } else if (calendarCreateType.value === 'updateEvent') {
             isSuccess = await updateEvent();
@@ -212,7 +219,7 @@ const onSubmit = async () => {
                     duration: 5000,
                     position: 'top-right',
                 });
-                setCalendarCreateModal(false, '', {});
+                setCalendarCreateModal(false, 'updated', {});
             }
         }
     } catch (error) {
@@ -228,4 +235,46 @@ const onSubmit = async () => {
         busy.value = false;
     }
 };
+const deleteEvent = async () => {
+    try {
+        const {data: response} = await useAPI().del(`system/schedule-events/${calendarCreateInfo.value.id}/`);
+        return true;
+        // if (response.status === 204) {
+        //     return true;
+        // } else {
+        //     throw new Error(t('Unexpected response status'));
+        // }
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        throw error;
+    }
+}
+const onDelete = async () => {
+    try {
+        busy.value = true;
+        const isSuccess = await deleteEvent();
+        if (isSuccess) {
+            useToast().add({
+                title: t('Success'),
+                description: t('The event was successfully deleted.'),
+                icon: 'i-heroicons-check-circle',
+                color: 'green',     
+                duration: 5000,
+                position: 'top-right',
+            });
+            setCalendarCreateModal(false, 'removed', {});
+        }   
+    } catch (error) {
+        useToast().add({
+            title: t('Error'),
+            description: error.message || t('An error occurred while deleting the event. Please try again later.'),
+            icon: 'i-heroicons-exclamation-circle',
+            color: 'red',
+            duration: 7000,
+            position: 'top-right',
+        });
+    } finally {
+        busy.value = false;
+    }
+}
 </script>

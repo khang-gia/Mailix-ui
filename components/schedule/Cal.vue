@@ -1,19 +1,35 @@
 <template>
 
-    <FullCalendar :options="calendarOptions" />
+    <FullCalendar ref="calendarRef" :options="calendarOptions" />
 </template>
   
 <script setup>
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+const {  data: userInfo } = useAuth()
 
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useModalStore } from '@/stores/modal'
+import { storeToRefs } from 'pinia'
+
 const modalStore = useModalStore()
 const { setCalendarCreateModal } = modalStore
+const { calendarCreateType } = storeToRefs(modalStore)
+const calendarRef = ref(null)
+watch(calendarCreateType, (newValue) => {
+  console.log('calendarCreateType changed:', newValue);
+  const refreshArray = ['created', 'updated', 'removed'];
+  if (newValue && refreshArray.includes(newValue)) {
+    refetchEvents();
+  }
+});
+const refetchEvents = () => {
+  const calendarApi = calendarRef.value.getApi(); 
+  calendarApi.refetchEvents(); 
+};
 const props = defineProps({
   events: {
       type: Array,
@@ -37,7 +53,13 @@ const handleDateSelect = (selectInfo)  =>{
   let endDate = new Date(selectInfo.endStr)
   endDate.setDate(endDate.getDate() - 1)
   let endInfo = formatDateInfo(endDate.toISOString().split('T')[0])
-  let dateInfo = { startStr: startInfo, endStr: endInfo, start:selectInfo.start, end:endDate }
+  let dateInfo = { 
+    startStr: startInfo, 
+    endStr: endInfo, 
+    start_datetime:selectInfo.start, 
+    end_datetime:endDate,
+    is_all_day: selectInfo.allDay,
+  }
   setCalendarCreateModal(true, 'createEvent', { ...dateInfo})
   // if (title) {
   //   calendarApi.addEvent({
@@ -74,14 +96,17 @@ const handleEventSelect = async (selectEvent)=> {
   let endInfo = formatDateInfo(event.endStr)
   const eventInfo = await loadEvent(event.id)
   const data = {
-    ...eventInfo,
+    // ...eventInfo,
     id: event.id,
     title: event.title,
-    start: event.start,
-    end: event.end,
+    start_datetime: event.start,
+    end_datetime: event.allDay && !event.end ? event.start : event.end,
     startStr: startInfo,
-    endStr: endInfo,
-    allDay: event.allDay
+    endStr: event.allDay && !event.end ? startInfo : endInfo,
+    is_all_day: event.allDay,
+    participants: eventInfo.participants || [],
+    description: eventInfo.description || '',
+    user: eventInfo.user || userInfo.value,
   }
   setCalendarCreateModal(true, 'updateEvent', { ...data })
 }
@@ -131,10 +156,10 @@ const calendarOptions = {
           const mappedResults = data.results.map(event => ({
             ...event,
             allDay: event.is_all_day,
-            start: event.start_datetime?.replace(/Z$/, ''),
-            end: event.end_datetime?.replace(/Z$/, '')
+            start: event.start_datetime,
+            end: event.end_datetime
           }))
-
+          console.log('mappedResults', mappedResults)
           successCallback(mappedResults)
         } catch (err) {
           console.error('Failed to load events:', err)

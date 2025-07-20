@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { title } from 'process'
 
 export const useModalStore = defineStore('modalStore', () => {
   const modalType = ref('')
@@ -29,7 +30,18 @@ export const useModalStore = defineStore('modalStore', () => {
   const modalCreateType = ref('')
   const calendarCreateModal = ref(false)
   const calendarCreateType = ref('')
-  const calendarCreateInfo = ref({})
+  const calendarCreateInfo = ref({
+  })
+  const defaultCreateInfo = ref({
+    id: null,
+    title: '',
+    start_datetime: null,
+    end_datetime: null,
+    allDay: false,
+    participants: [],
+    description: '',
+    user: null
+  })
   const isLive = computed(() => draggableModalInfo.value.embed_url !== '')
 
   function setModalType(type) {
@@ -80,7 +92,10 @@ export const useModalStore = defineStore('modalStore', () => {
   function setCalendarCreateModal(value, type, info) {
     calendarCreateModal.value = value
     calendarCreateType.value = type
-    calendarCreateInfo.value = {...info}
+    calendarCreateInfo.value = {
+      ...defaultCreateInfo.value,
+      ...info
+    }
   }
   return { 
     modalType, setModalType, setAlertModal, alertModal, alertProps, alertConfirm,
