@@ -40,7 +40,15 @@ export const useModalStore = defineStore('modalStore', () => {
     allDay: false,
     participants: [],
     description: '',
-    user: null
+    user: null,
+    color: '#039be5',
+    priority: 2,
+    has_reminder: false,
+    notification_type: 3,
+    reminder_time_value: 15,
+    reminder_time_unit: 'minutes',
+    reminder_email: '',
+    is_send_participants: false
   })
   const isLive = computed(() => draggableModalInfo.value.embed_url !== '')
 

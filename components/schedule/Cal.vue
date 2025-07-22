@@ -96,7 +96,7 @@ const handleEventSelect = async (selectEvent)=> {
   let endInfo = formatDateInfo(event.endStr)
   const eventInfo = await loadEvent(event.id)
   const data = {
-    // ...eventInfo,
+    ...eventInfo,
     id: event.id,
     title: event.title,
     start_datetime: event.start,

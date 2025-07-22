@@ -52,12 +52,83 @@
                 </div>
                 <CustomerUserSelect v-if="calendarCreateInfo.participants" v-model="calendarCreateInfo.participants" :placeholder="$t('Participants')" :multiple="true"/>
                 <UDivider/>
-                <!-- <UTextarea
-                    v-model="calendarCreateInfo.description"
-                    :placeholder="$t('Description')"
-                    rows="1"
-                    resize
-                /> -->
+                <div class="grid grid-cols-2 space-x-4 "> 
+                        <USelectMenu
+                            class="w-full"
+                            v-model="calendarCreateInfo.notification_type"
+                            :options="notification_types"
+                            valueAttribute="value"
+                            option-attribute="label"
+                            :is-dark="colorMode.value === 'dark'">
+                        </USelectMenu>
+                        <div v-if=" calendarCreateInfo.notification_type !==9" class="flex space-x-2">
+                            <UInput
+                                class="w-full"
+                                v-model="calendarCreateInfo.reminder_time_value"
+                                type="number"
+                                min="5"
+                                :disabled="calendarCreateInfo.notification_type === 9"
+                                :ui="{ base: 'rounded-lg' }"/>
+                            <USelectMenu
+                                class="w-full"
+                                v-model="calendarCreateInfo.reminder_time_unit"
+                                :options="reminder_time_units"
+                                valueAttribute="value"
+                                option-attribute="label"
+                                :disabled="calendarCreateInfo.notification_type === 9"
+                                :is-dark="colorMode.value === 'dark'">
+                            </USelectMenu>
+                        </div>
+                        
+                    </div>
+                    <UFormGroup
+                        v-if="calendarCreateInfo.notification_type === 1"
+                        >
+                        <UInput
+                            class="w-full"
+                            v-model="calendarCreateInfo.reminder_email"
+                            :placeholder="userInfo?.email || ''"
+                            type="text"
+                            :disabled="calendarCreateInfo.notification_type === 9"
+                            :ui="{ base: 'rounded-lg' }"/>
+                    </UFormGroup>
+                    <UFormGroup
+                        v-if="calendarCreateInfo.notification_type === 1"
+                        
+                        name="is_create_schedule">
+                        <div class="space-x-4 flex items-center">
+                            <UToggle v-model="calendarCreateInfo.is_send_participants" 
+                                :disabled="calendarCreateInfo.notification_type === 9"
+                            />
+                            <span class="text-sm italic text-gray-500 dark:text-gray-400">
+                                {{ $t('Also send to all participants ?') }}
+                            </span>
+                        </div>
+                    </UFormGroup>
+                    <UDivider/>
+
+                    <div class="grid grid-cols-2 space-x-4">
+                        <UFormGroup
+                            :label="$t('Choose event color')">
+                            <template #label>
+                                <span class="mr-1">
+                                    {{ $t('Tag') }}
+                                </span>
+                                <UTooltip :text="$t('Event tag tooltip')" :popper="{ placement: 'right' }" 
+                                :ui="{
+                                    base: 'text-xs font-normal overflow-x-visible',
+                                }">
+                                    <UIcon name="i-heroicons-exclamation-circle" class="text-yellow-500"/>
+                                </UTooltip>
+                                
+                            </template>
+                            <ColorPicker class="h-full" v-model="calendarCreateInfo.color"/>
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('Priority')">
+                            <PrioritySelect v-model="calendarCreateInfo.priority" :placeholder="$t('User')"/>
+                        </UFormGroup>
+                    </div>
                 <client-only>
                     <RickTextEditor v-model="calendarCreateInfo.description" />
                 </client-only>
@@ -186,6 +257,26 @@ const createEvent = async () => {
 //         return false;
 //     }
 // }
+const priorities = [
+    {label: t('Low'), value: 1},
+    {label: t('Medium'), value: 2},
+    {label: t('High'), value: 3},
+    {label: t('Urgent'), value: 4},
+    {label: t('Critical'), value: 5},
+    {label: t('None'), value: 6},
+]
+const notification_types = [
+    {label: t('Email'), value: 1},
+    {label: t('Push notification'), value: 3},
+    {label: t('No notification'), value: 9},
+]
+const reminder_time_units = [
+    {label: t('Minutes'), value: 'minutes'},
+    {label: t('Hours'), value:'hours'},
+    {label: t('Days'), value: 'days'},
+    {label: t('Weeks'), value: 'weeks'},
+
+]
 
 const onSubmit = async () => {
     // const isValid = await validateForm(); 

@@ -276,7 +276,7 @@
                     
                 </div>
                 <UFormGroup
-                    v-if="workInfo.schedule.notification_type !== 9"
+                    v-if="workInfo.schedule.notification_type === 1"
                     :label="$t('Event email')">
                     <UInput
                         class="w-full"
@@ -286,7 +286,7 @@
                         :ui="{ base: 'rounded-lg' }"/>
                 </UFormGroup>
                 <UFormGroup
-                    v-if="workInfo.schedule.notification_type !== 9"
+                    v-if="workInfo.schedule.notification_type === 1"
                     :label="$t('Send to participants')"
                     name="is_create_schedule">
                     <div class="space-x-4 flex items-center">
@@ -545,7 +545,11 @@ const formatData2 = () => {
                     formattedData[key][subKey] = dayjs(subValue).endOf('day').tz(localTz).format();
                 } else if (['participants'].includes(subKey)) {
                     formattedData[key][subKey] = subValue.map(item => item.id || item);
-                } else {
+                } else if (subKey === 'has_reminder'){
+                    let has_reminder = workInfo.value.schedule.notification_type !== 9 && workInfo.value.schedule.reminder_time_value > 0
+                    formattedData[key][subKey] = has_reminder;
+                }
+                else {
                     formattedData[key][subKey] = subValue;
                 }
             });
