@@ -144,22 +144,18 @@
                     name="Related Work">
                     <WorkRelatedSelect v-model="workInfo.related_work" :placeholder="$t('Related Work')"/>
                 </UFormGroup>
-                <client-only>
-                        <RickTextEditor v-model="workInfo.description" :placeholder="$t('Add work description...')" />
-                    </client-only>
-                <!-- <UFormGroup
-                    :label="$t('Description')"
-                    name="description">
+                <UFormGroup
+                    :label="$t('Description')">
                     <client-only>
-                        <RickTextEditor v-model="workInfo.description" />
+                        <RickTextEditor v-model="workInfo.description" :placeholder="$t('Add work description...')"/>
                     </client-only>
-                </UFormGroup> -->
+                </UFormGroup>
                 <UFormGroup
                     v-if="!props.isUpdate"
                     :label="$t('Create schedule')"
-                    name="isCreateSchedule">
+                    name="is_create_schedule">
                     <div class="space-x-4 flex items-center">
-                        <UToggle v-model="workInfo.isCreateSchedule"/>
+                        <UToggle v-model="workInfo.is_create_schedule"/>
                         <span class="text-sm italic text-gray-500 dark:text-gray-400">
                             {{ $t('Turn on this option if you want to create a schedule for this work') }}
                         </span>
@@ -194,7 +190,7 @@
                 </UFormGroup> -->
             </UForm>
         </UCard>
-        <UCard v-if="workInfo.isCreateSchedule" :ui="{
+        <UCard v-if="workInfo.is_create_schedule" :ui="{
             base: 'my-6',
             rounded: 'rounded-sm',
         }">
@@ -203,46 +199,136 @@
             </h2>
             <UForm :schema="schema" :state="workInfo" class="mx-4 py-2  grid grid-cols-2 gap-4">
                 <UFormGroup
-                    :label="$t('Shedule title')" >
+                    :label="$t('Schedule title')" >
                     <UInput
                         v-model="workInfo.schedule.title"
-                        :placeholder="$t('Shedule title')"
+                        :placeholder="$t('Schedule title')"
                         :ui="{ base: 'w-full rounded-lg' }"/>
                 </UFormGroup>
                 <UFormGroup
                     :label="$t('Participants')">
                     <CustomerUserSelect v-model="workInfo.schedule.participants" :placeholder="$t('Participants')" :multiple="true"/>
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Start date')">
-                    <BaseDatePicker
-                        v-model="workInfo.schedule.start_datetime"
-                        rref="startdatepicker"
-                        :required="true"
-                        class="w-full"
-                        :mode="dateMode"
-                        buttonType="outline"
-                    />
-                </UFormGroup>
-                <UFormGroup
-                    :label="$t('End date')"
-                    name='schedule.end_datetime'>
-                    <BaseDatePicker
-                        v-model="workInfo.schedule.end_datetime"
-                        ref="enddatepicker"
-                        :required="true"
-                        class="w-full"
-                        :mode="dateMode"
-                        buttonType="outline"
-                    />
-                </UFormGroup>
-                <UFormGroup
-                    :label="$t('All day')">
-                    <div class="space-x-4 flex items-center">
+                <div class="grid grid-rows-2 items-start">
+                    <div class="grid grid-cols-2 space-x-4">
+                        <UFormGroup
+                            :label="$t('Start date')">
+                            <BaseDatePicker
+                                v-model="workInfo.schedule.start_datetime"
+                                rref="startdatepicker"
+                                :required="true"
+                                class="w-full"
+                                :mode="dateMode"
+                                buttonType="outline"
+                            />
+                        </UFormGroup>
+                        <UFormGroup
+                            :label="$t('End date')"
+                            name='schedule.end_datetime'>
+                            <BaseDatePicker
+                                v-model="workInfo.schedule.end_datetime"
+                                ref="enddatepicker"
+                                :required="true"
+                                class="w-full"
+                                :mode="dateMode"
+                                buttonType="outline"
+                            />
+                        </UFormGroup>
+                    </div>
+                    <div class="space-x-4 flex items-center pt-4">
                         <UToggle v-model="workInfo.schedule.is_all_day" color="blue"/>
-                        <!-- <span>{{ $t('All day') }}</span> -->
+                        <span>{{ $t('All day') }}</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-700 pb-1">
+                        {{ $t('Notification') }}
+                    </label>
+                    <div class="grid grid-cols-2 space-x-4 "> 
+                        <USelectMenu
+                            class="w-full"
+                            v-model="workInfo.schedule.notification_type"
+                            :options="notification_types"
+                            valueAttribute="value"
+                            option-attribute="label"
+                            :is-dark="colorMode.value === 'dark'">
+                        </USelectMenu>
+                        <div v-if=" workInfo.schedule.notification_type !==9" class="flex space-x-2">
+                            <UInput
+                                class="w-full"
+                                v-model="workInfo.schedule.reminder_time_value"
+                                type="number"
+                                min="5"
+                                :disabled="workInfo.schedule.notification_type === 9"
+                                :ui="{ base: 'rounded-lg' }"/>
+                            <USelectMenu
+                                class="w-full"
+                                v-model="workInfo.schedule.reminder_time_unit"
+                                :options="reminder_time_units"
+                                valueAttribute="value"
+                                option-attribute="label"
+                                :disabled="workInfo.schedule.notification_type === 9"
+                                :is-dark="colorMode.value === 'dark'">
+                            </USelectMenu>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <UFormGroup
+                    v-if="workInfo.schedule.notification_type !== 9"
+                    :label="$t('Event email')">
+                    <UInput
+                        class="w-full"
+                        v-model="workInfo.schedule.reminder_email"
+                        type="text"
+                        :disabled="workInfo.schedule.notification_type === 9"
+                        :ui="{ base: 'rounded-lg' }"/>
+                </UFormGroup>
+                <UFormGroup
+                    v-if="workInfo.schedule.notification_type !== 9"
+                    :label="$t('Send to participants')"
+                    name="is_create_schedule">
+                    <div class="space-x-4 flex items-center">
+                        <UToggle v-model="workInfo.schedule.is_send_participants" 
+                            :disabled="workInfo.schedule.notification_type === 9"
+                        />
+                        <span class="text-sm italic text-gray-500 dark:text-gray-400">
+                            {{ $t('Also send to all participants ?') }}
+                        </span>
                     </div>
                 </UFormGroup>
+                <UDivider class="col-span-2 py-4" />
+                <UFormGroup
+                    :label="$t('Content')">
+                    <client-only>
+                        <RickTextEditor v-model="workInfo.schedule.description" :placeholder="$t('Add content...')"/>
+                    </client-only>
+                </UFormGroup>
+                <div class="grid grid-cols-2 space-x-4">
+                    <UFormGroup
+                        :label="$t('Choose event color')">
+                        <template #label>
+                            <span class="mr-1">
+                                {{ $t('Tag') }}
+                            </span>
+                            <UTooltip :text="$t('Event tag tooltip')" :popper="{ placement: 'right' }" 
+                            :ui="{
+                                base: 'text-xs font-normal overflow-x-visible',
+                            }">
+                                <UIcon name="i-heroicons-exclamation-circle" class="text-yellow-500"/>
+                            </UTooltip>
+                            
+                        </template>
+                        <ColorPicker class="h-full" v-model="workInfo.schedule.color"/>
+                    </UFormGroup>
+                    <UFormGroup
+                        :label="$t('Priority')">
+                        <PrioritySelect v-model="workInfo.schedule.priority" :placeholder="$t('User')"/>
+                    </UFormGroup>
+                </div>
+                
+                
                 
             </UForm>
         </UCard>
@@ -267,6 +353,7 @@ const { data: userInfo } = useAuth()
 import { useModalStore } from '@/stores/modal'
 const modalStore = useModalStore()
 const { setCalendarCreateModal } = modalStore
+
 const dateMode = computed(() => {
     return workInfo.value.schedule.is_all_day ? 'date' : 'datetime'
 })
@@ -299,6 +386,18 @@ const items = [
         label: t('Company Information'),
         slot: 'contract-info',
     },
+]
+const notification_types = [
+    {label: t('Email'), value: 1},
+    {label: t('Push notification'), value: 3},
+    {label: t('No notification'), value: 9},
+]
+const reminder_time_units = [
+    {label: t('Minutes'), value: 'minutes'},
+    {label: t('Hours'), value:'hours'},
+    {label: t('Days'), value: 'days'},
+    {label: t('Weeks'), value: 'weeks'},
+
 ]
 const props = defineProps({
     isUpdate: {
@@ -363,7 +462,7 @@ const defaultWorkInfo = {
     related_work:'',
     created_by: userInfo.value.id,
     description: '',
-    isCreateSchedule: false,
+    is_create_schedule: false,
     schedule: {
         title: '',
         start_datetime: new Date(),
@@ -371,6 +470,15 @@ const defaultWorkInfo = {
         is_all_day: false,
         participants: [],
         user: userInfo.value.id,
+        description: '',
+        color: '#039be5',
+        priority: 2,
+        has_reminder: false,
+        notification_type: 3,
+        reminder_time_value: 15,
+        reminder_time_unit: 'minutes',
+        reminder_email: userInfo.value.email,
+        is_send_participants: false
     }
 }  
 const workInfo = ref(defaultWorkInfo)
@@ -401,7 +509,10 @@ const priorities = [
     {label: t('High'), value: 3},
     {label: t('Urgent'), value: 4},
     {label: t('Critical'), value: 5},
+    {label: t('None'), value: 6},
 ]
+const localTz = 'Asia/Ho_Chi_Minh';
+
 const formatData2 = () => {
     const formattedData = {};
     Object.entries(workInfo.value).forEach(([key, value]) => {
@@ -423,14 +534,30 @@ const formatData2 = () => {
             } else if (value.length == 0) {
                 formattedData[key] = '';
             }
-        } else {
+        }else if (key==='schedule' && !props.isUpdate && workInfo.value.is_create_schedule) {
+            Object.entries(value).forEach(([subKey, subValue]) => {
+                formattedData[key] = formattedData[key] || {};
+
+                if (subKey === 'start_datetime' ) {
+                    formattedData[key][subKey] = dayjs(subValue).startOf('day').tz(localTz).format();
+                }
+                else if (subKey === 'end_datetime') {
+                    formattedData[key][subKey] = dayjs(subValue).endOf('day').tz(localTz).format();
+                } else if (['participants'].includes(subKey)) {
+                    formattedData[key][subKey] = subValue.map(item => item.id || item);
+                } else {
+                    formattedData[key][subKey] = subValue;
+                }
+            });
+        }
+         else {
             formattedData[key] = value;
         }
     });
     return formattedData;
 };
 
-const createCustomer = async () => {
+const createWork = async () => {
     const profileData = formatData2()
     try {
         const {data: response} = await useAPI().post(`core/works/`, profileData);
@@ -444,7 +571,7 @@ const createCustomer = async () => {
         throw error;
     }
 }
-const updateCustomer = async () => {
+const updateWork = async () => {
     const profileData = formatData2()
     try {
         const {data: response} = await useAPI().put(`core/works/${useRoute().params.id}/`, profileData);
@@ -458,7 +585,6 @@ const updateCustomer = async () => {
         throw error;
     }
 }
-
 const validateSchema = async () => {
     try {
         await schema.validate(workInfo.value, { abortEarly: false });
@@ -480,7 +606,7 @@ const onSubmit = async () => {
     try {
         busy.value = true;
         if (props.isUpdate) {
-            const isUpdated = await updateCustomer();
+            const isUpdated = await updateWork();
             if (isUpdated) {
                 useToast().add({
                     title: t('Success'),
@@ -493,7 +619,7 @@ const onSubmit = async () => {
                 useRouter().push({ name: 'works' });
             }
         } else {
-            const isCreated = await createCustomer();
+            const isCreated = await createWork();
             if (isCreated) {
                 useToast().add({
                     title: t('Success'),
@@ -528,22 +654,6 @@ function formatDateInfo(dateStr) {
   const month = date.getMonth() + 1
   return `${weekday}, ${day} tháng ${month}`
 }
-// const handleDateSelect = (selectInfo)  =>{
-//   let calendarApi = selectInfo.view.calendar
-//   calendarApi.unselect() 
-//   let startInfo = formatDateInfo(selectInfo.startStr)
-//   let endDate = new Date(selectInfo.endStr)
-//   endDate.setDate(endDate.getDate() - 1)
-//   let endInfo = formatDateInfo(endDate.toISOString().split('T')[0])
-//   let dateInfo = { 
-//     startStr: startInfo, 
-//     endStr: endInfo, 
-//     start_datetime:selectInfo.start, 
-//     end_datetime:endDate,
-//     is_all_day: selectInfo.allDay,
-//   }
-//   setCalendarCreateModal(true, 'createEvent', { ...dateInfo})
-// }
 const onCreateSchedule = () => {
     let startDate = new Date()
     let endDate = new Date()

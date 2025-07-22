@@ -153,6 +153,18 @@ const calendarOptions = {
           // Optional: store total count
           // totalEvents.value = data.count
 
+          // const mappedResults = data.results.map(event => {
+          //   let endDate = event.end_datetime ? new Date(event.end_datetime) : null;
+          //   if (endDate) {
+          //     endDate.setDate(endDate.getDate() + 1);
+          //   }
+          //   return {
+          //     ...event,
+          //     allDay: event.is_all_day,
+          //     start: event.start_datetime,
+          //     end: endDate ? endDate.toISOString() : event.end_datetime
+          //   }
+          // })
           const mappedResults = data.results.map(event => ({
             ...event,
             allDay: event.is_all_day,
