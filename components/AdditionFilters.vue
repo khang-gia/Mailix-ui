@@ -1,34 +1,23 @@
 <template>
-    <USlideover v-model="isOpen" >
+    <USlideover v-model="isOpenFilter" >
       <UCard class="flex flex-col flex-1 font-averta" :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
         <template #header>
           <div class="flex items-center justify-between">
             <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
               {{ $t('Additional Filters') }}
             </h3>
-            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="isOpen = false" />
+            <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="isOpenFilter = false" />
           </div>
         </template>
 
-        <div v-if="filters" class="h-full space-y-6">
-          <!-- <UFormGroup :label="$t('Status')">
-            <USelectMenu
-                  class="w-full"
-                  v-model="localFilters.status"
-                  :options="contact_statuses"
-                  :placeholder="$t('Status')"
-                  valueAttribute="value"
-                  option-attribute="label"
-            >
-            </USelectMenu>
-          </UFormGroup> -->
+        <div class="h-full space-y-6">
           <UFormGroup
               v-if="checkView('type_of_customer')"
               :label="$t('Type of contact')"
               name="type_of_customer">
               <USelectMenu
                   class="w-full"
-                  v-model="localFilters.type_of_customer"
+                  v-model="currentFilter.type_of_customer"
                   :options="type_of_customers"
                   :placeholder="$t('Type of contact')"
                   valueAttribute="value"
@@ -42,7 +31,7 @@
               name="customer_source">
               <USelectMenu
                   class="w-full"
-                  v-model="localFilters.customer_source"
+                  v-model="currentFilter.customer_source"
                   :options="customer_sources"
                   :placeholder="$t('Contact Source')"
                   valueAttribute="value"
@@ -56,7 +45,7 @@
                 name="customer_group">
                 <USelectMenu
                     class="w-full"
-                    v-model="localFilters.customer_group"
+                    v-model="currentFilter.customer_group"
                     :options="customer_groups"
                     :placeholder="$t('Customer Group')"
                     valueAttribute="value"
@@ -68,14 +57,52 @@
                 v-if="checkView('curators')"
                 :label="$t('Curators')"
                 name="curators">
-                <CustomerUserSelect v-model="localFilters.curators" :placeholder="$t('Curators')" :multiple="true"/>
+                <CustomerUserSelect v-model="currentFilter.curators" :placeholder="$t('Curators')" :multiple="true"/>
             </UFormGroup>
           <UFormGroup v-if="checkView('status')" :label="$t('Status')">
-            <USelectMenu v-model="localFilters.status" :options="statusOptions" size="sm" :ui="{ base: 'w-full' }" valueAttribute="value">
+            <USelectMenu v-model="currentFilter.statuses" :options="statusOptions" size="sm" :ui="{ base: 'w-full' }" valueAttribute="value">
               <template #label>
-                <span class="truncate">{{$t('Status')}}: {{ statusOptions.find((item) => item.value === localFilters.status)?.label || $t('All') }}</span>
+                <span class="truncate">{{$t('Status')}}: {{ statusOptions.find((item) => item.value === currentFilter.status)?.label || $t('All') }}</span>
               </template>
             </USelectMenu>
+          </UFormGroup>
+          <UFormGroup v-if="checkView('work_status')" :label="$t('Status')">
+            <USelectMenu 
+              v-model="currentFilter.statuses" 
+              :options="work_statuses" 
+              :placeholder="$t('Status')"
+              size="sm" 
+              :ui="{ base: 'w-full' }" 
+              option-attribute="label"
+              by="id"
+              multiple
+              :is-dark="colorMode.value === 'dark'">
+              <template #label>
+                <span v-if="currentFilter.statuses.length" class="truncate">{{ currentFilter.statuses.map(status => status.label).join(', ') }} </span>
+              </template>
+            </USelectMenu>
+          </UFormGroup>
+          <UFormGroup v-if="checkView('work_priority')" :label="$t('Priority')">
+            <PrioritySelect v-model="currentFilter.priority" :placeholder="$t('Priority')"/>
+          </UFormGroup>
+          <UFormGroup v-if="checkView('assigned_to')" :label="$t('Work assigned to')">
+            <CustomerUserSelect v-model="currentFilter.assigned_tos" :placeholder="$t('Work assigned to')" :multiple="true"/>
+          </UFormGroup>
+          <UFormGroup v-if="checkView('assigned_by')" :label="$t('Assigned by')">
+            <CustomerUserSelect v-model="currentFilter.assigned_bys" :placeholder="$t('Assigned by')" :multiple="true"/>
+          </UFormGroup>
+          <UFormGroup v-if="checkView('managers')" :label="$t('Manager')">
+            <CustomerUserSelect v-model="currentFilter.managers" :placeholder="$t('Manager')" :multiple="true"/>
+          </UFormGroup>
+          <UFormGroup
+              v-if="checkView('department')"
+              :label="$t('Department')">
+              <DepartmentSelectMulti v-model="currentFilter.departments" :placeholder="$t('Department')" :multiple="true"/>
+          </UFormGroup>
+          <UFormGroup
+              v-if="checkView('direct_manager')"
+              :label="$t('Direct manager')">
+              <CustomerUserSelect v-model="currentFilter.direct_managers" :placeholder="$t('Direct manager')" :multiple="true"/>
           </UFormGroup>
           
         </div>
@@ -94,38 +121,44 @@ const { t } = useI18n();
 const colorMode = useColorMode()
 import lodash from 'lodash'; 
 const { cloneDeep } = lodash; 
-const isOpen = defineModel({ default: false })
-const props = defineProps({
-  filters: {
-    type: Object,
-    default: {}
-  },
-  view: {
-    type: String,
-    required: true,
-  }
-})
-const localFilters = reactive(cloneDeep(props.filters));
+// const isOpenFilter = defineModel({ default: false })
+import { useFilterStore } from '@/stores/filter'
+import { storeToRefs } from 'pinia'
+import DepartmentSelectMulti from "./core/DepartmentSelectMulti.vue";
+const filterStore = useFilterStore()
+const { currentFilter, filterType, isOpenFilter } = storeToRefs(filterStore)
+const { setFilterModal, clear, setFilter } = filterStore
+
 const emit = defineEmits(['update:addtionFilters'])
 const statusOptions = [
   { label: t('All'), value: null },
   { label: t('Active'), value: 'active' },
   { label: t('Inactive'), value: 'inactive' },
 ]
-// const feeTypes = [
-//   { label: t('All'), value: null },
-//   { label: t('Fee'), value: 'fee' },
-//   { label: t('Usage Fee'), value: 'usage' },
-//   { label: t('Package Fee'), value: 'package' },
-//   { label: t('Usage or Package'), value: 'usage_or_package' },
-// ]
+const work_statuses = [
+  { label: t('Not Started'), id: 1 },
+  { label: t('In Progress'), id: 2 },
+  { label: t('Completed'), id: 3 },
+  { label: t('On Hold'), id: 4 },
+  { label: t('Cancelled'), id: 5 },
+  { label: t('Deferred'), id: 6 },
+  { label: t('Waiting for Review'), id: 7 },
+  { label: t('Approved'), id: 8 },
+  { label: t('Rejected'), id: 9 },
+  { label: t('Pending'), id: 11 },
+  { label: t('Success'), id: 12 },
+  { label: t('Archived'), id: 13 },
+  { label: t('Deleted'), id: 14 },
+  { label: t('Draft'), id: 15 },
+];
 const viewAllow = ref({
   profile_hrs:['department','position','title','direct_manager','role','profile_status'],
   contacts:['customer_source','type_of_customer','curators','created_at'],
   customers:['customer_source','type_of_customer','curators','customer_group','created_at'],
+  works:['work_status','progress','work_priority','assigned_to','assigned_by','managers','start_date','end_date','actual_start_date'],
 })
 const checkView = (key) => {
-  return viewAllow.value[props.view]?.includes(key);
+  return viewAllow.value[filterType.value]?.includes(key);
 
 }
 const type_of_customers = [
@@ -176,27 +209,29 @@ const contact_statuses = [
 ];
 
 const onApplyFilters = () => {
-  isOpen.value = false
-  emit('update:addtionFilters', cloneDeep(localFilters));
+  isOpenFilter.value = false
+  setFilter(filterType.value, currentFilter.value);
 };
 const onResetFilters = () => {
-  Object.keys(localFilters).forEach(key => {
-    if (Array.isArray(localFilters[key])) {
-      localFilters[key] = [];
-    } else if (typeof localFilters[key] === 'object') {
-      localFilters[key] = {};
+  Object.keys(currentFilter.value).forEach(key => {
+    if (Array.isArray(currentFilter.value[key])) {
+      currentFilter.value[key] = [];
+    } else if (typeof currentFilter.value[key] === 'object') {
+      currentFilter.value[key] = {};
     } else {
-      localFilters[key] = null;
+      currentFilter.value[key] = null;
     }
   });
+  clear(filterType.value);
+  isOpenFilter.value = false;
 }
-const initializeFilters = () => {
-  Object.assign(localFilters, cloneDeep(props.filters));
-};
+// const initializeFilters = () => {
+//   Object.assign(currentFilter, cloneDeep(props.filters));
+// };
 
-watchEffect(() => {
-  if (isOpen) {
-    initializeFilters();
-  }
-});
+// watchEffect(() => {
+//   if (isOpenFilter) {
+//     initializeFilters();
+//   }
+// });
 </script>

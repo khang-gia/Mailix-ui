@@ -32,6 +32,7 @@
     <ModalExpandImg />
     <ModalCreateEntities />
     <ScheduleDateSelectModal />
+    <AdditionFilters />
   </div>
   <div v-else class="font-averta">
     <main class="h-screen w-full relative transition-all duration-300 ease-in-out">

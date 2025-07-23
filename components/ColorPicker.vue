@@ -31,7 +31,7 @@ const loading = ref(false)
 const colors = [
     { label: 'Red', value: '#d50001' },       // Brownish Red
     { label: 'Green', value: '#0A8043' },     // Forest Green (user sample)
-    { label: 'Blue', value: '#039be5' },      // Slightly lighter dark blue
+    { label: 'Blue', value: '#3688d8' },      // Slightly lighter dark blue 039be5
     { label: 'Yellow', value: '#f5bf25' },    // Dark Yellow
     { label: 'Cyan', value: '#0E8388' },      // Slightly lighter dark cyan
     { label: 'Magenta', value: '#9B2C6B' },   // Dark Magenta with some brightness

@@ -692,7 +692,7 @@ const onSubmit = async () => {
             const isUpdated = await updateContact();
             if (isUpdated) {
                 useToast().add({
-                    curators: t('Success'),
+                    title: t('Success'),
                     description: t('The customer was successfully updated.'),
                     icon: 'i-heroicons-check-circle',
                     color: 'green',
@@ -705,7 +705,7 @@ const onSubmit = async () => {
             const isCreated = await createContact();
             if (isCreated) {
                 useToast().add({
-                    curators: t('Success'),
+                    title: t('Success'),
                     description: t('The customer was successfully created.'),
                     icon: 'i-heroicons-check-circle',
                     color: 'green',
@@ -717,7 +717,7 @@ const onSubmit = async () => {
         }
     } catch (error) {
         useToast().add({
-            curators: t('Error'),
+            title: t('Error'),
             description: error.message || t('An error occurred while processing the customer. Please try again later.'),
             icon: 'i-heroicons-exclamation-circle',
             color: 'red',
@@ -735,7 +735,7 @@ const onConvertCustomer = async () => {
             const isUpdated = await convertToCustomer();
             if (isUpdated) {
                 useToast().add({
-                    curators: t('Success'),
+                    title: t('Success'),
                     description: t('The contact was successfully converted to customer.'),
                     icon: 'i-heroicons-check-circle',
                     color: 'green',
@@ -747,7 +747,7 @@ const onConvertCustomer = async () => {
         } 
     } catch (error) {
         useToast().add({
-            curators: t('Error'),
+            title: t('Error'),
             description: error.message || t('An error occurred while converting the contact to customer. Please try again later.'),
             icon: 'i-heroicons-exclamation-circle',
             color: 'red',
@@ -761,7 +761,7 @@ const onConvertCustomer = async () => {
 const onChangeStatus = async (contact_status) => {
     if (!contact_status) {
         useToast().add({
-            curators: t('Error'),
+            title: t('Error'),
             description: t('Please select a contact status.'),
             icon: 'i-heroicons-exclamation-circle',
             color: 'red',
@@ -776,7 +776,7 @@ const onChangeStatus = async (contact_status) => {
             const isUpdated = await changeStatus(contact_status);
             if (isUpdated) {
                 useToast().add({
-                    curators: t('Success'),
+                    title: t('Success'),
                     description: t('The contact status was successfully changed.'),
                     icon: 'i-heroicons-check-circle',
                     color: 'green',
@@ -787,7 +787,7 @@ const onChangeStatus = async (contact_status) => {
         } 
     } catch (error) {
         useToast().add({
-            curators: t('Error'),
+            title: t('Error'),
             description: error.message || t('An error occurred while changing the contact status. Please try again later.'),
             icon: 'i-heroicons-exclamation-circle',
             color: 'red',

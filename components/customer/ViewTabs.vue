@@ -99,6 +99,10 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
+import { useFilterStore } from '@/stores/filter'
+const filterStore = useFilterStore()
+const { setFilterModal} = filterStore
+const { customerFilter } = storeToRefs(filterStore)
 
 const modalStore = useModalStore()
 const { alertConfirm, alertModal } = storeToRefs(modalStore)
@@ -115,7 +119,7 @@ const props = defineProps({
     default: ''
   }
 })
-const userFilter = computed({
+const mainFilter = computed({
   get: () => ({
     ordering: undefined,
     group: undefined,
@@ -124,13 +128,22 @@ const userFilter = computed({
     ...props.filters
   }),
   set: (filterValue) => {
-    Object.assign(userFilter.value, filterValue);
+    Object.assign(mainFilter.value, filterValue);
   }
 });
 const reload = ref(false);
 const customers = computedAsync(async () => {
+  const processedAdditionalFilter = {};
+  for (const key in customerFilter.value) {
+    if (Array.isArray(customerFilter.value[key])) {
+      processedAdditionalFilter[key] = customerFilter.value[key].map(item => item.id || item).join(',');
+    } else {
+      processedAdditionalFilter[key] = customerFilter.value[key];
+    }
+  }
   const params = {
-    ...userFilter.value
+    ...mainFilter.value,
+    ...processedAdditionalFilter
   }
   const data = await useAPI().$get('core/customers/', { 
     ...params,
@@ -154,11 +167,11 @@ const listViewDropdown = ref([
         console.log('hehe')
       }
     },{
-      label: t('Group by'),
-      icon: 'i-heroicons-rectangle-group',
+      label: t('Filter by'),
+      icon: 'i-heroicons-funnel',
       slot:"group",
       click: () => {
-        console.log('hehe')
+        setFilterModal(true, 'customers')
       }
     },{
       label: t('Select display columns'),
@@ -171,7 +184,7 @@ const listViewDropdown = ref([
       label: t('Unsort'),
       icon: 'i-heroicons-x-mark',
       slot: 'unsort',
-      disabled: userFilter.ordering === undefined,
+      disabled: mainFilter.ordering === undefined,
       click: () => {
         console.log('hi')
       }
@@ -179,7 +192,7 @@ const listViewDropdown = ref([
       label: t('Ungroup'),
       icon: 'i-heroicons-x-mark',
       slot: 'ungroup',
-      disabled: userFilter.group === undefined,
+      disabled: mainFilter.group === undefined,
       click: () => {
         console.log('hi')
       }

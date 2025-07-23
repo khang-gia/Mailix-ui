@@ -92,6 +92,7 @@
         </template>
       </UCard>
     </div>
+    <AdditionFilters v-model="isOpenFilter" :filters="additionalFilters" @update:addtion-filters="additionalFilters=$event" view="profile_hrs"/>
 </template>
 
 <script setup>
@@ -103,6 +104,10 @@ import { storeToRefs } from 'pinia'
 const modalStore = useModalStore()
 const { alertConfirm, alertModal } = storeToRefs(modalStore)
 const { setAlertModal } = modalStore
+import { useFilterStore } from '@/stores/filter'
+const filterStore = useFilterStore()
+const { setFilterModal} = filterStore
+const { hrFilter } = storeToRefs(filterStore)
 const pageTotal = ref(200)
 const page = ref(1)
 const pageSize = ref(10)
@@ -110,31 +115,46 @@ const pageFrom = computed(() => (page.value - 1) * pageSize.value + 1)
 const pageTo = computed(() => Math.min(page.value * pageSize.value, pageTotal.value))
 const selectedUsers = ref([])
 const props = defineProps({
-  status: {
-    type: Number,
-    default: 0
+  
+  filters: {
+    type: String,
+    default: ''
   }
 })
-const userFilter = ref(
-  {
-    status: 'Working',
+const userFilter = computed({
+  get: () => ({
     ordering: undefined,
     group: undefined,
     page: page.value,
     pageSize: pageSize.value,
+    ...props.filters
+  }),
+  set: (filterValue) => {
+    Object.assign(userFilter.value, filterValue);
   }
-)
+});
 const reload = ref(false)
 const users = computedAsync(async () => {
+  const processedAdditionalFilter = {};
+  for (const key in hrFilter.value) {
+    if (Array.isArray(hrFilter.value[key])) {
+      processedAdditionalFilter[key] = hrFilter.value[key].map(item => item.id || item).join(',');
+    } else {
+      processedAdditionalFilter[key] = hrFilter.value[key];
+    }
+  }
+  const params = {
+    ...userFilter.value,
+    ...processedAdditionalFilter
+  }
   const {data:data } = await useAPI().get('core/profile_hrs/', { 
     // customer_company_id: userStore.company.id, 
     // search: userStore.search, 
+    ...params,
     reload: reload.value,
     page: page.value,
     page_size: pageSize.value,
-    status: props.status,
   })
-  console.log('data',data.value)
   pageTotal.value = data.value.count
   return data.value.results
 })
@@ -149,11 +169,11 @@ const listViewDropdown = ref([
         console.log('hehe')
       }
     },{
-      label: t('Group by'),
-      icon: 'i-heroicons-rectangle-group',
+      label: t('Filter by'),
+      icon: 'i-heroicons-funnel',
       slot:"group",
       click: () => {
-        console.log('hehe')
+        setFilterModal(true, 'profile_hrs')
       }
     },{
       label: t('Select display columns'),

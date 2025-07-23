@@ -35,7 +35,7 @@
             <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.type_of_customer?$t(row.type_of_customer):'' }}</span>
         </template>
         <template #created_at-data="{row}">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ dayjs(row.created_at).format('YYYY-MM-DD') }}</span>
+            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.created_at?dayjs(row.created_at).format('YYYY-MM-DD'):'' }}</span>
         </template >
         <template #curators-data="{row}">
             <UAvatarGroup size="xs" :max="4" v-if="row.curators && row.curators.length">

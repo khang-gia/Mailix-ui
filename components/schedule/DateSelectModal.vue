@@ -126,7 +126,7 @@
                         </UFormGroup>
                         <UFormGroup
                             :label="$t('Priority')">
-                            <PrioritySelect v-model="calendarCreateInfo.priority" :placeholder="$t('User')"/>
+                            <PrioritySelect v-model="calendarCreateInfo.priority" :placeholder="$t('Priority')"/>
                         </UFormGroup>
                     </div>
                 <client-only>

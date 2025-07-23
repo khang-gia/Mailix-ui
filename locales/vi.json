@@ -358,5 +358,19 @@
     "No notification":"Không thông báo",
     "Event email": "Email nhận thông báo",
     "Send to participants": "Gửi đến khách mời",
-    "Also send to all participants ?": "Gửi đến tất cả khách mời ?"
+    "Also send to all participants ?": "Gửi đến tất cả khách mời ?",
+    "Not Started": "Chưa bắt đầu",
+    "In Progress": "Đang tiến hành",
+    "Completed": "Hoàn thành",
+    "On Hold": "Tạm dừng",
+    "Cancelled": "Đã hủy",
+    "Deferred": "Hoãn lại",
+    "Waiting for Review": "Chờ duyệt",
+    "Rejected": "Bị từ chối",
+    "Failed": "Thất bại",
+    "Archived": "Lưu trữ",
+    "Deleted": "Đã xóa",
+    "Draft": "Bản nháp",
+    "Assigned by": "Giao bởi",
+    "Manager": "Quản lý"
 }

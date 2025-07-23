@@ -21,7 +21,7 @@
             </div>
         </template>
         <template #label>
-            <div style="display: flex; align-items: center;">
+            <div v-if="priority" style="display: flex; align-items: center;">
                  <UIcon
                     :name="`i-heroicons-${priorities.find(p => p.value === priority)?.value === 1 ? 'check-circle' : priorities.find(p => p.value === priority)?.value === 2 ? 'exclamation-circle' : priorities.find(p => p.value === priority)?.value === 3 ? 'exclamation-triangle' : priorities.find(p => p.value === priority)?.value === 4 ? 'stop-circle' : priorities.find(p => p.value === priority)?.value === 5 ? 'x-circle' : 'question-mark-circle'}`"
                     class="inline-block mr-2 text-gray-500"

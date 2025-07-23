@@ -29,13 +29,13 @@
             <UProgress :value=row.progress indicator/>
         </template>
         <template #start_date-data="{row}">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ dayjs(row.start_date).format('YYYY-MM-DD') }}</span>
+            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.start_date?dayjs(row.start_date).format('YYYY-MM-DD'):'' }}</span>
         </template >
         <template #end_date-data="{row}">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ dayjs(row.end_date).format('YYYY-MM-DD') }}</span>
+            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.end_date?dayjs(row.end_date).format('YYYY-MM-DD'):'' }}</span>
         </template >
         <template #actual_start_date-data="{row}">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ dayjs(row.actual_start_date).format('YYYY-MM-DD') }}</span>
+            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.actual_start_date?dayjs(row.actual_start_date).format('YYYY-MM-DD'):'' }}</span>
         </template >
         <template #assigned_to-data="{row}">
             <UAvatarGroup size="xs" :max="4" v-if="row.assigned_to && row.assigned_to.length">

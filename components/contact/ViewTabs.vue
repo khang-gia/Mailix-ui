@@ -92,7 +92,6 @@
         </template>
       </UCard>
     </div>
-    <AdditionFilters v-model="isOpenFilter" :filters="additionalFilters" @update:addtion-filters="additionalFilters=$event" view="contacts"/>
 </template>
 
 <script setup>
@@ -100,6 +99,10 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
+import { useFilterStore } from '@/stores/filter'
+const filterStore = useFilterStore()
+const { setFilterModal} = filterStore
+const { contactFilter } = storeToRefs(filterStore)
 
 const modalStore = useModalStore()
 const { alertConfirm, alertModal } = storeToRefs(modalStore)
@@ -110,19 +113,14 @@ const pageSize = ref(10)
 const pageFrom = computed(() => (page.value - 1) * pageSize.value + 1)
 const pageTo = computed(() => Math.min(page.value * pageSize.value, pageTotal.value))
 const selectedUsers = ref([])
-const additionalFilters = ref({
-  type_of_customers: [],
-  customer_sources: [],
-  curators: [],
-})
-const isOpenFilter = ref(false)
+
 const props = defineProps({
   filters: {
     type: String,
     default: ''
   }
 })
-const userFilter = computed({
+const mainFilter = computed({
   get: () => ({
     ordering: undefined,
     group: undefined,
@@ -131,13 +129,22 @@ const userFilter = computed({
     ...props.filters
   }),
   set: (filterValue) => {
-    Object.assign(userFilter.value, filterValue);
+    Object.assign(mainFilter.value, filterValue);
   }
 });
 const reload = ref(false)
 const contacts = computedAsync(async () => {
+  const processedContactFilter = {};
+  for (const key in contactFilter.value) {
+    if (Array.isArray(contactFilter.value[key])) {
+      processedContactFilter[key] = contactFilter.value[key].map(item => item.id || item).join(',');
+    } else {
+      processedContactFilter[key] = contactFilter.value[key];
+    }
+  }
   const params = {
-    ...userFilter.value
+    ...mainFilter.value,
+    ...processedContactFilter
   }
   const {data:data } = await useAPI().get('core/customers/', { 
     // customer_company_id: userStore.company.id, 
@@ -168,7 +175,7 @@ const listViewDropdown = ref([
       icon: 'i-heroicons-funnel',
       slot:"group",
       click: () => {
-        isOpenFilter.value = true
+        setFilterModal(true, 'contacts')
       }
     },{
       label: t('Select display columns'),
@@ -181,7 +188,7 @@ const listViewDropdown = ref([
       label: t('Unsort'),
       icon: 'i-heroicons-x-mark',
       slot: 'unsort',
-      disabled: userFilter.ordering === undefined,
+      disabled: mainFilter.ordering === undefined,
       click: () => {
         console.log('hi')
       }
@@ -189,7 +196,7 @@ const listViewDropdown = ref([
       label: t('Ungroup'),
       icon: 'i-heroicons-x-mark',
       slot: 'ungroup',
-      disabled: userFilter.group === undefined,
+      disabled: mainFilter.group === undefined,
       click: () => {
         console.log('hi')
       }
