@@ -42,7 +42,7 @@ export const useFilterStore = defineStore('filter', () => {
     filterType.value = type
     currentFilter.value = cloneDeep(getFilter(type))
   }
-  function clear(type) {
+  function clearFilter(type) {
     if (type === 'contacts') {
       contactFilter.value = {
         type_of_customer: '',
@@ -107,7 +107,7 @@ export const useFilterStore = defineStore('filter', () => {
     }
   }
   return {
-    clear,
+    clearFilter,
     isOpenFilter,
     filterType,
     contactFilter,

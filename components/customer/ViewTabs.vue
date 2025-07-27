@@ -101,7 +101,8 @@ import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 import { useFilterStore } from '@/stores/filter'
 const filterStore = useFilterStore()
-const { setFilterModal} = filterStore
+const { setFilterModal, clearFilter} = filterStore
+
 const { customerFilter } = storeToRefs(filterStore)
 
 const modalStore = useModalStore()
@@ -159,14 +160,16 @@ const customers = computedAsync(async () => {
 const displayColumns = ref([
 ])
 const listViewDropdown = ref([ 
-  [{
-      label: t('Sort'),
-      icon: 'i-heroicons-funnel',
-      slot: "sort",
-      click: () => {
-        console.log('hehe')
-      }
-    },{
+  [
+    // {
+    //   label: t('Sort'),
+    //   icon: 'i-heroicons-funnel',
+    //   slot: "sort",
+    //   click: () => {
+    //     console.log('hehe')
+    //   }
+    // },
+    {
       label: t('Filter by'),
       icon: 'i-heroicons-funnel',
       slot:"group",
@@ -180,21 +183,22 @@ const listViewDropdown = ref([
         console.log('hehe')
       }
     }]
-    , [{
-      label: t('Unsort'),
-      icon: 'i-heroicons-x-mark',
-      slot: 'unsort',
-      disabled: mainFilter.ordering === undefined,
-      click: () => {
-        console.log('hi')
-      }
-    },{
-      label: t('Ungroup'),
+    , [
+    //   {
+    //   label: t('Unsort'),
+    //   icon: 'i-heroicons-x-mark',
+    //   slot: 'unsort',
+    //   disabled: mainFilter.ordering === undefined,
+    //   click: () => {
+    //     console.log('hi')
+    //   }
+    // },
+    {
+      label: t('Clear filter'),
       icon: 'i-heroicons-x-mark',
       slot: 'ungroup',
-      disabled: mainFilter.group === undefined,
       click: () => {
-        console.log('hi')
+        clearFilter('customers')
       }
     },
     {

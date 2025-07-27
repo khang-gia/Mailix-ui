@@ -127,7 +127,7 @@ import { storeToRefs } from 'pinia'
 import DepartmentSelectMulti from "./core/DepartmentSelectMulti.vue";
 const filterStore = useFilterStore()
 const { currentFilter, filterType, isOpenFilter } = storeToRefs(filterStore)
-const { setFilterModal, clear, setFilter } = filterStore
+const { setFilterModal, clearFilter, setFilter } = filterStore
 
 const emit = defineEmits(['update:addtionFilters'])
 const statusOptions = [
@@ -222,7 +222,7 @@ const onResetFilters = () => {
       currentFilter.value[key] = null;
     }
   });
-  clear(filterType.value);
+  clearFilter(filterType.value);
   isOpenFilter.value = false;
 }
 // const initializeFilters = () => {
