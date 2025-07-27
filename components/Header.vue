@@ -110,7 +110,8 @@ const routeCreate = [
     'contacts',
     'works',
     'customers',
-    'system'
+    'system',
+    "departments"
 ]
 const props = defineProps({
     sidebarOpen: {

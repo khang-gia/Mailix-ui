@@ -503,7 +503,7 @@ const loadData = async () => {
                 : '';
 
             // userInfo.value.direct_manager = userInfo.value.direct_manager ? userInfo.value.direct_manager.id: '',
-            userInfo.value.department = userInfo.value.department ? userInfo.value.department.id: '',
+            // userInfo.value.department = userInfo.value.department ? userInfo.value.department.id: '',
             console.log('response', userInfo.value)
         }
     } catch (error) {
@@ -616,7 +616,9 @@ const formatData = () => {
             }
         } else if (['dob', 'join_date', 'actual_sign_date', 'date_of_issue'].includes(key)) {
             formData.append(key, dayjs(value).format('YYYY-MM-DD'));
-        }else if(['pob','place_of_origin', 'nationality'].includes(key)) {
+        } else if (typeof value === 'object' && value !== null && value.id) {
+            formData.append(key, value.id)
+        } else if(['pob','place_of_origin', 'nationality'].includes(key)) {
             if (!value ) {
                 formData.append(key, '');
             }

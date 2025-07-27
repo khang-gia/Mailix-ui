@@ -374,5 +374,16 @@
     "Assigned by": "Giao bởi",
     "Manager": "Quản lý",
     "Clear filter": "Bỏ bộ lọc",
-    "New tab": "Tab mới"
+    "New tab": "Tab mới",
+    "Department - Branch": "Phòng ban - chi nhánh",
+    "Department name":"Tên phòng ban",
+    "Business unit": "Khối nghiệp vụ",
+    "Branch":"Chi nhánh",
+    "Department code": "Mã phòng ban",
+    "Department parent": "Phòng ban cha",
+    "Belonging to": "Thuộc phòng ban",
+    "Department code already exists": "Mã phòng ban đã tồn tại",
+    "Location": "Vị trí",
+    "Department Information": "Thông tin phòng ban",
+    "Department List": "Danh sách phòng ban"
 }

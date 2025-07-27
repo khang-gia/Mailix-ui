@@ -46,6 +46,7 @@ async function search(q) {
     if (props.isCreate){
         data.value.results.push({ id: 0, name: '' })
     }
+    data.value.results.push({ id: -1, name: 'None' })
     return data.value.results
 }
 const onSelectOption = (value)=>{
