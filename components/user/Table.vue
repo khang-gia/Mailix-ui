@@ -52,6 +52,10 @@ const props = defineProps({
   page:{
     type: Number,
     required: true
+  },
+  viewMode:{
+    type: String,
+    default: 'default'
   }
 })
 const _page = computed({
@@ -129,6 +133,10 @@ const _selected = computed({
 });
 const selectUser =  (row) => {
   const userId = row.id
-  useRouter().push({ name: 'hr-id', params: { id:userId } });
+  if (props.viewMode === 'new_tab') {
+    window.open(`/hr/${userId}`, '_blank')
+  } else {
+    useRouter().push({ name: 'hr-id', params: { id:userId } });
+  }
 }
 </script>

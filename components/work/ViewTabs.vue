@@ -33,9 +33,9 @@
                 </div>
             </template>
             <template #item="{ item }">
-                <span class="truncate">{{ item.label }}</span>
+                <span class="truncate" :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }">{{ item.label }}</span>
 
-                <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
+                <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }"/>
             </template>
         </UDropdown>
         <div class="px-2 flex items-center gap-1.5 border-l border-slate-300">
@@ -84,7 +84,7 @@
     
     <div class="p-2">
       <UCard :ui="{body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700'}, divide: 'divide-y divide-gray-200 dark:divide-gray-700',}">
-        <WorkTable :works="works" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedUsers=$event"/>
+        <WorkTable :works="works" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedUsers=$event" :viewMode="viewMode"/>
         <template #footer>
           <div class="flex justify-end items-center space-x-2">
             <UPagination :max="3" :page-count="pageSize" :total="pageTotal" v-model="page"/>
@@ -239,6 +239,7 @@ const sortItemDropDown = ref([
       label: t('ID Profile hr'),
     }]
 ])
+const viewMode=ref('default')
 const detailViewDropDown = ref([
     [{
         label:t('Choose view type detail'),
@@ -249,13 +250,22 @@ const detailViewDropDown = ref([
       label: t('Default'),
       icon: 'flowbite:window-outline',
       click: () => {
-        console.log('hi')
+        viewMode.value='default'
       }
-    },{
-      label: t('Slide'),
-      icon: 'material-symbols:transition-slide-outline',
+    },
+    // {
+    //   label: t('Slide'),
+    //   icon: 'material-symbols:transition-slide-outline',
+    //   click: () => {
+    //     console.log('hi')
+    //   }
+    // },
+    {
+      label: t('New tab'),
+      selectedName:'new_tab',
+      icon: 'cuida:open-in-new-tab-outline',
       click: () => {
-        console.log('hi')
+        viewMode.value = 'new_tab'
       }
     }]
 ])
