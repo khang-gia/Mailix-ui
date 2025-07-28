@@ -33,7 +33,11 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (!userinfo){
         return navigateTo('/login');
     }
-    let resource = userinfo.profile_hr.department?.group?.resources || [];
+    let department = userinfo.profile_hr.department
+    if (!department){
+        return navigateTo('/login');
+    }
+    let resource = department.group?.resources || [];
     let role = userinfo.profile_hr.role
     const resourceNames = resource.map((item: { code: string }) => item.code);
     if (role !=='A'){

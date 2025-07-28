@@ -53,7 +53,7 @@ const checkView = (slotName) => {
     let role = userInfo.value.profile_hr.role
     console.log('role',role)
     if (role==='A'){
-        return true
+        return false
     }
     const resourceNames = resource.map(item => item.code);
     return !resourceNames.includes(slotName);

@@ -169,9 +169,10 @@
         console.log('create account Data', entityInfo.value)
         try {
             const {data: response} = await useAPI().post(`core/profile_hrs/${useRoute().params.id}/create_account/`, {
-                name: entityInfo.value.name,
-                code: entityInfo.value.code,
-                description: entityInfo.value.description,
+                username: entityInfo.value.username,
+                password: entityInfo.value.password,
+                email: entityInfo.value.email,
+                confirm_password: entityInfo.value.confirm_password,
             });
             console.log('response', response.value)
             if (response.value && response.value.id) {
