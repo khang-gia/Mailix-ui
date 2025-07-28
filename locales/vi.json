@@ -385,5 +385,20 @@
     "Department code already exists": "Mã phòng ban đã tồn tại",
     "Location": "Vị trí",
     "Department Information": "Thông tin phòng ban",
-    "Department List": "Danh sách phòng ban"
+    "Department List": "Danh sách phòng ban",
+    "Groups":"Nhóm",
+    "Group name": "Tên nhóm",
+    "Resource": "Tài nguyên",
+    "Group List": "Danh sách nhóm",
+    "Create group": "Tạo nhóm",
+    "Resource note":"Các đối tượng ",
+    "Resources":"Tài nguyên",
+    "Group Information":"Thông tin nhóm",
+    "Group code already exists": "Mã nhóm đã tồn tại",
+    "Error checking group code": "Lỗi kiểm tra mã nhóm",
+    "Search resources": "Tìm kiếm tài nguyên",
+    "The group was successfully updated.":"Nhóm được tạo thành công",
+    "The group was successfully created.":"Cập nhật nhóm thành công",
+    "An error occurred while processing the group. Please try again later.":"Đã xảy ra lỗi khi lưu nhóm. Vui lòng thử lại sau.",
+    "Group": "Nhóm"
 }

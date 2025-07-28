@@ -101,7 +101,10 @@
                         <RickTextEditor v-model="departmentInfo.description" />
                     </client-only>
                 </UFormGroup>
-                
+                <UFormGroup
+                    :label="$t('Group')">
+                    <SystemGroupSelectMulti v-model="departmentInfo.group" :placeholder="$t('Group')"/>
+                </UFormGroup>
                
                 
             </UForm>

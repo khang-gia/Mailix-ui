@@ -111,7 +111,8 @@ const routeCreate = [
     'works',
     'customers',
     'system',
-    "departments"
+    "departments",
+    "groups"
 ]
 const props = defineProps({
     sidebarOpen: {

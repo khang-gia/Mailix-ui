@@ -46,29 +46,45 @@ import {useUserStore } from '@/stores/user'
 const { t } = useI18n();
 const userStore = useUserStore()
 const { isSidebarOpen } = storeToRefs(userStore)
+const {  data: userInfo } = useAuth()
 
-const items = [
-    {
-        label: t('Customer'),
-        icon:"ix:customer",
-        slot: 'customer',
-    },
-    {
-        label: t('CRM'),
-        icon:"mdi:face-agent",
-        slot: 'crm',
-    },
-    {
-        label: t('HR'),
-        icon:"heroicons:users",
-        slot: 'hrm',
-    },
-    {
-        label: t('Company'),
-        icon:"mdi:company",
-        slot: 'company',
-    },
-]
+const checkView = (slotName) => {
+    let resource = userInfo.value.profile_hr.department?.group?.resources || [];
+    let role = userInfo.value.profile_hr.role
+    console.log('role',role)
+    if (role==='A'){
+        return true
+    }
+    const resourceNames = resource.map(item => item.code);
+    return !resourceNames.includes(slotName);
+}
+
+const items = computed(() => {
+    const allItems = [
+        {
+            label: t('Customer'),
+            icon:"ix:customer",
+            slot: 'customer',
+        },
+        {
+            label: t('CRM'),
+            icon:"mdi:face-agent",
+            slot: 'crm',
+        },
+        {
+            label: t('HR'),
+            icon:"heroicons:users",
+            slot: 'hrm',
+        },
+        {
+            label: t('Company'),
+            icon:"mdi:company",
+            slot: 'company',
+        },
+    ];
+    return allItems.filter(item => !checkView(item.slot));
+});
+
 const customerSubmenu= ref([
     [{
             slot: 'tip',
@@ -116,8 +132,8 @@ const companySubmenu = ref([
         link: '/company', label: t('Information'), click: () => {
         useRouter().push({ name: 'company' });
     }}],
-    [{ link: '/titles', label: t('Title'), click: () => {
-        useRouter().push({ name: 'titles' });
+    [{ link: '/groups', label: t('Groups'), click: () => {
+        useRouter().push({ name: 'groups' });
     } },
     { link: '/departments', label: t('Department'), click: () => {
         useRouter().push({ name: 'departments' });
