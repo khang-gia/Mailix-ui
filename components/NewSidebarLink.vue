@@ -128,20 +128,20 @@ const companySubmenu = ref([
         slot: 'tip',
         disabled: true
     }],
-    [{
-        link: '/company', label: t('Information'), click: () => {
-        useRouter().push({ name: 'company' });
-    }}],
+    // [{
+    //     link: '/company', label: t('Information'), click: () => {
+    //     useRouter().push({ name: 'company' });
+    // }}],
     [{ link: '/groups', label: t('Groups'), click: () => {
         useRouter().push({ name: 'groups' });
     } },
     { link: '/departments', label: t('Department'), click: () => {
         useRouter().push({ name: 'departments' });
     } }],
-    [{
-        link: '/company/config', label: t('Config'), click: () => {
-        useRouter().push({ name: 'company/config' });
-    }}]
+    // [{
+    //     link: '/company/config', label: t('Config'), click: () => {
+    //     useRouter().push({ name: 'company/config' });
+    // }}]
 ])
 const submenuMap = {
   crm: crmSubmenu,

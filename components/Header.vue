@@ -52,7 +52,7 @@
                     <!-- <DropdownNotifications /> -->
                     <!-- <DropdownHelp align="right" /> -->
 
-                    <BaseLightDarkMode />
+                    <!-- <BaseLightDarkMode /> -->
                     <hr class="w-px h-6 bg-slate-200 dark:bg-slate-600 border-slate-200 dark:border-slate-600 ml-2" />
                     <DropdownProfile v-if="isAuthenticated" />
                     <div v-else>
