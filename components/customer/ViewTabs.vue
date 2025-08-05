@@ -101,7 +101,9 @@ import { storeToRefs } from 'pinia'
 import { useFilterStore } from '@/stores/filter'
 const filterStore = useFilterStore()
 const { setFilterModal, clearFilter} = filterStore
-
+import { useDisplayColStore } from '@/stores/column'
+const columnStore = useDisplayColStore()
+const { setColumnModal, clearColumn } = columnStore
 const { customerFilter } = storeToRefs(filterStore)
 
 const modalStore = useModalStore()
@@ -179,19 +181,10 @@ const listViewDropdown = ref([
       label: t('Select display columns'),
       icon: 'i-heroicons-view-columns',
       click: () => {
-        console.log('hehe')
+        setColumnModal(true, 'customers')
       }
     }]
     , [
-    //   {
-    //   label: t('Unsort'),
-    //   icon: 'i-heroicons-x-mark',
-    //   slot: 'unsort',
-    //   disabled: mainFilter.ordering === undefined,
-    //   click: () => {
-    //     console.log('hi')
-    //   }
-    // },
     {
       label: t('Clear filter'),
       icon: 'i-heroicons-x-mark',
@@ -204,9 +197,8 @@ const listViewDropdown = ref([
       label: t('Remove display columns'),
       icon: 'i-heroicons-x-mark',
       slot: 'remove_column',
-      disabled: displayColumns.value.length===0,
       click: () => {
-        console.log('hi')
+        clearColumn('customers')
       }
     }]
 ])

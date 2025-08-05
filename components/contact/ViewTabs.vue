@@ -100,6 +100,10 @@ const { t } = useI18n();
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 import { useFilterStore } from '@/stores/filter'
+import { useDisplayColStore } from '@/stores/column'
+const columnStore = useDisplayColStore()
+const { setColumnModal, clearColumn } = columnStore
+
 const filterStore = useFilterStore()
 const { setFilterModal, clearFilter} = filterStore
 const { contactFilter } = storeToRefs(filterStore)
@@ -183,7 +187,7 @@ const listViewDropdown = ref([
       label: t('Select display columns'),
       icon: 'i-heroicons-view-columns',
       click: () => {
-        console.log('hehe')
+        setColumnModal(true, 'contacts')
       }
     }]
     , [ 
@@ -208,9 +212,8 @@ const listViewDropdown = ref([
       label: t('Remove display columns'),
       icon: 'i-heroicons-x-mark',
       slot: 'remove_column',
-      disabled: displayColumns.value.length===0,
       click: () => {
-        console.log('hi')
+        clearColumn('contacts')
       }
     }]
 ])

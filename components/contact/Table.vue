@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white dark:bg-[#1E1E2E] rounded-md">
-        <UTable v-model="_selected" v-model:sort="sort" sort-mode="manual" @update:sort="page = 1" :columns :rows="contacts" 
+        <UTable v-model="_selected" v-model:sort="sort" sort-mode="manual" @update:sort="page = 1" :columns="_contactColumn" :rows="contacts" 
         :sortButton="{icon:'none',type:'string', color: 'none', variant: 'ghost', size: '2xs', square: true } "
         :ui="{
             base: 'w-max',
@@ -22,14 +22,21 @@
         >
         <template #name-data="{ row }">
             <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer" @click="selectCustomer(row)">{{ row.name }}</span>
+                <span class="text-sm italic font-medium text-mailix-primary dark:text-white cursor-pointer" @click="selectCustomer(row)">{{ row.name }}</span>
+            </div>
+        </template>
+        <template #customer_code-data="{ row }">
+            <div class="flex items-center space-x-2">
+                <span class="text-sm italic font-medium text-mailix-primary dark:text-white cursor-pointer" @click="selectCustomer(row)">{{ row.customer_code }}</span>
             </div>
         </template>
         <template #customer_source-data="{ row }">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.customer_source?$t(row.customer_source):'' }}</span>
+            <span v-if="row.customer_source" class="text-sm font-medium text-gray-900 dark:text-white">{{ $t(row.customer_source)}}</span>
+            <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">--</span>
         </template>
         <template #type_of_customer-data="{ row }">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.type_of_customer?$t(row.type_of_customer):'' }}</span>
+            <span v-if="row.type_of_customer" class="text-sm font-medium text-gray-900 dark:text-white">{{ $t(row.type_of_customer)}}</span>
+            <span v-else class="text-sm italic text-slate-400 dark:text-gray-500"> --</span>
         </template>
         <template #created_at-data="{row}">
             <span class="text-sm font-medium text-gray-900 dark:text-white">{{ dayjs(row.created_at).format('YYYY-MM-DD') }}</span>
@@ -45,8 +52,16 @@
                 </div>
             </UAvatarGroup>
             <div v-else>
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{$t('No curators assigned')}}</span>
+                <span class="text-sm italic text-slate-400 dark:text-gray-500">{{$t('No curators assigned')}}</span>
             </div>
+        </template>
+        <template v-for="column in _contactColumn.filter(item => !excludeColumns.includes(item.key))" :key="column.key" #[`${column.key}-data`]="{ row }">
+          <span v-if="row[column.key] !== null && row[column.key] !== undefined && row[column.key] !== ''" class="text-sm font-medium text-gray-900 dark:text-white">
+            {{ row[column.key] }}
+          </span>
+          <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">
+            --
+          </span>
         </template>
         </UTable>
     </div>
@@ -59,6 +74,10 @@
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const emit = defineEmits(['update:page', 'update:selected'])
+import { useDisplayColStore } from '@/stores/column'
+import { storeToRefs } from 'pinia'
+const columnStore = useDisplayColStore()
+const { contactColumn } = storeToRefs(columnStore)
 const dayjs = useDayjs()
  
 const props = defineProps({
@@ -84,6 +103,14 @@ const _page = computed({
   set: (val) => {
     emit('update:page', val)
   }
+})
+const excludeColumns = ['curators', 'name', 'customer_code', 'created_at','customer_source','type_of_customer']
+const _contactColumn = computed(() => {
+  const cols = contactColumn.value.filter(item => item.is_show === true)
+  return cols.map(col => ({
+    ...col,
+    label: t(col.label)
+  }))
 })
 const columns = [
     {   

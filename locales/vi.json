@@ -400,5 +400,8 @@
     "The group was successfully updated.":"Nhóm được tạo thành công",
     "The group was successfully created.":"Cập nhật nhóm thành công",
     "An error occurred while processing the group. Please try again later.":"Đã xảy ra lỗi khi lưu nhóm. Vui lòng thử lại sau.",
-    "Group": "Nhóm"
+    "Group": "Nhóm",
+    "Unregistered": "Chưa đăng ký",
+    "No profile found here!": "Không tìm thấy hồ sơ nào!!",
+    "No assigned by":"Không có người giao"
 }

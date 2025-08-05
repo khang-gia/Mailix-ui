@@ -104,9 +104,13 @@ const modalStore = useModalStore()
 const { alertConfirm, alertModal } = storeToRefs(modalStore)
 const { setAlertModal } = modalStore
 import { useFilterStore } from '@/stores/filter'
+import { useDisplayColStore } from '@/stores/column'
+
 const filterStore = useFilterStore()
 const { setFilterModal, clearFilter} = filterStore
 const { workFilter } = storeToRefs(filterStore)
+const columnStore = useDisplayColStore()
+const { setColumnModal, clearColumn } = columnStore
 
 const pageTotal = ref(200)
 const page = ref(1)
@@ -179,7 +183,7 @@ const listViewDropdown = ref([
       label: t('Select display columns'),
       icon: 'i-heroicons-view-columns',
       click: () => {
-        console.log('hehe')
+        setColumnModal(true,'works')
       }
     }]
     , [
@@ -204,9 +208,8 @@ const listViewDropdown = ref([
       label: t('Remove display columns'),
       icon: 'i-heroicons-x-mark',
       slot: 'remove_column',
-      disabled: displayColumns.value.length===0,
       click: () => {
-        console.log('hi')
+        clearColumn('works')
       }
     }]
 ])
