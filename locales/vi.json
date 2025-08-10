@@ -403,5 +403,12 @@
     "Group": "Nhóm",
     "Unregistered": "Chưa đăng ký",
     "No profile found here!": "Không tìm thấy hồ sơ nào!!",
-    "No assigned by":"Không có người giao"
+    "No assigned by":"Không có người giao",
+    "Suspend": "Tạm dừng",
+    "Founded": "Thành lập",
+    "Employees": "Nhân viên",
+    "General":"Tổng quan",
+    "Headquarters":"Trụ sở chính",
+    "Administrative Info": "Thông tin quản trị",
+    "Last Updated": "Cập nhật lần cuối"
 }

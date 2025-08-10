@@ -2,7 +2,6 @@
     <div class="flex-grow-1 p-8">
         <schedule-cal />
     </div>
-    <!-- <RickTextEditor /> -->
     
 </template>
 <script setup>
@@ -22,18 +21,18 @@ const mappingFilter = {
 }
 const reload = ref(false)
 const totalEvents = ref(0)
-const events = computedAsync(async () => {
-  const data = await useAPI().$get('system/schedule-events/', { 
-    ...params.value,
-  })
-  totalEvents.value = data.count
+// const events = computedAsync(async () => {
+//   const data = await useAPI().$get('system/schedule-events/', { 
+//     ...params.value,
+//   })
+//   totalEvents.value = data.count
   
-  const mappedResults = data.results.map(event => ({
-    ...event,
-    start: event.start_datetime ? event.start_datetime.replace(/Z$/, '') : event.start_datetime,
-    end: event.end_datetime ? event.end_datetime.replace(/Z$/, '') : event.end_datetime,
-  }))
+//   const mappedResults = data.results.map(event => ({
+//     ...event,
+//     start: event.start_datetime ? event.start_datetime.replace(/Z$/, '') : event.start_datetime,
+//     end: event.end_datetime ? event.end_datetime.replace(/Z$/, '') : event.end_datetime,
+//   }))
   
-  return mappedResults
-}) 
+//   return mappedResults
+// }) 
 </script>
