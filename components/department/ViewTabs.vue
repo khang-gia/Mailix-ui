@@ -240,27 +240,12 @@ const detailViewDropDown = ref([
       }
     }]
 ])
-const deleteProfile = async () => {
+const deleteDepartments = async () => {
   try {
-      const response = await useAPI().del(`system/departments/`, {
-        profiles: selectedDepartments.value.map(user => user.id)
+      const response = await useAPI().del(`system/departments/delete_departments`, {
+        departments: selectedDepartments.value.map(user => user.id)
       });
       console.log('response', response)
-      if (response && response.status.value === 'success') {
-          return true;
-      } else {
-          throw new Error(t('Unexpected response status'));
-      }
-  } catch (error) {
-      console.error('Error deleting fee:', error);
-      throw error;
-  }
-} 
-const deactivateProfile = async () => {
-  try {
-      const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
-          profiles: selectedDepartments.value.map(user => user.id)
-      });
       if (response && response.status.value === 'success') {
           return true;
       } else {
@@ -279,7 +264,7 @@ const actionSelected = [
     icon: 'i-heroicons-trash',
     click: () => {
       setAlertModal(true, {
-        message: t('Are you sure you want to delete these profiles?'),
+        message: t('Are you sure you want to delete these departments?'),
         confirmButton: t('OK'),
         denyButton: t('Cancel'),
       }) 
@@ -288,19 +273,20 @@ const actionSelected = [
         async (newVal) => {
           if (!newVal) {
             if (alertConfirm.value) {
-              const isDeleted = await deleteProfile();
+              const isDeleted = await deleteDepartments();
               if (isDeleted) {
                 reload.value = !reload.value
+                selectedDepartments.value = []
                 useToast().add({
                   title: t('Success'),
-                  description: t('Profile deleted successfully'),
+                  description: t('Department deleted successfully'),
                   icon: 'i-heroicons-check-circle',
                   color: 'green',
                 });
               } else {
                 useToast().add({
                   title: t('Error'),
-                  description: t('Profile deletion failed'),
+                  description: t('Department deletion failed'),
                   icon: 'i-heroicons-x-circle',
                   color: 'red',
                 });

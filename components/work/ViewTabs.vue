@@ -60,7 +60,7 @@
                 {{$t('records')}}
             </span>
         </div>
-        <UDropdown v-if="selectedUsers.length > 0" :items="actionSelected" :ui="{
+        <UDropdown v-if="selectedWorks.length > 0" :items="actionSelected" :ui="{
             container:'w-fit',
             item:{
                 padding: 'px-2 py-3',
@@ -84,7 +84,7 @@
     
     <div class="p-2">
       <UCard :ui="{body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700'}, divide: 'divide-y divide-gray-200 dark:divide-gray-700',}">
-        <WorkTable :works="works" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedUsers=$event" :viewMode="viewMode"/>
+        <WorkTable :works="works" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedWorks=$event" :viewMode="viewMode"/>
         <template #footer>
           <div class="flex justify-end items-center space-x-2">
             <UPagination :max="3" :page-count="pageSize" :total="pageTotal" v-model="page"/>
@@ -117,7 +117,7 @@ const page = ref(1)
 const pageSize = ref(10)
 const pageFrom = computed(() => (page.value - 1) * pageSize.value + 1)
 const pageTo = computed(() => Math.min(page.value * pageSize.value, pageTotal.value))
-const selectedUsers = ref([])
+const selectedWorks = ref([])
 const props = defineProps({
   filters: {
     type: String,
@@ -274,8 +274,8 @@ const detailViewDropDown = ref([
 ])
 const deleteProfile = async () => {
   try {
-      const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
-        profiles: selectedUsers.value.map(user => user.id)
+      const response = await useAPI().post(`core/works/delete_works/`, {
+        works: selectedWorks.value.map(user => user.id)
       });
       console.log('response', response)
       if (response && response.status.value === 'success') {
@@ -284,22 +284,7 @@ const deleteProfile = async () => {
           throw new Error(t('Unexpected response status'));
       }
   } catch (error) {
-      console.error('Error deleting fee:', error);
-      throw error;
-  }
-} 
-const deactivateProfile = async () => {
-  try {
-      const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
-          profiles: selectedUsers.value.map(user => user.id)
-      });
-      if (response && response.status.value === 'success') {
-          return true;
-      } else {
-          throw new Error(t('Unexpected response status'));
-      }
-  } catch (error) {
-      console.error('Error deleting fee:', error);
+      console.error('Error deleting works:', error);
       throw error;
   }
 } 
@@ -311,7 +296,7 @@ const actionSelected = [
     icon: 'i-heroicons-trash',
     click: () => {
       setAlertModal(true, {
-        message: t('Are you sure you want to delete these profiles?'),
+        message: t('Are you sure you want to delete these works?'),
         confirmButton: t('OK'),
         denyButton: t('Cancel'),
       }) 
@@ -323,16 +308,17 @@ const actionSelected = [
               const isDeleted = await deleteProfile();
               if (isDeleted) {
                 reload.value = !reload.value
+                selectedWorks.value = []
                 useToast().add({
                   title: t('Success'),
-                  description: t('Profile deleted successfully'),
+                  description: t('Work deleted successfully'),
                   icon: 'i-heroicons-check-circle',
                   color: 'green',
                 });
               } else {
                 useToast().add({
                   title: t('Error'),
-                  description: t('Profile deletion failed'),
+                  description: t('Work deletion failed'),
                   icon: 'i-heroicons-x-circle',
                   color: 'red',
                 });

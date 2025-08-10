@@ -218,21 +218,6 @@ const deleteGroup = async () => {
       throw error;
   }
 } 
-const deactivateProfile = async () => {
-  try {
-      const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
-          profiles: selectedDepartments.value.map(user => user.id)
-      });
-      if (response && response.status.value === 'success') {
-          return true;
-      } else {
-          throw new Error(t('Unexpected response status'));
-      }
-  } catch (error) {
-      console.error('Error deleting fee:', error);
-      throw error;
-  }
-} 
 const actionSelected = [
   [{
     key: 'delete',
