@@ -23,7 +23,21 @@
                 required>
                 <UInput
                     v-model="entityInfo.email"
+                    disabled="true"
                     :placeholder="$t('Email')"
+                    :ui="{ base: 'w-full rounded-lg' }"
+                    :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
+            </UFormGroup>
+            <UFormGroup
+                v-if="checkView('authen_email')"
+                v-slot="{ error }"
+                :label="$t('Authentication Email')"
+                name="authen_email"
+                :error="errors.authen_email"
+                required>
+                <UInput
+                    v-model="entityInfo.authen_email"
+                    :placeholder="$t('Authentication Email')"
                     :ui="{ base: 'w-full rounded-lg' }"
                     :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
             </UFormGroup>
@@ -129,11 +143,12 @@
     const busy= ref(false)
     const props = defineProps(['id'])
     const emit = defineEmits(['close-modal', 'change-mode'])
+
     // const modalTypeMapping = ref([
     //     'account','title','department'
     // ])
     const viewAllow = ref({
-        account:['username','password','confirm_password','email','phone'],
+        account:['username','password','confirm_password','email','phone', 'authen_email'],
         title:['name','code','description'],
         department:['name','code','description','parent','department_type', 'company', 'business_unit'],
     })
@@ -141,12 +156,50 @@
         return viewAllow.value[modalCreateType.value]?.includes(key);
 
     }
+    const normalizeName = (name) => {
+        const nameAscii = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  
+        const parts = nameAscii.toLowerCase().split(/\s+/);
+        if (parts.length < 2) return nameAscii.toLowerCase(); // fallback for single word
+        
+        const initials = parts.slice(0, -1).map(word => word[0]).join("");
+        return initials + parts[parts.length - 1];
+    }
+    const defaultEmail = async() => {
+        const userData = await useAPI().get(`core/profile_hrs/${useRoute().params.id}/`);
+        console.log('userData value', userData.data.value);
+        // Generate a default email based on the user's name with @imap.mailix.vn domain ex: Nguyễn Trần Gia Khiêng -> ntgkhieng@imap.mailix.vn
+        if (userData.data.value && userData.data.value.full_name) {
+            const email = normalizeName(userData.data.value.full_name) + '@imap.mailix.vn';
+            return email;
+        }
+        return ''
+    }
+    watch(createModal, async (newVal) => {
+            console.log('modalCreateType changed to', modalCreateType.value === 'account');
+            if (modalCreateType.value === 'account') {
+                entityInfo.value.email = await defaultEmail();
+            } else {
+                entityInfo.value.email = '';
+            }
+            entityInfo.value.name = '';
+            entityInfo.value.username = '';
+            entityInfo.value.password = '';
+            entityInfo.value.confirm_password = '';
+            entityInfo.value.authen_email = '';
+            entityInfo.value.phone = '';
+            entityInfo.value.description = '';
+            entityInfo.value.department_type = '';
+            entityInfo.value.code = '';
+        })
+
     const entityInfo = ref({
         name:'',
         username: '',
         password: '',
         confirm_password: '',
         email: '',
+        authen_email: '',
         phone: '',
         description: '',
         department_type: '',
@@ -159,7 +212,8 @@
     const schema = yup.object({
         username: checkView('username') ? yup.string().required(t('This field is required')) : yup.mixed().notRequired(),
         name: checkView('name') ? yup.string().required(t('This field is required')) : yup.mixed().notRequired(),
-        email: checkView('email') ? yup.string().email(t('Invalid email format')).required(t('This field is required')) : yup.mixed().notRequired(),
+        // email: checkView('email') ? yup.string().email(t('Invalid email format')).required(t('This field is required')) : yup.mixed().notRequired(),
+        authen_email: checkView('authen_email') ? yup.string().email(t('Invalid email format')).required(t('This field is required')) : yup.mixed().notRequired(),
         password: checkView('password') ? yup.string().min(6, t('Password must be at least 6 characters')).required(t('This field is required')) : yup.mixed().notRequired(),
         confirm_password: checkView('confirm_password') ? yup.string()
             .oneOf([yup.ref('password'), null], t('Passwords must match'))
@@ -172,6 +226,7 @@
                 username: entityInfo.value.username,
                 password: entityInfo.value.password,
                 email: entityInfo.value.email,
+                authen_email: entityInfo.value.authen_email,
                 confirm_password: entityInfo.value.confirm_password,
             });
             console.log('response', response.value)
