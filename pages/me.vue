@@ -14,7 +14,11 @@ import { useUserStore } from '@/stores/user'
 const modalStore = useModalStore()
 const { setAuthModal} = modalStore
 const { data: userInfo } = useAuth()
-useUserStore().setInfo(userInfo.value)
+// useUserStore().setInfo(userInfo.value)
+onMounted(() => {
+  useUserStore().setInfo(userInfo.value)
+  console.log('User Info in Me.vue onMounted:', userInfo.value)
+})
 definePageMeta({
   title: 'Trang chủ'
 })
