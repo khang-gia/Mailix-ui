@@ -37,7 +37,6 @@ export const useUserStore = defineStore('user', () => {
   persist: {
     storage: persistedState.cookiesWithOptions({
       sameSite: 'strict',
-      secure: true,
     }),
   },
 })
