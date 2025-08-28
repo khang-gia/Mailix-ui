@@ -20,7 +20,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
             path: ['/groups','/departments']
         }
     ]
-    
+    console.log('Navigating to:', to.path);
+    console.log('Authentication status:', status.value);
     if (status.value !== 'authenticated') {
         // Allow access to public routes for unauthenticated users
         if (publicRoutes.includes(to.path)) {
@@ -33,12 +34,21 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (!userinfo){
         return navigateTo('/login');
     }
+    console.log('User Info:', userinfo.is_superuser);
+    if (userinfo.is_superuser){
+        console.log('Superuser access granted');
+        return; 
+    }
+    else if (!userinfo.profile_hr){
+        return navigateTo('/login');
+    }
+    let role = userinfo.profile_hr.role 
     let department = userinfo.profile_hr.department
     if (!department){
         return navigateTo('/login');
     }
     let resource = department.group?.resources || [];
-    let role = userinfo.profile_hr.role
+    
     const resourceNames = resource.map((item: { code: string }) => item.code);
     if (role !=='A'){
         for (const mapping of pathMapping) {

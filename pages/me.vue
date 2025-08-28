@@ -10,10 +10,11 @@
 </template>
 <script setup>
 import { useModalStore } from '@/stores/modal'
+import { useUserStore } from '@/stores/user'
 const modalStore = useModalStore()
 const { setAuthModal} = modalStore
 const { data: userInfo } = useAuth()
-
+useUserStore().setInfo(userInfo.value)
 definePageMeta({
   title: 'Trang chủ'
 })
