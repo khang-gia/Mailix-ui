@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white dark:bg-[#1E1E2E] rounded-md">
-        <UTable v-model="_selected" v-model:sort="sort" sort-mode="manual" @update:sort="page = 1" :columns :rows="users" 
+        <UTable v-model="_selected" v-model:sort="sort" sort-mode="manual" @update:sort="page = 1" :columns="_hrColumn" :rows="users" 
         :sortButton="{icon:'none',type:'string', color: 'none', variant: 'ghost', size: '2xs', square: true } "
         :ui="{
             base: 'w-max',
@@ -22,11 +22,30 @@
         >
         <template #full_name-data="{ row }">
             <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer" @click="selectUser(row)">{{ row.full_name }}</span>
+                <span class="text-sm italic font-medium text-mailix-primary dark:text-white cursor-pointer" @click="selectUser(row)">{{ row.full_name }}</span>
             </div>
         </template>
-        <template #gender-data="{ row }">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.gender?$t(row.gender):'' }}</span>
+        <template #employee_code-data="{ row }">
+            <div class="flex items-center space-x-2">
+                <span class="text-sm italic font-medium text-mailix-primary dark:text-white cursor-pointer" @click="selectUser(row)">{{ row.employee_code }}</span>
+            </div>
+        </template>
+        <template #system_date_joined-data="{row}">
+            <span v-if="row.system_date_joined" class="text-sm font-medium text-gray-900 dark:text-white">{{ dayjs(row.system_date_joined).format('YYYY-MM-DD') }}</span>
+            <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">{{ $t('Unregistered')}}</span>
+        </template > 
+        <template v-for="column in _hrColumn.filter(item => !excludeColumns.includes(item.key))" :key="column.key" #[`${column.key}-data`]="{ row }">
+          <span v-if="row[column.key] !== null && row[column.key] !== undefined && row[column.key] !== ''" class="text-sm font-medium text-gray-900 dark:text-white">
+            {{ row[column.key] }}
+          </span>
+          <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">
+            --
+          </span>
+        </template>
+        <template #empty-state>
+          <div class="flex flex-col items-center justify-center py-6 gap-3">
+            <span class="italic text-sm">{{ $t('No profile found here!') }}</span>
+          </div>
         </template>
         </UTable>
     </div>
@@ -39,6 +58,11 @@
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const emit = defineEmits(['update:page', 'update:selected'])
+import { useDisplayColStore } from '@/stores/column'
+import { storeToRefs } from 'pinia'
+const columnStore = useDisplayColStore()
+const { hrColumn } = storeToRefs(columnStore)
+const dayjs = useDayjs()
  
 const props = defineProps({
   users: {
@@ -63,6 +87,14 @@ const _page = computed({
   set: (val) => {
     emit('update:page', val)
   }
+})
+const excludeColumns = ['full_name', 'system_date_joined','employee_code']
+const _hrColumn = computed(() => {
+  const cols = hrColumn.value.filter(item => item.is_show === true)
+  return cols.map(col => ({
+    ...col,
+    label: t(col.label)
+  }))
 })
 const columns = [
     {   
@@ -105,11 +137,6 @@ const columns = [
         label: t('Title'),
         sortable: true,
     },
-    // {
-    //     key: 'level',
-    //     label: t('Level'),
-    //     sortable: true,
-    // },
     {
         key: 'join_date',
         label: t('Join Date'),
@@ -117,7 +144,7 @@ const columns = [
     },
     
     {
-        key: 'account_created_at',
+        key: 'system_date_joined',
         label: t('Date create account'),
         sortable: true,
     },

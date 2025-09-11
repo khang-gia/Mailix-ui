@@ -49,12 +49,11 @@ const { isSidebarOpen } = storeToRefs(userStore)
 const {  data: userInfo } = useAuth()
 
 const checkView = (slotName) => {
-    let resource = userInfo.value.profile_hr.department?.group?.resources || [];
     let role = userInfo.value.profile_hr.role
-    console.log('role',role)
-    if (role==='A'){
+    if (role==='A' || userInfo.value.is_superuser){
         return false
     }
+    let resource = userInfo.value.profile_hr.department?.group?.resources || [];
     const resourceNames = resource.map(item => item.code);
     return !resourceNames.includes(slotName);
 }

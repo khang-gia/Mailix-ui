@@ -84,6 +84,7 @@
     
     <div class="p-2">
       <UCard :ui="{body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700'}, divide: 'divide-y divide-gray-200 dark:divide-gray-700',}">
+        <!-- {{ useFilterStore }} -->
         <UserTable :users="users" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedUsers=$event" :viewMode="viewMode"/>
         <template #footer>
           <div class="flex justify-end items-center space-x-2">
@@ -105,8 +106,12 @@ const modalStore = useModalStore()
 const { alertConfirm, alertModal } = storeToRefs(modalStore)
 const { setAlertModal } = modalStore
 import { useFilterStore } from '@/stores/filter'
+import { useDisplayColStore } from '@/stores/column'
 const filterStore = useFilterStore()
+const columnStore = useDisplayColStore()
+
 const { setFilterModal, clearFilter} = filterStore
+const { setColumnModal, clearColumn } = columnStore
 
 const { hrFilter } = storeToRefs(filterStore)
 const pageTotal = ref(200)
@@ -178,11 +183,12 @@ const listViewDropdown = ref([
       click: () => {
         setFilterModal(true, 'profile_hrs')
       }
-    },{
+    },
+    {
       label: t('Select display columns'),
       icon: 'i-heroicons-view-columns',
       click: () => {
-        console.log('hehe')
+        setColumnModal(true, 'profile_hrs')
       }
     }]
     , [
@@ -207,13 +213,12 @@ const listViewDropdown = ref([
       label: t('Remove display columns'),
       icon: 'i-heroicons-x-mark',
       slot: 'remove_column',
-      disabled: displayColumns.value.length===0,
       click: () => {
-        console.log('hi')
+        clearColumn('profile_hrs')
       }
     }]
 ])
-const sortItemDropDown = ref([ 
+const displayColumnsDropdown = ref([ 
   [{
       label: t('Employee code'),
     },{

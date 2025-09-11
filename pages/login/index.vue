@@ -116,6 +116,17 @@ const onPreLogin = async () => {
     try {
         busy.value = true
         const res = await preSignIn(creds.value)
+        console.log('res allowed_login', res)
+        if (res.allowed_login){
+            await signIn({
+                username: creds.value.username,
+                password: creds.value.password,
+            },{
+                callbackUrl: '/me', // Redirect to /me after successful login
+                redirect: true,
+            })
+            // navigateTo('/me')
+        }
         // emit('on-otp-verify', {
         //     username: creds.value.username,
         //     password: creds.value.password,

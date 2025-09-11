@@ -60,7 +60,7 @@
                 {{$t('contacts')}}
             </span>
         </div>
-        <UDropdown v-if="selectedUsers.length > 0" :items="actionSelected" :ui="{
+        <UDropdown v-if="selectedCustomers.length > 0" :items="actionSelected" :ui="{
             container:'w-fit',
             item:{
                 padding: 'px-2 py-3',
@@ -84,7 +84,7 @@
     
     <div class="p-2">
       <UCard :ui="{body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700'}, divide: 'divide-y divide-gray-200 dark:divide-gray-700',}">
-        <ContactTable :contacts="contacts" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedUsers=$event" :viewMode="viewMode"/>
+        <ContactTable :contacts="contacts" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedCustomers=$event" :viewMode="viewMode"/>
         <template #footer>
           <div class="flex justify-end items-center space-x-2">
             <UPagination :max="3" :page-count="pageSize" :total="pageTotal" v-model="page"/>
@@ -100,6 +100,10 @@ const { t } = useI18n();
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 import { useFilterStore } from '@/stores/filter'
+import { useDisplayColStore } from '@/stores/column'
+const columnStore = useDisplayColStore()
+const { setColumnModal, clearColumn } = columnStore
+
 const filterStore = useFilterStore()
 const { setFilterModal, clearFilter} = filterStore
 const { contactFilter } = storeToRefs(filterStore)
@@ -112,7 +116,7 @@ const page = ref(1)
 const pageSize = ref(10)
 const pageFrom = computed(() => (page.value - 1) * pageSize.value + 1)
 const pageTo = computed(() => Math.min(page.value * pageSize.value, pageTotal.value))
-const selectedUsers = ref([])
+const selectedCustomers = ref([])
 
 const props = defineProps({
   filters: {
@@ -183,7 +187,7 @@ const listViewDropdown = ref([
       label: t('Select display columns'),
       icon: 'i-heroicons-view-columns',
       click: () => {
-        console.log('hehe')
+        setColumnModal(true, 'contacts')
       }
     }]
     , [ 
@@ -208,9 +212,8 @@ const listViewDropdown = ref([
       label: t('Remove display columns'),
       icon: 'i-heroicons-x-mark',
       slot: 'remove_column',
-      disabled: displayColumns.value.length===0,
       click: () => {
-        console.log('hi')
+        clearColumn('contacts')
       }
     }]
 ])
@@ -277,7 +280,7 @@ const detailViewDropDown = ref([
 const deleteCustomer = async () => {
   try {
       const response = await useAPI().post(`core/customers/delete_customers/`, {
-        profiles: selectedUsers.value.map(user => user.id)
+        customers: selectedCustomers.value.map(user => user.id)
       });
       console.log('response', response)
       if (response && response.status.value === 'success') {
@@ -286,7 +289,7 @@ const deleteCustomer = async () => {
           throw new Error(t('Unexpected response status'));
       }
   } catch (error) {
-      console.error('Error deleting customer:', error);
+      console.error('Error deleting contact:', error);
       throw error;
   }
 }
@@ -298,7 +301,7 @@ const actionSelected = [
     icon: 'i-heroicons-trash',
     click: () => {
       setAlertModal(true, {
-        message: t('Are you sure you want to delete these customers?'),
+        message: t('Are you sure you want to delete these contacts?'),
         confirmButton: t('OK'),
         denyButton: t('Cancel'),
       }) 
@@ -310,16 +313,17 @@ const actionSelected = [
               const isDeleted = await deleteCustomer();
               if (isDeleted) {
                 reload.value = !reload.value
+                selectedCustomers.value= []
                 useToast().add({
                   title: t('Success'),
-                  description: t('Customers was deleted successfully.'),
+                  description: t('Contacts was deleted successfully.'),
                   icon: 'i-heroicons-check-circle',
                   color: 'green',
                 });
               } else {
                 useToast().add({
                   title: t('Error'),
-                  description: t('An error occurred while deleting customers, please try again later.'),
+                  description: t('An error occurred while deleting contacts, please try again later.'),
                   icon: 'i-heroicons-x-circle',
                   color: 'red',
                 });

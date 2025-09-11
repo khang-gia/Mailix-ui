@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white dark:bg-[#1E1E2E] rounded-md">
-        <UTable v-model="_selected" v-model:sort="sort" sort-mode="manual" @update:sort="page = 1" :columns :rows="works" 
+        <UTable v-model="_selected" v-model:sort="sort" sort-mode="manual" @update:sort="page = 1" :columns="_workColumn" :rows="works" 
         :sortButton="{icon:'none',type:'string', color: 'none', variant: 'ghost', size: '2xs', square: true } "
         :ui="{
             base: 'w-max',
@@ -22,20 +22,23 @@
         >
         <template #name-data="{ row }">
             <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer" @click="selectWork(row)">{{ row.name }}</span>
+                <span class="text-sm italic font-medium text-mailix-primary dark:text-white cursor-pointer" @click="selectWork(row)">{{ row.name }}</span>
             </div>
         </template>
         <template #progress-data="{ row }">
             <UProgress :value=row.progress indicator/>
         </template>
         <template #start_date-data="{row}">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.start_date?dayjs(row.start_date).format('YYYY-MM-DD'):'' }}</span>
+            <span v-if="row.start_date" class="text-sm font-medium text-gray-900 dark:text-white">{{ row.start_date?dayjs(row.start_date).format('YYYY-MM-DD'):'' }}</span>
+            <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">--</span>
         </template >
         <template #end_date-data="{row}">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.end_date?dayjs(row.end_date).format('YYYY-MM-DD'):'' }}</span>
+            <span v-if="row.end_date" class="text-sm font-medium text-gray-900 dark:text-white">{{ row.end_date?dayjs(row.end_date).format('YYYY-MM-DD'):'' }}</span>
+            <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">--</span>
         </template >
         <template #actual_start_date-data="{row}">
-            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ row.actual_start_date?dayjs(row.actual_start_date).format('YYYY-MM-DD'):'' }}</span>
+            <span v-if="row.actual_start_date" class="text-sm font-medium text-gray-900 dark:text-white">{{ row.actual_start_date?dayjs(row.actual_start_date).format('YYYY-MM-DD'):'' }}</span>
+            <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">--</span>
         </template >
         <template #assigned_to-data="{row}">
             <UAvatarGroup size="xs" :max="4" v-if="row.assigned_to && row.assigned_to.length">
@@ -48,7 +51,7 @@
                 </div>
             </UAvatarGroup>
             <div v-else>
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{$t('No user assigned')}}</span>
+                <span class="text-sm italic text-slate-400 dark:text-gray-500">{{$t('No user assigned')}}</span>
             </div>
         </template>
         <template #assigned_by-data="{row}">
@@ -62,7 +65,7 @@
                 </div>
             </UAvatarGroup>
             <div v-else>
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{$t('No user')}}</span>
+                <span class="text-sm italic text-slate-400 dark:text-gray-500">{{$t('No assigned by')}}</span>
             </div>
         </template>
         <template #managers-data="{row}">
@@ -76,7 +79,7 @@
                 </div>
             </UAvatarGroup>
             <div v-else>
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{$t('No user assigned')}}</span>
+                <span class="text-sm italic text-slate-400 dark:text-gray-500">{{$t('No user assigned')}}</span>
             </div>
         </template>
         <template #created_by-data="{row}">
@@ -88,8 +91,16 @@
                 </NuxtLink>
             </UAvatarGroup>
             <div v-else>
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{$t('No creator information')}}</span>
+                <span class="text-sm italic text-slate-400 dark:text-gray-500">{{$t('No creator information')}}</span>
             </div>
+        </template>
+        <template v-for="column in _workColumn.filter(item => !excludeColumns.includes(item.key))" :key="column.key" #[`${column.key}-data`]="{ row }">
+          <span v-if="row[column.key] !== null && row[column.key] !== undefined && row[column.key] !== ''" class="text-sm font-medium text-gray-900 dark:text-white">
+            {{ row[column.key] }}
+          </span>
+          <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">
+            --
+          </span>
         </template>
         </UTable>
     </div>
@@ -103,7 +114,10 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const emit = defineEmits(['update:page', 'update:selected'])
 const dayjs = useDayjs()
- 
+import { useDisplayColStore } from '@/stores/column'
+import { storeToRefs } from 'pinia'
+const columnStore = useDisplayColStore()
+const { workColumn } = storeToRefs(columnStore)
 const props = defineProps({
   works: {
     type: Array,
@@ -127,6 +141,14 @@ const _page = computed({
   set: (val) => {
     emit('update:page', val)
   }
+})
+const excludeColumns = ['start_date', 'end_date', 'actual_start_date', 'assigned_to','assigned_by','managers','created_by', 'progress', 'name']
+const _workColumn = computed(() => {
+  const cols = workColumn.value.filter(item => item.is_show === true)
+  return cols.map(col => ({
+    ...col,
+    label: t(col.label)
+  }))
 })
 const columns = [
     {   
