@@ -8,20 +8,20 @@
         <form v-if="authMode === 'signin'" @submit.stop.prevent="onLoginSubmit" novalidate="novalidate" @submit="_signinNoOTP">
             <div class="relative mb-4">
                 <div class="relative">
-                    <input ref="usernameInput" v-model="creds.username" name="username" id="username" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0313B0] pl-10" placeholder="Tên đăng nhập">
+                    <input ref="usernameInput" v-model="creds.username" name="username" id="username" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0313B0] pl-10 dark:bg-white text-black" placeholder="Tên đăng nhập">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <UIcon name="heroicons:user-circle" class="w-5 h-5 text-gray-400"></UIcon>
                     </div>
                 </div>
             </div>
             <div class="relative mt-4 mb-4">
-                <div class="relative">
-                    <input v-model="creds.password" :type="showPassword ? 'text':'password'" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0313B0] pl-10" placeholder="Mật khẩu">
+                <div class="relative text-black">
+                    <input v-model="creds.password" :type="showPassword ? 'text':'password'" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0313B0] pl-10 dark:bg-white text-black" placeholder="Mật khẩu">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <UIcon name="heroicons:lock-closed" class="w-5 h-5 text-gray-400"></UIcon>
                     </div>
                     <div class="absolute inset-y-0 right-0 flex items-center pr-1">
-                        <UButton type="button" variant="ghost" color="white" @click="togglePasswordVisibility" class="text-gray-500 focus:outline-none">
+                        <UButton type="button" variant="ghost" color="white" @click="togglePasswordVisibility" class="text-gray-500 dark:text-gray-500 focus:outline-none hover:dark:bg-white">
                             <UIcon :name="showPassword ? 'heroicons:eye-slash' : 'heroicons:eye'" class="w-5 h-5"></UIcon>
                         </UButton>
                     </div>
@@ -46,7 +46,7 @@
             <button class="p-2 w-full text-white py-2 px-4 rounded-lg shadow-lg mt-10 bg-[#0313B0] hover:bg-[#020B51] transition duration-300">ĐĂNG NHẬP</button>
         </form>
         <form  v-else-if="authMode === 'otp'" class="space-y-4 md:space-y-6" @submit.prevent="onSubmitOTP">
-            <div class="text-slate-800 dark:text-white text-sm">
+            <div class="text-slate-800 ">
             <p>
                 Vui lòng nhập mã chúng tôi đã gửi cho bạn qua email <strong>{{ userEmail }}</strong>.
                 Mã OTP có hiệu lực trong vòng 2 phút.
@@ -57,11 +57,11 @@
             </div>
             <UCheckbox
                 v-model="trustDevice"
-                class="text-slate-800 dark:text-white"
+                class="text-slate-800"
                 :label="$t('Trust this device')"/>
             <BaseButton
             type="submit"
-            class="w-full text-white bg-primary-600 enabled:hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm dark:bg-primary-600 enabled:dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            class="w-full text-white bg-primary-600 enabled:hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm"
             :busy="busy"
             :disabled="inputOtp.length<OTP_LENGTH"
             text="Xác nhận"></BaseButton>
@@ -71,7 +71,7 @@
                 type="button"
                 @click="resendOtp"
                 :disabled="timeout>0"
-                class="font-medium enabled:text-primary-600 disabled:text-grey-500 hover:underline dark:enabled:text-primary-500 dark:disabled:text-gray-500">
+                class="font-medium enabled:text-primary-600 disabled:text-grey-500 hover:underline">
                 Gửi lại mã
                 <span v-if="timeout>0">({{ timeout }}s)</span>
             </button>

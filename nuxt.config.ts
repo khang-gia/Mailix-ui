@@ -101,7 +101,8 @@ export default defineNuxtConfig({
 
   colorMode: {
       classSuffix: '',
-      preference: 'dark'
+      preference: 'light',
+      fallback: 'light',
   },
 
   auth: {
