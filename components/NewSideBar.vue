@@ -18,6 +18,10 @@
   
         <div v-if="!blank" class="space-y-4 ml-0">
             <NewSidebarLink/>
+            <!-- <UButton color="gray" variant="soft" size="sm" class="mx-2 w-full" to="https://app.mailix.vn/" target="_blank">
+              <UIcon name="heroicons:envelope" class="mr-2"/>
+              {{ $t('Mail') }}
+            </UButton> -->
         </div>
   
         <div class="flex justify-end pt-3 mt-auto text-slate-400 hover:text-slate-300 -translate-y-6">

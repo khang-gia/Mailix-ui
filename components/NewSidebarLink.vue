@@ -11,10 +11,10 @@
             base: 'w-full',
             wrapper: 'pt-4 px-2 ',
         }">
-        <template v-for="slotName in ['customer', 'hrm', 'crm', 'company']" v-slot:[slotName]>
+        <template v-for="slotName in ['customer', 'hrm', 'crm', 'company','task']" v-slot:[slotName]>
             <div v-for="(item, index) in submenuMap[slotName]?.value.slice(1)" :key="item.label">
                 <div v-for="subItem in item" :key="subItem.label">
-                    <UButton :to="subItem.link" color="white" variant="soft" :label="$t(subItem.label)" class="pl-9 my-0.5 w-full" :class="useRoute().path.startsWith(subItem.link) ? 'text-[#0313B0] bg-[#e3e5f5] dark:bg-[#34344A] dark:text-[#E0E0E0]' : 'text-[#707070] dark:text-[#E0E0E0] hover:text-[#0313B0] hover:bg-[#e3e5f5]'" >
+                    <UButton :to="subItem.link" :target="subItem.target" color="white" variant="soft" :label="$t(subItem.label)" class="pl-9 my-0.5 w-full" :class="useRoute().path.startsWith(subItem.link) ? 'text-[#0313B0] bg-[#e3e5f5] dark:bg-[#34344A] dark:text-[#E0E0E0]' : 'text-[#707070] dark:text-[#E0E0E0] hover:text-[#0313B0] hover:bg-[#e3e5f5]'" >
                         {{ $t(subItem.label) }}
                     </UButton>
                 </div>
@@ -80,6 +80,12 @@ const items = computed(() => {
             icon:"mdi:company",
             slot: 'company',
         },
+        {
+            label: t('Task'),
+            icon:"fluent:tasks-app-24-regular",
+            slot: 'task',
+        },
+
     ];
     return allItems.filter(item => !checkView(item.slot));
 });
@@ -142,11 +148,19 @@ const companySubmenu = ref([
     //     useRouter().push({ name: 'company/config' });
     // }}]
 ])
+const taskSubmenu = ref([
+    [{
+        slot: 'tip',
+        disabled: true
+    }],
+    [{ link: 'https://app.mailix.vn/', label: 'Mail', click: () => {}, target:'_blank'  },]
+]) 
 const submenuMap = {
   crm: crmSubmenu,
   hrm: hrmSubmenu,
   customer: customerSubmenu,
-  company:companySubmenu
+  company:companySubmenu,
+  task:taskSubmenu
 };
 const getDropdownItems = (name) => {
     const submenuRef = submenuMap[name];
