@@ -301,7 +301,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="flex gap-2">
+                    <!-- <div class="flex gap-2">
                         <UBadge
                             icon="ph:phone-plus"
                             size="md"
@@ -311,12 +311,12 @@
 
                         />
                         <div class="flex flex-col">
-                            <label class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{$t('Phone other')}}</label>
+                            <label class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{$t('Email')}}</label>
                             <p class="text-sm text-gray-600 dark:text-gray-400">
-                                {{ userInfo.phone_other ? userInfo.phone_other : '--' }}
+                                {{ userInfo.email_verified ? userInfo.email_verified : '--' }}
                             </p>
                         </div>
-                    </div>
+                    </div> -->
                     
                     <div class="flex gap-2">
                         <UBadge

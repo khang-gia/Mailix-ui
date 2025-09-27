@@ -413,5 +413,7 @@
     "Last Updated": "Cập nhật lần cuối",
     "Authentication Email": "Email xác thực",
     "Task": "Tác vụ",
-    "Others": "Khác"
+    "Others": "Khác",
+    "Authentication email": "Email xác thực",
+    "Authentication email tooltip": "Email dùng để đăng nhập vào hệ thống"
 }

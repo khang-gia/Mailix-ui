@@ -252,21 +252,21 @@
                                 :ui="{ base: 'w-full rounded-lg' }"/>
                         </UFormGroup>
                         <UFormGroup
-                            :label="$t('Phone other')"
-                            name="phone_other"
+                            :label="$t('Authentication email')"
+                            name="email"
                             >
                             <template #label>
                                 <span class="mr-1">
-                                    {{ $t('Phone other') }}
+                                    {{ $t('Authentication email') }}
                                 </span>
-                                <UTooltip :text="$t('Phone other tooltip')" :popper="{ placement: 'right' }">
+                                <UTooltip :text="$t('Authentication email tooltip')" :popper="{ placement: 'right' }">
                                     <UIcon name="i-heroicons-exclamation-circle" class="text-yellow-500"/>
                                 </UTooltip>
                                 
                             </template>
                             <UInput
-                                v-model="userInfo.phone_other"
-                                :placeholder="$t('Phone other')"
+                                v-model="userInfo.email"
+                                :placeholder="$t('Authentication email')"
                                 icon="i-heroicons-phone"
                                 :ui="{ base: 'w-full rounded-lg' }"/>
                         </UFormGroup>
