@@ -16,17 +16,6 @@ module.exports = {
       colors: {
         "vtd-primary": colors.sky,
         "vtd-secondary": colors.gray,
-        "titaca-primary": '#FFC107',
-        "titaca-sb-dark-bg": '#1E1E2E',
-        "titaca-sb-dark-text": '#E0E0E0',
-        "titaca-hd-dark-bg": '#2A2A40',
-        "titaca-hd-dark-text": '#FFD700',
-        "titaca-bd-dark-bg": '#121212',
-        "titaca-bd-dark-text": '#F5F5F5',
-        "titaca-border-primary": '#147FE0',
-        "titaca-button-primary": '#0C72CE',
-        "titaca-text-primary": '#147FE0',
-        "titaca-text-secondary": '#0C72CE',
         // "mailix-primary": '#020B51',
         "mailix-primary":'#0313B0',
         primary: {

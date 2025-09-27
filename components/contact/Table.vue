@@ -38,6 +38,14 @@
             <span v-if="row.type_of_customer" class="text-sm font-medium text-gray-900 dark:text-white">{{ $t(row.type_of_customer)}}</span>
             <span v-else class="text-sm italic text-slate-400 dark:text-gray-500"> --</span>
         </template>
+        <template #status_display-data="{ row }">
+            <UBadge :color="statusBadge[row.status] || 'gray'"
+             variant="solid" size="xs" class="px-2 py-1" :ui="{ rounded: 'rounded' }">
+                {{ $t(row.status_display) }}
+                  
+            </UBadge>
+            
+        </template>
         <template #created_at-data="{row}">
             <span class="text-sm font-medium text-gray-900 dark:text-white">{{ dayjs(row.created_at).format('YYYY-MM-DD') }}</span>
         </template >
@@ -104,7 +112,7 @@ const _page = computed({
     emit('update:page', val)
   }
 })
-const excludeColumns = ['curators', 'name', 'customer_code', 'created_at','customer_source','type_of_customer']
+const excludeColumns = ['curators', 'name', 'customer_code', 'created_at','customer_source','type_of_customer','status_display']
 const _contactColumn = computed(() => {
   const cols = contactColumn.value.filter(item => item.is_show === true)
   return cols.map(col => ({
@@ -112,6 +120,38 @@ const _contactColumn = computed(() => {
     label: t(col.label)
   }))
 })
+// Status include const links = [{
+//     label: t('All')
+//   }, {
+//     label: t('New'),
+//     // userCount: true
+//   }, {
+//     label: t('1st Contacted'),
+//   }, {
+//     label: t('2nd Contacted')
+//   },{
+//     label: t('Consulting'),
+//   }, {
+//     label: t('Negotiating')
+//   },{
+//     label: t('Contracted')
+//   },{
+//     label: t('Quoted')
+//   },{
+//     label:t('Old Customer')
+//   }
+// ]
+const statusBadge = {
+  1: 'primary',
+  2: 'blue',
+  3: 'yellow',
+  4: 'green',
+  5: 'indigo',
+  6: 'purple',
+  7: 'teal',
+  8: 'orange',
+  9: 'pink'
+}
 const columns = [
     {   
         key: 'name',

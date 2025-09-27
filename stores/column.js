@@ -67,6 +67,12 @@ export const useDisplayColStore = defineStore('column', () => {
         sortable: true,
         is_show:true,
     },
+    {
+        key: 'status_display',
+        label: 'Status',
+        sortable: true,
+        is_show:true,
+    }
   ])
   const customerColumn = ref([
     {   
