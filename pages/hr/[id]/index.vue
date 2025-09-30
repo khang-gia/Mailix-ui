@@ -248,6 +248,22 @@
 
                         />
                         <div class="flex flex-col">
+                            <label class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{$t('Username')}}</label>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                {{ userInfo.username? $t(userInfo.username):'--' }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <UBadge
+                            icon="icons8:gender"
+                            size="md"
+                            color="blue"
+                            variant="soft"
+                            class="my-1"
+
+                        />
+                        <div class="flex flex-col">
                             <label class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{$t('Gender')}}</label>
                             <p class="text-sm text-gray-600 dark:text-gray-400">
                                 {{ userInfo.gender? $t(userInfo.gender):'--' }}

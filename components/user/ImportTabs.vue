@@ -43,16 +43,18 @@
   const current = defineModel({ default: 0 })
   const links = [{
     label: t('Profile HR')
-  }, {
-    label: t('Insurance history'),
-    // userCount: true
-  }, {
-    label: t('HR ID Cards'),
-  },{
-    label: t('Certification'),
-  }, {
-    label: t('Avatar')
-  }]
+  }, 
+  // {
+  //   label: t('Insurance history'),
+  //   // userCount: true
+  // }, {
+  //   label: t('HR ID Cards'),
+  // },{
+  //   label: t('Certification'),
+  // }, {
+  //   label: t('Avatar')
+  // }
+]
   
   const sortItemDropDown = ref([ 
     [{
