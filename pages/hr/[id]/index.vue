@@ -298,7 +298,7 @@
                         <div class="flex flex-col">
                             <label class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{$t('Email')}}</label>
                             <p class="text-sm text-gray-600 dark:text-gray-400">
-                                {{ userInfo.email ? userInfo.email : '--' }}
+                                {{ userInfo.authen_email ? userInfo.authen_email : '--' }}
                             </p>
                         </div>
                     </div>

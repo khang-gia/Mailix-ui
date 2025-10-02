@@ -50,12 +50,13 @@
                 required>
                 <UInput
                     v-model="entityInfo.password"
+                    disabled
                     type="password"
                     :placeholder="$t('Password')"
                     :ui="{ base: 'w-full rounded-lg' }"
                     :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
             </UFormGroup>
-            <UFormGroup
+            <!-- <UFormGroup
                 v-if="checkView('confirm_password')"
                 v-slot="{ error }"
                 :label="$t('Confirm password')"
@@ -68,7 +69,7 @@
                     :placeholder="$t('Confirm password')"
                     :ui="{ base: 'w-full rounded-lg' }"
                     :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
-            </UFormGroup>
+            </UFormGroup> -->
             <UFormGroup
                 v-if="checkView('name')"
                 v-slot="{ error }"
@@ -148,7 +149,7 @@
     //     'account','title','department'
     // ])
     const viewAllow = ref({
-        account:['username','password','confirm_password','email','phone', 'authen_email'],
+        account:['username','password','email','phone','authen_email'],
         title:['name','code','description'],
         department:['name','code','description','parent','department_type', 'company', 'business_unit'],
     })
@@ -184,8 +185,8 @@
             }
             entityInfo.value.name = '';
             entityInfo.value.username = '';
-            entityInfo.value.password = '';
-            entityInfo.value.confirm_password = '';
+            entityInfo.value.password = '99999999999';
+            // entityInfo.value.confirm_password = '';
             entityInfo.value.authen_email = '';
             entityInfo.value.phone = '';
             entityInfo.value.description = '';
@@ -197,7 +198,7 @@
         name:'',
         username: '',
         password: '',
-        confirm_password: '',
+        // confirm_password: '',
         email: '',
         authen_email: '',
         phone: '',
@@ -212,22 +213,22 @@
     const schema = yup.object({
         username: checkView('username') ? yup.string().required(t('This field is required')) : yup.mixed().notRequired(),
         name: checkView('name') ? yup.string().required(t('This field is required')) : yup.mixed().notRequired(),
-        // email: checkView('email') ? yup.string().email(t('Invalid email format')).required(t('This field is required')) : yup.mixed().notRequired(),
+        email: checkView('email') ? yup.string().email(t('Invalid email format')).required(t('This field is required')) : yup.mixed().notRequired(),
         authen_email: checkView('authen_email') ? yup.string().email(t('Invalid email format')).required(t('This field is required')) : yup.mixed().notRequired(),
         password: checkView('password') ? yup.string().min(6, t('Password must be at least 6 characters')).required(t('This field is required')) : yup.mixed().notRequired(),
-        confirm_password: checkView('confirm_password') ? yup.string()
-            .oneOf([yup.ref('password'), null], t('Passwords must match'))
-            .required(t('This field is required')) : yup.mixed().notRequired(),
+        // confirm_password: checkView('confirm_password') ? yup.string()
+        //     .oneOf([yup.ref('password'), null], t('Passwords must match'))
+        //     .required(t('This field is required')) : yup.mixed().notRequired(),
     })
     const createAccount = async () => {
         console.log('create account Data', entityInfo.value)
         try {
             const {data: response} = await useAPI().post(`core/profile_hrs/${useRoute().params.id}/create_account/`, {
                 username: entityInfo.value.username,
-                password: entityInfo.value.password,
+                password: '',
                 email: entityInfo.value.email,
                 authen_email: entityInfo.value.authen_email,
-                confirm_password: entityInfo.value.confirm_password,
+                // confirm_password: entityInfo.value.confirm_password,
             });
             console.log('response', response.value)
             if (response.value && response.value.id) {

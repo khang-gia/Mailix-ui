@@ -252,6 +252,7 @@
                                 :ui="{ base: 'w-full rounded-lg' }"/>
                         </UFormGroup>
                         <UFormGroup
+                            v-if="userInfo.authen_email"
                             :label="$t('Authentication email')"
                             name="email"
                             >
@@ -265,7 +266,7 @@
                                 
                             </template>
                             <UInput
-                                v-model="userInfo.email"
+                                v-model="userInfo.authen_email"
                                 :placeholder="$t('Authentication email')"
                                 icon="i-heroicons-phone"
                                 :ui="{ base: 'w-full rounded-lg' }"/>
@@ -391,6 +392,7 @@ const schema = yup.object({
                 return false;
             }
         }),
+    email: yup.string().email(t('Invalid email format')).required(t('This field is required')),
     // id_number: yup.string().required(t('This field is required')),
     // place_of_issue: yup.string().required(t('This field is required')),
 })
@@ -437,7 +439,7 @@ const defaultUserInfo = {
     marital_status: '',
     gender: '',
     id_card: '',
-    email: '',
+    authen_email: '',
     phone: '',
     address: '',
     city: '',
@@ -459,8 +461,6 @@ const defaultUserInfo = {
     place_of_issue: '',
     front_id_card:'',
     back_id_card: '',
-    phone:'',
-    email:'',
     permanent_address:'',
     current_address:'',
     title: '',
