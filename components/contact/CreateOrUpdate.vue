@@ -354,6 +354,8 @@
 <script setup>
 import * as yup from 'yup'
 import { useI18n } from "vue-i18n";
+import { includes } from 'lodash';
+import { on } from 'events';
 const { t } = useI18n();
 const busy = ref(false)
 const colorMode = useColorMode()
@@ -436,6 +438,9 @@ const loadData = async () => {
             contactInfo.value = response.value
             contactInfo.value.dob = contactInfo.value.dob ? new Date(contactInfo.value.dob) : null
             const stage = contactInfo.value.stage
+            if (contactInfo.value.additional_infos.length == 0){
+                onAddItem()
+            }
             if (stage === 1){
                 is_correct_data.value = true
             }
@@ -584,6 +589,9 @@ const onDeleteItem = (info) => {
 };
 const formatData2 = () => {
     const formattedData = {};
+    contactInfo.value.additional_infos = contactInfo.value.additional_infos.filter(
+        (item) => item.type_of_contact !== null
+    );
     Object.entries(contactInfo.value).forEach(([key, value]) => {
         if (!value) return;
         if (Array.isArray(value)) {
