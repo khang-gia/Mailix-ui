@@ -102,6 +102,10 @@ import { useFilterStore } from '@/stores/filter'
 const filterStore = useFilterStore()
 const { setFilterModal, clearFilter} = filterStore
 import { useDisplayColStore } from '@/stores/column'
+import { useSearchStore } from '@/stores/search';
+
+const searchStore = useSearchStore();
+const { search } = storeToRefs(searchStore);
 const columnStore = useDisplayColStore()
 const { setColumnModal, clearColumn } = columnStore
 const { customerFilter } = storeToRefs(filterStore)
@@ -151,6 +155,7 @@ const customers = computedAsync(async () => {
     ...params,
     reload: reload.value,
     page: page.value,
+    search: search.value,
     page_size: pageSize.value,
     stage: 2,
   })

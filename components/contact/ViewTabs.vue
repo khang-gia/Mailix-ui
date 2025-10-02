@@ -101,6 +101,10 @@ import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 import { useFilterStore } from '@/stores/filter'
 import { useDisplayColStore } from '@/stores/column'
+import { useSearchStore } from '@/stores/search';
+
+const searchStore = useSearchStore();
+const { search } = storeToRefs(searchStore);
 const columnStore = useDisplayColStore()
 const { setColumnModal, clearColumn } = columnStore
 
@@ -156,6 +160,7 @@ const contacts = computedAsync(async () => {
     ...params,
     reload: reload.value,
     page: page.value,
+    search: search.value,
     page_size: pageSize.value,
     stage: 1,
     // status: props.status,
