@@ -1,6 +1,7 @@
 <template>
     <div class="py-2 px-4 grid grid-flow-col bg-white dark:bg-[#1E1E2E] space-x-2 w-full">
       <div class="flex items-center">
+        hehe {{ search }}
         <UDropdown :items="listViewDropdown" :popper="{ placement: 'bottom-start' }" 
         :ui="{
             container:'w-fit',
@@ -101,6 +102,10 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
+import { useSearchStore } from '@/stores/search';
+
+const searchStore = useSearchStore();
+const { search } = storeToRefs(searchStore);
 
 const modalStore = useModalStore()
 const { alertConfirm, alertModal } = storeToRefs(modalStore)
@@ -158,6 +163,7 @@ const users = computedAsync(async () => {
     // search: userStore.search, 
     ...params,
     reload: reload.value,
+    search: search,
     page: page.value,
     page_size: pageSize.value,
   })

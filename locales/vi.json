@@ -415,5 +415,6 @@
     "Task": "Tác vụ",
     "Others": "Khác",
     "Authentication email": "Email xác thực",
-    "Authentication email tooltip": "Email dùng để đăng nhập vào hệ thống"
+    "Authentication email tooltip": "Email dùng để đăng nhập vào hệ thống",
+    "Enter keyword": "Nhập từ khoá"
 }

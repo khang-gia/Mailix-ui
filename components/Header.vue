@@ -26,6 +26,8 @@
                     </NuxtLink>
 
                     <div>
+                        <SearchInput v-if="routeCreate.includes(route.name) " v-model="search" />
+
                         <!-- <UTooltip text="Tìm kiếm" :shortcuts="[metaSymbol, 'K']">
                             <span class="sm:hidden">
                                 <UButton variant="link" color="gray" @click.stop="openSearchModal" class="p-[6px]">
@@ -95,8 +97,12 @@ import { storeToRefs } from 'pinia'
 import { useModalStore } from '@/stores/modal'
 import { useAppStore } from '@/stores/app'
 const modalStore = useModalStore()
-const { setAuthModal, setSearchModal, setCreateArticleTypeModal } = modalStore
-const { searchModal, isLive, draggableModal } = storeToRefs(modalStore)
+import { useSearchStore } from '@/stores/search';
+
+const searchStore = useSearchStore();
+const { search } = storeToRefs(searchStore);
+const { setAuthModal, setSearchModal } = modalStore
+const { isLive, draggableModal } = storeToRefs(modalStore)
 const appStore = useAppStore()
 
 const { appTitle } = storeToRefs(appStore)
@@ -123,7 +129,6 @@ const props = defineProps({
 
 const { status, data } = useAuth()
 
-const searchModalRef = ref(null)
 const { metaSymbol } = useShortcuts()
 
 defineShortcuts({
