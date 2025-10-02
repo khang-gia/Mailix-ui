@@ -1,7 +1,6 @@
 <template>
     <div class="py-2 px-4 grid grid-flow-col bg-white dark:bg-[#1E1E2E] space-x-2 w-full">
       <div class="flex items-center">
-        hehe {{ search }}
         <UDropdown :items="listViewDropdown" :popper="{ placement: 'bottom-start' }" 
         :ui="{
             container:'w-fit',
