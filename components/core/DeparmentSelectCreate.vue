@@ -36,6 +36,10 @@ const props = defineProps({
     isCreate: {
         type:Boolean,
         default: false,
+    },
+    allowNoneOption: {
+        type: Boolean,
+        default: true,
     }
 })
 const loading = ref(false)
@@ -46,7 +50,9 @@ async function search(q) {
     if (props.isCreate){
         data.value.results.push({ id: 0, name: '' })
     }
-    data.value.results.push({ id: -1, name: 'None' })
+    if (props.allowNoneOption){
+        data.value.results.push({ id: -1, name: 'None' })
+    }
     return data.value.results
 }
 const onSelectOption = (value)=>{

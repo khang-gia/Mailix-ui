@@ -316,13 +316,16 @@
                             <CoreTitleSelectCreate v-model="userInfo.title" :placeholder="$t('Title')"/>
                         </UFormGroup>
                          <UFormGroup
+                            v-slot="{ error }"
+                            :error="errors.department"
                             :label="$t('Department')"
-                            name="department">
-                            <CoreDeparmentSelectCreate v-model="userInfo.department" :placeholder="$t('Department')"/>
+                            name="department"
+                            required>
+                            <CoreDeparmentSelectCreate v-model="userInfo.department" :placeholder="$t('Department')" :allowNoneOption="false"/>
                         </UFormGroup>
                         <UFormGroup
                             :label="$t('Type of labour')"
-                            name="department">
+                            name="type_of_labor">
                             <USelectMenu
                                 class="w-full"
                                 v-model="userInfo.type_of_labor"
@@ -393,6 +396,7 @@ const schema = yup.object({
             }
         }),
     email: yup.string().email(t('Invalid email format')).required(t('This field is required')),
+    department: yup.object().nullable().required(t('This field is required')),
     // id_number: yup.string().required(t('This field is required')),
     // place_of_issue: yup.string().required(t('This field is required')),
 })
