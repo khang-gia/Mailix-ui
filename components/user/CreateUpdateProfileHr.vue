@@ -252,22 +252,21 @@
                                 :ui="{ base: 'w-full rounded-lg' }"/>
                         </UFormGroup>
                         <UFormGroup
-                            v-if="userInfo.authen_email"
-                            :label="$t('Authentication email')"
+                            :label="$t('Personal email')"
                             name="email"
                             >
                             <template #label>
                                 <span class="mr-1">
-                                    {{ $t('Authentication email') }}
+                                    {{ $t('Personal email') }}
                                 </span>
-                                <UTooltip :text="$t('Authentication email tooltip')" :popper="{ placement: 'right' }">
+                                <UTooltip :text="$t('Personal email tooltip')" :popper="{ placement: 'right' }">
                                     <UIcon name="i-heroicons-exclamation-circle" class="text-yellow-500"/>
                                 </UTooltip>
                                 
                             </template>
                             <UInput
-                                v-model="userInfo.authen_email"
-                                :placeholder="$t('Authentication email')"
+                                v-model="userInfo.personal_email"
+                                :placeholder="$t('Personal email')"
                                 icon="i-heroicons-phone"
                                 :ui="{ base: 'w-full rounded-lg' }"/>
                         </UFormGroup>
@@ -395,7 +394,7 @@ const schema = yup.object({
                 return false;
             }
         }),
-    email: yup.string().email(t('Invalid email format')).required(t('This field is required')),
+    // email: yup.string().email(t('Invalid email format')).required(t('This field is required')),
     department: yup.object().nullable().required(t('This field is required')),
     // id_number: yup.string().required(t('This field is required')),
     // place_of_issue: yup.string().required(t('This field is required')),
@@ -443,7 +442,7 @@ const defaultUserInfo = {
     marital_status: '',
     gender: '',
     id_card: '',
-    authen_email: '',
+    personal_email: '',
     phone: '',
     address: '',
     city: '',
@@ -459,7 +458,7 @@ const defaultUserInfo = {
     actual_sign_date: new Date(),
     highest_qualification: '',
     direct_manager: '',
-    nationality: '',
+    nationality: 'Việt Nam',
     id_number:'',
     date_of_issue: '',
     place_of_issue: '',
