@@ -61,7 +61,7 @@ const checkView = (slotName) => {
 const items = computed(() => {
     const allItems = [
         {
-            label: t('Customer'),
+            label: t('HR'),
             icon:"ix:customer",
             slot: 'customer',
         },
@@ -71,7 +71,7 @@ const items = computed(() => {
             slot: 'crm',
         },
         {
-            label: t('HR'),
+            label: t('Customer'),
             icon:"heroicons:users",
             slot: 'hrm',
         },
