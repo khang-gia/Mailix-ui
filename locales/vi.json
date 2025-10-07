@@ -416,5 +416,12 @@
     "Others": "Khác",
     "Personal email": "Email cá nhân",
     "Personal email tooltip": "Email dùng để đăng nhập, nhận thông báo hệ thống, reset mật khẩu...",
-    "Enter keyword": "Nhập từ khoá"
+    "Enter keyword": "Nhập từ khoá",
+    "The entity was successfully created.": "Tạo thành công.",
+    "An error occurred while creating the entity. Please try again later.": "Đã xảy ra lỗi khi tạo. Vui lòng thử lại sau.",
+    "Authen email is already in use by another account.": "Email xác thực đã được sử dụng bởi tài khoản khác.",
+    "Username, email and password are required.": "Tên đăng nhập, email và mật khẩu là bắt buộc.",
+    "Profile not found.": "Không tìm thấy hồ sơ.",
+    "Username is already in use by another account.": "Tên đăng nhập đã được sử dụng bởi tài khoản khác.",
+    "Cannot create email account on Mail-in-a-Box server.": "Không thể tạo tài khoản email trên máy chủ Mail-in-a-Box."
 }

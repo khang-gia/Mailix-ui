@@ -23,20 +23,19 @@
                 required>
                 <UInput
                     v-model="entityInfo.email"
-                    disabled="true"
                     :placeholder="$t('Email')"
                     :ui="{ base: 'w-full rounded-lg' }"
                     :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
             </UFormGroup>
             <UFormGroup
-                v-if="checkView('authen_email')"
+                v-if="checkView('personal_email')"
                 v-slot="{ error }"
                 :label="$t('Authentication Email')"
-                name="authen_email"
-                :error="errors.authen_email"
+                name="personal_email"
+                :error="errors.personal_email"
                 required>
                 <UInput
-                    v-model="entityInfo.authen_email"
+                    v-model="entityInfo.personal_email"
                     :placeholder="$t('Authentication Email')"
                     :ui="{ base: 'w-full rounded-lg' }"
                     :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
@@ -149,7 +148,7 @@
     //     'account','title','department'
     // ])
     const viewAllow = ref({
-        account:['username','password','email','phone','authen_email'],
+        account:['username','password','email','phone','personal_email'],
         title:['name','code','description'],
         department:['name','code','description','parent','department_type', 'company', 'business_unit'],
     })
@@ -168,18 +167,19 @@
     }
     const defaultEmail = async() => {
         const userData = await useAPI().get(`core/profile_hrs/${useRoute().params.id}/`);
-        console.log('userData value', userData.data.value);
-        // Generate a default email based on the user's name with @imap.mailix.vn domain ex: Nguyễn Trần Gia Khiêng -> ntgkhieng@imap.mailix.vn
-        if (userData.data.value && userData.data.value.full_name) {
-            const email = normalizeName(userData.data.value.full_name) + '@imap.mailix.vn';
-            return email;
+        const userInfo = userData.data.value;
+        console.log('userInfo', userInfo);
+        // Generate a default email based on the user's name + dob with @imap.mailix.vn domain ex: Nguyễn Trần Gia Khiêng , dob is 2109-> ntgkhieng0921@imap.mailix.vn
+        if (userInfo && userInfo.full_name) {
+            const email = normalizeName(userInfo.full_name) + (userInfo.dob ? userInfo.dob.replace(/-/g, '').slice(-4) : '') + '@imap.mailix.vn';
+            entityInfo.value.personal_email = userInfo.personal_email;
+            entityInfo.value.email = email;
         }
-        return ''
     }
     watch(createModal, async (newVal) => {
             console.log('modalCreateType changed to', modalCreateType.value === 'account');
             if (modalCreateType.value === 'account') {
-                entityInfo.value.email = await defaultEmail();
+                await defaultEmail();
             } else {
                 entityInfo.value.email = '';
             }
@@ -187,7 +187,6 @@
             entityInfo.value.username = '';
             entityInfo.value.password = '99999999999';
             // entityInfo.value.confirm_password = '';
-            entityInfo.value.authen_email = '';
             entityInfo.value.phone = '';
             entityInfo.value.description = '';
             entityInfo.value.department_type = '';
@@ -200,7 +199,7 @@
         password: '',
         // confirm_password: '',
         email: '',
-        authen_email: '',
+        personal_email: '',
         phone: '',
         description: '',
         department_type: '',
@@ -211,11 +210,11 @@
     ]
     const errors = ref({})
     const schema = yup.object({
-        username: checkView('username') ? yup.string().required(t('This field is required')) : yup.mixed().notRequired(),
-        name: checkView('name') ? yup.string().required(t('This field is required')) : yup.mixed().notRequired(),
-        email: checkView('email') ? yup.string().email(t('Invalid email format')).required(t('This field is required')) : yup.mixed().notRequired(),
-        authen_email: checkView('authen_email') ? yup.string().email(t('Invalid email format')).required(t('This field is required')) : yup.mixed().notRequired(),
-        password: checkView('password') ? yup.string().min(6, t('Password must be at least 6 characters')).required(t('This field is required')) : yup.mixed().notRequired(),
+        username:  yup.string().required(t('This field is required')),
+        // name: !checkView('name') ? yup.string().required(t('This field is required')) : yup.mixed().notRequired(),
+        email:  yup.string().email(t('Invalid email format')).required(t('This field is required')),
+        personal_email: yup.string().email(t('Invalid email format')).required(t('This field is required')),
+        password: yup.string().min(6, t('Password must be at least 6 characters')).required(t('This field is required')),
         // confirm_password: checkView('confirm_password') ? yup.string()
         //     .oneOf([yup.ref('password'), null], t('Passwords must match'))
         //     .required(t('This field is required')) : yup.mixed().notRequired(),
@@ -223,17 +222,23 @@
     const createAccount = async () => {
         console.log('create account Data', entityInfo.value)
         try {
-            const {data: response} = await useAPI().post(`core/profile_hrs/${useRoute().params.id}/create_account/`, {
+            const {data: response, error: errorVal} = await useAPI().post(`core/profile_hrs/${useRoute().params.id}/create_account/`, {
                 username: entityInfo.value.username,
                 password: '',
                 email: entityInfo.value.email,
-                authen_email: entityInfo.value.authen_email,
+                authen_email: entityInfo.value.personal_email,
                 // confirm_password: entityInfo.value.confirm_password,
             });
             console.log('response', response.value)
             if (response.value && response.value.id) {
                 return true;
-            } else {
+            }
+            console.log('errorVal', errorVal.value.data)
+            if (errorVal.value.statusCode === 400 && errorVal.value.data) {
+                const errorData = errorVal.value.data.detail;
+                throw new Error(t(errorData));
+            }
+            else {
                 throw new Error(t('Unexpected response status'));
             }
         } catch (error) {
@@ -286,21 +291,17 @@
             await schema.validate(entityInfo.value, { abortEarly: false });
             errors.value = {};
             return true;
-        } catch (err) {
-            if (err instanceof yup.ValidationError) {
-                errors.value = {};
-                err.inner.forEach(error => {
-                    errors.value[error.path] = error.message;
-                });
-            } else {
-                console.error(err);
-            }
+        } catch (validationError) {
+            const validationErrors = {};
+            validationError.inner.forEach((err) => {
+                validationErrors[err.path] = err.message;
+            });
+            errors.value = validationErrors; 
             return false;
         }
     }
     const onSubmit = async () => {
         const isValid = await validateForm(); 
-        console.log('isValid', isValid);
         if (!isValid) return;
         try {
             busy.value = true;
