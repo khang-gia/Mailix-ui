@@ -215,9 +215,9 @@
         email:  yup.string().email(t('Invalid email format')).required(t('This field is required')),
         personal_email: yup.string().email(t('Invalid email format')).required(t('This field is required')),
         password: yup.string().min(6, t('Password must be at least 6 characters')).required(t('This field is required')),
-        // confirm_password: checkView('confirm_password') ? yup.string()
-        //     .oneOf([yup.ref('password'), null], t('Passwords must match'))
-        //     .required(t('This field is required')) : yup.mixed().notRequired(),
+        confirm_password:  yup.string()
+            .oneOf([yup.ref('password'), null], t('Passwords must match'))
+            .required(t('This field is required')),
     })
     const createAccount = async () => {
         console.log('create account Data', entityInfo.value)

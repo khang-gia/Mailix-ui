@@ -420,8 +420,8 @@ const userData = await useAPI().get(`core/profile_hrs/${useRoute().params.id}/`)
 userInfo.value = userData.data.value;
 console.log('userInfo',userData.data)
 definePageMeta({
-    title: 'Hồ sơ nhân sự',
-    header: userInfo.value.full_name || '',
+    title: userInfo.value.full_name || 'Hồ sơ nhân sự',
+    // header: userInfo.value.full_name || '',
 });
 const showImageModal = (image, type) => {
     const imageData = {

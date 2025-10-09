@@ -4,7 +4,7 @@
             <div class="flex items-center justify-between h-16 -mb-px">
                 <div class="flex h-16 my-auto pt-5">
                     <UButton v-if="routeCreate.includes(route.name) " icon="i-heroicons-plus" variant="outline" color="" size="xs" class="mr-2 w-7 h-7 bounce-animation text-[#147FE0] dark:text-[#7FC1FC] hover:bg-[#e3eef8] dark:hover:bg-[#1B1B29]" @click.stop="onPageAction"/>
-                    <span class="text-lg font-semibold font-averta lg:flex mr-3">{{ appTitle || route.meta.header|| route.meta.title}}</span>
+                    <span v-if="!route.meta.hideTitle" class="text-lg font-semibold font-averta lg:flex mr-3">{{ appTitle || route.meta.header|| $t(route.meta.title)}}</span>
                 </div>
 
                 <div class="flex items-center space-x-2">
@@ -98,7 +98,8 @@ import { useModalStore } from '@/stores/modal'
 import { useAppStore } from '@/stores/app'
 const modalStore = useModalStore()
 import { useSearchStore } from '@/stores/search';
-
+// import { useI18n } from "vue-i18n";
+// const { t } = useI18n();
 const searchStore = useSearchStore();
 const { search } = storeToRefs(searchStore);
 const { setAuthModal, setSearchModal } = modalStore
