@@ -30,7 +30,7 @@
             </div>
             <template #footer>
                 <div class="flex justify-end items-center space-x-2">
-                    <UButton color="" @click="onSubmit" :disabled="!uploadFile || busy" class="bg-titaca-button-primary">
+                    <UButton color="" @click="onSubmit" :disabled="!uploadFile || busy" class="bg-mailix-primary hover:bg-primary-800">
                         {{ $t('Import') }}
                     </UButton>
                 </div>

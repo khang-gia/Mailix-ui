@@ -68,7 +68,7 @@
                     
                     </UButton>
                         
-                    <UButton color="" @click="onSubmit" :disabled="!uploadFile || busy" class="bg-titaca-button-primary dark:text-white">
+                    <UButton color="" @click="onSubmit" :disabled="!uploadFile || busy" class="bg-mailix-primary hover:bg-primary-800">
                         {{ $t('Import') }}
                     </UButton>
                 </div>

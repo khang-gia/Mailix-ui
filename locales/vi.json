@@ -441,5 +441,8 @@
     "Password must contain at least one special character": "Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt",
     "Your password was successfully changed.": "Mật khẩu của bạn đã được thay đổi.",
     "An error occurred while process to change the password. Please try again later.": "Có lỗi xảy ra khi thay đổi mật khẩu. Vui lòng kiểm tra thông tin và thử lại.",
-    "PASSWORD_INVALID": "Mật khẩu không khớp"
+    "PASSWORD_INVALID": "Mật khẩu không khớp",
+    "Import contacts": "Tải lên liên hệ",
+    "Import customers": "Tải lên khách hàng",
+    "Import Works": "Tải lên công việc"
 }
