@@ -295,6 +295,7 @@
             console.log('ERROR VALIDATION', validationError)
             const validationErrors = {};
             validationError.inner.forEach((err) => {
+                console.log('ERROR detail', err)
                 validationErrors[err.path] = err.message;
             });
             errors.value = validationErrors; 
