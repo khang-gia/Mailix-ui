@@ -292,6 +292,7 @@
             errors.value = {};
             return true;
         } catch (validationError) {
+            console.log('ERROR VALIDATION', validationError)
             const validationErrors = {};
             validationError.inner.forEach((err) => {
                 validationErrors[err.path] = err.message;
