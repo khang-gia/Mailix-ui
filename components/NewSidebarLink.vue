@@ -11,7 +11,7 @@
             base: 'w-full',
             wrapper: 'pt-4 px-2 ',
         }">
-        <template v-for="slotName in ['customer', 'hrm', 'crm', 'company','task']" v-slot:[slotName]>
+        <template v-for="slotName in ['customer', 'workspace', 'crm', 'company','task']" v-slot:[slotName]>
             <div v-for="(item, index) in submenuMap[slotName]?.value.slice(1)" :key="item.label">
                 <div v-for="subItem in item" :key="subItem.label">
                     <UButton :to="subItem.link" :target="subItem.target" color="white" variant="soft" :label="$t(subItem.label)" class="pl-9 my-0.5 w-full" :class="useRoute().path.startsWith(subItem.link) ? 'text-[#0313B0] bg-[#e3e5f5] dark:bg-[#34344A] dark:text-[#E0E0E0]' : 'text-[#707070] dark:text-[#E0E0E0] hover:text-[#0313B0] hover:bg-[#e3e5f5]'" >
@@ -71,9 +71,9 @@ const items = computed(() => {
             slot: 'crm',
         },
         {
-            label: t('Customer'),
-            icon:"heroicons:users",
-            slot: 'hrm',
+            label: t('Workspace'),
+            icon:"carbon:workspace",
+            slot: 'workspace',
         },
         {
             label: t('Company'),
@@ -116,7 +116,7 @@ const crmSubmenu = ref([
 ])
 
 
-const hrmSubmenu = ref([
+const workspaceSubmenu = ref([
     [{
         slot: 'tip',
         disabled: true
@@ -157,7 +157,7 @@ const taskSubmenu = ref([
 ]) 
 const submenuMap = {
   crm: crmSubmenu,
-  hrm: hrmSubmenu,
+  workspace: workspaceSubmenu,
   customer: customerSubmenu,
   company:companySubmenu,
   task:taskSubmenu
