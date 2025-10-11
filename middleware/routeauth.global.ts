@@ -13,7 +13,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
             path: ['/contacts','/customers']
         },
         {
-            name: 'hrm',
+            name: 'workspace',
             path: ['/works','/schedules']
         },
         {
