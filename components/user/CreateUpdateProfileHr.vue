@@ -137,7 +137,12 @@
                         <CoreEthnicitySelect
                             v-model="userInfo.ethnicity" :placeholder="$t('Ethnicity')"/>
                     </UFormGroup>
-                    
+                    <UFormGroup
+                        :label="$t('Religion')"
+                        name="ethnicity">
+                        <CoreReligionSelect
+                            v-model="userInfo.religion" :placeholder="$t('Religion')"/>
+                    </UFormGroup>
                     <UFormGroup
                         :label="$t('Education level')"
                         name="educaional_level">
@@ -467,6 +472,7 @@ const defaultUserInfo = {
     permanent_address:'',
     current_address:'',
     title: '',
+    religion: ''
 }
 const userInfo = ref(defaultUserInfo)
 const genders = [
