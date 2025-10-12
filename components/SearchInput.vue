@@ -8,8 +8,8 @@
       leave-from-class="opacity-100 translate-x-0"
       leave-to-class="opacity-0 -translate-x-4"
       >
-      <UButton v-if="!activeInput" size="sm" color="white" @click="activeInput = true" icon="i-heroicons-magnifying-glass-20-solid" />
-      <UInput v-else size="sm" color="white" :placeholder="$t('Enter keyword') + '...'"
+      <!-- <UButton v-if="!activeInput" size="sm" color="white" @click="activeInput = true" icon="i-heroicons-magnifying-glass-20-solid" /> -->
+      <UInput size="sm" color="white" :placeholder="$t('Enter keyword') + '...'"
         v-model="search" @change="emit('search', search)" autocomplete="off"
         :ui="{ 
           icon: { 

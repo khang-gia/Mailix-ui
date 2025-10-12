@@ -105,7 +105,10 @@ const { alertConfirm, alertModal } = storeToRefs(modalStore)
 const { setAlertModal } = modalStore
 import { useFilterStore } from '@/stores/filter'
 import { useDisplayColStore } from '@/stores/column'
+import { useSearchStore } from '@/stores/search';
 
+const searchStore = useSearchStore();
+const { search } = storeToRefs(searchStore);
 const filterStore = useFilterStore()
 const { setFilterModal, clearFilter} = filterStore
 const { workFilter } = storeToRefs(filterStore)
@@ -154,6 +157,7 @@ const works = computedAsync(async () => {
     ...params,
     reload: reload.value,
     page: page.value,
+    search: search.value,
     page_size: pageSize.value,
     stage: 2,
   })
