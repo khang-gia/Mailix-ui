@@ -61,7 +61,7 @@ const onSelectFiles = (files) => {
 }
 const importFile = async (value) => {
     const data = new FormData()
-    const upload_type = 1
+    const upload_type = 8
     data.append('file', value)
     data.append('upload_type', upload_type)
     const { data: upload, error } = await useAPI().post(
