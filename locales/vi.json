@@ -444,5 +444,6 @@
     "PASSWORD_INVALID": "Mật khẩu không khớp",
     "Import contacts": "Tải lên liên hệ",
     "Import customers": "Tải lên khách hàng",
-    "Import Works": "Tải lên công việc"
+    "Import Works": "Tải lên công việc",
+    "Download failed. Please check and try again": "Tải về thất bại. Vui lòng kiểm tra và thử lại sau"
 }

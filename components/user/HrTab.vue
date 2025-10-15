@@ -77,8 +77,8 @@
       <div class="flex justify-end">
           
           <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'hr-upload'}"/>
-          <UButton disabled color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs"/>
-          <UButton disabled color="gray" variant="ghost" icon="i-heroicons-cog-6-tooth" :label="$t('Setting')" size="xs" :to="{name: 'hr-setting'}"/>
+          <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs" @click.prevent="exportHRList"/>
+          <!-- <UButton disabled color="gray" variant="ghost" icon="i-heroicons-cog-6-tooth" :label="$t('Setting')" size="xs" :to="{name: 'hr-setting'}"/> -->
       </div>
     </div>
     
@@ -102,6 +102,8 @@ const { t } = useI18n();
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 import { useSearchStore } from '@/stores/search';
+import { saveAs } from "file-saver"
+import moment from "moment"
 
 const searchStore = useSearchStore();
 const { search } = storeToRefs(searchStore);
@@ -308,6 +310,37 @@ const deactivateProfile = async () => {
           return true;
       } else {
           throw new Error(t('Unexpected response status'));
+      }
+  } catch (error) {
+      console.error('Error deleting fee:', error);
+      throw error;
+  }
+} 
+const exportHRList = async () => {
+  try {
+      const processedAdditionalFilter = {};
+      for (const key in hrFilter.value) {
+        if (Array.isArray(hrFilter.value[key])) {
+          processedAdditionalFilter[key] = hrFilter.value[key].map(item => item.id || item).join(',');
+        } else {
+          processedAdditionalFilter[key] = hrFilter.value[key];
+        }
+      }
+      const params = {
+        ...userFilter.value,
+        ...processedAdditionalFilter
+      }
+      const response = await useAPI().get(`core/profile_hrs/export_profile_hrs/`, { 
+        ...params,
+        search: search,
+        page: page.value,
+        page_size: pageSize.value,
+      });
+      if (response && response.data.value) {
+          saveAs(response.data.value, `DANH_SACH_NHAN_SU_${moment().format('DDMMYYYY')}.xlsx`)
+          return true;
+      } else {
+          throw new Error(t('Download failed. Please check and try again'));
       }
   } catch (error) {
       console.error('Error deleting fee:', error);

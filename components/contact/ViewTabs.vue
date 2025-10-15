@@ -77,7 +77,7 @@
       <div class="flex justify-end">
           
           <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'contacts-upload'}"/>
-          <UButton disabled color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs"/>
+          <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs" @click.prevent="exportContactList"/>
           <!-- <UButton disabled color="gray" variant="ghost" icon="i-heroicons-cog-6-tooth" :label="$t('Setting')" size="xs" :to="{name: 'hr-setting'}"/> -->
       </div>
       <!-- <div class="flex justify-end">
@@ -108,6 +108,8 @@ import { storeToRefs } from 'pinia'
 import { useFilterStore } from '@/stores/filter'
 import { useDisplayColStore } from '@/stores/column'
 import { useSearchStore } from '@/stores/search';
+import { saveAs } from "file-saver"
+import moment from "moment"
 
 const searchStore = useSearchStore();
 const { search } = storeToRefs(searchStore);
@@ -347,5 +349,36 @@ const actionSelected = [
     }
   }],
 ]
-
+const exportContactList = async () => {
+  try {
+      const processedContactFilter = {};
+      for (const key in contactFilter.value) {
+        if (Array.isArray(contactFilter.value[key])) {
+          processedContactFilter[key] = contactFilter.value[key].map(item => item.id || item).join(',');
+        } else {
+          processedContactFilter[key] = contactFilter.value[key];
+        }
+      }
+      const params = {
+        ...mainFilter.value,
+        ...processedContactFilter
+      }
+      const response = await useAPI().get(`core/customers/export_contacts/`, { 
+        ...params,
+        search: search,
+        page: page.value,
+        page_size: pageSize.value,
+        stage: 1
+      });
+      if (response && response.data.value) {
+          saveAs(response.data.value, `DANH_SÁCH_LIÊN_HỆ_${moment().format('DDMMYYYY')}.xlsx`)
+          return true;
+      } else {
+          throw new Error(t('Download failed. Please check and try again'));
+      }
+  } catch (error) {
+      console.error('Error deleting fee:', error);
+      throw error;
+  }
+} 
 </script>
