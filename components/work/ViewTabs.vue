@@ -77,7 +77,7 @@
       <div class="flex justify-end">
           
           <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'works-upload'}"/>
-          <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs"/>
+          <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs" @click.prevent="exportWorkList"/>
           <!-- <UButton color="gray" variant="ghost" icon="i-heroicons-cog-6-tooth" :label="$t('Setting')" size="xs" :to="{name: 'hr-setting'}"/> -->
       </div>
     </div>
@@ -106,6 +106,8 @@ const { setAlertModal } = modalStore
 import { useFilterStore } from '@/stores/filter'
 import { useDisplayColStore } from '@/stores/column'
 import { useSearchStore } from '@/stores/search';
+import { saveAs } from "file-saver"
+import moment from "moment"
 
 const searchStore = useSearchStore();
 const { search } = storeToRefs(searchStore);
@@ -159,7 +161,6 @@ const works = computedAsync(async () => {
     page: page.value,
     search: search.value,
     page_size: pageSize.value,
-    stage: 2,
   })
   pageTotal.value = data.count
   return data.results
@@ -335,5 +336,35 @@ const actionSelected = [
     }
   }]
 ]
-
+const exportWorkList = async () => {
+  try {
+      const processedAdditionalFilter = {};
+      for (const key in workFilter.value) {
+        if (Array.isArray(workFilter.value[key])) {
+          processedAdditionalFilter[key] = workFilter.value[key].map(item => item.id || item).join(',');
+        } else {
+          processedAdditionalFilter[key] = workFilter.value[key];
+        }
+      }
+      const params = {
+        ...mainFilter.value,
+        ...processedAdditionalFilter,
+      }
+      const response = await useAPI().get(`core/works/export_work_list/`, { 
+        ...params,
+        search: search,
+        page: page.value,
+        page_size: pageSize.value,
+      });
+      if (response && response.data.value) {
+          saveAs(response.data.value, `DANH_SÁCH_CÔNG_VIỆC_${moment().format('DDMMYYYY')}.xlsx`)
+          return true;
+      } else {
+          throw new Error(t('Download failed. Please check and try again'));
+      }
+  } catch (error) {
+      console.error('Error deleting fee:', error);
+      throw error;
+  }
+} 
 </script>
