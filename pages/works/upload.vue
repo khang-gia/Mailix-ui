@@ -1,19 +1,19 @@
 <template>
     <div>
-        <UserImportTabs v-model="tab" />
+        <WorkImportTabs v-model="tab" />
     </div>
     <div class="p-2">
         <UCard :ui="{body: { base: 'divide-y divide-gray-200 dark:divide-gray-700'}, divide: 'divide-y divide-gray-200 dark:divide-gray-700',}">
             <template #header>
-                <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-200">{{ $t('Import Profile HR') }}</h1>
+                <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-200">{{ $t('Import Works') }}</h1>
                 <span class="text-sm italic text-slate-500 dark:text-slate-400">{{ $t('Import note') }}</span>
             </template>
             <div class="grid grid-flow-row ">
                 <div class="flex justify-start items-center space-x-4">
                     <span class="font-averta text-md text-slate-700 dark:text-slate-200">Template</span>
                     <UButton color="" variant="outline" class="w-fit dark:text-slate-200" icon="i-heroicons-arrow-down-tray" size="sm">
-                        <a href="/downloads/hr/profile_hr_import_template_v1.xlsx" >
-                            profile_hr_import_template_v1.xlsx
+                        <a href="/downloads/work/work_import_template_v1.xlsx" >
+                            work_import_template_v1.xlsx
                         </a>
                     </UButton>
                 </div>
@@ -61,7 +61,7 @@ const onSelectFiles = (files) => {
 }
 const importFile = async (value) => {
     const data = new FormData()
-    const upload_type = 1
+    const upload_type = 9
     data.append('file', value)
     data.append('upload_type', upload_type)
     const { data: upload, error } = await useAPI().post(
