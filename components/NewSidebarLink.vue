@@ -1,4 +1,4 @@
-<template>
+ <template>
     <UAccordion
         v-if="isSidebarOpen"
         default-open
@@ -11,7 +11,26 @@
             base: 'w-full',
             wrapper: 'pt-4 px-2 ',
         }">
-        <template v-for="slotName in ['customer', 'workspace', 'crm', 'company','task']" v-slot:[slotName]>
+        <!-- <template #default="{ item, index, open }">
+            <UButton :to="item.noSub ? item.link : undefined" color="gray" variant="ghost" class="border-b border-gray-200 dark:border-gray-700" :ui="{ rounded: 'rounded-none', padding: { sm: 'p-3' } }">
+                <template #leading>
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center -my-1">
+                        <UIcon :name="item.icon" class="w-4 h-4" />
+                    </div>
+                </template>
+                <span class="truncate">{{ item.label }}</span>
+                <template #trailing>
+                    <UIcon
+                        v-if="!item.noSub"
+                        name="i-heroicons-chevron-right-20-solid"
+                        class="w-5 h-5 ms-auto transform transition-transform duration-200"
+                        :class="[open && 'rotate-90']"
+                    />
+                </template>
+            </UButton>
+        </template>
+         -->
+        <template v-for="slotName in ['customer', 'workspace', 'crm', 'company','task','guide']" v-slot:[slotName]>
             <div v-for="(item, index) in submenuMap[slotName]?.value.slice(1)" :key="item.label">
                 <div v-for="subItem in item" :key="subItem.label">
                     <UButton :to="subItem.link" :target="subItem.target" color="white" variant="soft" :label="$t(subItem.label)" class="pl-9 my-0.5 w-full" :class="useRoute().path.startsWith(subItem.link) ? 'text-[#0313B0] bg-[#e3e5f5] dark:bg-[#34344A] dark:text-[#E0E0E0]' : 'text-[#707070] dark:text-[#E0E0E0] hover:text-[#0313B0] hover:bg-[#e3e5f5]'" >
@@ -21,6 +40,7 @@
                 <UDivider class="pl-9 py-1" v-if="submenuMap[slotName]?.value.slice(1).length !== 1 && index + 1 !== submenuMap[slotName]?.value.slice(1).length"/>
             </div>
         </template>
+
     </UAccordion>
     <div v-else >
         <div v-for="item in items" :key="item.name" class="flex justify-center items-center py-4">
@@ -80,11 +100,28 @@ const items = computed(() => {
             icon:"mdi:company",
             slot: 'company',
         },
+        // {
+        //     label: t('Task'),
+        //     icon:"fluent:tasks-app-24-regular",
+        //     slot: 'task',
+        // },
         {
-            label: t('Task'),
-            icon:"fluent:tasks-app-24-regular",
-            slot: 'task',
+            label: t('Guide'),
+            icon:"ix:user-manual",
+            slot: 'guide',
         },
+        // {
+        //     label: t('Mail'),
+        //     icon:"heroicons-envelope",
+        //     slot: 'mail',
+        //     noSub: true,
+        // },
+        // {
+        //     label: t('App'),
+        //     icon:"tdesign:app",
+        //     slot: 'app',
+        //     noSub: true,
+        // },
 
     ];
     return allItems.filter(item => !checkView(item.slot));
@@ -155,12 +192,23 @@ const taskSubmenu = ref([
     }],
     [{ link: 'https://app.mailix.vn/', label: 'Mail', click: () => {}, target:'_blank'  },]
 ]) 
+const guideMenu = ref([
+    [{
+        slot: 'tip',
+        disabled: true
+    }],
+    [{ link: 'https://app.mailix.vn/', label: t('Mail'), click: () => {}, target:'_blank'   },
+    { link: '/app', label: t('Guide'), click: () => {
+        useRouter().push({ name: 'app' });
+    } }],
+]) 
 const submenuMap = {
   crm: crmSubmenu,
   workspace: workspaceSubmenu,
   customer: customerSubmenu,
   company:companySubmenu,
-  task:taskSubmenu
+  task:taskSubmenu,
+  guide:guideMenu
 };
 const getDropdownItems = (name) => {
     const submenuRef = submenuMap[name];
