@@ -198,8 +198,8 @@ const guideMenu = ref([
         disabled: true
     }],
     [{ link: 'https://app.mailix.vn/', label: t('Mail'), click: () => {}, target:'_blank'   },
-    { link: '/app', label: t('Guide'), click: () => {
-        useRouter().push({ name: 'app' });
+    { link: '/setting', label: t('App'), click: () => {
+        useRouter().push({ name: 'setting' });
     } }],
 ]) 
 const submenuMap = {
