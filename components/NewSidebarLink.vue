@@ -197,10 +197,8 @@ const guideMenu = ref([
         slot: 'tip',
         disabled: true
     }],
-    [{ link: 'https://app.mailix.vn/', label: t('Mail'), click: () => {}, target:'_blank'   },
-    { link: '/setting', label: t('App'), click: () => {
-        useRouter().push({ name: 'setting' });
-    } }],
+    [{ link: '/guide', label: t('Mail'), click: () => {} },
+    { link: '/setting', label: t('App'), click: () => {} }],
 ]) 
 const submenuMap = {
   crm: crmSubmenu,
