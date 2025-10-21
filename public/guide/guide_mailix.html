@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng Dẫn Thiết Lập Outlook</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tải thư viện Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Cấu hình font Inter */
+        html { font-family: 'Inter', sans-serif; }
+        .image-step-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .image-step-container img {
+            width: 100%;
+            max-width: 200px; /* Giới hạn chiều rộng ảnh trên mobile */
+            height: auto;
+        }
+        @media (min-width: 768px) {
+            .image-step-container img {
+                max-width: 250px;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#0078D4',
+                        'secondary-gray': '#F3F4F6',
+                    },
+                }
+            }
+        }
+
+        // JavaScript cho việc chuyển đổi tab (Mục 1)
+        function switchTab(platform) {
+            // Ẩn tất cả nội dung
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // Gỡ active khỏi tất cả các nút
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('bg-primary-blue', 'text-white');
+                btn.classList.add('bg-secondary-gray', 'text-gray-700');
+            });
+
+            // Hiện nội dung tương ứng
+            document.getElementById(platform + '-content').classList.remove('hidden');
+            // Đặt nút tương ứng thành active
+            document.getElementById(platform + '-button').classList.remove('bg-secondary-gray', 'text-gray-700');
+            document.getElementById(platform + '-button').classList.add('bg-primary-blue', 'text-white');
+        }
+
+        // JavaScript cho việc chuyển đổi nội dung di động (Mục 1.2)
+        function switchMobile(platform) {
+            // Ẩn tất cả nội dung
+            document.querySelectorAll('.mobile-content').forEach(el => el.classList.add('hidden'));
+            // Gỡ active khỏi tất cả các nút
+            document.querySelectorAll('.mobile-button').forEach(btn => {
+                btn.classList.remove('border-primary-blue', 'text-primary-blue');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+
+            // Hiện nội dung tương ứng
+            document.getElementById(platform + '-mobile-content').classList.remove('hidden');
+            // Đặt nút tương ứng thành active
+            document.getElementById(platform + '-mobile-button').classList.remove('border-transparent', 'text-gray-500');
+            document.getElementById(platform + '-mobile-button').classList.add('border-primary-blue', 'text-primary-blue');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Khởi tạo tab PC
+            switchTab('windows');
+            // Khởi tạo tab Mobile
+            switchMobile('ios');
+            // Khởi tạo Lucide icons
+            lucide.createIcons();
+        });
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
+        
+        <!-- Header -->
+        <header class="bg-primary-blue p-6 md:p-8 text-white">
+            <h1 class="text-3xl md:text-4xl font-extrabold flex items-center">
+                <i data-lucide="mail" class="w-8 h-8 mr-3"></i>
+                Thiết Lập Outlook cho Email Mailix
+            </h1>
+            <p class="mt-2 text-sm md:text-base opacity-90">
+                Hướng dẫn chi tiết cách tải ứng dụng và thiết lập thủ công tài khoản Email Mailix (IMAP/SMTP) trên mọi nền tảng.
+            </p>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="p-4 md:p-8 space-y-10">
+
+            <!-- Section 1: Cài Đặt Ứng Dụng -->
+            <section id="cai-dat" class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-primary-blue">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+                    <i data-lucide="download-cloud" class="w-6 h-6 mr-3 text-primary-blue"></i>
+                    1. Cài Đặt Ứng Dụng Microsoft Outlook
+                </h2>
+
+                <!-- Tabs cho PC/Mac/Mobile -->
+                <div class="mb-4 flex flex-wrap gap-2">
+                    <button id="windows-button" onclick="switchTab('windows')" class="tab-button px-4 py-2 text-sm font-semibold rounded-lg transition duration-200">
+                        <i data-lucide="monitor" class="w-4 h-4 inline-block mr-1"></i> Windows (PC)
+                    </button>
+                    <button id="mac-button" onclick="switchTab('mac')" class="tab-button px-4 py-2 text-sm font-semibold rounded-lg transition duration-200">
+                        <i data-lucide="laptop-minimal" class="w-4 h-4 inline-block mr-1"></i> macOS
+                    </button>
+                    <button id="mobile-button" onclick="switchTab('mobile')" class="tab-button px-4 py-2 text-sm font-semibold rounded-lg transition duration-200">
+                        <i data-lucide="smartphone" class="w-4 h-4 inline-block mr-1"></i> Thiết bị Di động
+                    </button>
+                </div>
+
+                <!-- Nội dung Windows -->
+                <div id="windows-content" class="tab-content bg-secondary-gray p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg text-gray-800 mb-2">Windows (Sử dụng "Outlook Mới" Miễn Phí)</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li>Truy cập vào Microsoft Store trên PC của bạn.</li>
+                        <li>Tìm kiếm "Microsoft Outlook".</li>
+                        <li>Nhấp vào nút "Tải về" hoặc "Get" để cài đặt.</li>
+                    </ol>
+                    <a href="https://apps.microsoft.com/detail/9nrx63209r7b?hl=vi-VN&gl=US" target="_blank" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200">
+                        <i data-lucide="download" class="w-4 h-4 mr-2"></i> Tải Outlook cho Windows
+                    </a>
+                </div>
+
+                <!-- Nội dung Mac -->
+                <div id="mac-content" class="tab-content bg-secondary-gray p-4 rounded-lg hidden">
+                    <h3 class="font-semibold text-lg text-gray-800 mb-2">macOS (Yêu cầu Giấy phép Office)</h3>
+                    <p class="text-gray-700 mb-2">Phiên bản Outlook Desktop trên Mac yêu cầu giấy phép Office (ví dụ: Office Home & Business) hoặc đăng ký Microsoft 365.</p>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li>Truy cập vào App Store trên Mac của bạn.</li>
+                        <li>Tìm kiếm và cài đặt ứng dụng Microsoft Outlook.</li>
+                    </ol>
+                    <a href="https://apps.apple.com/vn/app/microsoft-outlook/id985367838?mt=12" target="_blank" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200">
+                        <i data-lucide="download" class="w-4 h-4 mr-2"></i> Tải Outlook cho Mac
+                    </a>
+                </div>
+
+                <!-- Nội dung Mobile -->
+                <div id="mobile-content" class="tab-content bg-secondary-gray p-4 rounded-lg hidden">
+                    <h3 class="font-semibold text-lg text-gray-800 mb-2">Thiết bị Di động (Miễn Phí)</h3>
+                    <div class="flex border-b border-gray-300 mb-3">
+                        <button id="ios-mobile-button" onclick="switchMobile('ios')" class="mobile-button px-4 py-2 border-b-2 text-sm font-medium transition duration-200">
+                            iOS (iPhone/iPad)
+                        </button>
+                        <button id="android-mobile-button" onclick="switchMobile('android')" class="mobile-button px-4 py-2 border-b-2 text-sm font-medium transition duration-200">
+                            Android
+                        </button>
+                    </div>
+
+                    <div id="ios-mobile-content" class="mobile-content space-y-2 text-gray-700">
+                        <ol class="list-decimal list-inside">
+                            <li>Mở App Store và tìm kiếm "Microsoft Outlook".</li>
+                            <li>Nhấn nút "Tải về" (Get) để cài đặt.</li>
+                        </ol>
+                        <a href="https://apps.apple.com/vn/app/microsoft-outlook/id951937596" target="_blank" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200">
+                            <i data-lucide="download" class="w-4 h-4 mr-2"></i> Tải Outlook cho iOS
+                        </a>
+                    </div>
+                     <div id="android-mobile-content" class="mobile-content space-y-2 text-gray-700 hidden">
+                        <ol class="list-decimal list-inside">
+                            <li>Mở Google Play Store và tìm kiếm "Microsoft Outlook".</li>
+                            <li>Nhấn nút "Cài đặt" (Install).</li>
+                        </ol>
+                        <a href="https://play.google.com/store/apps/details?id=com.microsoft.office.outlook" target="_blank" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200">
+                            <i data-lucide="download" class="w-4 h-4 mr-2"></i> Tải Outlook cho Android
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Thiết Lập Tài Khoản Server Riêng -->
+            <section id="thiet-lap" class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-red-500">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+                    <i data-lucide="settings" class="w-6 h-6 mr-3 text-red-500"></i>
+                    2. Thiết Lập Tài Khoản Email Mailix (Thủ Công)
+                </h2>
+
+                <!-- Updated Configuration Block -->
+                <div class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg shadow-inner">
+                    <p class="font-bold text-yellow-800 flex items-center mb-1">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 mr-2"></i> THÔNG TIN CẤU HÌNH BẮT BUỘC
+                    </p>
+                    <p class="text-sm text-yellow-700">
+                        Vui lòng sử dụng thông tin chi tiết sau để thiết lập tài khoản Outlook:
+                    </p>
+                    
+                    <div class="mt-3 p-3 bg-yellow-100 rounded-lg border border-yellow-300 space-y-2 text-sm text-yellow-900">
+                        <p class="font-bold border-b border-yellow-300 pb-1 mb-1">THÔNG TIN ĐĂNG NHẬP MẪU</p>
+                        <p><span class="font-semibold w-20 inline-block">Tài khoản:</span> <code class="bg-white px-1 rounded">demo@mailix.vn</code></p>
+                        <p><span class="font-semibold w-20 inline-block">Mật khẩu:</span> <code class="bg-white px-1 rounded">AdminMailix123@</code></p>
+                        
+                        <hr class="border-yellow-300 my-1">
+                        
+                        <p class="font-bold">CẤU HÌNH MÁY CHỦ THƯ ĐẾN (IMAP)</p>
+                        <p><span class="font-semibold w-20 inline-block">Server:</span> <code class="bg-white px-1 rounded">mail.mailix.vn</code></p>
+                        <p><span class="font-semibold w-20 inline-block">Port:</span> <code class="bg-white px-1 rounded">993</code></p>
+                        <p class="font-semibold italic text-xs block mt-[-5px]">Yêu cầu phương thức mã hóa: SSL/TLS</p>
+
+                        <hr class="border-yellow-300 my-1">
+                        
+                        <p class="font-bold">CẤU HÌNH MÁY CHỦ THƯ ĐI (SMTP)</p>
+                        <p><span class="font-semibold w-20 inline-block">Server:</span> <code class="bg-white px-1 rounded">mail.mailix.vn</code></p>
+                        <p><span class="font-semibold w-20 inline-block">Port:</span> <code class="bg-white px-1 rounded">465</code></p>
+                        <p class="font-semibold italic text-xs block mt-[-5px]">Yêu cầu phương thức mã hóa: SSL/TLS</p>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Setup MAC -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 flex items-center mb-4 border-b pb-2">
+                            <i data-lucide="laptop-minimal" class="w-5 h-5 mr-2 text-primary-blue"></i>
+                            2.1. Thiết lập trên Mac
+                        </h3>
+                        <ol class="list-decimal list-inside space-y-3 text-gray-700 ml-4">
+                            <li>Mở ứng dụng Outlook trên Mac. Nếu đây là lần đầu tiên, bạn sẽ thấy màn hình chào mừng.</li>
+                            <li>Nhấp vào "Add Email Account" (Thêm Tài khoản Email) từ thanh công cụ hoặc menu Outlook > Preferences > Account. 
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/Screenshot-2025-10-20-at-14.53.27-scaled.png" alt="Bước 2: Chọn Add Email Account trong Outlook" class="w-full max-w-sm mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                            <li>Nhập địa chỉ Email Mailix của bạn (ví dụ: `demo@mailix.vn`) và nhấn Continue (Tiếp tục). 
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/Screenshot-2025-10-20-at-14.54.42.png" alt="Bước 3: Nhập địa chỉ email và nhấn Continue" class="w-full max-w-sm mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                            <li>Khi màn hình thông báo đồng bộ đám mây hiện ra, hãy chọn "Sync directly with IMAP" (Đồng bộ trực tiếp với IMAP) để thiết lập thủ công.
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/Screenshot-2025-10-20-at-14.55.34.png" alt="Bước 4: Chọn Sync directly with IMAP" class="w-full max-w-sm mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                            <li>Nhập các thông tin sau:
+                                <ul class="list-disc list-inside space-y-1 text-gray-600 ml-6 mt-1">
+                                    <li>Email Address: Địa chỉ Email Mailix của bạn.</li>
+                                    <li>IMAP Password: Mật khẩu Email Mailix của bạn.</li>
+                                </ul>
+                                Tắt nút gạt "Show Advanced Settings" (Hiện Cài đặt Nâng cao) để tiếp tục.
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/Screenshot-2025-10-20-at-14.56.03.png" alt="Bước 5: Nhập thông tin cơ bản và tắt Advanced Settings" class="w-full max-w-sm mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                            <li>Outlook sẽ hiển thị thêm các trường thông số nâng cao. Bật nút gạt "Show Advanced Settings" (Hiện Cài đặt Nâng cao) và điền các thông số sau:
+                                <ul class="list-disc list-inside space-y-1 text-gray-800 ml-6 mt-1">
+                                    <li>IMAP Incoming Server: `mail.mailix.vn`, Port: `993`, Use SSL to connect (recommended).</li>
+                                    <li>SMTP Outgoing Server: `mail.mailix.vn`, Port: `465`, Use SSL to connect (recommended).</li>
+                                    <li>Nhập lại Mật khẩu IMAP và Mật khẩu SMTP của bạn.</li>
+                                </ul>
+                                Nhấn "Add Account" (Thêm Tài khoản).
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/Screenshot-2025-10-20-at-14.57.05.png" alt="Bước 6: Điền thông số Server IMAP/SMTP" class="w-full max-w-sm mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                            <li>Sau khi thiết lập thành công, màn hình sẽ hiển thị thông báo "IMAP account has been added". Chọn "Skip for now" (Bỏ qua bây giờ) để hoàn tất.
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/Screenshot-2025-10-20-at-14.57.42.png" alt="Bước 7: Hoàn tất thiết lập và chọn Skip for now" class="w-full max-w-sm mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- Setup Windows -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 flex items-center mb-3 border-b pb-2">
+                            <i data-lucide="monitor" class="w-5 h-5 mr-2 text-primary-blue"></i>
+                            2.2. Thiết lập trên Windows
+                        </h3>
+                        <ol class="list-decimal list-inside space-y-3 text-gray-700 ml-4">
+                            <li>Mở Outlook. Nhập địa chỉ email của bạn, sau đó chọn "Tùy chọn nâng cao" (Advanced options).</li>
+                            <li>Tích chọn hộp "Cho phép tôi thiết lập tài khoản của mình theo cách thủ công" (Let me set up my account manually).</li>
+                            <li>Nhấn "Kết nối" (Connect).</li>
+                            <li>Chọn loại tài khoản: Chọn IMAP.
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/z7136835643951_130de4ca92cf1ed3ea78b26039d7be14.jpg" alt="Bước 4: Chọn loại tài khoản IMAP trên Windows" class="w-full max-w-sm mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                            <li>Nhập Thông tin Cấu hình: Điền đầy đủ các thông số sau (chọn SSL/TLS cho phương thức Mã hóa):
+                                <ul class="list-disc list-inside text-gray-600 ml-6 mt-1">
+                                    <li>Thư đến (IMAP): Server: `mail.mailix.vn`, Port: `993`, Mã hóa: SSL/TLS.</li>
+                                    <li>Thư đi (SMTP): Server: `mail.mailix.vn`, Port: `465`, Mã hóa: SSL/TLS.</li>
+                                </ul>
+                                <div class="image-step-container my-3">
+                                    <img src="https://mailix.vn/wp-content/uploads/2025/10/z7136782973591_111cc6f2fe98c8bd62306799768e680a.jpg" alt="Cấu hình IMAP trên Windows" class="rounded-lg shadow-xl border border-gray-200"/>
+                                    <img src="https://mailix.vn/wp-content/uploads/2025/10/z7136783675805_abdffdc1918f6c57645de46b01406aaa.jpg" alt="Cấu hình SMTP trên Windows" class="rounded-lg shadow-xl border border-gray-200"/>
+                                </div>
+                            </li>
+                            <li>Nhấn "Tiếp theo" (Next), nhập mật khẩu và hoàn tất quá trình thiết lập.</li>
+                        </ol>
+                    </div>
+                    
+                    <!-- Setup Mobile -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 flex items-center mb-3 border-b pb-2">
+                            <i data-lucide="smartphone" class="w-5 h-5 mr-2 text-primary-blue"></i>
+                            2.3. Thiết lập trên Di động (iOS/Android)
+                        </h3>
+                        <ol class="list-decimal list-inside space-y-3 text-gray-700 ml-4">
+                            <li>Mở ứng dụng Outlook trên thiết bị di động. Nhấn vào biểu tượng tài khoản (Avatar) ở góc trên bên trái.
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/z7136584722720_3674c9e584c95d65e4bbbc1093fd23a8-scaled.jpg" alt="Bước 1: Màn hình hộp thư đến trên Outlook Mobile" class="w-full max-w-xs mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                            <li>Bấm vào biểu tượng Thêm (+) hoặc chọn "Add Email Account" (Thêm Địa chỉ Email).
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/IMG_2917-scaled.png" alt="Bước 2: Chọn Thêm Địa chỉ Email trên Mobile" class="w-full max-w-xs mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                            <li>Outlook có thể tự động tìm thấy các tài khoản cũ. Nhấn "Skip" (Bỏ qua) ở dưới cùng nếu bạn không muốn thêm các tài khoản đó.
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/z7136584747259_46cf10ea9fb75c87ec6ee6e323fa5a67-scaled.jpg" alt="Bước 3: Bỏ qua tài khoản đã tìm thấy" class="w-full max-w-xs mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                            <li>Nhập địa chỉ Email Mailix của bạn (ví dụ: `demo@mailix.vn`) và nhấn "Add Account" (Thêm Tài khoản).
+                                <img src="https://mailix.vn/wp-content/uploads/2025/10/IMG_2919-scaled.png" alt="Bước 4: Nhập địa chỉ email và Add Account" class="w-full max-w-xs mx-auto my-3 rounded-lg shadow-xl border border-gray-200"/>
+                            </li>
+                            <li>Nhập thông tin chi tiết IMAP và SMTP: Điền các thông tin cấu hình thủ công như sau:
+                                <ul class="list-disc list-inside space-y-1 text-gray-800 ml-6 mt-1">
+                                    <li>IMAP Hostname: `mail.mailix.vn`, IMAP Port: `993`, Port Security: SSL.</li>
+                                    <li>SMTP Hostname: `mail.mailix.vn`, SMTP Port: `465`, Port Security: SSL.</li>
+                                    <li>IMAP Username/Password và SMTP Username/Password: Sử dụng thông tin đăng nhập Mailix của bạn.</li>
+                                </ul>
+                                <div class="image-step-container my-3">
+                                    <img src="https://mailix.vn/wp-content/uploads/2025/10/IMG_2920-scaled.png" alt="Điền thông số IMAP" class="rounded-lg shadow-xl border border-gray-200"/>
+                                    <img src="https://mailix.vn/wp-content/uploads/2025/10/IMG_2921-scaled.png" alt="Điền thông số SMTP và Đăng nhập" class="rounded-lg shadow-xl border border-gray-200"/>
+                                </div>
+                            </li>
+                            <li>Nhấn "Sign In" (Đăng nhập) và hoàn tất quá trình thiết lập.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+             <!-- Section 3: Sử Dụng Cơ Bản -->
+            <section id="su-dung" class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-green-500">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+                    <i data-lucide="send" class="w-6 h-6 mr-3 text-green-500"></i>
+                    3. Hướng Dẫn Sử Dụng Cơ Bản
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-green-50 p-4 rounded-lg shadow-sm">
+                        <h3 class="font-semibold text-lg text-green-800 mb-2">Chức Năng Chính</h3>
+                        <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
+                            <li>Mail (Thư): Khu vực chính để xem, soạn, và sắp xếp thư.</li>
+                            <li>Calendar (Lịch): Quản lý cuộc hẹn và sự kiện.</li>
+                            <li>People (Danh bạ): Quản lý danh sách liên hệ của bạn.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-lg shadow-sm">
+                        <h3 class="font-semibold text-lg text-green-800 mb-2">Soạn và Gửi Thư</h3>
+                        <ol class="list-decimal list-inside space-y-1 text-gray-700 ml-4">
+                            <li>Nhấp vào nút "Thư Mới" (New Email).</li>
+                            <li>Nhập địa chỉ người nhận vào trường "To".</li>
+                            <li>Nhập chủ đề thư vào trường "Subject".</li>
+                            <li>Nhấn biểu tượng Kẹp giấy (Attach File) để đính kèm tệp.</li>
+                            <li>Nhấn "Send" (Gửi).</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <p class="mt-4 italic text-sm text-gray-600">
+                    Mọi email gửi đi từ Outlook sẽ được chuyển qua Máy chủ Thư đi (SMTP) mà bạn đã cấu hình.
+                </p>
+            </section>
+
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-200 p-4 text-center text-sm text-gray-600 rounded-b-xl">
+            © 2025 Hướng dẫn Thiết lập Email Mailix
+        </footer>
+
+    </div>
+
+</body>
+</html>

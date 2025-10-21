@@ -197,8 +197,8 @@ const guideMenu = ref([
         slot: 'tip',
         disabled: true
     }],
-    [{ link: '/guide', label: t('Mail'), click: () => {} },
-    { link: '/setting', label: t('App'), click: () => {} }],
+    [{ link: '/guide-mail', label: t('Mail'), click: () => {} },
+    { link: '/guide-app', label: t('App'), click: () => {} }],
 ]) 
 const submenuMap = {
   crm: crmSubmenu,

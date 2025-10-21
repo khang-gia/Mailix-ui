@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng Dẫn Tạo Người Dùng Mới (Nhân sự, Liên hệ, Khách hàng)</title>
+    <!-- Tải Tailwind CSS & Icon (Lucide Icons) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Cấu hình Tailwind cho font Inter -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        // Định nghĩa màu sắc cho từng phân hệ để dễ nhận diện
+                        'mailix-primary': '#047857', // Xanh lục đậm (Nhân sự)
+                        'mailix-contact': '#2563eb', // Xanh dương đậm (Liên hệ)
+                        'mailix-customer': '#dc2626', // Đỏ đậm (Khách hàng)
+                        'mailix-job': '#ea580c', // Cam đậm (Công việc)
+                        'mailix-schedule': '#0d9488', // Xanh ngọc đậm (Lập lịch)
+                        'mailix-group': '#d97706', // Vàng/Cam (Nhóm)
+                        'mailix-dept': '#6d28d9', // Tím đậm (Phòng ban)
+                        'mailix-bg': '#f9fafb', // Nền sáng hơn
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Tùy chỉnh nhỏ để đảm bảo font Inter được sử dụng */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--mailix-bg); 
+        }
+        /* Style cho các bước hướng dẫn (tối ưu UX) */
+        .step-card {
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+            cursor: default; 
+        }
+        .step-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Tối ưu hóa nút tab */
+        .tab-button {
+            white-space: nowrap; 
+            min-width: 120px; /* Tăng kích thước tối thiểu */
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        /* Ẩn nội dung tab mặc định */
+        .tab-content {
+            display: none;
+        }
+        /* Custom class cho header theo hình mẫu */
+        .header-nav-item {
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+        }
+        .header-nav-item.active {
+            color: #1e40af; /* Màu xanh đậm cho active */
+            border-bottom: 2px solid #1e40af;
+        }
+        /* Đảm bảo nội dung chính không bị header cố định che mất */
+        main {
+            /* Giảm padding-top từ 140px xuống 20px vì thanh tab đã bị xóa */
+            padding-top: 20px; 
+            margin-top: 138px; /* Đẩy nội dung chính xuống dưới Header Nav 2 dòng (14 * 2 = 112px + 26px) */
+        }
+        
+        /* Dropdown Link Style */
+        .dropdown-link:hover {
+            color: #1e40af; /* Blue hover for links */
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-mailix-bg text-gray-800">
+    
+    <!-- HEADER MỚI - Phản ánh 7 Phân hệ tạo mới -->
+    <header class="fixed top-0 left-0 w-full z-20 bg-white shadow-md">
+        
+        <!-- Dòng 1: Tên Tài liệu Hướng dẫn (Đã đổi tên) -->
+        <div class="border-b border-gray-200">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
+                <h1 class="text-xl font-bold text-gray-900">
+                    Hướng dẫn
+                </h1>
+                <div class="flex space-x-4 text-sm text-gray-500">
+                    <a href="#" class="hover:text-blue-700">Tài liệu</a>
+                    <a href="#" class="hover:text-blue-700">Phản hồi</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dòng 2: Mục điều hướng chính -->
+        <div class="border-b border-gray-200">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex">
+                <a href="#nhan-su" id="header-nav-active" onclick="openTab('nhan-su', true)" class="header-nav-item active text-blue-700">Tạo mới</a>
+                
+                <!-- Tab Phân hệ (Dropdown) -->
+                <div class="header-nav-item text-gray-700 hover:text-blue-700 relative group">
+                    <span class="flex items-center">
+                        Các Phân hệ
+                        <i data-lucide="chevron-down" class="w-4 h-4 ml-1 transition-transform duration-200 group-hover:rotate-180"></i>
+                    </span>
+                    <!-- Dropdown Content (Phân nhóm 7 Phân hệ) -->
+                    <div class="absolute left-0 top-full mt-0 pt-3 hidden group-hover:block w-[550px] bg-white shadow-xl rounded-lg border border-gray-100 z-30">
+                        <div class="grid grid-cols-3 gap-4 p-5">
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-2">QUẢN LÝ NHÂN SỰ (HRM)</h4>
+                                <ul class="space-y-1 text-sm text-gray-700">
+                                    <li class="rounded-md dropdown-link px-2 py-1 cursor-pointer" onclick="openTab('nhan-su')">
+                                        <i data-lucide="users" class="w-4 h-4 mr-1 inline text-mailix-primary"></i> Nhân sự
+                                    </li>
+                                    <li class="rounded-md dropdown-link px-2 py-1 cursor-pointer" onclick="openTab('phong-ban')">
+                                        <i data-lucide="building" class="w-4 h-4 mr-1 inline text-mailix-dept"></i> Phòng ban
+                                    </li>
+                                    <li class="rounded-md dropdown-link px-2 py-1 cursor-pointer" onclick="openTab('nhom')">
+                                        <i data-lucide="group" class="w-4 h-4 mr-1 inline text-mailix-group"></i> Nhóm
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-2">QUẢN LÝ TÁC NGHIỆP (WORKFLOW)</h4>
+                                <ul class="space-y-1 text-sm text-gray-700">
+                                    <li class="rounded-md dropdown-link px-2 py-1 cursor-pointer" onclick="openTab('cong-viec')">
+                                        <i data-lucide="check-square" class="w-4 h-4 mr-1 inline text-mailix-job"></i> Công việc
+                                    </li>
+                                    <li class="rounded-md dropdown-link px-2 py-1 cursor-pointer" onclick="openTab('lap-lich')">
+                                        <i data-lucide="calendar" class="w-4 h-4 mr-1 inline text-mailix-schedule"></i> Lập lịch
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-2">QUẢN LÝ KHÁCH HÀNG (CRM)</h4>
+                                <ul class="space-y-1 text-sm text-gray-700">
+                                    <li class="rounded-md dropdown-link px-2 py-1 cursor-pointer" onclick="openTab('khach-hang')">
+                                        <i data-lucide="building-2" class="w-4 h-4 mr-1 inline text-mailix-customer"></i> Khách hàng
+                                    </li>
+                                    <li class="rounded-md dropdown-link px-2 py-1 cursor-pointer" onclick="openTab('lien-he')">
+                                        <i data-lucide="phone-call" class="w-4 h-4 mr-1 inline text-mailix-contact"></i> Liên hệ
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- Tiêu đề (Đã được chỉnh sửa để không trùng với Header) -->
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-6 pb-2 border-b border-gray-200">
+            Tạo Mới Hồ sơ & Dữ liệu trong Mailix
+        </h1>
+
+        <!-- Tab Content Container -->
+        <div class="bg-white p-6 rounded-xl shadow-xl mt-0 mb-8">
+            
+            <!-- ============================================== -->
+            <!-- NỘI DUNG 1: HƯỚNG DẪN TẠO HỒ SƠ NHÂN SỰ MỚI -->
+            <!-- ============================================== -->
+
+            <div id="tab-content-nhan-su" role="tabpanel" class="tab-content space-y-6">
+                <h3 class="text-2xl font-extrabold text-gray-900 mb-6 pb-2 border-b border-gray-200">1. Hướng dẫn Tạo Hồ sơ Nhân sự mới</h3>
+                
+                <!-- Bước 1 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-primary">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-primary text-white mr-3 text-sm font-extrabold">1</span>
+                        Bước 1: Truy cập màn hình Tạo hồ sơ Nhân sự mới
+                    </h4>
+                    <ol class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Vào mục Nhân sự:</span> Trên menu bên trái của ứng dụng, chọn mục "Nhân sự".</li>
+                        <li><span class="font-semibold">Mở Danh sách Nhân sự:</span> Màn hình danh sách nhân sự sẽ hiển thị.</li>
+                        <li><span class="font-semibold">Thêm hồ sơ mới:</span> Tìm và nhấp vào nút hoặc tùy chọn cho phép bạn thêm một hồ sơ mới (thường là một biểu tượng hoặc nút "Thêm mới").</li>
+                        <li>Bạn sẽ được chuyển đến giao diện <span class="font-semibold">"Tạo hồ sơ nhân sự mới"</span>.</li>
+                    </ol>
+                </div>
+
+                <!-- Bước 2 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-primary">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-primary text-white mr-3 text-sm font-extrabold">2</span>
+                        Bước 2: Nhập Thông tin Cá nhân (Phần 1)
+                    </h4>
+                    <p class="text-gray-600 mb-3 italic">Tập trung vào dữ liệu cá nhân cơ bản.</p>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Người quản lý trực tiếp:</span> Chọn tên người quản lý.</li>
+                        <li><span class="font-semibold">Mã nhân sự (Bắt buộc):</span> Nhập mã số định danh.</li>
+                        <li><span class="font-semibold">Họ và tên (Bắt buộc):</span> Nhập đầy đủ họ và tên.</li>
+                        <li><span class="font-semibold">Ngày sinh, Giới tính, Nơi sinh:</span> Điền thông tin cá nhân cơ bản.</li>
+                        <li><span class="font-semibold">Quốc tịch, Dân tộc, Tôn giáo:</span> Chọn hoặc nhập các thông tin liên quan.</li>
+                        <li><span class="font-semibold">Mã số thuế cá nhân:</span> Nhập mã số thuế cá nhân (nếu có).</li>
+                        <li><span class="font-semibold">Trình độ:</span> Điền các thông tin về trình độ phổ thông, học vấn và số năm kinh nghiệm.</li>
+                    </ul>
+                </div>
+
+                <!-- Bước 3 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-primary">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-primary text-white mr-3 text-sm font-extrabold">3</span>
+                        Bước 3: Nhập Thông tin Giấy tờ và Liên hệ (Phần 2)
+                    </h4>
+                    <div class="space-y-4">
+                        <div class="p-3 bg-gray-100 rounded-lg">
+                            <p class="font-semibold text-gray-800 mb-1">3.1. Thông tin CMT/CCCD</p>
+                            <ul class="list-disc ml-6 text-sm text-gray-600 space-y-1">
+                                <li><span class="font-semibold">Số CMT/CCCD, Ngày cấp, Nơi cấp:</span> Nhập thông tin chi tiết.</li>
+                                <li><span class="font-semibold">Ảnh CMT/CCCD:</span> Tải lên ảnh mặt trước và mặt sau của giấy tờ tùy thân.</li>
+                            </ul>
+                        </div>
+                        <div class="p-3 bg-gray-100 rounded-lg">
+                            <p class="font-semibold text-gray-800 mb-1">3.2. Thông tin liên hệ</p>
+                            <ul class="list-disc ml-6 text-sm text-gray-600 space-y-1">
+                                <li><span class="font-semibold">Điện thoại, Email cá nhân:</span> Nhập các phương thức liên lạc.</li>
+                                <li><span class="font-semibold">Ảnh đại diện:</span> Tải lên ảnh đại diện cá nhân.</li>
+                                <li><span class="font-semibold">Thường trú, Chỗ ở hiện tại:</span> Nhập các địa chỉ cư trú.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bước 4 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-primary">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-primary text-white mr-3 text-sm font-extrabold">4</span>
+                        Bước 4: Nhập Thông tin Hợp đồng/Công việc (Phần 3)
+                    </h4>
+                    <p class="text-gray-600 mb-3 italic">Thiết lập vị trí và điều khoản làm việc.</p>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Chức vụ:</span> Chọn chức vụ của nhân sự.</li>
+                        <li><span class="font-semibold">Phòng ban (Bắt buộc):</span> Chọn phòng ban mà nhân sự này trực thuộc.</li>
+                        <li><span class="font-semibold">Loại lao động:</span> Chọn loại hợp đồng lao động (chính thức, thử việc, v.v.).</li>
+                        <li><span class="font-semibold">Ngày vào:</span> Chọn ngày chính thức nhân sự bắt đầu làm việc.</li>
+                        <li><span class="font-semibold">Ngày ký hợp đồng chính thức:</span> Chọn ngày ký (nếu có).</li>
+                    </ul>
+                </div>
+
+                <!-- Bước 5 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-primary">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-primary text-white mr-3 text-sm font-extrabold">5</span>
+                        Bước 5: Hoàn tất
+                    </h4>
+                    <p class="text-gray-600 mb-3">Sau khi điền đầy đủ và kiểm tra lại thông tin:</p>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li>Nhấp vào nút <span class="font-semibold">"Lưu"</span> ở góc dưới bên phải màn hình để hoàn tất việc tạo hồ sơ nhân sự mới.</li>
+                        <li>Để hủy bỏ, nhấp vào nút <span class="font-semibold">"Hủy"</span>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- NỘI DUNG 2: HƯỚNG DẪN TẠO LIÊN HỆ MỚI -->
+            <!-- ============================================== -->
+
+            <div id="tab-content-lien-he" role="tabpanel" class="tab-content space-y-6">
+                <h3 class="text-2xl font-extrabold text-gray-900 mb-6 pb-2 border-b border-gray-200">2. Hướng dẫn Tạo Liên hệ mới</h3>
+
+                <!-- Bước L.1 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-contact">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-contact text-white mr-3 text-sm font-extrabold">L.1</span>
+                        Bước 1: Truy cập màn hình Tạo Liên hệ mới
+                    </h4>
+                    <ol class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Vào mục Liên hệ:</span> Trên menu bên trái của ứng dụng, chọn mục "Liên hệ" (Contact).</li>
+                        <li><span class="font-semibold">Mở Danh sách Liên hệ:</span> Màn hình danh sách liên hệ sẽ hiển thị.</li>
+                        <li><span class="font-semibold">Thêm liên hệ mới:</span> Tìm và nhấp vào nút hoặc tùy chọn "Thêm mới" để mở giao diện <span class="font-semibold">"Tạo mới Liên hệ"</span>.</li>
+                    </ol>
+                </div>
+
+                <!-- Bước L.2 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-contact">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-contact text-white mr-3 text-sm font-extrabold">L.2</span>
+                        Bước 2: Nhập Thông tin Liên hệ cơ bản
+                    </h4>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Họ và tên (Bắt buộc):</span> Nhập đầy đủ họ và tên liên hệ.</li>
+                        <li><span class="font-semibold">Mã khách hàng (Bắt buộc):</span> Chọn mã khách hàng mà liên hệ này thuộc về.</li>
+                        <li><span class="font-semibold">Ngày sinh, Giới tính:</span> Điền các thông tin cá nhân cơ bản.</li>
+                        <li><span class="font-semibold">Điện thoại, Email:</span> Nhập thông tin liên lạc chính.</li>
+                        <li><span class="font-semibold">Địa chỉ:</span> Nhập địa chỉ cụ thể của liên hệ.</li>
+                        <li><span class="font-semibold">Mã số thuế, SỐ CMND/CCCD:</span> Điền các thông tin giấy tờ nếu cần.</li>
+                        <li><span class="font-semibold">Người phụ trách:</span> Chọn người phụ trách liên hệ này trong nội bộ công ty.</li>
+                        <li><span class="font-semibold">Loại liên hệ, Danh xưng, Mã số:</span> Điền hoặc chọn các thông tin phân loại liên hệ.</li>
+                    </ul>
+                </div>
+
+                <!-- Bước L.3 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-contact">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-contact text-white mr-3 text-sm font-extrabold">L.3</span>
+                        Bước 3: Nhập Thông tin Bổ sung
+                    </h4>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Cá nhân, Nguồn liên hệ, Tông đồ:</span> Điền hoặc chọn các trường phân loại phụ theo yêu cầu quản lý.</li>
+                        <li><span class="font-semibold">Nguyên, Mô tả:</span> Điền các thông tin bổ sung và mô tả chi tiết về liên hệ này.</li>
+                        <li><span class="font-semibold">Hoàn tất:</span> Nhấn nút "Lưu" để hoàn tất việc tạo Liên hệ mới.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- NỘI DUNG 3: HƯỚNG DẪN TẠO KHÁCH HÀNG MỚI -->
+            <!-- ============================================== -->
+
+            <div id="tab-content-khach-hang" role="tabpanel" class="tab-content space-y-6">
+                <h3 class="text-2xl font-extrabold text-gray-900 mb-6 pb-2 border-b border-gray-200">3. Hướng dẫn Tạo Khách hàng mới</h3>
+
+                <!-- Bước KH.1 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-customer">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-customer text-white mr-3 text-sm font-extrabold">KH.1</span>
+                        Bước 1: Truy cập màn hình Tạo Khách hàng mới
+                    </h4>
+                    <ol class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Vào mục Khách hàng:</span> Trên menu bên trái của ứng dụng, chọn mục "Khách hàng" (Customer).</li>
+                        <li><span class="font-semibold">Mở Danh sách Khách hàng:</span> Màn hình danh sách khách hàng sẽ hiển thị.</li>
+                        <li><span class="font-semibold">Thêm khách hàng mới:</span> Tìm và nhấp vào nút hoặc tùy chọn "Thêm mới" để mở giao diện <span class="font-semibold">"Tạo mới Khách hàng"</span>.</li>
+                    </ol>
+                </div>
+
+                <!-- Bước KH.2 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-customer">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-customer text-white mr-3 text-sm font-extrabold">KH.2</span>
+                        Bước 2: Nhập Thông tin Khách hàng cơ bản
+                    </h4>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Họ và tên (Bắt buộc):</span> Nhập tên khách hàng (công ty hoặc cá nhân).</li>
+                        <li><span class="font-semibold">Mã khách hàng (Bắt buộc):</span> Nhập mã số định danh cho khách hàng.</li>
+                        <li><span class="font-semibold">Ngày sinh, Giới tính:</span> Điền nếu khách hàng là cá nhân.</li>
+                        <li><span class="font-semibold">Điện thoại, Email, Địa chỉ:</span> Nhập thông tin liên hệ và địa chỉ chính.</li>
+                        <li><span class="font-semibold">Mã số thuế, SỐ CMND/CCCD:</span> Điền các thông tin giấy tờ/mã số doanh nghiệp.</li>
+                        <li><span class="font-semibold">Người phụ trách:</span> Chọn người phụ trách khách hàng này trong nội bộ.</li>
+                        <li><span class="font-semibold">Loại khách hàng, Nhóm khách hàng:</span> Phân loại khách hàng (Ví dụ: Cá nhân/Tổ chức, Nhóm tiềm năng mới).</li>
+                        <li><span class="font-semibold">Cá nhân, Nguồn khách hàng:</span> Điền các trường phân loại phụ khác (nếu có).</li>
+                        <li><span class="font-semibold">Hoàn tất:</span> Nhấn nút "Lưu" để hoàn tất việc tạo Khách hàng mới.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- NỘI DUNG 4: HƯỚNG DẪN TẠO CÔNG VIỆC MỚI -->
+            <!-- ============================================== -->
+
+            <div id="tab-content-cong-viec" role="tabpanel" class="tab-content space-y-6">
+                <h3 class="text-2xl font-extrabold text-gray-900 mb-6 pb-2 border-b border-gray-200">4. Hướng dẫn Tạo Công việc mới</h3>
+
+                <!-- Bước CV.1 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-job">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-job text-white mr-3 text-sm font-extrabold">CV.1</span>
+                        Bước 1: Truy cập màn hình Tạo Công việc mới
+                    </h4>
+                    <ol class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Vào mục Công việc:</span> Trên menu bên trái của ứng dụng, chọn mục "Công việc" (Task).</li>
+                        <li><span class="font-semibold">Mở Danh sách Công việc:</span> Màn hình danh sách công việc sẽ hiển thị.</li>
+                        <li><span class="font-semibold">Thêm công việc mới:</span> Tìm và nhấp vào tùy chọn "Thêm mới" hoặc tương đương để mở giao diện <span class="font-semibold">"Tạo công việc"</span>.</li>
+                    </ol>
+                </div>
+
+                <!-- Bước CV.2 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-job">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-job text-white mr-3 text-sm font-extrabold">CV.2</span>
+                        Bước 2: Nhập Thông tin Công việc bắt buộc
+                    </h4>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Tên công việc:</span> Nhập tên mô tả công việc.</li>
+                        <li><span class="font-semibold">Mã công việc (Bắt buộc):</span> Nhập mã số định danh cho công việc.</li>
+                        <li><span class="font-semibold">Người thực hiện & Người giao:</span> Chọn nhân sự phụ trách thực hiện và người giao việc.</li>
+                        <li><span class="font-semibold">Ngày bắt đầu (Bắt buộc) & Ngày kết thúc:</span> Chọn ngày bắt đầu và kết thúc theo kế hoạch.</li>
+                        <li><span class="font-semibold">Quản lý:</span> Chọn người quản lý giám sát công việc này.</li>
+                        <li><span class="font-semibold">Độ ưu tiên:</span> Thiết lập mức độ ưu tiên (Trung bình, Cao, Thấp...).</li>
+                    </ul>
+                </div>
+
+                <!-- Bước CV.3 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-job">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-job text-white mr-3 text-sm font-extrabold">CV.3</span>
+                        Bước 3: Nhập Thông tin bổ sung và Lập lịch
+                    </h4>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Ngày bắt đầu/kết thúc thực tế:</span> Cập nhật nếu công việc đã hoàn thành hoặc đang tiến hành.</li>
+                        <li><span class="font-semibold">Mô tả:</span> Thêm mô tả chi tiết công việc.</li>
+                        <li><span class="font-semibold">Công việc liên quan (cha):</span> Chọn công việc mẹ (nếu đây là công việc con).</li>
+                        <li><span class="font-semibold">Tạo lịch nhắc hẹn:</span> Tích chọn ô này nếu bạn muốn tự động tạo một sự kiện lịch nhắc nhở cho công việc này.</li>
+                        <li><span class="font-semibold">Hoàn tất:</span> Nhấn nút "Lưu" để hoàn tất việc tạo Công việc mới.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- NỘI DUNG 5: HƯỚNG DẪN TẠO LỊCH (SỰ KIỆN) MỚI -->
+            <!-- ============================================== -->
+
+            <div id="tab-content-lap-lich" role="tabpanel" class="tab-content space-y-6">
+                <h3 class="text-2xl font-extrabold text-gray-900 mb-6 pb-2 border-b border-gray-200">5. Hướng dẫn Tạo Sự kiện Lập lịch mới</h3>
+
+                <!-- Bước LL.1 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-schedule">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-schedule text-white mr-3 text-sm font-extrabold">LL.1</span>
+                        Bước 1: Truy cập màn hình Lập lịch
+                    </h4>
+                    <ol class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Vào mục Lập lịch:</span> Trên menu bên trái của ứng dụng, chọn mục "Lập lịch" (Calendar).</li>
+                        <li><span class="font-semibold">Mở lịch:</span> Giao diện lịch (Tháng/Tuần/Ngày) sẽ hiển thị.</li>
+                        <li><span class="font-semibold">Thêm sự kiện mới:</span> Nhấp trực tiếp vào ngày/giờ muốn tạo sự kiện trên lịch, hoặc tìm nút "Thêm mới" để mở cửa sổ/form <span class="font-semibold">"Thêm tiêu đề"</span> (Sự kiện).</li>
+                    </ol>
+                </div>
+
+                <!-- Bước LL.2 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-schedule">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-schedule text-white mr-3 text-sm font-extrabold">LL.2</span>
+                        Bước 2: Nhập Thông tin Sự kiện
+                    </h4>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Thêm tiêu đề:</span> Nhập tên cho sự kiện (Ví dụ: Họp team, Demo sản phẩm, v.v.).</li>
+                        <li><span class="font-semibold">Thời gian:</span> Chọn/Kiểm tra thời gian và ngày diễn ra sự kiện (Thông thường sẽ tự động điền nếu nhấp trực tiếp vào lịch).</li>
+                        <li><span class="font-semibold">Khách mời/Khách hàng:</span> Chọn khách mời hoặc khách hàng liên quan đến sự kiện.</li>
+                        <li><span class="font-semibold">Thông báo đẩy:</span> Thiết lập loại và thời gian thông báo (Ví dụ: Thông báo đẩy, 15 phút trước).</li>
+                        <li><span class="font-semibold">Nhãn & Độ ưu tiên:</span> Chọn màu nhãn để phân loại sự kiện và thiết lập độ ưu tiên.</li>
+                        <li><span class="font-semibold">Thêm nội dung mô tả:</span> Sử dụng công cụ soạn thảo để thêm mô tả chi tiết.</li>
+                        <li><span class="font-semibold">Hoàn tất:</span> Nhấn nút "Lưu" để hoàn tất việc tạo Sự kiện Lập lịch.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- ============================================== -->
+            <!-- NỘI DUNG 6: HƯỚNG DẪN TẠO NHÓM MỚI -->
+            <!-- ============================================== -->
+
+            <div id="tab-content-nhom" role="tabpanel" class="tab-content space-y-6">
+                <h3 class="text-2xl font-extrabold text-gray-900 mb-6 pb-2 border-b border-gray-200">6. Hướng dẫn Tạo Nhóm mới</h3>
+
+                <!-- Bước N.1 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-group">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-group text-white mr-3 text-sm font-extrabold">N.1</span>
+                        Bước 1: Truy cập màn hình Tạo Nhóm mới
+                    </h4>
+                    <ol class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Vào mục Nhóm:</span> Trên menu bên trái của ứng dụng (dưới mục Công ty), chọn "Nhóm" (Group).</li>
+                        <li><span class="font-semibold">Mở Danh sách Nhóm:</span> Màn hình danh sách nhóm sẽ hiển thị.</li>
+                        <li><span class="font-semibold">Thêm nhóm mới:</span> Tìm và nhấp vào tùy chọn "Thêm mới" hoặc tương đương để mở giao diện <span class="font-semibold">"Tạo nhóm"</span>.</li>
+                    </ol>
+                </div>
+
+                <!-- Bước N.2 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-group">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-group text-white mr-3 text-sm font-extrabold">N.2</span>
+                        Bước 2: Nhập Thông tin Nhóm
+                    </h4>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Tên nhóm (Bắt buộc):</span> Nhập tên nhóm.</li>
+                        <li><span class="font-semibold">Mã (Bắt buộc):</span> Nhập mã số định danh cho nhóm.</li>
+                        <li><span class="font-semibold">Tài nguyên:</span> Chọn các tài nguyên mà nhóm này sẽ quản lý hoặc sử dụng (ví dụ: dự án, khách hàng, v.v.).</li>
+                        <li><span class="font-semibold">Mô tả:</span> Thêm mô tả chi tiết về mục đích của nhóm.</li>
+                        <li><span class="font-semibold">Hoàn tất:</span> Nhấn nút "Lưu" để hoàn tất việc tạo Nhóm mới.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- ============================================== -->
+            <!-- NỘI DUNG 7: HƯỚNG DẪN TẠO PHÒNG BAN MỚI -->
+            <!-- ============================================== -->
+
+            <div id="tab-content-phong-ban" role="tabpanel" class="tab-content space-y-6">
+                <h3 class="text-2xl font-extrabold text-gray-900 mb-6 pb-2 border-b border-gray-200">7. Hướng dẫn Tạo Phòng ban mới</h3>
+
+                <!-- Bước PB.1 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-dept">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-dept text-white mr-3 text-sm font-extrabold">PB.1</span>
+                        Bước 1: Truy cập màn hình Tạo Phòng ban mới
+                    </h4>
+                    <ol class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Vào mục Phòng ban:</span> Trên menu bên trái của ứng dụng (dưới mục Công ty), chọn "Phòng ban" (Department).</li>
+                        <li><span class="font-semibold">Mở Danh sách Phòng ban:</span> Màn hình danh sách phòng ban sẽ hiển thị.</li>
+                        <li><span class="font-semibold">Thêm phòng ban mới:</span> Tìm và nhấp vào tùy chọn "Thêm mới" hoặc tương đương để mở giao diện <span class="font-semibold">"Tạo mới phòng ban"</span>.</li>
+                    </ol>
+                </div>
+
+                <!-- Bước PB.2 -->
+                <div class="step-card bg-mailix-bg p-6 rounded-xl border-l-4 border-mailix-dept">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-mailix-dept text-white mr-3 text-sm font-extrabold">PB.2</span>
+                        Bước 2: Nhập Thông tin Phòng ban
+                    </h4>
+                    <ul class="list-disc ml-8 space-y-2 text-gray-600">
+                        <li><span class="font-semibold">Tên phòng ban (Bắt buộc):</span> Nhập tên phòng ban.</li>
+                        <li><span class="font-semibold">Mã phòng ban (Bắt buộc):</span> Nhập mã số định danh cho phòng ban.</li>
+                        <li><span class="font-semibold">Thuộc phòng ban (Phòng ban cha):</span> Chọn phòng ban cấp trên (nếu có).</li>
+                        <li><span class="font-semibold">Vị trí:</span> Nhập vị trí làm việc của phòng ban.</li>
+                        <li><span class="font-semibold">Loại phòng ban & Khối nghiệp vụ:</span> Chọn các phân loại liên quan.</li>
+                        <li><span class="font-semibold">Nhóm:</span> Liên kết phòng ban này với một Nhóm đã tạo.</li>
+                        <li><span class="font-semibold">Mô tả:</span> Thêm mô tả chi tiết về chức năng của phòng ban.</li>
+                        <li><span class="font-semibold">Hoàn tất:</span> Nhấn nút "Lưu" để hoàn tất việc tạo Phòng ban mới.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div> <!-- End Tab Content Container -->
+
+    </main>
+
+    <script>
+        function openTab(tabId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            // Ẩn tất cả nội dung tab
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+            });
+
+            // Hiển thị nội dung tab được chọn
+            const activeContent = document.getElementById(`tab-content-${tabId}`);
+            if (activeContent) {
+                activeContent.style.display = 'block';
+            }
+
+            // Cập nhật tiêu đề tab active trên Header Nav Dòng 2
+            const activeHeaderLink = document.getElementById('header-nav-active');
+            if (activeHeaderLink) {
+                // Lấy tên tab/phân hệ để cập nhật tiêu đề Header Nav
+                const tabNames = {
+                    'nhan-su': 'Nhân sự',
+                    'lien-he': 'Liên hệ',
+                    'khach-hang': 'Khách hàng',
+                    'cong-viec': 'Công việc',
+                    'lap-lich': 'Lập lịch',
+                    'nhom': 'Nhóm',
+                    'phong-ban': 'Phòng ban'
+                };
+                const tabName = tabNames[tabId] || 'Tạo mới';
+                
+                // Cập nhật text và hash để giữ trạng thái active
+                activeHeaderLink.textContent = tabName;
+                activeHeaderLink.href = `#${tabId}`;
+
+                // Thêm/Xóa class active để đảm bảo nó vẫn sáng
+                activeHeaderLink.classList.add('active', 'text-blue-700');
+                
+                // Cập nhật tiêu đề trang chính (Main H1)
+                const mainTitle = document.querySelector('main h1');
+                if (mainTitle) {
+                    mainTitle.textContent = `Tạo Mới Hồ sơ ${tabName} & Dữ liệu trong Mailix`;
+                }
+            }
+            
+            // Re-render lucide icons
+            lucide.createIcons();
+        }
+
+        // Khởi tạo tab đầu tiên (Nhân sự) khi tải trang
+        window.onload = function () {
+            // Kiểm tra hash trong URL để mở tab tương ứng (nếu có)
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(`tab-content-${hash}`)) {
+                openTab(hash);
+            } else {
+                openTab('nhan-su');
+            }
+            // Khởi tạo icon ban đầu
+            lucide.createIcons();
+        };
+    </script>
+
+</body>
+</html>
