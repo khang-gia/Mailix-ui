@@ -11,7 +11,7 @@
 @import 'additional-styles/flatpickr.css'; */
 /* @import 'additional-styles/theme.css'; */
 
-@import 'additional-styles/custom.css';
+@import './additional-styles/custom.css';
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 /* Hide scrollbar for Chrome, Safari and Opera */
