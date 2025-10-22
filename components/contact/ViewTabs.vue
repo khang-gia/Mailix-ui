@@ -164,7 +164,6 @@ const contacts = computedAsync(async () => {
   }
   const {data:data } = await useAPI().get('core/customers/', { 
     // customer_company_id: userStore.company.id, 
-    // search: userStore.search, 
     ...params,
     reload: reload.value,
     page: page.value,
@@ -365,7 +364,7 @@ const exportContactList = async () => {
       }
       const response = await useAPI().get(`core/customers/export_contacts/`, { 
         ...params,
-        search: search,
+        search: search.value,
         page: page.value,
         page_size: pageSize.value,
         stage: 1
