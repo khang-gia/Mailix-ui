@@ -5,7 +5,7 @@
         </div> -->
         <h1 class="text-2xl font-medium text-left font-averta text-black">Đăng nhập.</h1>
         <p class="text-center text-gray-500 mb-5"></p>
-        <form v-if="authMode === 'signin'" @submit.stop.prevent="onLoginSubmit" novalidate="novalidate" @submit="_signinNoOTP">
+        <form v-if="authMode === 'signin'" @submit.stop.prevent="onLoginSubmit" novalidate="novalidate" @submit="onPreLogin">
             <div class="relative mb-4">
                 <div class="relative">
                     <input ref="usernameInput" v-model="creds.username" name="username" id="username" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0313B0] pl-10 dark:bg-white text-black" placeholder="Tên đăng nhập">
@@ -100,7 +100,7 @@ const trustDevice = ref(false)
 const snackbar = useMySnackBar()
 const { signIn, status } = useAuth()
 const preSignIn = async (creds) => {
-    const { data, error } = await useAPI().post('/auth/login/', {
+    const { data, error } = await useAPI().post('/auth/pre_login/', {
         username: creds.username,
         password: creds.password,
         withCredentials: true
