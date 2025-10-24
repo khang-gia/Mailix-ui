@@ -357,7 +357,11 @@ const exportWorkList = async () => {
         page_size: pageSize.value,
       });
       if (response && response.data.value) {
-          saveAs(response.data.value, `DANH_SÁCH_CÔNG_VIỆC_${moment().format('DDMMYYYY')}.xlsx`)
+          if (typeof window !== 'undefined') { 
+              saveAs(response.data.value, `DANH_SÁCH_CÔNG_VIỆC_${moment().format('DDMMYYYY')}.xlsx`)
+              return true;
+          }
+          console.warn('file-saver attempted to run outside of a browser environment.');
           return true;
       } else {
           throw new Error(t('Download failed. Please check and try again'));

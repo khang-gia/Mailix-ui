@@ -349,7 +349,11 @@ const exportCustomerList = async () => {
         stage: 2
       });
       if (response && response.data.value) {
-          saveAs(response.data.value, `DANH_SÁCH_KHÁCH_HÀNG_${moment().format('DDMMYYYY')}.xlsx`)
+          if (typeof window !== 'undefined') { 
+              saveAs(response.data.value, `DANH_SÁCH_KHÁCH_HÀNG_${moment().format('DDMMYYYY')}.xlsx`)
+              return true;
+          }
+          console.warn('file-saver attempted to run outside of a browser environment.');
           return true;
       } else {
           throw new Error(t('Download failed. Please check and try again'));
