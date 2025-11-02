@@ -669,6 +669,7 @@ const createProfile = async () => {
 const updateProfile = async () => {
     const profileData = formatData()
     console.log('update profile Data', profileData)
+    console.log('id', useRoute().params)
     try {
         const {data: response} = await useAPI().put(`core/profile_hrs/${useRoute().params.id}/`, profileData);
         console.log('response', response.value)

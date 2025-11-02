@@ -7,7 +7,7 @@
         <div class="flex items-center justify-between">
             <UBreadcrumb
                 :ui="{ ol: 'gap-x-3', li: 'gap-x-3',active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
-                :links="[{ label: $t('Contact List'), to: '/contacts' }, { label: props.isUpdate ? contactInfo.name : $t('Create contact') }]">
+                :links="[{ label: $t('Contact List'), to: '/contacts' }, { label: props.isUpdate ? cloneContactInfo.name: $t('Create contact'), to: props.isUpdate ? `/contacts/${useRoute().params.id}` : ''}, { label: props.isUpdate ? $t('Update') : '' }]">
                 <!-- <template #divider>
                     <span class="w-8 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
                 </template> -->
@@ -48,8 +48,65 @@
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
                 {{ $t('Contact Information') }}
             </h2>
+            <UCard class="m-4" :ui="{
+                rounded: 'rounded-3xl',
+                background: 'bg-blue-100',
+                shadow: 'shadow-lg'
+            }">
+            <div class="flex flex-row items-end">
+                <UForm :schema="schema" :state="contactInfo" class="mx-4 py-2">
+                    <UFormGroup
+                        name="avatar"
+                        >
+                        <CoreImageUpload 
+                            :multiple="false" 
+                            fileTypes=".png, .jpeg, .jpg, image/* "
+                            v-model="contactInfo.avatar"
+                            height="185px"
+                            width="185px"
+                            :rounded="true"
+                        />
+                    </UFormGroup>
+                    
+                </UForm>
+                <UForm :schema="schema" :state="contactInfo" class="py-8 space-y-6 w-1/2">
+                    <UFormGroup
+                        v-slot="{error}"
+                        name="name"
+                        :error="errors.name"
+                        required>
+                        <UInput
+                            variant="none" 
+                            size="2xl"
+                            v-model="contactInfo.name"
+                            :placeholder="$t('Full Name')"
+                            :ui="{ base: 'w-full rounded-lg',
+                                placeholder: error ? 'placeholder-red-500' : 'placeholder-gray-400'
+                             }"/>
+                    </UFormGroup>
+                    <UFormGroup
+                        v-slot="{ error }"
+                        name="customer_code"
+                        :error="errors.customer_code"
+                        required>
+                        <UInput
+                            variant="none" 
+                            size="lg"
+                            v-model="contactInfo.customer_code"
+                            :disabled="props.isUpdate"
+                            :placeholder="$t('Customer Code')"
+                            :ui="{ 
+                                base: 'w-full rounded-lg',
+                                placeholder: error ? 'placeholder-red-500' : 'placeholder-gray-400'
+                                }"/>
+                    </UFormGroup>
+                </UForm>
+            </div>
+            
+            </UCard>
+            
             <UForm :schema="schema" :state="contactInfo" class="mx-4 py-2  grid grid-cols-2 gap-4">
-                <UFormGroup
+                <!-- <UFormGroup
                     v-slot="{error}"
                     :label="$t('Full Name')" 
                     name="name"
@@ -74,7 +131,7 @@
                         :placeholder="$t('Customer Code')"
                         :ui="{ base: 'w-full rounded-lg' }"
                         :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
-                </UFormGroup>
+                </UFormGroup> -->
                 <UFormGroup
                     :label="$t('Dob')"
                     name='dob'>
@@ -87,7 +144,6 @@
                         :place-holder="$t('Dob')"
                     />
                 </UFormGroup>
-                
                 <UFormGroup
                     :label="$t('Gender')"
                     name='gender'>
@@ -354,8 +410,7 @@
 <script setup>
 import * as yup from 'yup'
 import { useI18n } from "vue-i18n";
-import { includes } from 'lodash';
-import { on } from 'events';
+import { forEach } from 'lodash';
 const { t } = useI18n();
 const busy = ref(false)
 const colorMode = useColorMode()
@@ -402,6 +457,7 @@ const props = defineProps({
     },
 })
 const defaultInfo = {
+    avatar: '',
     name: '',
     customer_code: '',
     gender: '',
@@ -430,6 +486,7 @@ const genders = [
     {label: t('Other'), value: 'Other'},
 ]
 const is_correct_data = ref(true)
+const cloneContactInfo = ref({})
 const loadData = async () => {
     try {
         if (props.isUpdate){
@@ -437,6 +494,11 @@ const loadData = async () => {
             const {data: response} = await useAPI().get(`core/customers/${useRoute().params.id}/`);
             contactInfo.value = response.value
             contactInfo.value.dob = contactInfo.value.dob ? new Date(contactInfo.value.dob) : null
+            contactInfo.value.avatar = contactInfo.value.avatar 
+                ? [{ 
+                    preview: contactInfo.value.avatar, 
+                }] 
+                : '';
             const stage = contactInfo.value.stage
             if (contactInfo.value.additional_infos.length == 0){
                 onAddItem()
@@ -444,6 +506,7 @@ const loadData = async () => {
             if (stage === 1){
                 is_correct_data.value = true
             }
+            cloneContactInfo.value = JSON.parse(JSON.stringify(contactInfo.value))
             console.log('currentStage', currentStage)
         }
     } catch (error) {
@@ -587,39 +650,45 @@ const onAddItem = () =>{
 const onDeleteItem = (info) => {
     contactInfo.value.additional_infos = contactInfo.value.additional_infos.filter(item => item !== info);
 };
-const formatData2 = () => {
-    const formattedData = {};
+const formatData = () => {
+    const formData = new FormData();
+
+    // Remove invalid additional_infos
     contactInfo.value.additional_infos = contactInfo.value.additional_infos.filter(
         (item) => item.type_of_contact !== null
     );
     Object.entries(contactInfo.value).forEach(([key, value]) => {
         if (!value) return;
-        if (Array.isArray(value)) {
-            formattedData[key] = value.map(item => {
-                if (typeof item === 'object' && item !== null) {
-                    return item.id || item;
-                }
-                return item;
+        if (['curators'].includes(key)){
+            if (value.length == 0) return;
+            value.forEach((curator) => {
+                formData.append('curators', curator.id || curator); // Append each ID
             });
-        } else if (typeof value === 'object' && value !== null && value.id) {
-            formattedData[key] = value.id;
-        } else if (['dob'].includes(key)) {
-            formattedData[key] = dayjs(value).format('YYYY-MM-DD');
-        }else if (['avatar'].includes(key)){
+        }
+        else if(['additional_infos'].includes(key)){ 
+            if (value.length == 0) return;
+            formData.append(key, JSON.stringify(value));
+        }
+        else if (['dob'].includes(key)) {
+            // Format date fields
+            formData.append(key, dayjs(value).format('YYYY-MM-DD'));
+        } else if (['avatar'].includes(key)) {
             if (value[0] instanceof File) {
-                formattedData[key] = value[0];
-            } else if (value.length == 0) {
-                formattedData[key] = '';
+                formData.append(key, value[0])
+            }
+            else if (value.length == 0){
+                formData.append(key, '')
             }
         } else {
-            formattedData[key] = value;
+            formData.append(key, value);
         }
     });
-    return formattedData;
+    console.log('formData', formData)
+    return formData;
 };
 
 const createContact = async () => {
-    const profileData = formatData2()
+    const profileData = formatData()
     try {
         const {data: response} = await useAPI().post(`core/customers/`, profileData);
         if (response.value && response.value.id) {
@@ -633,7 +702,7 @@ const createContact = async () => {
     }
 }
 const updateContact = async () => {
-    const profileData = formatData2()
+    const profileData = formatData()
     try {
         const {data: response} = await useAPI().put(`core/customers/${useRoute().params.id}/`, profileData);
         if (response.value && response.value.id) {
@@ -648,7 +717,7 @@ const updateContact = async () => {
 }
 
 const convertToCustomer = async () => {
-    const profileData = formatData2()
+    const profileData = formatData()
     try {
         const {data: response} = await useAPI().post(`core/customers/${useRoute().params.id}/convert_to_customer/`, profileData);
         if (response.value && response.value.id) {

@@ -1,8 +1,8 @@
 <template>
   <section>
     <div
-      class="min-h-28 rounded-md border-dotted border-2 border-[#147FE0] text-muted px-3 py-2 block bg-gray-100"
-      v-bind:class="{'border-primary': fileDragOver, 'border-danger': hasError}"
+      class="min-h-28 border-dotted border-2 border-[#147FE0] text-muted px-3 py-2 block bg-gray-100"
+      v-bind:class="{'border-primary': fileDragOver, 'border-danger': hasError, 'rounded-full': rounded, 'rounded-md': !rounded }"
       @drop.prevent="addFile" 
       @dragover.prevent="fileDragOver=true"
       @dragleave.prevent="fileDragOver=false"
@@ -20,7 +20,7 @@
       <h4 v-if="!filesCount && !readonly" class="block mt-4 text-center text-muted">Thả ảnh vào đây hoặc bấm để chọn.</h4>
       <div v-if="filesCount" class="block w-full">
         <div v-for="(selectedFile, $index) in selectedFiles" :key="$index" class="flex flex-col items-center mt-3">
-          <img :src="selectedFile.preview" alt="Uploaded Image" class="max-w-full max-h-40 object-cover rounded-md" />
+          <img :src="selectedFile.preview" alt="Uploaded Image" class="max-w-full max-h-40 object-cover" :class="{ 'rounded-full': rounded,'rounded-md': !rounded  }"/>
           <span v-text="selectedFile.info" class="mx-2 truncate mt-2"></span>
           <span @click.prevent="removeFile($index, $event)" class="text-red-500 pointer mt-2" v-if="!readonly">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zM7 6h10v13H7zm2 2v9h2V8zm4 0v9h2V8z"/></svg>
@@ -47,7 +47,8 @@
         init: { type: Array, default: () => [] },
         hasError: { type: Boolean, default: false },
         width: { type: String, default: '400px' }, // New prop for width
-        height: { type: String, default: '200px' } // New prop for height
+        height: { type: String, default: '200px' }, // New prop for height
+        rounded: { type: Boolean, default: false },
     })
     const selectedFiles = defineModel({ default: () => [] })
     const emit = defineEmits(['on-select', 'on-remove'])

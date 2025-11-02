@@ -181,6 +181,7 @@
     "Customer Code": "Mã khách hàng",
     "Assigned to": "Người phụ trách",
     "Customer Source": "Nguồn khách hàng",
+    "Customer Type": "Loại khách hàng",
     "Customer Group": "Nhóm khách hàng",
     "Type of customer": "Loại khách hàng",
     "Created At": "Ngày tạo",
@@ -446,5 +447,8 @@
     "Import customers": "Tải lên khách hàng",
     "Import Works": "Tải lên công việc",
     "Download failed. Please check and try again": "Tải về thất bại. Vui lòng kiểm tra và thử lại sau",
-    "Guide": "Hướng dẫn"
+    "Guide": "Hướng dẫn",
+    "Contact Detail": "Chi tiết liên hệ",
+    "Basic Information": "Thông tin cơ bản",
+    "Descriptions & Accounting": "Thông tin Kế toán & Mô tả"
 }
