@@ -7,10 +7,7 @@
             <div class="flex items-center justify-between">
                 <UBreadcrumb
                     :ui="{ ol: 'gap-x-3', li: 'gap-x-3',active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
-                    :links="[{ label: $t('Customer List'), to: '/customers' }, { label: props.isUpdate ? customerInfo.name : $t('Create customer') }]">
-                    <!-- <template #divider>
-                        <span class="w-8 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
-                    </template> -->
+                    :links="[{ label: $t('Customer List'), to: '/customers' }, { label: props.isUpdate ? cloneCustomerInfo.name: $t('Create customer'), to: props.isUpdate ? `/customers/${useRoute().params.id}` : ''}, { label: props.isUpdate ? $t('Update') : '' }]">
                 </UBreadcrumb>
                 <div class="flex items-center space-x-2">
                     <UDropdown :items="props.isUpdate ? updateItemDropdown: createItemDropdown" :popper="{ placement: 'bottom-start' }">
@@ -38,8 +35,64 @@
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
                 {{ $t('Customer Information') }}
             </h2>
+            <UCard class="m-4" :ui="{
+                rounded: 'rounded-3xl',
+                background: 'bg-blue-100',
+                shadow: 'shadow-lg'
+            }">
+                <div class="flex flex-row items-end">
+                    <UForm :schema="schema" :state="customerInfo" class="mx-4 py-2">
+                        <UFormGroup
+                            name="avatar"
+                            >
+                            <CoreImageUpload 
+                                :multiple="false" 
+                                fileTypes=".png, .jpeg, .jpg, image/* "
+                                v-model="customerInfo.avatar"
+                                height="185px"
+                                width="185px"
+                                :rounded="true"
+                            />
+                        </UFormGroup>
+                        
+                    </UForm>
+                    <UForm :schema="schema" :state="customerInfo" class="py-8 space-y-6 w-1/2">
+                        <UFormGroup
+                            v-slot="{error}"
+                            name="name"
+                            :error="errors.name"
+                            required>
+                            <UInput
+                                variant="none" 
+                                size="2xl"
+                                v-model="customerInfo.name"
+                                :placeholder="$t('Full Name')"
+                                :ui="{ base: 'w-full rounded-lg',
+                                    placeholder: error ? 'placeholder-red-500' : 'placeholder-gray-400'
+                                }"/>
+                        </UFormGroup>
+                        <UFormGroup
+                            v-slot="{ error }"
+                            name="customer_code"
+                            :error="errors.customer_code"
+                            required>
+                            <UInput
+                                variant="none" 
+                                size="lg"
+                                v-model="customerInfo.customer_code"
+                                :disabled="props.isUpdate"
+                                :placeholder="$t('Customer Code')"
+                                :ui="{ 
+                                    base: 'w-full rounded-lg',
+                                    placeholder: error ? 'placeholder-red-500' : 'placeholder-gray-400'
+                                    }"/>
+                        </UFormGroup>
+                    </UForm>
+                </div>
+                
+            </UCard>
             <UForm :schema="schema" :state="customerInfo" class="mx-4 py-2  grid grid-cols-2 gap-4">
-                <UFormGroup
+                <!-- <UFormGroup
                     v-slot="{error}"
                     :label="$t('Full Name')" 
                     name="name"
@@ -64,7 +117,7 @@
                         :placeholder="$t('Customer Code')"
                         :ui="{ base: 'w-full rounded-lg' }"
                         :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
-                </UFormGroup>
+                </UFormGroup> -->
                 <UFormGroup
                     :label="$t('Dob')"
                     name='dob'>
@@ -376,6 +429,7 @@ const createItemDropdown = ref([
     }]
 ])
 const defaultUserInfo = {
+    avatar: '',
     name: '',
     customer_code: '',
     gender: '',
@@ -400,12 +454,20 @@ const genders = [
 ]
 const titles = ref([])
 const departments = ref([])
+const cloneCustomerInfo = ref({})
+
 const loadData = async () => {
     try {
         if (props.isUpdate){
             const {data: response} = await useAPI().get(`core/customers/${useRoute().params.id}/`);
             customerInfo.value = response.value
             customerInfo.value.dob = customerInfo.value.dob ? new Date(customerInfo.value.dob) : null
+            customerInfo.value.avatar = customerInfo.value.avatar 
+                ? [{ 
+                    preview: customerInfo.value.avatar, 
+                }] 
+                : '';
+            cloneCustomerInfo.value = JSON.parse(JSON.stringify(customerInfo.value))
             console.log('response', customerInfo.value)
         }
     } catch (error) {
@@ -439,85 +501,68 @@ const customer_sources = [
     {label: t('Sale data'), value: 9},
 ]
 const company_types = [
-    { label: t('Limited Liability Company'), value: 1 },
-    { label: t('Joint Stock Company'), value: 2 },
-    { label: t('Partnership'), value: 3 },
-    { label: t('Sole Proprietorship'), value: 4 },
-    { label: t('State-owned Enterprise'), value: 5 },
-    { label: t('Foreign Enterprise'), value: 6 },
-    { label: t('Cooperative'), value: 7 },
-    { label: t('Non-profit Organization'), value: 8 },
+    { label: t('Limited Liability Company'), value: t('Limited Liability Company') },
+    { label: t('Joint Stock Company'), value: t('Joint Stock Company') },
+    { label: t('Partnership'), value: t('Partnership') },
+    { label: t('Sole Proprietorship'), value: t('Sole Proprietorship') },
+    { label: t('State-owned Enterprise'), value: t('State-owned Enterprise') },
+    { label: t('Foreign Enterprise'), value: t('Foreign Enterprise') },
+    { label: t('Cooperative'), value: t('Cooperative') },
+    { label: t('Non-profit Organization'), value: t('Non-profit Organization') },
 ];
 const LINE_OF_BUSINESS_CHOICES = [
-    { value: 1, label: t('Retail') },
-    { value: 2, label: t('Wholesale') },
-    { value: 3, label: t('Manufacturing') },
-    { value: 4, label: t('Service') },
-    { value: 5, label: t('Technology') },
-    { value: 6, label: t('Healthcare') },
-    { value: 7, label: t('Education') },
-    { value: 8, label: t('Finance') },
-    { value: 9, label: t('Real Estate') },
-    { value: 10, label: t('Transportation') },
-    { value: 11, label: t('Construction') },
-    { value: 12, label: t('Hospitality') },
-    { value: 13, label: t('Entertainment') },
-    { value: 14, label: t('Agriculture') },
-    { value: 15, label: t('Other') },
+    { value: t('Retail') , label: t('Retail') },
+    { value: t('Wholesale') , label: t('Wholesale') },
+    { value: t('Manufacturing') , label: t('Manufacturing') },
+    { value: t('Service') , label: t('Service') },
+    { value: t('Technology') , label: t('Technology') },
+    { value: t('Healthcare') , label: t('Healthcare') },
+    { value: t('Education') , label: t('Education') },
+    { value: t('Finance') , label: t('Finance') },
+    { value: t('Real Estate') , label: t('Real Estate') },
+    { value: t('Transportation') , label: t('Transportation') },
+    { value: t('Construction') , label: t('Construction') },
+    { value: t('Hospitality') , label: t('Hospitality') },
+    { value: t('Entertainment') , label: t('Entertainment') },
+    { value: t('Agriculture') , label: t('Agriculture') },
+    { value: t('Other') , label: t('Other') },
 ];
-// const formatData = () => {
-//     const formData = new FormData();
-//     Object.entries(customerInfo.value).forEach(([key, value]) => {
-//         if (!value) return;
-//         if (Array.isArray(value)) {
-//             const ids = value.map(item => {
-//                 if (typeof item === 'object' && item !== null) {
-//                     return item.id || item;
-//                 }
-//                 return item;
-//             });
-//             formData.append(key, ids.join(','));
-//         } else if (typeof value === 'object' && value !== null && value.id) {
-//             formData.append(key, value.id);
-//         }
-//         else if (['dob'].includes(key)) {
-//             formData.append(key, dayjs(value).format('YYYY-MM-DD'));
-//         } else {
-//             formData.append(key, value);
-//         }
-//     });
-//     return formData;
-// };
-const formatData2 = () => {
-    const formattedData = {};
+const formatData = () => {
+    const formData = new FormData();
+
+    customerInfo.value.additional_infos = customerInfo.value.additional_infos.filter(
+        (item) => item.type_of_contact !== null
+    );
     Object.entries(customerInfo.value).forEach(([key, value]) => {
         if (!value) return;
-        if (Array.isArray(value)) {
-            formattedData[key] = value.map(item => {
-                if (typeof item === 'object' && item !== null) {
-                    return item.id || item;
-                }
-                return item;
+        if (['curators'].includes(key)){
+            if (value.length == 0) return;
+            value.forEach((curator) => {
+                formData.append('curators', curator.id || curator);
             });
-        } else if (typeof value === 'object' && value !== null && value.id) {
-            formattedData[key] = value.id;
-        } else if (['dob'].includes(key)) {
-            formattedData[key] = dayjs(value).format('YYYY-MM-DD');
-        }else if (['avatar'].includes(key)){
+        }
+        else if(['additional_infos'].includes(key)){ 
+            if (value.length == 0) return;
+            formData.append(key, JSON.stringify(value));
+        }
+        else if (['dob'].includes(key)) {
+            formData.append(key, dayjs(value).format('YYYY-MM-DD'));
+        } else if (['avatar'].includes(key)) {
             if (value[0] instanceof File) {
-                formattedData[key] = value[0];
-            } else if (value.length == 0) {
-                formattedData[key] = '';
+                formData.append(key, value[0])
+            }
+            else if (value.length == 0){
+                formData.append(key, '')
             }
         } else {
-            formattedData[key] = value;
+            formData.append(key, value);
         }
     });
-    return formattedData;
+    return formData;
 };
 
 const createCustomer = async () => {
-    const profileData = formatData2()
+    const profileData = formatData()
     try {
         const {data: response} = await useAPI().post(`core/customers/`, profileData);
         if (response.value && response.value.id) {
@@ -531,7 +576,7 @@ const createCustomer = async () => {
     }
 }
 const updateCustomer = async () => {
-    const profileData = formatData2()
+    const profileData = formatData()
     try {
         const {data: response} = await useAPI().put(`core/customers/${useRoute().params.id}/`, profileData);
         if (response.value && response.value.id) {

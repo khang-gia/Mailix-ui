@@ -5,12 +5,13 @@
     }">
         <template #header>
             <div class="flex items-center justify-between">
-                <UBreadcrumb
+                <!-- <UBreadcrumb
                     :ui="{ ol: 'gap-x-3', li: 'gap-x-3',active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
                     :links="[{ label: $t('Work List'), to: '/works' }, { label: props.isUpdate ? workInfo.name : $t('Create work') }]">
-                    <!-- <template #divider>
-                        <span class="w-8 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
-                    </template> -->
+                </UBreadcrumb> -->
+                <UBreadcrumb
+                    :ui="{ ol: 'gap-x-3', li: 'gap-x-3',active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
+                    :links="[{ label: $t('Work List'), to: '/works' }, { label: props.isUpdate ? workInfo.name: $t('Create work'), to: props.isUpdate ? `/works/${useRoute().params.id}` : ''}, { label: props.isUpdate ? $t('Update') : '' }]">
                 </UBreadcrumb>
                 <div class="flex items-center space-x-2">
                     <UButton

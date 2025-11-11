@@ -39,5 +39,5 @@ const props = defineProps({
     default: ''
   }
 })
-const translate_keys = ['Gender', 'Type of contact', 'Contact Source']
+const translate_keys = ['Gender', 'Type of contact', 'Contact Source','Company Type', 'Line of business']
 </script>
