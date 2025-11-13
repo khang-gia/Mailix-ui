@@ -73,22 +73,32 @@ const { data: userInfo } = useAuth()
 const { t } = useI18n();
 const dayjs = useDayjs()
 const props = defineProps({
-    comments: {
-        type: Array,
-        required: true,
-        default: []
-    },
     commentType: {
         type: String,
         required: true,
-        default: 'work',
+        default: 'works',
     }
 })
+const apiUrl = computed(() => {
+  const id = useRoute().params.id
+  switch (props.commentType) {
+    case 'works':
+      return `core/works/${id}/comments/`
+    case 'contacts':
+      return `core/contacts/${id}/comments/`
+    case 'customers':
+      return `core/customers/${id}/comments/`
+    default:
+      console.warn(`Unknown commentType: ${props.commentType}`)
+      return null
+  }
+})
+const { data: comments, refresh } = await useAPI().get(apiUrl);
 const newComment = ref('')
 const typeMapping = {
-    work: 'work_comments',
-    contact: 'contact_comments',
-    customer: 'customer_comments',
+    works: 'work_comments',
+    contacts: 'contact_comments',
+    customers: 'customer_comments',
 };
 const interactComment = async (comment) => {
     try {
@@ -119,10 +129,15 @@ const interactComment = async (comment) => {
         throw error;
     }
 } 
+const mappingForeignKey = {
+    works: 'work',
+    contacts: 'contact',
+    customers: 'customer',
+}
 const writeComment = async() => {
     try {
         const apiPath = typeMapping[props.commentType];
-        if (!apiPath) {
+        if (!apiPath || !newComment.value) {
             console.error(`Invalid commentType: ${props.commentType}`);
             throw new Error(t('Invalid comment type'));
         }
@@ -130,25 +145,15 @@ const writeComment = async() => {
         const payload = {
             text: newComment.value,
             user: userInfo.value.id,
-            [props.commentType]: useRoute().params.id,
+            [mappingForeignKey[props.commentType]]: useRoute().params.id,
         };
 
         const response = await useAPI().post(endpoint, payload);
 
         if (response && response.status.value === 'success') {
-            // const newCommentData = {
-            //     ...response.data.value, 
-            //     // user: { ...userInfo.value },
-            // };
-            // props.comments.push(newCommentData);
-
-            // newComment.value = '';
-            try{
-                await refreshNuxtData(['comments'])
-            }
-            finally{
-                return true;
-            }
+            newComment.value = '';
+            refresh()
+            return true
         } else {
             throw new Error(t('Unexpected response status'));
         }

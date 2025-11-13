@@ -95,7 +95,7 @@
             <template #item="{ item }">
               <div class="mt-4">
                 <div v-if="item.key === 'discussions'" class="h-full overflow-x-hidden">
-                  <CommentsSection v-if="workDiscussions" :comments="workDiscussions"/>
+                  <CommentsSection comment-type="works"/>
                 </div>
                 <div v-else-if="item.key === 'activity_log'" class="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
                   <div v-for="history in workHistory" :key="history.id" class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
@@ -181,15 +181,7 @@ const tabs = [{
 }]
 const workInfo = ref({})
 const workHistory = ref([])
-const workDiscussions = ref([])
-const fetchDiscussion = async () => {
-    try {
-        const {data: response} = await useAPI().get(`core/works/${useRoute().params.id}/comments/`);
-        workDiscussions.value = response.value
-    } catch (error) {
-        console.error('Error loading history data:', error);
-    }
-}
+
 const fetchHistory = async () => {
     try {
         const {data: response} = await useAPI().get(`core/works/${useRoute().params.id}/history/`);
@@ -216,28 +208,12 @@ const fetchData = async () => {
         await fetchWorkInfo();
         await new Promise((resolve) => setTimeout(resolve, 300));
         await fetchHistory();
-        await fetchDiscussion();
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 };
 fetchData();
 
-const historyAction = (type) => {
-  if (type === 'Created'){
-    return t('created') + ' ' + t('work')
-  } 
-  else if (type ==='Changed'){
-    return t('changed') + ' ' + t('work information')
-  } 
-  else {
-    return t('changed')
-  } 
-}
-const historyUser = (userinfo) => {
-    if (!userinfo) return 'Unknown User'
-    return userinfo.full_name? userinfo.full_name : userinfo.username
-}
 const viewMode=ref('default')
 
 const actionDropdown = ref([
