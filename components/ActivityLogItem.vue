@@ -1,10 +1,11 @@
 <template>
-  <div class="border-l-2 border-gray-300 dark:border-gray-600 pl-3 py-2 space-y-1">
+  <div class="pt-2 space-y-1">
     
         <p class="font-semibold text-gray-900 dark:text-gray-100 text-sm md:truncate">{{ historyUser(history.history_user) }} 
             <span class="text-gray-500 text-sm font-medium">{{historyAction(history.history_type_display)}}</span>
         </p>
-      <span class="text-xs text-gray-500 dark:text-gray-400">
+      <span class="text-xs text-gray-500 dark:text-gray-400 items-center flex">
+        <UIcon name="i-heroicons-clock" class="w-3 h-3 inline-block mr-1 shrink-0" />
         {{ dayjs(history.history_date).format('HH:mm DD/MM/YYYY') }}
       </span>
 
@@ -62,7 +63,7 @@
     </p> -->
 
   </div>
-  <UDivider orientation="horizontal" class="my-4" />
+  <UDivider orientation="horizontal" class="my-2" />
 </template>
 
 <script setup>

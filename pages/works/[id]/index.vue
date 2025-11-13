@@ -94,37 +94,11 @@
           <UTabs :items="tabs" class="w-full"  @change="updateTab">
             <template #item="{ item }">
               <div class="mt-4">
-                <div v-if="item.key === 'discussions'" class="space-y-8 h-full overflow-y-auto">
-                  <div v-for="discussion in activityFeed" :key="discussion.time" class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
-                    <p class="font-semibold text-sm">{{ discussion.user }} <span
-                        class="text-xs font-normal text-gray-500">{{ discussion.time }}</span></p>
-                    <p class="text-gray-700 dark:text-gray-300 text-sm mt-1">{{ discussion.message }}</p>
-                    <div class="flex space-x-3 text-xs mt-2 text-gray-500">
-                      <span>Like</span>
-                      <span>Reply</span>
-                    </div>
-                    <UDivider orientation="horizontal" class="my-4" />
-                  </div>
+                <div v-if="item.key === 'discussions'" class="h-full overflow-x-hidden">
+                  <CommentsSection v-if="workDiscussions" :comments="workDiscussions"/>
                 </div>
                 <div v-else-if="item.key === 'activity_log'" class="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
-                  <div v-for="history in workHistory" :key="history.id" class=" pl-3">
-                    <!-- <p class="font-semibold text-sm">{{ historyUser(history.history_user) }} 
-                      <span class="text-gray-500">{{historyAction(history.history_type_display)}}</span>
-                    </p>
-                    <span class="text-xs font-normal text-gray-500">{{ dayjs(history.history_date).format('HH:mm DD/MM/YYYY') }}</span>
-                    <div v-for="change in history.field_changes" :key="change.field">
-                      <span v-if="change.new_value !== 'Created'">
-                         +
-                         <span class="truncate text-sm">
-                            {{ change.old_value }} 
-                         </span>
-                         - <span class="truncate text-sm">
-                            {{ change.new_value }} 
-                         </span>
-                      </span>
-                    </div>
-                    <p class="text-gray-700 dark:text-gray-300 text-sm mt-1">{{ history.change_message }}</p>
-                    <UDivider orientation="horizontal" class="my-4" /> -->
+                  <div v-for="history in workHistory" :key="history.id" class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
                     <ActivityLogItem :history="history" history-type="work" />
                   </div>
                 </div>
@@ -132,7 +106,7 @@
               
             </template>
           </UTabs>
-          <template #footer>
+          <!-- <template #footer>
             <div v-if="activeTab===0" class="mb-4">
                <UInput
                   type="text"
@@ -156,7 +130,7 @@
                 </template>
               </UInput>
             </div>
-          </template>
+          </template> -->
         </UCard>
       </div>
 
@@ -172,7 +146,7 @@ definePageMeta({
   title: 'Chi tiết công việc',
 })
 
-const activityFeed = ref([
+const discussions = ref([
     { user: 'Gia Khang', message: 'Đã nhắc bạn hỗ trợ giới thiệu đối tác nhé!', time: '10:00 04/02/2024' },
     { user: 'Thanh Thanh', message: 'em đã gửi đính kèm file tiến độ lên đây nhé', time: '10:47 22/07/2024' },
 ])
@@ -207,6 +181,15 @@ const tabs = [{
 }]
 const workInfo = ref({})
 const workHistory = ref([])
+const workDiscussions = ref([])
+const fetchDiscussion = async () => {
+    try {
+        const {data: response} = await useAPI().get(`core/works/${useRoute().params.id}/comments/`);
+        workDiscussions.value = response.value
+    } catch (error) {
+        console.error('Error loading history data:', error);
+    }
+}
 const fetchHistory = async () => {
     try {
         const {data: response} = await useAPI().get(`core/works/${useRoute().params.id}/history/`);
@@ -233,6 +216,7 @@ const fetchData = async () => {
         await fetchWorkInfo();
         await new Promise((resolve) => setTimeout(resolve, 300));
         await fetchHistory();
+        await fetchDiscussion();
     } catch (error) {
         console.error('Error fetching data:', error);
     }
