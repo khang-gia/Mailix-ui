@@ -10,15 +10,17 @@
       </span>
 
     <div v-if="history.history_type !== '+'" v-for="change in history.field_changes" :key="change.field" class="ml-2 text-sm">
-        
-        <p class="text-gray-700 dark:text-gray-300">
+        <p v-if="ignoreFields.includes(change.field)" class="text-gray-700 dark:text-gray-300">
+            <span class="test-sm font-semibold text-primary-600">{{  parseChangeField(change.field) +' '+ $t('has changed')  }}</span>
+        </p>
+        <p v-else class="text-gray-700 dark:text-gray-300">
             <span class="test-sm font-semibold text-primary-600">{{ parseChangeField(change.field) }}:</span>
         </p>
         
         <div v-if="translateField.includes(change.field)" class="flex gap-2 text-xs ml-2">
-            <p v-if="change.old_value" class="flex items-center text-red-600 dark:text-red-400">
+            <p class="flex items-center text-red-600 dark:text-red-400">
                 <!-- <UIcon name="i-heroicons-minus" class="w-3 h-3 mr-1 shrink-0" /> -->
-                <span class="truncate">{{ $t(change.old_value) }}</span>
+                <span class="truncate">{{ change.old_value?$t(change.old_value):'Null' }}</span>
             </p>
             
             <p v-if="change.new_value" class="flex items-center">
@@ -26,10 +28,13 @@
                 <span class="truncate text-green-600 dark:text-green-400">{{ $t(change.new_value) }}</span>
             </p>
         </div>
-        <div v-else-if="change.field === 'description'" class="flex gap-4 text-xs ml-2">
-            <p v-if="change.old_value" class="flex items-center text-red-600 dark:text-red-400">
-                <!-- <UIcon name="i-heroicons-minus" class="w-3 h-3 mr-1 shrink-0" /> -->
-                <span class="truncate"  v-html="change.old_value"></span>
+        <div v-else-if="ignoreFields.includes(change.field)" class="flex gap-2 text-xs ml-2">
+
+        </div>
+        <div v-else-if="textFields.includes(change.field)" class="flex gap-4 text-xs ml-2">
+            <p class="flex items-center text-red-600 dark:text-red-400">
+                <span v-if="change.old_value" class="truncate"  v-html="change.old_value"></span>
+                <span v-else class="truncate"> Null</span>
             </p> 
             <p v-if="change.new_value" class="flex items-center">
                 <UIcon name="i-heroicons-arrow-long-right" class="w-3 h-3 mr-1 shrink-0" />
@@ -37,9 +42,9 @@
             </p>
         </div>
         <div v-else class="flex gap-2 test-xs ml-2">
-            <p v-if="change.old_value" class="flex items-center text-red-600 dark:text-red-400">
+            <p class="flex items-center text-red-600 dark:text-red-400">
                 <!-- <UIcon name="i-heroicons-minus" class="w-3 h-3 mr-1 shrink-0" /> -->
-                <span class="truncate">{{ change.old_value }}</span>
+                <span class="truncate">{{ change.old_value?change.old_value:'Null' }}</span>
                 <span v-if="change.field === 'progress' || change.field === 'budget'">
                   {{ change.field === 'progress' ? '%' : '$' }}
                 </span>
@@ -81,7 +86,9 @@ const props = defineProps({
     default: 'work'
   }
 })
-const translateField = ['status', 'priority', 'type_of_customer', 'assigned_to', 'assigned_by', 'full_name', 'name', 'code']
+const translateField = ['status', 'priority', 'type_of_customer', 'assigned_to', 'assigned_by', 'full_name', 'name', 'code', 'title']
+const ignoreFields = ['avatar']
+const textFields = ['note', 'description']
 const historyAction = (type) => {
     const historyTypeMapping = {
         contact: t('contact information'),

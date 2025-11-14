@@ -1,6 +1,6 @@
 <template>
     <div class="space-y-4 h-full overflow-x-auto mb-4">
-        <div v-for="comment in comments" :key="comment.id" class="">
+        <div v-for="comment in comments" :key="comment.id" class="h-full">
 
             <div class="flex w-full">
                 <NuxtLink v-if="comment.user.profile_hr"
@@ -26,7 +26,7 @@
                             @click.prevent="interactComment(comment)">{{ $t('Like') }}</span>
                         <span class="cursor-pointer hover:underline">{{ $t('Reply') }}</span>
                         <div v-if="comment.likes && comment.like_count > 0">
-                            <UButton icon="i-heroicons-hand-thumb-up" color="primary" size="xs" variant="ghost" square
+                            <UButton icon="i-heroicons-hand-thumb-up-solid" color="primary" size="xs" variant="ghost" square
                                 trailing :label="comment.like_count"></UButton>
                         </div>
                     </div>
@@ -97,7 +97,6 @@ const { data: comments, refresh } = await useAPI().get(apiUrl);
 const newComment = ref('')
 const typeMapping = {
     works: 'work_comments',
-    contacts: 'contact_comments',
     customers: 'customer_comments',
 };
 const interactComment = async (comment) => {
@@ -131,7 +130,6 @@ const interactComment = async (comment) => {
 } 
 const mappingForeignKey = {
     works: 'work',
-    contacts: 'contact',
     customers: 'customer',
 }
 const writeComment = async() => {

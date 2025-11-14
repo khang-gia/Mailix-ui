@@ -1,139 +1,296 @@
 <template>
-  <div class="p-4 space-y-6">
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-        {{ $t('Customer Detail') }}
-      </h1>
-      <div class="flex space-x-3">
-        <UButton icon="i-heroicons-pencil-square" :label="$t('Update')" :to="{name: 'customers-id-update'}" />
-        <UButton icon="i-heroicons-trash" :label="$t('Delete')" color="red" variant="outline" />
-        
+  <div class="py-2 px-4 grid grid-flow-col bg-white dark:bg-[#1E1E2E] space-x-2 w-full">
+    <div class="flex items-center">
+      <div class="flex items-center gap-3 pr-3">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+          <span class="text-primary-500">{{ customerInfo.name }}</span>
+        </h1>
       </div>
     </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
-      <div class="lg:col-span-1">
+    <div class="flex justify-end">
+      <UDropdown :items="actionDropdown" :popper="{ placement: 'bottom-start' }">
+        <UButton color="gray" variant="ghost" size="sm" icon="i-heroicons-chevron-double-down" class="border" />
+        <template #item="{ item }">
+          <span class="truncate" :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }">{{
+            item.label }}
+          </span>
+          <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
+            :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }" />
+        </template>
+      </UDropdown>
+    </div>
+  </div>
+  <div class="p-4 space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
+      <div class="lg:col-span-2">
         <UCard class="p-4 h-full">
-          <div class="flex flex-col items-center">            
-            <UAvatar
-              :src="customer.avatar"
-              :alt="customer.name"
-              size="3xl"
-              class="mb-4"
-            />
-            <span class="text-mailix-primary text-2xl">{{ customer.name }}</span>
-            <span class="text-sm text-gray-500 mt-1">{{ customer.customer_code || '--' }}</span>
+          <div class="flex flex-col items-center">
+            <img v-if="customerInfo.avatar" :src="customerInfo.avatar" alt="" class="mb-4 rounded-full w-44 h-44" />
+            <img v-else :src="customerInfo.gender === 'Male'?'/images/user_male.png':'/images/user_female.png'" alt=""
+              class="mb-4 rounded-full w-44 h-44" />
+            <span class="text-mailix-primary text-2xl">{{ customerInfo.name }}</span>
+            <span class="text-md text-gray-500 mt-1">{{ customerInfo.customer_code || '--' }}</span>
           </div>
 
           <UDivider class="my-6" />
 
-          <div class="space-y-4 text-sm">
+          <div class="space-y-4 text-md">
             <div class="flex items-center space-x-2">
               <UIcon name="i-heroicons-phone" class="w-5 h-5 justify-center text-gray-400" />
-              <span class="font-medium truncate items-center">{{ customer.phone || '--' }}</span>
+              <span class="font-medium truncate items-center">{{ customerInfo.phone || '--' }}</span>
             </div>
             <div class="flex items-center space-x-2">
               <UIcon name="i-heroicons-envelope" class="w-5 h-5 justify-center text-gray-400" />
-              <span v-if="customer.mail" class="font-medium truncate cursor-pointer hover:text-blue-700" @click="copyToClipboard(customer.mail)">{{ customer.mail }}</span>
+              <span v-if="customerInfo.mail" class="font-medium truncate cursor-pointer hover:text-blue-700"
+                @click="copyToClipboard(customerInfo.mail)">{{ customerInfo.mail }}</span>
               <span v-else class="font-medium truncate">--</span>
             </div>
             <div class="flex items-center space-x-2">
               <UIcon name="i-heroicons-map-pin" class="w-5 h-5 justify-center text-gray-400" />
-              <span v-if="customer.address" class="font-medium truncate cursor-pointer hover:text-blue-700 " @click="copyToClipboard(customer.address)">{{ customer.address }}</span>
+              <span v-if="customerInfo.address" class="font-medium truncate cursor-pointer hover:text-blue-700 "
+                @click="copyToClipboard(customerInfo.address)">{{ customerInfo.address }}</span>
               <span v-else class="font-medium truncate">--</span>
             </div>
           </div>
         </UCard>
       </div>
+      <div class="lg:col-span-4 md:col-span-2 h-full">
+        <UCard class="h-full">
+          <template #header>
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                {{ $t('Personal Information') }}
+              </h2>
 
-      <div class="lg:col-span-3">
-        <UCard class="p-4">
-          <UTabs :items="tabs" class="w-full">
-            <template #item="{ item }">
-              <div class="mt-4 p-4">
-                
-                <div v-if="item.key === 'basic_info'" class="space-y-6">
-                    <h2 class="text-xl font-semibold border-b pb-3 mb-4 text-gray-800 dark:text-gray-100">{{ $t('Personal Information') }}</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
-                      <ContactDetailItem label="Email" :value="customer.email" />
-                      <ContactDetailItem label="Name" :value="customer.name" />
-                      <ContactDetailItem label="Customer title" :value="customer.title" />
-                      
-                      <ContactDetailItem label="Dob" :value="dayjs(customer.dob).format('YYYY-MM-DD')" />
-                      <ContactDetailItem label="Gender" :value="customer.gender" />
-                      <ContactDetailItem label="Type of customer" :value="customer.type_of_customer_display" />
-                      
-                      <ContactDetailItem label="Curators" :value="customer.curators_list" />
-                      <ContactDetailItem label="Customer Source" :value="customer.customer_source_display" />
-                    </div>
-                </div>
+            </div>
+          </template>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
 
-                <div v-else-if="item.key === 'additional_info'" class="space-y-6">
-                    <h2 class="text-xl font-semibold border-b pb-3 mb-4 text-gray-800 dark:text-gray-100">{{ $t('Descriptions & Accounting') }}</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
-                      <ContactDetailItem label="Tax Code" :value="customer.tax_code" />
-                      <ContactDetailItem label="Id Number" :value="customer.id_number" />
-                      
-                      <div class="md:col-span-2 lg:col-span-3">
-                         <ContactDetailItem label="Description" :value="customer.description" />
-                      </div>
-                    </div>
-                    <div v-if="customer.type_of_customer === 2">
-                      <h2 class="text-xl font-semibold border-b pb-3 mb-4 text-gray-800 dark:text-gray-100">{{ $t('Company Information') }}</h2>
-                      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
-                        <ContactDetailItem label="Company Name" :value="customer.company_name" />
-                        <ContactDetailItem label="Phone" :value="customer.company_phone" />
-                        <ContactDetailItem label="Email" :value="customer.company_email" />
-                        <ContactDetailItem label="Tax Code" :value="customer.company_tax_code" />
-                        <ContactDetailItem label="Address" :value="customer.company_address" />
-                        <ContactDetailItem label="Company Type" :value="customer.company_type" />
-                        <ContactDetailItem label="Line of business" :value="customer.line_of_business" />
-                        
-                      </div>
-                    </div>
-                    
-                </div>
-                
+            <!-- <WorkDetailItem label="Contact Name" :value="customerInfo.name" class="md:col-span-1" />
+            <WorkDetailItem label="Contact Code" :value="customerInfo.customer_code" class="md:col-span-1" /> -->
+            <ContactDetailItem label="Name" :value="customerInfo.name" />
+            <ContactDetailItem label="Customer title" :value="customerInfo.title" />
+
+            <ContactDetailItem label="Dob" :value="customerInfo.dob?dayjs(customerInfo.dob).format('YYYY-MM-DD'):''" />
+            <ContactDetailItem label="Gender" :value="customerInfo.gender" />
+            <ContactDetailItem label="Type of contact" :value="customerInfo.type_of_customer_display" />
+
+            <ContactDetailItem label="Curators" :value="customerInfo.curators_list" />
+            <ContactDetailItem label="Contact Source" :value="customerInfo.customer_source_display" />
+            <!-- <WorkDetailItem label="Progress" :value="progress" >
+
+              <template #value>
+                <UProgress :value="customerInfo.progress" indicator class="w-32" />
+              </template>
+            </WorkDetailItem> -->
+
+            <!-- <WorkDetailItem label="End date" :value="dayjs(customerInfo.end_date).format('YYYY-MM-DD HH:mm')" />
+            <WorkDetailItem label="Actual start date" :value="dayjs(customerInfo.actual_start_date).format('YYYY-MM-DD')" /> -->
+            <ContactDetailItem v-if="customerInfo.status" label="Status" :value="customerInfo.status_display"
+              class="md:col-span-1">
+              <template #value>
+                <UBadge :color="statusMapping[customerInfo.status]" variant="subtle" class="font-semibold">{{
+                  $t(customerInfo.status_display)}}</UBadge>
+              </template>
+            </ContactDetailItem>
+            <!-- <WorkDetailItem v-if="customerInfo.priority" label="Priority" :value="customerInfo.priority"
+              class="md:col-span-1">
+              <template #value>
+                <UBadge :color="statusMapping[customerInfo.priority]" variant="subtle" class="font-semibold">{{
+                  $t(customerInfo.priority_display)}}</UBadge>
+              </template>
+            </WorkDetailItem> -->
+            <!-- <WorkDetailItem label="Priority" :value="customerInfo.priority" /> -->
+
+            <!-- <UDivider class="md:col-span-2 lg:col-span-3 my-4" /> -->
+
+          </div>
+
+          <UCard class="my-6">
+            <template #header>
+              <div class="flex items-center justify-between">
+                <h2 class="text-xl font-semibold text-red-500 dark:text-gray-100">
+                  {{ $t('Note') }}
+                </h2>
               </div>
+            </template>
+            <div
+              class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+              <span v-if="customerInfo.note" v-html="customerInfo.note"></span>
+              <span v-else>{{ $t('No note for this customer...') }}</span>
+            </div>
+          </UCard>
+
+
+        </UCard>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-7 gap-4">
+
+      <div v-if="customerInfo.type_of_customer === 2" class="lg:col-span-4 md:col-span-2">
+        <UCard class="h-full">
+          <template #header>
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                {{ $t('Company Information') }}
+              </h2>
+            </div>
+          </template>
+          <div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+              <ContactDetailItem label="Company Name" :value="customerInfo.company_name" />
+              <ContactDetailItem label="Phone" :value="customerInfo.company_phone" />
+              <ContactDetailItem label="Email" :value="customerInfo.company_email" />
+              <ContactDetailItem label="Tax Code" :value="customerInfo.company_tax_code" />
+              <ContactDetailItem label="Address" :value="customerInfo.company_address" />
+              <ContactDetailItem label="Company Type" :value="customerInfo.company_type" />
+              <ContactDetailItem label="Line of business" :value="customerInfo.line_of_business" />
+
+            </div>
+          </div>
+        </UCard>
+      </div>
+      <div class="lg:col-span-3 md:col-span-2">
+        <UCard class="">
+          <template #header>
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                {{ $t('Descriptions & Accounting') }}
+              </h2>
+              <!-- <h2 class="text-xl font-semibold border-b pb-3 mb-4 text-gray-800 dark:text-gray-100">{{ $t('Descriptions & Accounting') }}</h2> -->
+
+            </div>
+          </template>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+            <ContactDetailItem label="Tax Code" :value="customerInfo.tax_code" />
+            <ContactDetailItem label="Id Number" :value="customerInfo.id_number" />
+
+            <!-- <div class="md:col-span-2 lg:col-span-3">
+                  <ContactDetailItem label="Description" :value="customerInfo.description" />
+              </div> -->
+          </div>
+
+        </UCard>
+
+      </div>
+      <div class="lg:col-span-4 md:col-span-2">
+        <UCard class="" :ui="{
+          footer: {
+            base: 'border-none', padding: 'px-4 py-4 sm:px-6'
+          }
+        }">
+          <UTabs :items="tabs" class="w-full h-full">
+            <template #item="{ item }">
+              <div class="mt-4">
+                <div v-if="item.key === 'discussions'" class="h-full overflow-x-hidden">
+                  <CommentsSection comment-type="customers" />
+                </div>
+                <div v-else-if="item.key === 'activity_log'" class="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
+                  <div v-for="history in workHistory" :key="history.id"
+                    class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
+                    <ActivityLogItem :history="history" history-type="customer" />
+                  </div>
+                </div>
+              </div>
+
             </template>
           </UTabs>
         </UCard>
       </div>
+
     </div>
   </div>
 </template>
 <script setup>
-const dayjs = useDayjs()
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+const dayjs = useDayjs()
+
 definePageMeta({
-  title: 'Hồ sơ khách hàng',
-  hideTitle: true,
+  title: 'Chi tiết khách hàng',
 })
-const route = useRoute()
-const customer = ref({})
+
+const statusMapping = [
+  "none",
+  "gray",
+  "blue",
+  "green",
+  "amber",
+  "slate",
+  "indigo",
+  "cyan",
+  "emerald",
+  "red",
+  "yellow",
+  "rose",
+  "lime",
+  "gray",
+  "red",
+  "purple"
+];
 const tabs = [{
-  label: t('Basic Information'),
-  key: 'basic_info',
+  label: t('Discussion'),
+  key: 'discussions',
 }, {
-  label: t('Additional Information'),
-  key: 'additional_info',
+  label: t('Activity Log'),
+  key: 'activity_log',
 }]
-const loadData = async () => {
-    try {
-        const {data: response} = await useAPI().get(`core/customers/${useRoute().params.id}/`);
-        customer.value = response.value
-        customer.value.dob = customer.value.dob ? new Date(customer.value.dob) : null
-    } catch (error) {
-        console.error('Error loading data:', error);
-    }
+const customerInfo = ref({})
+const workHistory = ref([])
+
+const fetchHistory = async () => {
+  try {
+    const { data: response } = await useAPI().get(`core/customers/${useRoute().params.id}/history/`);
+    workHistory.value = response.value
+  } catch (error) {
+    console.error('Error loading history data:', error);
+  }
+}
+const fetchCustomerInfo = async () => {
+  try {
+    const { data: response } = await useAPI().get(`core/customers/${useRoute().params.id}/`);
+    customerInfo.value = response.value
+    customerInfo.value.dob = customerInfo.value.dob ? new Date(customerInfo.value.dob) : null
+    // customerInfo.value.end_date = customerInfo.value.end_date ? new Date(customerInfo.value.end_date) : null
+    // customerInfo.value.actual_start_date = customerInfo.value.actual_start_date ? new Date(customerInfo.value.actual_start_date) : null
+    // customerInfo.value.related_work = customerInfo.value.related_work ? customerInfo.value.related_work.id : '',
+    console.log('response', customerInfo.value)
+  } catch (error) {
+    console.error('Error loading data:', error);
+  }
 };
-loadData()
+const fetchData = async () => {
+  try {
+    await fetchCustomerInfo();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await fetchHistory();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+fetchData();
+
+const viewMode = ref('default')
+
+const actionDropdown = ref([
+  [{
+    label: t('Update'),
+    icon: 'i-heroicons-pencil-square',
+    click: () => {
+      useRouter().push({ name: 'customers-id-update', params: { id: useRoute().params.id } })
+    }
+  },
+  {
+    label: t('Add document'),
+    icon: 'i-heroicons-arrow-up-on-square',
+    click: () => {
+      viewMode.value = 'new_tab'
+    }
+  }]
+])
 const copyToClipboard = async (text) => {
   try {
     await navigator.clipboard.writeText(text);
-    // alert('Copied to clipboard!');
     useToast().add({
       description: 'Copied to clipboard!',
       icon: 'i-heroicons-check-circle',

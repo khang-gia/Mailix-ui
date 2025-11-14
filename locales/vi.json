@@ -470,5 +470,12 @@
     "System": "Hệ thống",
     "From": "Từ",
     "Like":"Thích",
-    "Reply": "Trả lời"
+    "Reply": "Trả lời",
+    "No description for this work...":"Không có mô tả chi tiết cho công việc này.",
+    "No note for this contact...": "Không có ghi chú cho liên hệ này",
+    "Note":"Ghi chú",
+    "has changed": "đã thay đổi",
+    "contact information": "thông tin liên hệ",
+    "customer information": "thông tin khách hàng",
+    "No note for this customer...":"Không có ghi chú cho khách hàng này"
 }

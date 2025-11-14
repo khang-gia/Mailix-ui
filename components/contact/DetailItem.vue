@@ -18,12 +18,20 @@
       </div>
     </div>
     <div v-else>
+      <slot name="value">
+        <span v-if="value" class="text-base font-semibold text-gray-800 dark:text-gray-200 break-words">
+          {{ translate_keys.includes(label) ? $t(value) : value }}
+        </span>
+        <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">--</span>
+      </slot>
+    </div>
+    <!-- <div v-else>
 
       <span v-if="value" class="text-base font-semibold text-gray-800 dark:text-gray-200 break-words">
         {{ translate_keys.includes(label) ? $t(value) : value }}
       </span>
       <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">--</span>
-    </div>
+    </div> -->
     
   </div>
 </template>
@@ -39,5 +47,5 @@ const props = defineProps({
     default: ''
   }
 })
-const translate_keys = ['Gender', 'Type of contact', 'Contact Source','Company Type', 'Line of business']
+const translate_keys = ['Gender', 'Type of contact', 'Contact Source','Company Type', 'Line of business','Status', 'Stage']
 </script>

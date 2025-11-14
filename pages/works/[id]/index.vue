@@ -76,11 +76,11 @@
           <UDivider class="my-6" />
 
           <h2 class="text-xl font-semibold border-b pb-3 mb-4 text-gray-800 dark:text-gray-100">
-            Mô tả
+            {{$t('Description')}}
           </h2>
           <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
             <span v-if="workInfo.description" v-html="workInfo.description"></span>
-            <span v-else>{{ 'Không có mô tả chi tiết cho công việc này.' }}</span>
+            <span v-else>{{ $t('No description for this work...') }}</span>
           </div>
 
         </UCard>
@@ -91,7 +91,7 @@
           footer: { base: 'border-none', padding:'px-4 py-4 sm:px-6'
         }
         }">
-          <UTabs :items="tabs" class="w-full"  @change="updateTab">
+          <UTabs :items="tabs" class="w-full" >
             <template #item="{ item }">
               <div class="mt-4">
                 <div v-if="item.key === 'discussions'" class="h-full overflow-x-hidden">
@@ -106,31 +106,6 @@
               
             </template>
           </UTabs>
-          <!-- <template #footer>
-            <div v-if="activeTab===0" class="mb-4">
-               <UInput
-                  type="text"
-                  :placeholder="$t('Write a discussion...')"
-                  size="sm"
-                  class="w-full"
-                  :ui="{ 
-                    icon: { 
-                      trailing: { 
-                        pointer: '' 
-                      },
-                      leading:{
-                        wrapper: 'flex items-center justify-center',
-                        pointer:''
-                      }
-                    } 
-                  }"
-                >
-                <template #trailing>
-                  <UButton :padded="false" color="blue" variant="link" icon="i-heroicons-paper-airplane-20-solid" />
-                </template>
-              </UInput>
-            </div>
-          </template> -->
         </UCard>
       </div>
 
@@ -146,10 +121,6 @@ definePageMeta({
   title: 'Chi tiết công việc',
 })
 
-const discussions = ref([
-    { user: 'Gia Khang', message: 'Đã nhắc bạn hỗ trợ giới thiệu đối tác nhé!', time: '10:00 04/02/2024' },
-    { user: 'Thanh Thanh', message: 'em đã gửi đính kèm file tiến độ lên đây nhé', time: '10:47 22/07/2024' },
-])
 const statusMapping = [
   "none",
   "gray",
@@ -168,10 +139,6 @@ const statusMapping = [
   "red",
   "purple"
 ];
-const activeTab = ref(0)
-const updateTab = (val) => {
-  activeTab.value = val
-}
 const tabs = [{
   label: t('Discussion'),
   key: 'discussions',

@@ -24,10 +24,6 @@
         </span>
         <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">--</span>
       </slot>
-      <!-- <span v-if="value" class="text-base font-semibold text-gray-800 dark:text-gray-200 break-words">
-        {{ translate_keys.includes(label) ? $t(value) : value }}
-      </span>
-      <span v-else class="text-sm italic text-slate-400 dark:text-gray-500">--</span> -->
     </div>
   </div>
 </template>
