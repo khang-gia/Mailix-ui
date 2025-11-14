@@ -23,9 +23,9 @@
     </div>
   </div>
   <div class="p-4 space-y-6">
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
 
-      <div class="lg:col-span-3 md:col-span-2">
+      <div class="lg:col-span-4 md:col-span-6">
         <UCard>
           <template #header>
             <div class="flex items-center justify-between">
@@ -86,7 +86,7 @@
         </UCard>
       </div>
 
-      <div class="lg:col-span-1 md:col-span-2">
+      <div class="lg:col-span-2 md:col-span-6">
         <UCard :ui="{
           footer: { base: 'border-none', padding:'px-4 py-4 sm:px-6'
         }

@@ -9,7 +9,7 @@
         {{ dayjs(history.history_date).format('HH:mm DD/MM/YYYY') }}
       </span>
 
-    <div v-if="history.history_type !== '+'" v-for="change in history.field_changes" :key="change.field" class="ml-2 text-sm">
+    <div v-if="history.history_type !== '+'" v-for="change in history.field_changes" :key="change.field" class="ml-2 text-sm flex">
         <p v-if="ignoreFields.includes(change.field)" class="text-gray-700 dark:text-gray-300">
             <span class="test-sm font-semibold text-primary-600">{{  parseChangeField(change.field) +' '+ $t('has changed')  }}</span>
         </p>
