@@ -26,7 +26,7 @@
                     </NuxtLink>
 
                     <div>
-                        <SearchInput v-if="routeCreate.includes(route.name) " v-model="search" />
+                        <SearchInput v-if="routeSearch.includes(route.name) " v-model="search" />
 
                         <!-- <UTooltip text="Tìm kiếm" :shortcuts="[metaSymbol, 'K']">
                             <span class="sm:hidden">
@@ -119,7 +119,17 @@ const routeCreate = [
     'customers',
     'system',
     "departments",
-    "groups"
+    "groups",
+]
+const routeSearch = [
+    'hr',
+    'contacts',
+    'works',
+    'customers',
+    'system',
+    "departments",
+    "groups",
+    // "dashboard-hrm"
 ]
 const props = defineProps({
     sidebarOpen: {

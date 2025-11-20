@@ -49,7 +49,7 @@ const links = [{
 }, {
   label: t('Temporary leave'),
 }, {
-  label: t('Resignation')
+  label: t('Resigned')
 },{
   label: t('Providing service'),
 }, {
@@ -73,7 +73,7 @@ const sortItemDropDown = ref([
         console.log('hehe')
       }
     },{
-      label: t('Resignation'),
+      label: t('Resigned'),
       click: () => {
         console.log('hehe')
       }

@@ -137,7 +137,8 @@ const customerSubmenu= ref([
     }},
     { link: '/hr', label: 'Nhân sự', click: () => {
         useRouter().push({ name: 'hr' });
-    } },]
+    } },
+    { link: '/dashboard-hrm', label: 'Dashboard', click: () => {} },]
 ])
 const crmSubmenu = ref([
     [{

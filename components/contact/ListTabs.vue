@@ -80,7 +80,7 @@
           console.log('hehe')
         }
       },{
-        label: t('Resignation'),
+        label: t('Resigned'),
         click: () => {
           console.log('hehe')
         }

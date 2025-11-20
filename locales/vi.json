@@ -7,7 +7,7 @@
     "All": "Tất cả",
     "Wait for approval": "Chờ phê duyệt",
     "Approved": "Đã phê duyệt",
-    "Resignation": "Đã nghỉ việc",
+    "Resigned": "Đã nghỉ việc",
     "Temporary leave":"Nghỉ tạm thời",
     "Providing service": "Đang làm dịch vụ",
     "Pending for recruitment": "Chờ nhận việc",
@@ -478,5 +478,18 @@
     "contact information": "thông tin liên hệ",
     "customer information": "thông tin khách hàng",
     "No note for this customer...":"Không có ghi chú cho khách hàng này",
-    "customer":"khách hàng"
+    "customer":"khách hàng",
+    "Total Employee": "Tổng nhân sự",
+    "Birthday in month": "Nhân sự sinh nhật tháng này",
+    "Employees using domain email": "Nhân sự sử dụng Email Tên Miền",
+    "Pending Activation": "Chờ kích hoạt",
+    "Deactivate":"Vô hiệu hoá",
+    "Stage":"Giai đoạn",
+    "CONTACT":"Liên hệ",
+    "CUSTOMER":"Khách hàng",
+    "DEAL":"Deal",
+    "INVOICE": "Hoá đơn",
+    "PAYMENT":"Thanh toán",
+    "DELIVERY": "Vận chuyển",
+    "COMPLETED": "Hoàn thành"
 }
