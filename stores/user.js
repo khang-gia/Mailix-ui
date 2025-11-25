@@ -5,11 +5,30 @@ export const useUserStore = defineStore('user', () => {
   const company = ref({})
   const isNullCompany = computed(() => !company.value.id)
   const isSidebarOpen = ref(true)
-
+  const isDismissTodayTask = ref(false)
+  const dismissedTaskDate = ref(null) // Store the date when task was dismissed
+  
   function setInfo(newInfo) {
     info.value = newInfo
   }
-
+  
+  function setDissmissTodayTask(value) {
+    isDismissTodayTask.value = value
+    if (value) {
+      // Store current date when dismissing
+      dismissedTaskDate.value = new Date().toDateString()
+    }
+  }
+  
+  function checkAndResetDismissedTask() {
+    // Check if the stored date is different from today
+    const today = new Date().toDateString()
+    if (dismissedTaskDate.value && dismissedTaskDate.value !== today) {
+      isDismissTodayTask.value = false
+      dismissedTaskDate.value = null
+    }
+  }
+  
   function setCompany(newCompany) {
     company.value = newCompany
   }
@@ -31,7 +50,11 @@ export const useUserStore = defineStore('user', () => {
     setCompany,
     isNullCompany,
     isSidebarOpen,
-    setSidebar
+    setSidebar,
+    isDismissTodayTask,
+    setDissmissTodayTask,
+    dismissedTaskDate,
+    checkAndResetDismissedTask,
   }
 }, {
   persist: {

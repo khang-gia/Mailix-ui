@@ -164,7 +164,8 @@ const workspaceSubmenu = ref([
     } },
     { link: '/schedules', label: t('Schedule'), click: () => {
         useRouter().push({ name: 'schedules' });
-    } }]
+    } },
+    { link: '/dashboard-work', label: 'Dashboard', click: () => {} },]
 ])
 const companySubmenu = ref([
     [{

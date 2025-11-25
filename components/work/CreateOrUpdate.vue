@@ -152,6 +152,12 @@
                     </client-only>
                 </UFormGroup>
                 <UFormGroup
+                    :label="$t('Brief')">
+                    <client-only>
+                        <RickTextEditor v-model="workInfo.brief" :placeholder="$t('Add work brief...')"/>
+                    </client-only>
+                </UFormGroup>
+                <UFormGroup
                     v-if="!props.isUpdate"
                     :label="$t('Create schedule')"
                     name="is_create_schedule">
@@ -463,6 +469,7 @@ const defaultWorkInfo = {
     related_work:'',
     created_by: userInfo.value.id,
     description: '',
+    brief: '',
     is_create_schedule: false,
     schedule: {
         title: '',

@@ -1,0 +1,173 @@
+<template>
+  <div class="p-4 space-y-2">
+    <span class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+      {{ t("Hello") }}, {{ userInfo.display_name }}!
+    </span>
+    <div class="grid grid-cols-7 gap-4 items-start">
+      <div class="col-span-5 flex gap-4">
+        <div class="flex-1">
+          <WorkTodayTask :todayTasks="todayTasks" />
+        </div>
+        <div v-if="allTasks" class="flex-1">
+          <UCard
+            :ui="{ rounded: 'rounded-xl', divide: '', body: { padding: 'py-0' }, footer: { padding: 'px-0' }, header: { padding: 'pb-0' } }"
+            class="w-full h-full">
+            <template #header>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center justify-center space-x-2">
+                  <span class="rounded-full w-10 h-10 justify-center flex items-center bg-slate-100">
+                    <UIcon name="ix:doughnutchart-filled" class="w-5 h-5 text-black inline-block shrink-0" />
+                  </span>
+                  <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                    {{ $t('Overview') }}
+                  </h2>
+                </div>
+              </div>
+            </template>
+            <ChartDoughnut v-if="DNChartData" :chartData="DNChartData" :chartOptions="DNChartOptions" />
+          </UCard>
+        </div>
+      </div>
+
+      <WorkOverviewCard :allTasks="allTasks" class="col-span-2" />
+      <!-- <div class="col-span-7">
+        <WorkKanban :allTasks="allTasks" />
+      </div> -->
+    </div>
+    <div>
+      <UCard
+        :ui="{ rounded: 'rounded-xl', divide: '', body: { padding: 'py-0' }, footer: { padding: 'px-0' }, header: { padding: 'pb-0' } }"
+        class="w-full h-full">
+        <template #header>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center justify-center space-x-2">
+              <!-- <span class="rounded-full w-10 h-10 justify-center flex items-center bg-slate-100">
+                <UIcon name="i-heroicons-kanban"
+                 class="w-5 h-5 text-black inline-block shrink-0" />
+              </span> -->
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                {{ $t('Kanban board - Work management') }}
+              </h2>
+            </div>
+          </div>
+        </template>
+        <WorkKanban :tasks="allTasks" @update:status="handleStatusUpdate" />
+      </UCard>
+    </div>
+  </div>
+</template>
+<script setup>
+definePageMeta({
+  title: 'Dashboard',
+})
+const { data: userInfo } = useAuth()
+
+import { useI18n } from "vue-i18n";
+import pattern from 'patternomaly';
+import { useSearchStore } from '@/stores/search';
+import { storeToRefs } from 'pinia'
+const searchStore = useSearchStore();
+const { search } = storeToRefs(searchStore);
+const { t } = useI18n();
+
+const reload = ref(false)
+const page = ref(1)
+const pageSize = ref(10)
+const pageTotal = ref(0)
+const overviewHeight = ref(0)
+
+const todayTasks = computedAsync(async () => {
+  const { data: data } = await useAPI().get('core/works/', {
+    reload: reload.value,
+    page: page.value,
+    search: search.value,
+    page_size: pageSize.value,
+    assigned_to_person: userInfo.value.id,
+    today_task: true,
+  })
+  pageTotal.value = data.value.count
+  return data.value.results
+})
+const allTasks = computedAsync(async () => {
+  const { data: data } = await useAPI().get('core/works/', {
+    reload: reload.value,
+    page: page.value,
+    search: search.value,
+    page_size: pageSize.value,
+    assigned_to_person: userInfo.value.id,
+  })
+  pageTotal.value = data.value.count
+  return data.value.results
+})
+
+// Handle Kanban status update
+const handleStatusUpdate = async ({ taskId, oldStatus, newStatus }) => {
+  try {
+    await useAPI().patch(`core/works/${taskId}/`, {
+      status: newStatus
+    })
+    // Reload tasks to reflect the change
+    reload.value = !reload.value
+  } catch (error) {
+    console.error('Failed to update task status:', error)
+    // Optionally show error notification to user
+  }
+}
+// const {data: hrmStatistic, refresh} = await useAPI().get(`core/hrm_statistic/`);
+const completeWorkData = computed(() => {
+  if (!allTasks.value) return [0, 0, 0]
+  return [
+    allTasks.value.filter(task => task.status === 1).length,
+    allTasks.value.filter(task => task.status === 2).length,
+    allTasks.value.filter(task => task.status === 3).length,
+  ]
+})
+const DNChartData = ref(null);
+
+// Function to generate chart data
+const generateChartData = () => {
+  DNChartData.value = {
+    labels: [t('Completed'), t('In Progress'), t('Not Started')],
+    datasets: [
+      {
+        data: completeWorkData.value,
+        backgroundColor: [
+          pattern.draw('dash', '#1f77b4'), // Blue squares
+          pattern.draw('diagonal', '#ff7f0e'), // Orange circles
+          pattern.draw('diamond', '#2ca02c'), // Green diamonds
+        ],
+        hoverOffset: 10,
+      },
+    ],
+  };
+};
+
+// Watch for changes in todayTasks and regenerate chart data
+watch(allTasks, (newTasks) => {
+  if (newTasks) {
+    generateChartData();
+  }
+});
+
+// Generate chart data on initial mount
+onMounted(() => {
+  generateChartData();
+});
+
+const DNChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  cutout: '70%',
+  plugins: {
+    legend: {
+      display: true,
+    },
+    title: {
+      display: false
+    },
+    datalabels: {
+      display: false
+    },
+  },
+}
+</script>
