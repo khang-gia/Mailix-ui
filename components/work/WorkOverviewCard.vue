@@ -1,7 +1,7 @@
 <template>
     <UCard
         :ui="{ rounded: 'rounded-xl', divide: '', body: { padding: 'py-0' }, footer: { padding: 'px-0' }, header: { padding: 'pb-0' } }"
-        class="w-full">
+        class="w-full overflow-hidden" :style="matchHeight ? `height: ${matchHeight}px` : 'auto'">
         <template #header>
             <div class="flex items-center justify-between">
                 <div class="flex items-center justify-center space-x-2">
@@ -20,6 +20,7 @@
             </div>
         </template>
         <div class="space-y-4">
+            <!-- Fixed Tabs -->
             <div class="flex items-start justify-start gap-2">
                 <UButton :ui="{ rounded: 'rounded-full' }" :color="selectedTab === 'high_priority' ? 'red' : 'gray'"
                     variant="solid" size="md" @click="selectedTab = 'high_priority'" class="p-3">
@@ -31,72 +32,74 @@
                 </UButton>
             </div>
 
-            <div v-if="selectedTab === 'high_priority'">
-                <div v-for="task in highPriorityTasks" :key="task.id"
-                    class="px-4 py-2 rounded-lg cursor-pointer bg-red-50 mb-3">
-                    <div class="">
-                        <div class="bg-red-50 flex items-center justify-between">
-                            <UAvatarGroup size="xs" :max="3" v-if="task.assigned_to && task.assigned_to.length"
-                                :ui="{ ring: '' }" class="pt-2">
-                                <div v-for="user in task.assigned_to" :key="user.id">
-                                    <NuxtLink v-if="user.profile_hr"
-                                        :to="{ name: 'hr-id', params: { id: user.profile_hr.id } }">
-                                        <UAvatar :src="user.avatar" :alt="user.display_name" />
-                                    </NuxtLink>
-                                </div>
-                            </UAvatarGroup>
-                            <UIcon name="fluent:alert-urgent-16-filled"
-                                class=" w-5 h-5 text-red-600 inline-block shrink-0" />
+            <!-- Scrollable Task Lists -->
+            <div class="overflow-y-auto" :style="matchHeight ? `max-height: calc(${matchHeight}px - 150px)` : 'auto'">
+                <div v-if="selectedTab === 'high_priority'">
+                    <div v-for="task in highPriorityTasks" :key="task.id"
+                        class="px-4 py-2 rounded-lg cursor-pointer bg-red-50 mb-3">
+                        <div class="">
+                            <div class="bg-red-50 flex items-center justify-between">
+                                <UAvatarGroup size="xs" :max="3" v-if="task.assigned_to && task.assigned_to.length"
+                                    :ui="{ ring: '' }" class="pt-2">
+                                    <div v-for="user in task.assigned_to" :key="user.id">
+                                        <NuxtLink v-if="user.profile_hr"
+                                            :to="{ name: 'hr-id', params: { id: user.profile_hr.id } }">
+                                            <UAvatar :src="user.avatar" :alt="user.display_name" />
+                                        </NuxtLink>
+                                    </div>
+                                </UAvatarGroup>
+                                <UIcon name="fluent:alert-urgent-16-filled"
+                                    class=" w-5 h-5 text-red-600 inline-block shrink-0" />
+
+                            </div>
+                            <!-- <p class="text-sm text-gray-500 dark:text-gray-400">{{ task.code }}</p> -->
+                            <!-- <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-black dark:text-gray-100">{{ task.name }}</h3>
+                                <UIcon name="fluent:alert-urgent-16-filled" class="w-5 h-6 text-red-600 inline-block shrink-0" />
+                            </div> -->
+                            <h3 class="text-lg font-semibold text-black dark:text-gray-100">{{ task.name }}</h3>
+
+                            <span class="w-full truncate" v-html="task.brief"></span>
+
 
                         </div>
-                        <!-- <p class="text-sm text-gray-500 dark:text-gray-400">{{ task.code }}</p> -->
-                        <!-- <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-black dark:text-gray-100">{{ task.name }}</h3>
-                            <UIcon name="fluent:alert-urgent-16-filled" class="w-5 h-6 text-red-600 inline-block shrink-0" />
-                        </div> -->
-                        <h3 class="text-lg font-semibold text-black dark:text-gray-100">{{ task.name }}</h3>
-
-                        <span class="w-full truncate" v-html="task.brief"></span>
-
-
+                    </div>
+                    <div v-if="highPriorityTasks.length === 0" class="p-4 flex items-center justify-center">
+                        {{ $t('No tasks found') }}
                     </div>
                 </div>
-                <div v-if="highPriorityTasks.length === 0" class="p-4 flex items-center justify-center">
-                    {{ $t('No tasks found') }}
-                </div>
-            </div>
-            <div v-if="selectedTab === 'time_sensitive'">
-                <div v-for="task in timeSensitiveTasks" :key="task.id"
-                    class="px-4 py-2 rounded-lg cursor-pointer bg-slate-100 mb-3">
-                    <div class="">
-                        <div class="bg-slate-100 flex items-center justify-between">
-                            <UAvatarGroup size="xs" :max="3" v-if="task.assigned_to && task.assigned_to.length"
-                                :ui="{ ring: '' }" class="pt-2">
-                                <div v-for="user in task.assigned_to" :key="user.id">
-                                    <NuxtLink v-if="user.profile_hr"
-                                        :to="{ name: 'hr-id', params: { id: user.profile_hr.id } }">
-                                        <UAvatar :src="user.avatar" :alt="user.display_name" />
-                                    </NuxtLink>
-                                </div>
-                            </UAvatarGroup>
-                            <UIcon name="ic:round-alarm"
-                                class=" w-5 h-5  inline-block shrink-0" />
+                <div v-if="selectedTab === 'time_sensitive'">
+                    <div v-for="task in timeSensitiveTasks" :key="task.id"
+                        class="px-4 py-2 rounded-lg cursor-pointer bg-slate-100 mb-3">
+                        <div class="">
+                            <div class="bg-slate-100 flex items-center justify-between">
+                                <UAvatarGroup size="xs" :max="3" v-if="task.assigned_to && task.assigned_to.length"
+                                    :ui="{ ring: '' }" class="pt-2">
+                                    <div v-for="user in task.assigned_to" :key="user.id">
+                                        <NuxtLink v-if="user.profile_hr"
+                                            :to="{ name: 'hr-id', params: { id: user.profile_hr.id } }">
+                                            <UAvatar :src="user.avatar" :alt="user.display_name" />
+                                        </NuxtLink>
+                                    </div>
+                                </UAvatarGroup>
+                                <UIcon name="ic:round-alarm" class=" w-5 h-5  inline-block shrink-0" />
+
+                            </div>
+                            <!-- <p class="text-sm text-gray-500 dark:text-gray-400">{{ task.code }}</p> -->
+                            <!-- <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-black dark:text-gray-100">{{ task.name }}</h3>
+                                <UIcon name="fluent:alert-urgent-16-filled" class="w-5 h-6 text-red-600 inline-block shrink-0" />
+                            </div> -->
+                            <h3 class="text-lg font-semibold text-black dark:text-gray-100">{{ task.name }}</h3>
+
+                            <span class="w-full truncate" v-html="task.brief"></span>
+
 
                         </div>
-                        <!-- <p class="text-sm text-gray-500 dark:text-gray-400">{{ task.code }}</p> -->
-                        <!-- <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-black dark:text-gray-100">{{ task.name }}</h3>
-                            <UIcon name="fluent:alert-urgent-16-filled" class="w-5 h-6 text-red-600 inline-block shrink-0" />
-                        </div> -->
-                        <h3 class="text-lg font-semibold text-black dark:text-gray-100">{{ task.name }}</h3>
-
-                        <span class="w-full truncate" v-html="task.brief"></span>
-
-
                     </div>
-                </div>
-                <div v-if="timeSensitiveTasks.length === 0" class="p-4 flex items-center justify-center">
-                    {{ $t('No tasks found') }}
+                    <div v-if="timeSensitiveTasks.length === 0" class="p-4 flex items-center justify-center">
+                        {{ $t('No tasks found') }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -118,6 +121,10 @@ const props = defineProps({
         type: Array,
         required: true,
         default: () => []
+    },
+    matchHeight: {
+        type: Number,
+        default: 0
     }
 })
 

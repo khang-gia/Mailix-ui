@@ -8,7 +8,7 @@
         <div class="flex-1">
           <WorkTodayTask :todayTasks="todayTasks" />
         </div>
-        <div v-if="allTasks" class="flex-1">
+        <div v-if="allTasks" class="flex-1" id="overview-card">
           <UCard
             :ui="{ rounded: 'rounded-xl', divide: '', body: { padding: 'py-0' }, footer: { padding: 'px-0' }, header: { padding: 'pb-0' } }"
             class="w-full h-full">
@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <WorkOverviewCard :allTasks="allTasks" class="col-span-2" />
+      <WorkOverviewCard :allTasks="allTasks" :matchHeight="overviewHeight" class="col-span-2" />
       <!-- <div class="col-span-7">
         <WorkKanban :allTasks="allTasks" />
       </div> -->
@@ -74,6 +74,7 @@ const reload = ref(false)
 const page = ref(1)
 const pageSize = ref(10)
 const pageTotal = ref(0)
+const overviewHeight = ref(0)
 
 const todayTasks = computedAsync(async () => {
   const { data: data } = await useAPI().get('core/works/', {
@@ -97,6 +98,25 @@ const allTasks = computedAsync(async () => {
   })
   pageTotal.value = data.value.count
   return data.value.results
+})
+
+// Track the height of the overview card
+onMounted(() => {
+  const overviewCard = document.getElementById('overview-card')
+  if (overviewCard) {
+    const updateHeight = () => {
+      overviewHeight.value = overviewCard.offsetHeight
+    }
+    updateHeight()
+
+    // Use ResizeObserver to track height changes
+    const resizeObserver = new ResizeObserver(updateHeight)
+    resizeObserver.observe(overviewCard)
+
+    onUnmounted(() => {
+      resizeObserver.disconnect()
+    })
+  }
 })
 
 // Handle Kanban status update
