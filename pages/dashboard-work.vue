@@ -74,7 +74,6 @@ const reload = ref(false)
 const page = ref(1)
 const pageSize = ref(10)
 const pageTotal = ref(0)
-const overviewHeight = ref(0)
 
 const todayTasks = computedAsync(async () => {
   const { data: data } = await useAPI().get('core/works/', {
@@ -127,14 +126,14 @@ const DNChartData = ref(null);
 // Function to generate chart data
 const generateChartData = () => {
   DNChartData.value = {
-    labels: [t('Completed'), t('In Progress'), t('Not Started')],
+    labels: [t('Not Started'), t('In Progress'), t('Completed')],
     datasets: [
       {
         data: completeWorkData.value,
         backgroundColor: [
-          pattern.draw('dash', '#1f77b4'), // Blue squares
-          pattern.draw('diagonal', '#ff7f0e'), // Orange circles
-          pattern.draw('diamond', '#2ca02c'), // Green diamonds
+          pattern.draw('dash', '#D8DCE0'), // Light gray
+          pattern.draw('diagonal', '#4278ef'), // Orange circles
+          pattern.draw('diamond', '#25a752'), // Green diamonds
         ],
         hoverOffset: 10,
       },
