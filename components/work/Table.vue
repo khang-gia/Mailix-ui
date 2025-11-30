@@ -79,7 +79,7 @@
                 </div>
             </UAvatarGroup>
             <div v-else>
-                <span class="text-sm italic text-slate-400 dark:text-gray-500">{{$t('No user assigned')}}</span>
+                <span class="text-sm italic text-slate-400 dark:text-gray-500">{{$t('No manager')}}</span>
             </div>
         </template>
         <template #created_by-data="{row}">

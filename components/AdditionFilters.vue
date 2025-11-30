@@ -83,7 +83,7 @@
             </USelectMenu>
           </UFormGroup>
           <UFormGroup v-if="checkView('work_priority')" :label="$t('Priority')">
-            <PrioritySelect v-model="currentFilter.priority" :placeholder="$t('Priority')"/>
+            <PrioritySelect v-model="currentFilter.priorities" :placeholder="$t('Priority')"  :multiple="true"/>
           </UFormGroup>
           <UFormGroup v-if="checkView('assigned_to')" :label="$t('Work assigned to')">
             <CustomerUserSelect v-model="currentFilter.assigned_tos" :placeholder="$t('Work assigned to')" :multiple="true"/>
@@ -97,7 +97,7 @@
           <UFormGroup
               v-if="checkView('department')"
               :label="$t('Department')">
-              <DepartmentSelectMulti v-model="currentFilter.departments" :placeholder="$t('Department')" :multiple="true"/>
+              <CoreDepartmentSelectMulti v-model="currentFilter.departments" :placeholder="$t('Department')" :multiple="true"/>
           </UFormGroup>
           <UFormGroup
               v-if="checkView('direct_manager')"
@@ -121,10 +121,8 @@ const { t } = useI18n();
 const colorMode = useColorMode()
 import lodash from 'lodash'; 
 const { cloneDeep } = lodash; 
-// const isOpenFilter = defineModel({ default: false })
 import { useFilterStore } from '@/stores/filter'
 import { storeToRefs } from 'pinia'
-import DepartmentSelectMulti from "./core/DepartmentSelectMulti.vue";
 const filterStore = useFilterStore()
 const { currentFilter, filterType, isOpenFilter } = storeToRefs(filterStore)
 const { setFilterModal, clearFilter, setFilter } = filterStore
@@ -137,75 +135,78 @@ const statusOptions = [
 ]
 const work_statuses = [
   { label: t('Not Started'), id: 1 },
-  { label: t('In Progress'), id: 2 },
-  { label: t('Completed'), id: 3 },
-  { label: t('On Hold'), id: 4 },
-  { label: t('Cancelled'), id: 5 },
-  { label: t('Deferred'), id: 6 },
-  { label: t('Waiting for Review'), id: 7 },
-  { label: t('Approved'), id: 8 },
-  { label: t('Rejected'), id: 9 },
-  { label: t('Pending'), id: 11 },
-  { label: t('Success'), id: 12 },
-  { label: t('Archived'), id: 13 },
-  { label: t('Deleted'), id: 14 },
-  { label: t('Draft'), id: 15 },
+  { label: t('Backlog'), id: 2},
+  { label: t('To Do') ,id :3},
+  { label: t('In Progress'), id: 4 },
+  { label: t('Completed'), id: 5 },
+  { label: t('On Hold'), id: 6 },
+  { label: t('Cancelled'), id: 7 },
+  { label: t('Deferred'), id: 8 },
+  { label: t('Waiting for Review'), id: 9 },
+  { label: t('Approved'), id: 10 },
+  { label: t('Rejected'), id: 11 },
+  { label: t('Pending'), id: 12 },
+  { label: t('Failed'), id:13},
+  { label: t('Success'), id: 14 },
+  { label: t('Archived'), id: 15 },
+  { label: t('Deleted'), id: 16 },
+  { label: t('Draft'), id: 17 },
 ];
 const viewAllow = ref({
-  profile_hrs:['department','position','title','direct_manager','role','profile_status'],
-  contacts:['customer_source','type_of_customer','curators','created_at'],
-  customers:['customer_source','type_of_customer','curators','customer_group','created_at'],
-  works:['work_status','progress','work_priority','assigned_to','assigned_by','managers','start_date','end_date','actual_start_date'],
+  profile_hrs: ['department', 'position', 'title', 'direct_manager', 'role', 'profile_status'],
+  contacts: ['customer_source', 'type_of_customer', 'curators', 'created_at'],
+  customers: ['customer_source', 'type_of_customer', 'curators', 'customer_group', 'created_at'],
+  works: ['work_status', 'progress', 'work_priority', 'assigned_to', 'assigned_by', 'managers', 'start_date', 'end_date', 'actual_start_date'],
 })
 const checkView = (key) => {
   return viewAllow.value[filterType.value]?.includes(key);
 
 }
 const type_of_customers = [
-    {label: t('Personal'), value: 1},
-    {label: t('Organization'), value: 2},
+  { label: t('Personal'), value: 1 },
+  { label: t('Organization'), value: 2 },
 ]
 const customer_sources = [
-    {label: 'Facebook', value: 1},
-    {label: 'Instagram', value: 2},
-    {label: 'Google', value: 3},
-    {label: t('Old customer referral'), value: 4},
-    {label: t('Website'), value: 5},
-    {label: t('Self-searching'), value: 6},
-    {label: t('Switchboard'), value: 7},
-    {label: t('Broker'), value: 8},
-    {label: t('Sale data'), value: 9},
+  { label: 'Facebook', value: 1 },
+  { label: 'Instagram', value: 2 },
+  { label: 'Google', value: 3 },
+  { label: t('Old customer referral'), value: 4 },
+  { label: t('Website'), value: 5 },
+  { label: t('Self-searching'), value: 6 },
+  { label: t('Switchboard'), value: 7 },
+  { label: t('Broker'), value: 8 },
+  { label: t('Sale data'), value: 9 },
 ]
 const customer_groups = [
-    {label: t('Loyal Customer'), value: 1},
-    {label: t('Former Customer'), value: 2},
-    {label: t('Potential Customer'), value: 3},
-    {label: t('Casual Customer'), value: 4},
-    {label: t('Newly acquired lead'), value: 5},
-    {label: t('Nurturing customer lead'), value: 6},
-    {label: 'VIP', value: 7},
-    {label: 'VVIP', value: 8},
+  { label: t('Loyal Customer'), value: 1 },
+  { label: t('Former Customer'), value: 2 },
+  { label: t('Potential Customer'), value: 3 },
+  { label: t('Casual Customer'), value: 4 },
+  { label: t('Newly acquired lead'), value: 5 },
+  { label: t('Nurturing customer lead'), value: 6 },
+  { label: 'VIP', value: 7 },
+  { label: 'VVIP', value: 8 },
 ]
 const company_types = [
-    { label: t('Limited Liability Company'), value: 1 },
-    { label: t('Joint Stock Company'), value: 2 },
-    { label: t('Partnership'), value: 3 },
-    { label: t('Sole Proprietorship'), value: 4 },
-    { label: t('State-owned Enterprise'), value: 5 },
-    { label: t('Foreign Enterprise'), value: 6 },
-    { label: t('Cooperative'), value: 7 },
-    { label: t('Non-profit Organization'), value: 8 },
+  { label: t('Limited Liability Company'), value: 1 },
+  { label: t('Joint Stock Company'), value: 2 },
+  { label: t('Partnership'), value: 3 },
+  { label: t('Sole Proprietorship'), value: 4 },
+  { label: t('State-owned Enterprise'), value: 5 },
+  { label: t('Foreign Enterprise'), value: 6 },
+  { label: t('Cooperative'), value: 7 },
+  { label: t('Non-profit Organization'), value: 8 },
 ];
 const contact_statuses = [
-    { value: 1, label: t('New') },
-    { value: 2, label: t('1st Contacted') },
-    { value: 3, label: t('2nd Contacted') },
-    { value: 4, label: t('Consulting') },
-    { value: 5, label: t('Negotiating') },
-    { value: 6, label: t('Contracted') },
-    { value: 7, label: t('Quoted') },
-    { value: 8, label: t('Old Customer') },
-    { value: 10, label: t('Others') },
+  { value: 1, label: t('New') },
+  { value: 2, label: t('1st Contacted') },
+  { value: 3, label: t('2nd Contacted') },
+  { value: 4, label: t('Consulting') },
+  { value: 5, label: t('Negotiating') },
+  { value: 6, label: t('Contracted') },
+  { value: 7, label: t('Quoted') },
+  { value: 8, label: t('Old Customer') },
+  { value: 10, label: t('Others') },
 ];
 
 const onApplyFilters = () => {

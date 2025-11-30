@@ -1,51 +1,58 @@
 <template>
-    <USelectMenu
-        v-model="priority"
-        :loading="loading"
-        :options="priorities"
-        :placeholder="placeholder"
-        :is-dark="colorMode.value === 'dark'"
+    <USelectMenu 
+        v-model="priorities" 
+        :options="priority_options" 
+        :placeholder="$t('Priority')"
+        size="sm" 
+        :ui="{ base: 'w-full' }" 
         option-attribute="label"
-        value-attribute="value"
-        trailing
-
-    >
-        <template #option="{ option }">
-            <div style="display: flex; align-items: center;">
-                 <UIcon
-                    :name="`i-heroicons-${option.value === 1 ? 'check-circle' : option.value === 2 ? 'exclamation-circle' : option.value === 3 ? 'exclamation-triangle' : option.value === 4 ? 'stop-circle' : option.value === 5 ? 'x-circle' : 'question-mark-circle'}`"
+        by="id"
+        :multiple="multiple"
+        :is-dark="colorMode.value === 'dark'">
+        <template #label>
+            <div v-if="multiple && priorities.length" class="flex items-center" v-for="priority in priorities" :key="priority.id">
+                <UIcon
+                    :name="`i-heroicons-${priority_options.find(p => p.id === priority.id)?.id === 1 ? 'check-circle' : priority_options.find(p => p.id === priority.id)?.id === 2 ? 'exclamation-circle' : priority_options.find(p => p.id === priority.id)?.id === 3 ? 'exclamation-triangle' : priority_options.find(p => p.id === priority.id)?.id === 4 ? 'stop-circle' : priority_options.find(p => p.id === priority.id)?.id === 5 ? 'x-circle' : 'question-mark-circle'}`"
                     class="inline-block mr-2 text-gray-500"
-                    :style="{ color: priorityColors[option.value] || '#9e9e9e' }"
+                    :style="{ color: priorityColors[priority_options.find(p => p.id === priority.id)?.id] || '#9e9e9e' }"
+                />
+                <span>{{ priority.label }},</span>
+            </div>
+            <span v-else-if="!multiple">{{ priority_options.find(p => p.id === priorities)?.label }}</span>
+            <span v-else-if="multiple">{{placeholder }}</span>
+        </template>
+        <template #option="{ option }">
+            <div class="flex items-center">
+                 <UIcon
+                    :name="`i-heroicons-${priority_options.find(p => p.id === option.id)?.id === 1 ? 'check-circle' : priority_options.find(p => p.id === option.id)?.id === 2 ? 'exclamation-circle' : priority_options.find(p => p.id === option.id)?.id === 3 ? 'exclamation-triangle' : priority_options.find(p => p.id === option.id)?.id === 4 ? 'stop-circle' : priority_options.find(p => p.id === option.id)?.id === 5 ? 'x-circle' : 'question-mark-circle'}`"
+                    class="inline-block mr-2 text-gray-500"
+                    :style="{ color: priorityColors[priority_options.find(p => p.id === option.id)?.id] || '#9e9e9e' }"
                 />
                 <span>{{ option.label }}</span>
             </div>
         </template>
-        <template #label>
-            <div v-if="priority" style="display: flex; align-items: center;">
-                 <UIcon
-                    :name="`i-heroicons-${priorities.find(p => p.value === priority)?.value === 1 ? 'check-circle' : priorities.find(p => p.value === priority)?.value === 2 ? 'exclamation-circle' : priorities.find(p => p.value === priority)?.value === 3 ? 'exclamation-triangle' : priorities.find(p => p.value === priority)?.value === 4 ? 'stop-circle' : priorities.find(p => p.value === priority)?.value === 5 ? 'x-circle' : 'question-mark-circle'}`"
-                    class="inline-block mr-2 text-gray-500"
-                    :style="{ color: priorityColors[priorities.find(p => p.value === priority)?.value] || '#9e9e9e' }"
-                />
-                <span>{{ priorities.find(p => p.value === priority)?.label || '' }}</span>
-            </div>
-        </template>
+
     </USelectMenu>
 </template>
 <script setup>
-const priority = defineModel({ default: '' })
+const priorities = defineModel({ required: true, type: [Array, String] })
 const colorMode = useColorMode()
-const props = defineProps(['placeholder'])
-const loading = ref(false)
+const props = defineProps({
+    placeholder: String,
+    multiple: {
+        type: Boolean,
+        default: false
+    }
+})
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
-const priorities = [
-    {label: t('Low'), value: 1},
-    {label: t('Medium'), value: 2},
-    {label: t('High'), value: 3},
-    {label: t('Urgent'), value: 4},
-    {label: t('Critical'), value: 5},
-    {label: t('None'), value: 6},
+const priority_options = [
+    { label: t('Low'), id: 1 },
+    { label: t('Medium'), id: 2 },
+    { label: t('High'), id: 3 },
+    { label: t('Urgent'), id: 4 },
+    { label: t('Critical'), id: 5 },
+    { label: t('None'), id: 6 },
 ]
 const priorityColors = {
     1: '#388e3c', // Green (Low)

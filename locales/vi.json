@@ -513,5 +513,19 @@
     "Done": "Hoàn thành",
     "No tasks": "Không có công việc",
     "Normal": "Bình thường",
-    "Kanban board - Work management": "Kanban board - Quản lý công việc"
+    "Kanban board - Work management": "Kanban board - Quản lý công việc",
+    "List View": "Xem dạng danh sách",
+    "Kanban View": "Xem dạng Kanban",
+    "Select Kanban columns": "Chọn cột hiển thị Kanban",
+    "Reset Kanban columns": "Đặt lại cột Kanban",
+    "List": "Danh sách",
+    "Edit": "Tuỳ chỉnh",
+    "Display": "Hiển thị",
+    "Assignees": "Người thực hiện",
+    "State": "Trạng thái",
+    "Is assigned to": "Đã được giao",
+    "No manager": "Không có người quản lý",
+    "Clear All": "Xóa tất cả",
+    "View all": "Xem tất cả",
+    "Show less": "Thu gọn"
 }

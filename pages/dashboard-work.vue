@@ -34,17 +34,13 @@
         <WorkKanban :allTasks="allTasks" />
       </div> -->
     </div>
-    <div>
+    <!-- <div>
       <UCard
         :ui="{ rounded: 'rounded-xl', divide: '', body: { padding: 'py-0' }, footer: { padding: 'px-0' }, header: { padding: 'pb-0' } }"
         class="w-full h-full">
         <template #header>
           <div class="flex items-center justify-between">
             <div class="flex items-center justify-center space-x-2">
-              <!-- <span class="rounded-full w-10 h-10 justify-center flex items-center bg-slate-100">
-                <UIcon name="i-heroicons-kanban"
-                 class="w-5 h-5 text-black inline-block shrink-0" />
-              </span> -->
               <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
                 {{ $t('Kanban board - Work management') }}
               </h2>
@@ -53,7 +49,7 @@
         </template>
         <WorkKanban :tasks="allTasks" @update:status="handleStatusUpdate" />
       </UCard>
-    </div>
+    </div> -->
   </div>
 </template>
 <script setup>
