@@ -1,76 +1,31 @@
 <template>
     <div class="kanban-board">
         <div class="flex gap-4 overflow-x-auto pb-4">
-            <!-- To Do Column -->
-            <div class="kanban-column flex-shrink-0 w-80">
-                <div class="kanban-column-header bg-gray-100 dark:bg-gray-800 rounded-t-xl p-4">
+            <!-- Dynamic Kanban Columns based on workKanbanColumn store -->
+            <div v-for="column in visibleColumns" :key="column.key" class="kanban-column flex-shrink-0 w-80">
+                <div class="kanban-column-header rounded-t-xl p-4" :class="getColumnHeaderClass(column.key)">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <UIcon name="material-symbols:circle-outline" class="w-5 h-5 text-gray-600" />
-                            <h3 class="font-semibold text-gray-800 dark:text-gray-100">{{ $t('Not Started') }}</h3>
-                            <span class="text-sm text-gray-500 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full">
-                                {{ todoTasks.length }}
+                            <UIcon :name="getColumnIcon(column.key)" class="w-5 h-5"
+                                :class="getColumnIconClass(column.key)" />
+                            <h3 class="font-semibold" :class="getColumnTitleClass(column.key)">
+                                {{ $t(column.label) }}
+                            </h3>
+                            <span class="text-sm px-2 py-1 rounded-full" :class="getColumnBadgeClass(column.key)">
+                                {{ getTasksByStatus(column.key).length }}
                             </span>
                         </div>
-                        <UButton icon="i-heroicons-plus" size="xs" color="gray" variant="ghost" />
+                        <UButton icon="i-heroicons-plus" size="xs" variant="ghost"
+                            :color="getColumnColor(column.key)" />
                     </div>
                 </div>
-                <div class="kanban-column-content bg-gray-50 dark:bg-gray-900 rounded-b-xl p-4 min-h-[500px] space-y-3"
-                    :class="{ 'drag-over': isDraggingOver === 1 }" @drop="onDrop($event, 1)"
-                    @dragover="onDragOver($event, 1)" @dragleave="onDragLeave" @dragenter.prevent>
-                    <WorkKanbanCard v-for="task in todoTasks" :key="task.id" :task="task"
+                <div class="kanban-column-content rounded-b-xl p-4 min-h-[500px] space-y-3"
+                    :class="[getColumnContentClass(column.key), { 'drag-over': isDraggingOver === getStatusId(column.key) }]"
+                    @drop="onDrop($event, getStatusId(column.key))"
+                    @dragover="onDragOver($event, getStatusId(column.key))" @dragleave="onDragLeave" @dragenter.prevent>
+                    <WorkKanbanCard v-for="task in getTasksByStatus(column.key)" :key="task.id" :task="task"
                         @dragstart="onDragStart($event, task)" />
-                    <div v-if="todoTasks.length === 0" class="text-center text-gray-400 py-8">
-                        {{ $t('No tasks') }}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Backlog Column -->
-            <div class="kanban-column flex-shrink-0 w-80">
-                <div class="kanban-column-header bg-blue-100 dark:bg-blue-900 rounded-t-xl p-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <UIcon name="mdi:archive-outline" class="w-5 h-5 text-blue-600" />
-                            <h3 class="font-semibold text-blue-800 dark:text-blue-100">{{ $t('Backlog') }}</h3>
-                            <span class="text-sm text-blue-600 bg-blue-200 dark:bg-blue-800 px-2 py-1 rounded-full">
-                                {{ backLogTasks.length }}
-                            </span>
-                        </div>
-                        <UButton icon="i-heroicons-plus" size="xs" color="blue" variant="ghost" />
-                    </div>
-                </div>
-                <div class="kanban-column-content bg-blue-50 dark:bg-blue-950 rounded-b-xl p-4 min-h-[500px] space-y-3"
-                    :class="{ 'drag-over': isDraggingOver === 2 }" @drop="onDrop($event, 2)"
-                    @dragover="onDragOver($event, 2)" @dragleave="onDragLeave" @dragenter.prevent>
-                    <WorkKanbanCard v-for="task in backLogTasks" :key="task.id" :task="task"
-                        @dragstart="onDragStart($event, task)" />
-                    <div v-if="backLogTasks.length === 0" class="text-center text-gray-400 py-8">
-                        {{ $t('No tasks') }}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Todo Column -->
-            <div class="kanban-column flex-shrink-0 w-80">
-                <div class="kanban-column-header bg-green-100 dark:bg-green-900 rounded-t-xl p-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <UIcon name="mdi:format-list-bulleted" class="w-5 h-5 text-green-600" />
-                            <h3 class="font-semibold text-green-800 dark:text-green-100">{{ $t('Todo') }}</h3>
-                            <span class="text-sm text-green-600 bg-green-200 dark:bg-green-800 px-2 py-1 rounded-full">
-                                {{ toDoTasks.length }}
-                            </span>
-                        </div>
-                        <UButton icon="i-heroicons-plus" size="xs" color="green" variant="ghost" />
-                    </div>
-                </div>
-                <div class="kanban-column-content bg-green-50 dark:bg-green-950 rounded-b-xl p-4 min-h-[500px] space-y-3"
-                    :class="{ 'drag-over': isDraggingOver === 3 }" @drop="onDrop($event, 3)"
-                    @dragover="onDragOver($event, 3)" @dragleave="onDragLeave" @dragenter.prevent>
-                    <WorkKanbanCard v-for="task in toDoTasks" :key="task.id" :task="task"
-                        @dragstart="onDragStart($event, task)" />
-                    <div v-if="toDoTasks.length === 0" class="text-center text-gray-400 py-8">
+                    <div v-if="getTasksByStatus(column.key).length === 0" class="text-center text-gray-400 py-8">
                         {{ $t('No tasks') }}
                     </div>
                 </div>
@@ -82,6 +37,11 @@
 <script setup>
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+import { useDisplayColStore } from '@/stores/column'
+import { storeToRefs } from 'pinia'
+
+const columnStore = useDisplayColStore()
+const { workKanbanColumn } = storeToRefs(columnStore)
 
 const props = defineProps({
     tasks: {
@@ -93,21 +53,150 @@ const props = defineProps({
 
 const emit = defineEmits(['update:status'])
 
-// Separate tasks by status
-const todoTasks = computed(() => {
-    if (!props.tasks) return []
-    return props.tasks.filter(task => task.status === 1)
+// Map column keys to status IDs
+const statusMap = {
+    'not_started': 1,
+    'backlog': 2,
+    'todo': 3,
+    'in_progress': 4,
+    'completed': 5,
+    'on_hold': 6,
+    'cancelled': 7,
+    'deferred': 8,
+    'waiting_for_review': 9,
+    'approved': 10,
+    'rejected': 11,
+    'pending': 12,
+    'failed': 13,
+    'success': 14,
+    'archived': 15,
+    'deleted': 16,
+    'draft': 17
+}
+
+// Get visible columns from store
+const visibleColumns = computed(() => {
+    return workKanbanColumn.value.filter(col => col.is_show === true)
 })
 
-const backLogTasks = computed(() => {
-    if (!props.tasks) return []
-    return props.tasks.filter(task => task.status === 2)
-})
+// Get status ID from column key
+const getStatusId = (columnKey) => {
+    return statusMap[columnKey] || 1
+}
 
-const toDoTasks = computed(() => {
+// Get tasks by column key
+const getTasksByStatus = (columnKey) => {
     if (!props.tasks) return []
-    return props.tasks.filter(task => task.status === 3)
-})
+    const statusId = getStatusId(columnKey)
+    return props.tasks.filter(task => task.status === statusId)
+}
+
+// Column styling configuration
+const columnStyles = {
+    'not_started': {
+        header: 'bg-gray-100 dark:bg-gray-800',
+        content: 'bg-gray-50 dark:bg-gray-900',
+        icon: 'material-symbols:circle-outline',
+        iconClass: 'text-gray-600',
+        titleClass: 'text-gray-800 dark:text-gray-100',
+        badgeClass: 'text-gray-500 bg-gray-200 dark:bg-gray-700',
+        color: 'gray'
+    },
+    'backlog': {
+        header: 'bg-blue-100 dark:bg-blue-900',
+        content: 'bg-blue-50 dark:bg-blue-950',
+        icon: 'mdi:archive-outline',
+        iconClass: 'text-blue-600',
+        titleClass: 'text-blue-800 dark:text-blue-100',
+        badgeClass: 'text-blue-600 bg-blue-200 dark:bg-blue-800',
+        color: 'blue'
+    },
+    'todo': {
+        header: 'bg-green-100 dark:bg-green-900',
+        content: 'bg-green-50 dark:bg-green-950',
+        icon: 'mdi:format-list-bulleted',
+        iconClass: 'text-green-600',
+        titleClass: 'text-green-800 dark:text-green-100',
+        badgeClass: 'text-green-600 bg-green-200 dark:bg-green-800',
+        color: 'green'
+    },
+    'in_progress': {
+        header: 'bg-yellow-100 dark:bg-yellow-900',
+        content: 'bg-yellow-50 dark:bg-yellow-950',
+        icon: 'i-heroicons-arrow-path',
+        iconClass: 'text-yellow-600',
+        titleClass: 'text-yellow-800 dark:text-yellow-100',
+        badgeClass: 'text-yellow-600 bg-yellow-200 dark:bg-yellow-800',
+        color: 'yellow'
+    },
+    'completed': {
+        header: 'bg-emerald-100 dark:bg-emerald-900',
+        content: 'bg-emerald-50 dark:bg-emerald-950',
+        icon: 'i-heroicons-check-circle',
+        iconClass: 'text-emerald-600',
+        titleClass: 'text-emerald-800 dark:text-emerald-100',
+        badgeClass: 'text-emerald-600 bg-emerald-200 dark:bg-emerald-800',
+        color: 'emerald'
+    },
+    'on_hold': {
+        header: 'bg-orange-100 dark:bg-orange-900',
+        content: 'bg-orange-50 dark:bg-orange-950',
+        icon: 'i-heroicons-pause-circle',
+        iconClass: 'text-orange-600',
+        titleClass: 'text-orange-800 dark:text-orange-100',
+        badgeClass: 'text-orange-600 bg-orange-200 dark:bg-orange-800',
+        color: 'orange'
+    },
+    'cancelled': {
+        header: 'bg-red-100 dark:bg-red-900',
+        content: 'bg-red-50 dark:bg-red-950',
+        icon: 'i-heroicons-x-circle',
+        iconClass: 'text-red-600',
+        titleClass: 'text-red-800 dark:text-red-100',
+        badgeClass: 'text-red-600 bg-red-200 dark:bg-red-800',
+        color: 'red'
+    }
+}
+
+// Default style for columns not in the map
+const defaultStyle = {
+    header: 'bg-gray-100 dark:bg-gray-800',
+    content: 'bg-gray-50 dark:bg-gray-900',
+    icon: 'i-heroicons-circle',
+    iconClass: 'text-gray-600',
+    titleClass: 'text-gray-800 dark:text-gray-100',
+    badgeClass: 'text-gray-500 bg-gray-200 dark:bg-gray-700',
+    color: 'gray'
+}
+
+// Helper functions to get column styles
+const getColumnHeaderClass = (columnKey) => {
+    return columnStyles[columnKey]?.header || defaultStyle.header
+}
+
+const getColumnContentClass = (columnKey) => {
+    return columnStyles[columnKey]?.content || defaultStyle.content
+}
+
+const getColumnIcon = (columnKey) => {
+    return columnStyles[columnKey]?.icon || defaultStyle.icon
+}
+
+const getColumnIconClass = (columnKey) => {
+    return columnStyles[columnKey]?.iconClass || defaultStyle.iconClass
+}
+
+const getColumnTitleClass = (columnKey) => {
+    return columnStyles[columnKey]?.titleClass || defaultStyle.titleClass
+}
+
+const getColumnBadgeClass = (columnKey) => {
+    return columnStyles[columnKey]?.badgeClass || defaultStyle.badgeClass
+}
+
+const getColumnColor = (columnKey) => {
+    return columnStyles[columnKey]?.color || defaultStyle.color
+}
 
 // Drag and drop functionality
 const draggedTask = ref(null)

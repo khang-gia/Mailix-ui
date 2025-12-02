@@ -17,7 +17,7 @@
     </ul>
     <div v-else class="flex items-center gap-2 py-2">
       <UButton color="gray" variant="soft" size="sm" icon="i-heroicons-adjustments-vertical"
-        @click="setColumnModal(true, 'kanban')">
+        @click="setColumnModal(true, 'work_kanban')">
         {{ $t('Display') }}
       </UButton>
 
