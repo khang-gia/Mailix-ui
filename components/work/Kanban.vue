@@ -26,15 +26,15 @@
                 </div>
             </div>
 
-            <!-- In Progress Column -->
+            <!-- Backlog Column -->
             <div class="kanban-column flex-shrink-0 w-80">
                 <div class="kanban-column-header bg-blue-100 dark:bg-blue-900 rounded-t-xl p-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <UIcon name="material-symbols:progress-activity" class="w-5 h-5 text-blue-600" />
+                            <UIcon name="mdi:archive-outline" class="w-5 h-5 text-blue-600" />
                             <h3 class="font-semibold text-blue-800 dark:text-blue-100">{{ $t('Backlog') }}</h3>
                             <span class="text-sm text-blue-600 bg-blue-200 dark:bg-blue-800 px-2 py-1 rounded-full">
-                                {{ inProgressTasks.length }}
+                                {{ backLogTasks.length }}
                             </span>
                         </div>
                         <UButton icon="i-heroicons-plus" size="xs" color="blue" variant="ghost" />
@@ -43,23 +43,23 @@
                 <div class="kanban-column-content bg-blue-50 dark:bg-blue-950 rounded-b-xl p-4 min-h-[500px] space-y-3"
                     :class="{ 'drag-over': isDraggingOver === 2 }" @drop="onDrop($event, 2)"
                     @dragover="onDragOver($event, 2)" @dragleave="onDragLeave" @dragenter.prevent>
-                    <WorkKanbanCard v-for="task in inProgressTasks" :key="task.id" :task="task"
+                    <WorkKanbanCard v-for="task in backLogTasks" :key="task.id" :task="task"
                         @dragstart="onDragStart($event, task)" />
-                    <div v-if="inProgressTasks.length === 0" class="text-center text-gray-400 py-8">
+                    <div v-if="backLogTasks.length === 0" class="text-center text-gray-400 py-8">
                         {{ $t('No tasks') }}
                     </div>
                 </div>
             </div>
 
-            <!-- Done Column -->
+            <!-- Todo Column -->
             <div class="kanban-column flex-shrink-0 w-80">
                 <div class="kanban-column-header bg-green-100 dark:bg-green-900 rounded-t-xl p-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <UIcon name="material-symbols:check-circle-outline" class="w-5 h-5 text-green-600" />
+                            <UIcon name="mdi:format-list-bulleted" class="w-5 h-5 text-green-600" />
                             <h3 class="font-semibold text-green-800 dark:text-green-100">{{ $t('Todo') }}</h3>
                             <span class="text-sm text-green-600 bg-green-200 dark:bg-green-800 px-2 py-1 rounded-full">
-                                {{ doneTasks.length }}
+                                {{ toDoTasks.length }}
                             </span>
                         </div>
                         <UButton icon="i-heroicons-plus" size="xs" color="green" variant="ghost" />
@@ -68,9 +68,9 @@
                 <div class="kanban-column-content bg-green-50 dark:bg-green-950 rounded-b-xl p-4 min-h-[500px] space-y-3"
                     :class="{ 'drag-over': isDraggingOver === 3 }" @drop="onDrop($event, 3)"
                     @dragover="onDragOver($event, 3)" @dragleave="onDragLeave" @dragenter.prevent>
-                    <WorkKanbanCard v-for="task in doneTasks" :key="task.id" :task="task"
+                    <WorkKanbanCard v-for="task in toDoTasks" :key="task.id" :task="task"
                         @dragstart="onDragStart($event, task)" />
-                    <div v-if="doneTasks.length === 0" class="text-center text-gray-400 py-8">
+                    <div v-if="toDoTasks.length === 0" class="text-center text-gray-400 py-8">
                         {{ $t('No tasks') }}
                     </div>
                 </div>
@@ -99,12 +99,12 @@ const todoTasks = computed(() => {
     return props.tasks.filter(task => task.status === 1)
 })
 
-const inProgressTasks = computed(() => {
+const backLogTasks = computed(() => {
     if (!props.tasks) return []
     return props.tasks.filter(task => task.status === 2)
 })
 
-const doneTasks = computed(() => {
+const toDoTasks = computed(() => {
     if (!props.tasks) return []
     return props.tasks.filter(task => task.status === 3)
 })
