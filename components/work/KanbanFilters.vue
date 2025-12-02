@@ -10,9 +10,9 @@
         <template #panel>
             <div class="p-4 w-80 max-h-[600px] overflow-y-auto bg-white dark:bg-gray-900">
                 <!-- Search -->
-                <div class="mb-4">
+                <!-- <div class="mb-4">
                     <UInput icon="i-heroicons-magnifying-glass" :placeholder="$t('Search')" size="sm" />
-                </div>
+                </div> -->
 
                 <!-- Priority Filter -->
                 <UAccordion :items="[{ label: $t('Priority'), slot: 'priority', defaultOpen: true }]" class="mb-3">
@@ -50,11 +50,20 @@
                 </UAccordion>
 
                 <!-- Assignee Filter -->
-                <UAccordion :items="[{ label: $t('Assignee'), slot: 'assignee', defaultOpen: false }]">
-                    <template #assignee>
-                        <div class="py-2">
-                            <CustomerUserSelect v-model="workFilter.assigned_tos" :placeholder="$t('Select assignees')"
-                                :multiple="true" />
+                <UAccordion :items="[{ label: $t('Assignees'), slot: 'assignees', defaultOpen: true }]">
+                    <template #assignees>
+                        <div class="space-y-2 py-2">
+                            <label v-for="assignee in visibleAssignees" :key="assignee"
+                                class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded">
+                                <UCheckbox :model-value="workFilter.assigned_tos.some(u => u.id === assignee.id)"
+                                    @update:model-value="toggleAssignee(assignee)" />
+                                <UAvatar :src="assignee.avatar" :name="assignee.name" />
+                                <span class="text-sm">{{ assignee.full_name }}</span>
+                            </label>
+                            <UButton v-if="assignee_users.length > 5" variant="ghost" size="xs" color="primary"
+                                @click="showAllAssignees = !showAllAssignees" class="w-full">
+                                {{ showAllAssignees ? $t('Show less') : $t('View all') }}
+                            </UButton>
                         </div>
                     </template>
                 </UAccordion>
@@ -74,7 +83,7 @@ const filterStore = useFilterStore()
 const { workFilter } = storeToRefs(filterStore)
 
 const showAllStatuses = ref(false)
-
+const showAllAssignees = ref(false)
 // Priority options
 // Priority options based on PrioritySelect
 const priorityOptions = [
@@ -90,7 +99,7 @@ const priorityOptions = [
 const workStatuses = [
     { label: t('Not Started'), id: 1, icon: 'mdi:checkbox-blank-outline' },
     { label: t('Backlog'), id: 2, icon: 'mdi:archive-outline' },
-    { label: t('To Do'), id: 3, icon: 'mdi:format-list-bulleted' },
+    { label: t('Todo'), id: 3, icon: 'mdi:format-list-bulleted' },
     { label: t('In Progress'), id: 4, icon: 'i-heroicons-arrow-path' },
     { label: t('Completed'), id: 5, icon: 'i-heroicons-check-circle' },
     { label: t('On Hold'), id: 6, icon: 'i-heroicons-pause-circle' },
@@ -110,6 +119,8 @@ const workStatuses = [
 const visibleStatuses = computed(() => {
     return showAllStatuses.value ? workStatuses : workStatuses.slice(0, 5)
 })
+
+
 
 // Helper functions
 const togglePriority = (value) => {
@@ -144,4 +155,19 @@ const isWorkFilterEmpty = computed(() => {
         return false
     })
 })
+const assignee_users = computedAsync(async () => {
+    const { data } = await useAPI().get('core/users/', {})
+    return data.value.results
+})
+const visibleAssignees = computed(() => {
+    return showAllAssignees.value ? assignee_users.value : assignee_users.value.slice(0, 5)
+})
+const toggleAssignee = (assignee) => {
+    const index = workFilter.value.assigned_tos.findIndex(a => a.id === assignee.id)
+    if (index > -1) {
+        workFilter.value.assigned_tos.splice(index, 1)
+    } else {
+        workFilter.value.assigned_tos.push(assignee)
+    }
+}
 </script>

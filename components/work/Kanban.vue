@@ -32,7 +32,7 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <UIcon name="material-symbols:progress-activity" class="w-5 h-5 text-blue-600" />
-                            <h3 class="font-semibold text-blue-800 dark:text-blue-100">{{ $t('In Progress') }}</h3>
+                            <h3 class="font-semibold text-blue-800 dark:text-blue-100">{{ $t('Backlog') }}</h3>
                             <span class="text-sm text-blue-600 bg-blue-200 dark:bg-blue-800 px-2 py-1 rounded-full">
                                 {{ inProgressTasks.length }}
                             </span>
@@ -57,7 +57,7 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <UIcon name="material-symbols:check-circle-outline" class="w-5 h-5 text-green-600" />
-                            <h3 class="font-semibold text-green-800 dark:text-green-100">{{ $t('Done') }}</h3>
+                            <h3 class="font-semibold text-green-800 dark:text-green-100">{{ $t('Todo') }}</h3>
                             <span class="text-sm text-green-600 bg-green-200 dark:bg-green-800 px-2 py-1 rounded-full">
                                 {{ doneTasks.length }}
                             </span>

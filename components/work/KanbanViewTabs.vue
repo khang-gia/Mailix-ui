@@ -29,11 +29,12 @@
                 <UIcon :name="filter.value ? 'i-heroicons-x-circle' : 'i-heroicons-check-circle'" class="w-4 h-4" />
             </UBadge>
 
-            <!-- Generic Value -->
-            <span v-else class="font-medium text-gray-900 dark:text-white mr-2 flex items-center gap-1">
-                <UAvatar v-if="filter.key === 'assigned_tos' || filter.key === 'assigned_bys'" :alt="filter.value"
-                    size="2xs" />
-                {{ filter.value }}
+            <!-- Avatar Value -->
+            <span v-else-if="filter.key === 'assigned_tos' || filter.key === 'assigned_bys'" class="" v-for="user in filter.value" :key="user.id">
+                <UBadge color="gray" variant="solid" class="flex items-center mr-2">
+                    <UAvatar :src="user.avatar" :alt="user.full_name" size="2xs" />
+                    <span>{{ user.full_name }}</span>
+                </UBadge>
             </span>
 
             <UButton icon="i-heroicons-x-mark" size="2xs" color="gray" variant="ghost"
