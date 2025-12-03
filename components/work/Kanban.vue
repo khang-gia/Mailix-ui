@@ -162,7 +162,7 @@ const columnStyles = {
 const defaultStyle = {
     header: 'bg-gray-100 dark:bg-gray-800',
     content: 'bg-gray-50 dark:bg-gray-900',
-    icon: 'i-heroicons-circle',
+    icon: 'material-symbols:circle-outline',
     iconClass: 'text-gray-600',
     titleClass: 'text-gray-800 dark:text-gray-100',
     badgeClass: 'text-gray-500 bg-gray-200 dark:bg-gray-700',

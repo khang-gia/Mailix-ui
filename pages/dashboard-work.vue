@@ -30,26 +30,18 @@
       </div>
 
       <WorkOverviewCard :allTasks="allTasks" :matchHeight="overviewHeight" class="col-span-2" />
-      <!-- <div class="col-span-7">
-        <WorkKanban :allTasks="allTasks" />
-      </div> -->
+       <!-- <WorkProjectTimeline :tasks="allTasks" /> -->
     </div>
-    <!-- <div>
-      <UCard
-        :ui="{ rounded: 'rounded-xl', divide: '', body: { padding: 'py-0' }, footer: { padding: 'px-0' }, header: { padding: 'pb-0' } }"
-        class="w-full h-full">
-        <template #header>
-          <div class="flex items-center justify-between">
-            <div class="flex items-center justify-center space-x-2">
-              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                {{ $t('Kanban board - Work management') }}
-              </h2>
-            </div>
-          </div>
-        </template>
-        <WorkKanban :tasks="allTasks" @update:status="handleStatusUpdate" />
-      </UCard>
-    </div> -->
+
+    <div class="py-2">
+      <!-- <div>
+        <WorkActivityTimeline :tasks="allTasks" />
+      </div> -->
+
+      <div>
+        <WorkProjectTimeline :tasks="allTasks" />
+      </div>
+    </div>
   </div>
 </template>
 <script setup>

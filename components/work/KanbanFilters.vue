@@ -38,7 +38,7 @@
                                 class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded">
                                 <UCheckbox :model-value="isStatusSelected(status.id)"
                                     @update:model-value="toggleStatus(status)" />
-                                <UIcon :name="status.icon || 'i-heroicons-circle'" class="w-4 h-4" />
+                                <UIcon :name="status.icon || 'material-symbols:circle-outline'" class="w-4 h-4" />
                                 <span class="text-sm">{{ status.label }}</span>
                             </label>
                             <UButton v-if="workStatuses.length > 5" variant="ghost" size="xs" color="primary"
@@ -109,7 +109,7 @@ const workStatuses = [
     { label: t('Approved'), id: 10, icon: 'i-heroicons-check-badge' },
     { label: t('Rejected'), id: 11, icon: 'i-heroicons-x-mark' },
     { label: t('Pending'), id: 12, icon: 'i-heroicons-ellipsis-horizontal-circle' },
-    { label: t('Failed'), id:13, icon:'mingcute:sad-line'},
+    { label: t('Failed'), id: 13, icon: 'mingcute:sad-line' },
     { label: t('Success'), id: 14, icon: 'i-heroicons-trophy' },
     { label: t('Archived'), id: 15, icon: 'i-heroicons-archive-box' },
     { label: t('Deleted'), id: 16, icon: 'i-heroicons-trash' },
@@ -124,7 +124,7 @@ const visibleStatuses = computed(() => {
 
 // Helper functions
 const togglePriority = (value) => {
-    console.log('togglePriority',value)
+    console.log('togglePriority', value)
     const index = workFilter.value.priorities.findIndex(p => p.id === value)
     if (index > -1) {
         workFilter.value.priorities.splice(index, 1)
