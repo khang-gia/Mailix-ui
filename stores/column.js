@@ -421,23 +421,23 @@ export const useDisplayColStore = defineStore('column', () => {
         { key: 'created_by', label: 'Created By', sortable: true, is_show: true }
       ],
       work_kanban: [
-        { key: 'not_started', label: 'Not Started', sortable: true, is_show: true },
+        { key: 'not_started', label: 'Not Started', sortable: true, is_show: false },
         { key: 'backlog', label: 'Backlog', sortable: true, is_show: true },
         { key: 'todo', label: 'Todo', sortable: true, is_show: true },
         { key: 'in_progress', label: 'In Progress', sortable: true, is_show: true },
         { key: 'completed', label: 'Completed', sortable: true, is_show: true },
-        { key: 'on_hold', label: 'On Hold', sortable: true, is_show: true },
-        { key: 'cancelled', label: 'Cancelled', sortable: true, is_show: true },
-        { key: 'deferred', label: 'Deferred', sortable: true, is_show: true },
-        { key: 'waiting_for_review', label: 'Waiting for Review', sortable: true, is_show: true },
-        { key: 'approved', label: 'Approved', sortable: true, is_show: true },
-        { key: 'rejected', label: 'Rejected', sortable: true, is_show: true },
-        { key: 'pending', label: 'Pending', sortable: true, is_show: true },
-        { key: 'failed', label: 'Failed', sortable: true, is_show: true },
-        { key: 'success', label: 'Success', sortable: true, is_show: true },
-        { key: 'archived', label: 'Archived', sortable: true, is_show: true },
-        { key: 'deleted', label: 'Deleted', sortable: true, is_show: true },
-        { key: 'draft', label: 'Draft', sortable: true, is_show: true }
+        { key: 'on_hold', label: 'On Hold', sortable: true, is_show: false },
+        { key: 'cancelled', label: 'Cancelled', sortable: true, is_show: false },
+        { key: 'deferred', label: 'Deferred', sortable: true, is_show: false },
+        { key: 'waiting_for_review', label: 'Waiting for Review', sortable: true, is_show: false },
+        { key: 'approved', label: 'Approved', sortable: true, is_show: false },
+        { key: 'rejected', label: 'Rejected', sortable: true, is_show: false },
+        { key: 'pending', label: 'Pending', sortable: true, is_show: false },
+        { key: 'failed', label: 'Failed', sortable: true, is_show: false },
+        { key: 'success', label: 'Success', sortable: true, is_show: false },
+        { key: 'archived', label: 'Archived', sortable: true, is_show: false },
+        { key: 'deleted', label: 'Deleted', sortable: true, is_show: false },
+        { key: 'draft', label: 'Draft', sortable: true, is_show: false }
       ]
     }
     return defaults[type] || []
