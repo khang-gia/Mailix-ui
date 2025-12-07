@@ -11,8 +11,7 @@
                     <UIcon
                         :name="`i-heroicons-${priority.id === 1 ? 'check-circle' : priority.id === 2 ? 'exclamation-circle' : priority.id === 3 ? 'exclamation-triangle' : priority.id === 4 ? 'stop-circle' : priority.id === 5 ? 'x-circle' : 'question-mark-circle'}`"
                         class="inline-block text-gray-500"
-                        :style="{ color: priorityColors[priority.id] || '#9e9e9e' }"
-                    />
+                        :style="{ color: priorityColors[priority.id] || '#9e9e9e' }" />
                     <span>{{ priority.label }}</span>
                 </UBadge>
             </div>
@@ -30,7 +29,8 @@
             </UBadge>
 
             <!-- Avatar Value -->
-            <span v-else-if="filter.key === 'assigned_tos' || filter.key === 'assigned_bys'" class="" v-for="user in filter.value" :key="user.id">
+            <span v-else-if="filter.key === 'assigned_tos' || filter.key === 'assigned_bys'" class=""
+                v-for="user in filter.value" :key="user.id">
                 <UBadge color="gray" variant="solid" class="flex items-center mr-2">
                     <UAvatar :src="user.avatar" :alt="user.full_name" size="2xs" />
                     <span>{{ user.full_name }}</span>
@@ -45,7 +45,9 @@
             icon="i-heroicons-x-mark" @click="clearAllFilters" class="ml-auto" />
     </div>
 
-    <div class="p-2">
+    <div class="p-2 ">
+        <!-- <WorkKanban :tasks="works" @update:status="handleStatusUpdate" @create:task="handleTaskCreate" /> -->
+
         <UCard
             :ui="{ rounded: 'rounded-xl', divide: '', body: { padding: 'py-0' }, footer: { padding: 'px-0' }, header: { padding: 'pb-0' } }">
             <template #header>
@@ -57,7 +59,9 @@
                     </div>
                 </div>
             </template>
-            <WorkKanban :tasks="works" @update:status="handleStatusUpdate" />
+            <div class="kanban-com">
+                <WorkKanban :tasks="works" @update:status="handleStatusUpdate" @create:task="handleTaskCreate" />
+            </div>
         </UCard>
     </div>
 </template>
@@ -218,4 +222,22 @@ const handleStatusUpdate = async ({ taskId, oldStatus, newStatus }) => {
         // Optionally show error notification to user
     }
 }
+
+// Handle task creation
+const handleTaskCreate = () => {
+    // Reload tasks to show the newly created task
+    reload.value = !reload.value
+}
 </script>
+<style scoped>
+.kanban-com {
+  height: calc(100vh - 200px); /* adjust for header */
+  display: flex;
+  flex-direction: column;
+}
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+</style>

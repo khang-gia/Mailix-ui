@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <WorkListTabs v-model="tab" v-model:viewMode="viewMode" />
     <div class="">
       <!-- List View Tabs -->

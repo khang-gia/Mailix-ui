@@ -2,32 +2,52 @@
     <div class="kanban-board">
         <div class="flex gap-4 overflow-x-auto pb-4">
             <!-- Dynamic Kanban Columns based on workKanbanColumn store -->
-            <div v-for="column in visibleColumns" :key="column.key" class="kanban-column flex-shrink-0 w-80">
-                <div class="kanban-column-header rounded-t-xl p-4" :class="getColumnHeaderClass(column.key)">
+            <div v-for="column in visibleColumns" :key="column.key"
+                class="kanban-column flex-shrink-0 w-80 flex flex-col">
+                <!-- Column Header -->
+                <div class="kanban-column-header rounded-t-xl p-4 bg-gray-100 dark:bg-gray-800">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <UIcon :name="getColumnIcon(column.key)" class="w-5 h-5"
-                                :class="getColumnIconClass(column.key)" />
-                            <h3 class="font-semibold" :class="getColumnTitleClass(column.key)">
+                            <UIcon :name="getColumnIcon(column.key)" class="w-5 h-5 text-gray-600" />
+                            <h3 class="font-semibold text-gray-800 dark:text-gray-100">
                                 {{ $t(column.label) }}
                             </h3>
-                            <span class="text-sm px-2 py-1 rounded-full" :class="getColumnBadgeClass(column.key)">
+                            <span class="text-sm px-2 py-1 rounded-full text-gray-600">
                                 {{ getTasksByStatus(column.key).length }}
                             </span>
                         </div>
-                        <UButton icon="i-heroicons-plus" size="xs" variant="ghost"
-                            :color="getColumnColor(column.key)" />
                     </div>
                 </div>
-                <div class="kanban-column-content rounded-b-xl p-4 min-h-[500px] space-y-3"
-                    :class="[getColumnContentClass(column.key), { 'drag-over': isDraggingOver === getStatusId(column.key) }]"
-                    @drop="onDrop($event, getStatusId(column.key))"
-                    @dragover="onDragOver($event, getStatusId(column.key))" @dragleave="onDragLeave" @dragenter.prevent>
-                    <WorkKanbanCard v-for="task in getTasksByStatus(column.key)" :key="task.id" :task="task"
-                        @dragstart="onDragStart($event, task)" />
-                    <div v-if="getTasksByStatus(column.key).length === 0" class="text-center text-gray-400 py-8">
-                        {{ $t('No tasks') }}
+
+                <!-- Column Content - Scrollable -->
+                <div class="kanban-column-content rounded-b-xl bg-gray-50 dark:bg-gray-900 flex flex-col"
+                    >
+                    <div class="overflow-y-auto flex-1 p-4 space-y-3"
+                        :class="{ 'drag-over': isDraggingOver === getStatusId(column.key) }"
+                        @drop="onDrop($event, getStatusId(column.key))"
+                        @dragover="onDragOver($event, getStatusId(column.key))" @dragleave="onDragLeave"
+                        @dragenter.prevent>
+
+                        <!-- Task Cards -->
+                        <WorkKanbanCard v-for="task in getTasksByStatus(column.key)" :key="task.id" :task="task"
+                            @dragstart="onDragStart($event, task)" />
+
+                        <!-- Inline Creation Card -->
+                        <div v-if="isCreating[column.key]"
+                            class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <UInput v-model="newTaskTitle[column.key]" :placeholder="$t('Enter title')" size="sm"
+                                autofocus @keyup.enter="createTask(column.key)" @keyup.esc="cancelCreate(column.key)"
+                                @blur="cancelCreate(column.key)" />
+                        </div>
+
+                        <!-- New Item Button - Flows with content -->
+                        <UButton v-if="!isCreating[column.key]" icon="i-heroicons-plus" size="sm" color="gray"
+                            variant="ghost" block class="justify-start text-gray-500" @click="startCreate(column.key)">
+                            {{ $t('New Work Item') }}
+                        </UButton>
+
                     </div>
+
                 </div>
             </div>
         </div>
@@ -51,7 +71,69 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['update:status'])
+const emit = defineEmits(['update:status', 'create:task'])
+
+// Inline creation state
+const isCreating = ref({})
+const newTaskTitle = ref({})
+
+// Start creating a new task in a column
+const startCreate = (columnKey) => {
+    isCreating.value[columnKey] = true
+    newTaskTitle.value[columnKey] = ''
+}
+
+// Cancel task creation
+const cancelCreate = (columnKey) => {
+    // Small delay to allow Enter key to process first
+    setTimeout(() => {
+        isCreating.value[columnKey] = false
+        newTaskTitle.value[columnKey] = ''
+    }, 100)
+}
+
+// Create a new task
+const createTask = async (columnKey) => {
+    const title = newTaskTitle.value[columnKey]?.trim()
+    if (!title) {
+        cancelCreate(columnKey)
+        return
+    }
+
+    const statusId = getStatusId(columnKey)
+
+    try {
+        // Call API to create work
+        const { data } = await useAPI().post('core/works/', {
+            name: title,
+            status: statusId
+        })
+
+        if (data.value) {
+            useToast().add({
+                title: t('Success'),
+                description: t('Work item created successfully'),
+                icon: 'i-heroicons-check-circle',
+                color: 'green'
+            })
+
+            // Emit event to refresh tasks
+            emit('create:task', data.value)
+        }
+    } catch (error) {
+        console.error('Failed to create task:', error)
+        useToast().add({
+            title: t('Error'),
+            description: t('Failed to create work item'),
+            icon: 'i-heroicons-x-circle',
+            color: 'red'
+        })
+    } finally {
+        isCreating.value[columnKey] = false
+        newTaskTitle.value[columnKey] = ''
+    }
+}
+
 
 // Map column keys to status IDs
 const statusMap = {
@@ -235,16 +317,23 @@ const onDrop = (event, newStatus) => {
 <style scoped>
 .kanban-board {
     width: 100%;
+    flex: 1;
+    display: flex;
+    gap: 16px;
+    min-height: 0;
 }
 
 .kanban-column {
     display: flex;
-    flex-direction: column;
+    
 }
 
 .kanban-column-content {
     flex: 1;
     transition: all 0.2s ease;
+    flex-direction: column;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .kanban-column-content.drag-over {
