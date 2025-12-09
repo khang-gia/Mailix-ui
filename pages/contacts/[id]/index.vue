@@ -24,7 +24,7 @@
   </div>
   <div class="p-4 space-y-6">
     <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
-      <div class="lg:col-span-2">
+      <!-- <div class="lg:col-span-2">
         <UCard class="p-4 h-full">
           <div class="flex flex-col items-center">
             <img v-if="customerInfo.avatar" :src="customerInfo.avatar" alt="" class="mb-4 rounded-full w-44 h-44" />
@@ -54,7 +54,7 @@
             </div>
           </div>
         </UCard>
-      </div>
+      </div> -->
       <div class="lg:col-span-4 md:col-span-2 h-full">
         <UCard class="h-full">
           <template #header>
@@ -67,8 +67,6 @@
           </template>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
             
-            <!-- <WorkDetailItem label="Contact Name" :value="customerInfo.name" class="md:col-span-1" />
-            <WorkDetailItem label="Contact Code" :value="customerInfo.customer_code" class="md:col-span-1" /> -->
             <ContactDetailItem label="Name" :value="customerInfo.name" />
             <ContactDetailItem label="Customer title" :value="customerInfo.title" />
             
@@ -78,12 +76,6 @@
             
             <ContactDetailItem label="Curators" :value="customerInfo.curators_list" />
             <ContactDetailItem label="Contact Source" :value="customerInfo.customer_source_display" />
-            <!-- <WorkDetailItem label="Progress" :value="progress" >
-
-              <template #value>
-                <UProgress :value="customerInfo.progress" indicator class="w-32" />
-              </template>
-            </WorkDetailItem> -->
 
             <!-- <WorkDetailItem label="End date" :value="dayjs(customerInfo.end_date).format('YYYY-MM-DD HH:mm')" />
             <WorkDetailItem label="Actual start date" :value="dayjs(customerInfo.actual_start_date).format('YYYY-MM-DD')" /> -->
@@ -103,8 +95,12 @@
             </WorkDetailItem> -->
             <!-- <WorkDetailItem label="Priority" :value="customerInfo.priority" /> -->
 
-            <!-- <UDivider class="md:col-span-2 lg:col-span-3 my-4" /> -->
-
+            <UDivider class="md:col-span-2 lg:col-span-3 my-4" />
+            <ContactDetailItem label="Phone" :value="customerInfo.phone" />
+            <ContactDetailItem label="Email" :value="customerInfo.email" />
+            <ContactDetailItem label="Address" :value="customerInfo.address" />
+            <UDivider class="md:col-span-2 lg:col-span-3 my-4" />
+            
           </div>
 
 
@@ -125,26 +121,7 @@
 
         </UCard>
       </div>
-    </div>
-    <div class="grid grid-cols-1 lg:grid-cols-7 gap-4">
-      
-      <div class="lg:col-span-3 md:col-span-2">
-        <UCard class="">
-          <template #header>
-            <div class="flex items-center justify-between">
-              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                {{ $t('Descriptions & Accounting') }}
-              </h2>
-            </div>
-          </template>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
-              <ContactDetailItem label="Tax Code" :value="customerInfo.tax_code" />
-              <ContactDetailItem label="Id Number" :value="customerInfo.id_number" />
-              
-            </div>
-        </UCard>
-      </div>
-      <div class="lg:col-span-4 md:col-span-2">
+      <div class="col-span-2">
         <UCard class="" :ui="{
           footer: {
             base: 'border-none', padding: 'px-4 py-4 sm:px-6'
@@ -168,6 +145,25 @@
           </UTabs>
         </UCard>
       </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
+      <div class="lg:col-span-4 md:col-span-2">
+        <UCard class="">
+          <template #header>
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                {{ $t('Additional Information') }}
+              </h2>
+            </div>
+          </template>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+              <ContactDetailItem label="Tax Code" :value="customerInfo.tax_code" />
+              <ContactDetailItem label="Id Number" :value="customerInfo.id_number" />
+              
+            </div>
+        </UCard>
+      </div>
+      
     </div>
   </div>
 </template>

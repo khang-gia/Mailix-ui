@@ -48,7 +48,7 @@
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
                 {{ $t('Contact Information') }}
             </h2>
-            <UCard class="m-4" :ui="{
+            <!-- <UCard class="m-4" :ui="{
                 rounded: 'rounded-3xl',
                 background: 'bg-blue-100',
                 shadow: 'shadow-lg'
@@ -103,10 +103,10 @@
                 </UForm>
             </div>
             
-            </UCard>
+            </UCard> -->
             
             <UForm :schema="schema" :state="contactInfo" class="mx-4 py-2  grid grid-cols-2 gap-4">
-                <!-- <UFormGroup
+                <UFormGroup
                     v-slot="{error}"
                     :label="$t('Full Name')" 
                     name="name"
@@ -131,7 +131,7 @@
                         :placeholder="$t('Customer Code')"
                         :ui="{ base: 'w-full rounded-lg' }"
                         :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
-                </UFormGroup> -->
+                </UFormGroup>
                 <UFormGroup
                     :label="$t('Dob')"
                     name='dob'>

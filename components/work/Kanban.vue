@@ -116,7 +116,7 @@ const createTask = async (columnKey) => {
         if (data.value) {
             useToast().add({
                 title: t('Success'),
-                description: t('Work item created successfully'),
+                description: t('The work was successfully created.'),
                 icon: 'i-heroicons-check-circle',
                 color: 'green'
             })

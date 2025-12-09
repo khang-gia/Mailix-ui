@@ -22,7 +22,7 @@
   </div>
   <div class="p-4 space-y-6">
     <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
-      <div class="lg:col-span-2">
+      <!-- <div class="lg:col-span-2">
         <UCard class="p-4 h-full">
           <div class="flex flex-col items-center">
             <img v-if="customerInfo.avatar" :src="customerInfo.avatar" alt="" class="mb-4 rounded-full w-44 h-44" />
@@ -53,7 +53,7 @@
             </div>
           </div>
         </UCard>
-      </div>
+      </div> -->
       <div class="lg:col-span-4 md:col-span-2 h-full">
         <UCard class="h-full">
           <template #header>
@@ -103,7 +103,12 @@
             <!-- <WorkDetailItem label="Priority" :value="customerInfo.priority" /> -->
 
             <!-- <UDivider class="md:col-span-2 lg:col-span-3 my-4" /> -->
-
+            <UDivider class="md:col-span-2 lg:col-span-3 my-4" />
+            <ContactDetailItem label="Phone" :value="customerInfo.phone" />
+            <ContactDetailItem label="Email" :value="customerInfo.email" />
+            <ContactDetailItem label="Address" :value="customerInfo.address" />
+            <UDivider class="md:col-span-2 lg:col-span-3 my-4" />
+            
           </div>
 
           <UCard class="my-6">
@@ -124,8 +129,32 @@
 
         </UCard>
       </div>
+      <div class="col-span-2">
+        <UCard class="" :ui="{
+          footer: {
+            base: 'border-none', padding: 'px-4 py-4 sm:px-6'
+          }
+        }">
+          <UTabs :items="tabs" class="w-full h-full">
+            <template #item="{ item }">
+              <div class="mt-4">
+                <div v-if="item.key === 'discussions'" class="h-full overflow-x-hidden">
+                  <CommentsSection comment-type="customers" />
+                </div>
+                <div v-else-if="item.key === 'activity_log'" class="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
+                  <div v-for="history in workHistory" :key="history.id"
+                    class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
+                    <ActivityLogItem :history="history" history-type="customer" />
+                  </div>
+                </div>
+              </div>
+
+            </template>
+          </UTabs>
+        </UCard>
+      </div>
     </div>
-    <div class="grid grid-cols-1 lg:grid-cols-7 gap-4">
+    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
 
       <div v-if="customerInfo.type_of_customer === 2" class="lg:col-span-4 md:col-span-2">
         <UCard class="h-full">
@@ -150,12 +179,12 @@
           </div>
         </UCard>
       </div>
-      <div class="lg:col-span-3 md:col-span-2">
+      <div class="lg:col-span-2 md:col-span-2">
         <UCard class="">
           <template #header>
             <div class="flex items-center justify-between">
               <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                {{ $t('Descriptions & Accounting') }}
+                {{ $t('Additional Information') }}
               </h2>
               <!-- <h2 class="text-xl font-semibold border-b pb-3 mb-4 text-gray-800 dark:text-gray-100">{{ $t('Descriptions & Accounting') }}</h2> -->
 
@@ -173,30 +202,7 @@
         </UCard>
 
       </div>
-      <div class="lg:col-span-4 md:col-span-2">
-        <UCard class="" :ui="{
-          footer: {
-            base: 'border-none', padding: 'px-4 py-4 sm:px-6'
-          }
-        }">
-          <UTabs :items="tabs" class="w-full h-full">
-            <template #item="{ item }">
-              <div class="mt-4">
-                <div v-if="item.key === 'discussions'" class="h-full overflow-x-hidden">
-                  <CommentsSection comment-type="customers" />
-                </div>
-                <div v-else-if="item.key === 'activity_log'" class="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
-                  <div v-for="history in workHistory" :key="history.id"
-                    class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
-                    <ActivityLogItem :history="history" history-type="customer" />
-                  </div>
-                </div>
-              </div>
-
-            </template>
-          </UTabs>
-        </UCard>
-      </div>
+      
 
     </div>
   </div>
