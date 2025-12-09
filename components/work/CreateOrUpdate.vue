@@ -66,11 +66,9 @@
                     v-slot="{ error }"
                     :label="$t('Work Code')"
                     name="code"
-                    :error="errors.code"
-                    required>
+                    :error="errors.code">
                     <UInput
                         v-model="workInfo.code"
-                        :disabled="props.isUpdate"
                         :placeholder="$t('Work Code')"
                         :ui="{ base: 'w-full rounded-lg' }"
                         :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
@@ -367,15 +365,15 @@ const dateMode = computed(() => {
 const schema = yup.object({
     name: yup.string().required(t('This field is required')),
     code: yup.string()
-        .required(t('This field is required'))
-        .test('check-employee-code-exists', t('Employee code already exists'), async (value) => {
-            if (!value || props.isUpdate) return true;
+    .nullable()
+    .test('check-work-code-exists', t('Work code already exists'), async (value) => {
+            if (!value) return true;
             try {
                 const { data: exists } = await useAPI().get('core/works/', { code: value });
                 console.log('data', exists.value.results);
                 return exists.value.results.length == 0;
             } catch (error) {
-                console.error('Error checking employee code:', error);
+                console.error('Error checking work code:', error);
                 return false;
             }
         }),

@@ -104,12 +104,23 @@ export const useModalStore = defineStore('modalStore', () => {
       ...info
     }
   }
+  
+  // Work Kanban Modal - separate from createModal to avoid conflicts
+  const workKanbanModal = ref(false)
+  const workKanbanInitialStatus = ref(1)
+  
+  function setWorkKanbanModal(value, status = 1) {
+    workKanbanModal.value = value
+    workKanbanInitialStatus.value = status
+  }
+  
   return { 
     modalType, setModalType, setAlertModal, alertModal, alertProps, alertConfirm,
     setAuthModal, authModalMode, authModalOpen,
     setFeedbackModal, feedbackModal,
     setSearchModal, searchModal, draggableModal, toggleDraggableModal, draggableModalInfo, setDraggableModalInfo, setDraggableModal, isLive,
     setCreateArticleTypeModal, articleTypeModal, imageData, setExpandImageModal, expandImageModal,
-    setImageData,setCreateModal, createModal, modalCreateType, setCalendarCreateModal, calendarCreateModal, calendarCreateType, calendarCreateInfo
+    setImageData,setCreateModal, createModal, modalCreateType, setCalendarCreateModal, calendarCreateModal, calendarCreateType, calendarCreateInfo,
+    workKanbanModal, workKanbanInitialStatus, setWorkKanbanModal
   }
 })

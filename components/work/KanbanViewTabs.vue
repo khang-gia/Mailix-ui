@@ -60,10 +60,13 @@
                 </div>
             </template>
             <div class="kanban-com">
-                <WorkKanban :tasks="works" @update:status="handleStatusUpdate" @create:task="handleTaskCreate" />
+                <WorkKanban :tasks="localWorks" @update:status="handleStatusUpdate" @create:task="handleTaskCreate" />
             </div>
         </UCard>
     </div>
+
+    <!-- Create Work Item Modal -->
+    <ModalCreateKanbanItem @workCreated="handleWorkCreated" />
 </template>
 
 <script setup>
@@ -209,6 +212,20 @@ const works = computedAsync(async () => {
     return data.results
 })
 
+// Local works array that can be mutated for instant updates
+const localWorks = ref([])
+const newlyCreatedWorks = ref([])
+
+// Watch works and sync to localWorks, combining with newly created items
+watch(works, (fetchedWorks) => {
+    if (fetchedWorks) {
+        // Combine newly created works with fetched works, avoiding duplicates
+        const fetchedIds = new Set(fetchedWorks.map(w => w.id))
+        const uniqueNewWorks = newlyCreatedWorks.value.filter(w => !fetchedIds.has(w.id))
+        localWorks.value = [...uniqueNewWorks, ...fetchedWorks]
+    }
+}, { immediate: true })
+
 // Handle Kanban status update
 const handleStatusUpdate = async ({ taskId, oldStatus, newStatus }) => {
     try {
@@ -228,16 +245,38 @@ const handleTaskCreate = () => {
     // Reload tasks to show the newly created task
     reload.value = !reload.value
 }
+
+// Handle work created from modal - fetch and add to array without full reload
+const handleWorkCreated = async (workId) => {
+    try {
+        // Fetch the complete work item from API
+        const { data: workItem } = await useAPI().get(`core/works/${workId}/`)
+
+        if (workItem.value) {
+            // Add to newly created works tracker
+            newlyCreatedWorks.value.unshift(workItem.value)
+            // Add to local works for immediate display
+            localWorks.value.unshift(workItem.value)
+            console.log('New work item added:', workItem.value)
+        }
+    } catch (error) {
+        console.error('Failed to fetch created work item:', error)
+        // Fallback to reload if fetch fails
+        reload.value = !reload.value
+    }
+}
 </script>
 <style scoped>
 .kanban-com {
-  height: calc(100vh - 200px); /* adjust for header */
-  display: flex;
-  flex-direction: column;
-}
-html, body {
-  height: 100%;
-  overflow: hidden;
+    height: calc(100vh - 200px);
+    /* adjust for header */
+    display: flex;
+    flex-direction: column;
 }
 
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
 </style>

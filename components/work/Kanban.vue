@@ -16,12 +16,13 @@
                                 {{ getTasksByStatus(column.key).length }}
                             </span>
                         </div>
+                        <UButton icon="i-heroicons-plus" size="xs" variant="ghost" color="gray"
+                            @click="openCreateModal(column.key)" />
                     </div>
                 </div>
 
                 <!-- Column Content - Scrollable -->
-                <div class="kanban-column-content rounded-b-xl bg-gray-50 dark:bg-gray-900 flex flex-col"
-                    >
+                <div class="kanban-column-content rounded-b-xl bg-gray-50 dark:bg-gray-900 flex flex-col">
                     <div class="overflow-y-auto flex-1 p-4 space-y-3"
                         :class="{ 'drag-over': isDraggingOver === getStatusId(column.key) }"
                         @drop="onDrop($event, getStatusId(column.key))"
@@ -134,6 +135,15 @@ const createTask = async (columnKey) => {
     }
 }
 
+// Open create modal with pre-filled status
+import { useModalStore } from '@/stores/modal'
+const modalStore = useModalStore()
+const { setWorkKanbanModal } = modalStore
+
+const openCreateModal = (columnKey) => {
+    const statusId = getStatusId(columnKey)
+    setWorkKanbanModal(true, statusId)
+}
 
 // Map column keys to status IDs
 const statusMap = {
@@ -325,7 +335,7 @@ const onDrop = (event, newStatus) => {
 
 .kanban-column {
     display: flex;
-    
+
 }
 
 .kanban-column-content {

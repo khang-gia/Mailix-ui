@@ -529,5 +529,7 @@
     "View all": "Xem tất cả",
     "Show less": "Thu gọn",
     "This Week": "Tuần này",
-    "New Work Item": "Thêm công việc"
+    "New Work Item": "Thêm công việc",
+    "The work was successfully created.": "Thêm công việc thành công.",
+    "Work code already exists": "Mã công việc đã tồn tại"
 }
