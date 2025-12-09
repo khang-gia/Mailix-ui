@@ -5,7 +5,7 @@
             <div v-for="column in visibleColumns" :key="column.key"
                 class="kanban-column flex-shrink-0 w-80 flex flex-col">
                 <!-- Column Header -->
-                <div class="kanban-column-header rounded-t-xl p-4 bg-gray-100 dark:bg-gray-800">
+                <div class="rounded-t-xl p-4 bg-gray-100 dark:bg-gray-800">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <UIcon :name="getColumnIcon(column.key)" class="w-5 h-5 text-gray-600" />
@@ -23,7 +23,7 @@
 
                 <!-- Column Content - Scrollable -->
                 <div class="kanban-column-content rounded-b-xl bg-gray-50 dark:bg-gray-900 flex flex-col">
-                    <div class="overflow-y-auto flex-1 p-4 space-y-3"
+                    <div class="overflow-y-auto flex-1 p-4 pb-0 space-y-3"
                         :class="{ 'drag-over': isDraggingOver === getStatusId(column.key) }"
                         @drop="onDrop($event, getStatusId(column.key))"
                         @dragover="onDragOver($event, getStatusId(column.key))" @dragleave="onDragLeave"
@@ -41,11 +41,14 @@
                                 @blur="cancelCreate(column.key)" />
                         </div>
 
-                        <!-- New Item Button - Flows with content -->
-                        <UButton v-if="!isCreating[column.key]" icon="i-heroicons-plus" size="sm" color="gray"
-                            variant="ghost" block class="justify-start text-gray-500" @click="startCreate(column.key)">
-                            {{ $t('New Work Item') }}
-                        </UButton>
+                        <!-- New Item Button - Flows with content, sticky when scrolling -->
+                        <div class="sticky bottom-0 bg-gray-50 dark:bg-gray-900 py-2 w-full">
+                            <UButton v-if="!isCreating[column.key]" icon="i-heroicons-plus" size="sm" color="gray"
+                                variant="ghost" block class="justify-start text-gray-500"
+                                @click="startCreate(column.key)">
+                                {{ $t('New Work Item') }}
+                            </UButton>
+                        </div>
 
                     </div>
 
