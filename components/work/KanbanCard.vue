@@ -1,6 +1,6 @@
 <template>
-    <div class="kanban-card bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-move border border-gray-200 dark:border-gray-700"
-        draggable="true" @dragstart="$emit('dragstart', $event)">
+    <div class="kanban-card bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-200 dark:border-gray-700"
+        draggable="true" @dragstart="$emit('dragstart', $event)" @click="openTaskDetail(task)">
 
         <!-- Priority Badge -->
         <div class="flex items-center justify-between mb-2">
@@ -66,7 +66,11 @@ const props = defineProps({
     }
 })
 
-defineEmits(['dragstart'])
+const emit = defineEmits(['dragstart', 'openDetail'])
+
+const openTaskDetail = (task) => {
+    emit('openDetail', task)
+}
 
 const getPriorityLabel = (priority) => {
     const labels = {

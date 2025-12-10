@@ -31,7 +31,7 @@
 
                         <!-- Task Cards -->
                         <WorkKanbanCard v-for="task in getTasksByStatus(column.key)" :key="task.id" :task="task"
-                            @dragstart="onDragStart($event, task)" />
+                            @dragstart="onDragStart($event, task)" @openDetail="openWorkDetail" />
 
                         <!-- Inline Creation Card -->
                         <div v-if="isCreating[column.key]"
@@ -56,6 +56,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Work Detail Slide-over -->
+    <WorkDetailSlideover v-model="isDetailOpen" :workId="selectedWorkId" />
 </template>
 
 <script setup>
@@ -80,6 +83,16 @@ const emit = defineEmits(['update:status', 'create:task'])
 // Inline creation state
 const isCreating = ref({})
 const newTaskTitle = ref({})
+
+// Detail slide-over state
+const isDetailOpen = ref(false)
+const selectedWorkId = ref(null)
+
+// Open work detail slide-over
+const openWorkDetail = (task) => {
+    selectedWorkId.value = task.id
+    isDetailOpen.value = true
+}
 
 // Start creating a new task in a column
 const startCreate = (columnKey) => {

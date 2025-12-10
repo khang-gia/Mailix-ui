@@ -77,10 +77,14 @@ const props = defineProps({
         type: String,
         required: true,
         default: 'works',
+    },
+    id: {
+        type: String,
+        required: false,
     }
 })
 const apiUrl = computed(() => {
-  const id = useRoute().params.id
+  const id = props.id || useRoute().params.id
   switch (props.commentType) {
     case 'works':
       return `core/works/${id}/comments/`
@@ -143,7 +147,7 @@ const writeComment = async() => {
         const payload = {
             text: newComment.value,
             user: userInfo.value.id,
-            [mappingForeignKey[props.commentType]]: useRoute().params.id,
+            [mappingForeignKey[props.commentType]]: props.id || useRoute().params.id,
         };
 
         const response = await useAPI().post(endpoint, payload);
