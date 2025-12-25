@@ -39,7 +39,7 @@
     </div>
 
     <div class="mt-2">
-        <UInput v-model="newComment" type="text" :placeholder="$t('Write a discussion...')" @keyup.enter="writeComment"
+        <UInput v-model="newComment" type="text" :placeholder="$t(placeholder)" @keyup.enter="writeComment"
             size="md" 
             class="w-full"
             :ui="{
@@ -81,8 +81,14 @@ const props = defineProps({
     id: {
         type: String,
         required: false,
-    }
+    },
+    placeholder: {
+        type: String,
+        required: false,
+        default: 'Write a discussion...',
+    },
 })
+const emit = defineEmits(['onAddComment'])
 const apiUrl = computed(() => {
   const id = props.id || useRoute().params.id
   switch (props.commentType) {
@@ -92,6 +98,8 @@ const apiUrl = computed(() => {
       return `core/contacts/${id}/comments/`
     case 'customers':
       return `core/customers/${id}/comments/`
+    case 'social':
+      return `social/posts/${id}/comments/`
     default:
       console.warn(`Unknown commentType: ${props.commentType}`)
       return null
@@ -100,8 +108,9 @@ const apiUrl = computed(() => {
 const { data: comments, refresh } = await useAPI().get(apiUrl);
 const newComment = ref('')
 const typeMapping = {
-    works: 'work_comments',
-    customers: 'customer_comments',
+    works: 'core/work_comments',
+    customers: 'core/customer_comments',
+    social: 'social/post_comments',
 };
 const interactComment = async (comment) => {
     try {
@@ -111,7 +120,7 @@ const interactComment = async (comment) => {
             console.error(`Invalid commentType: ${props.commentType}`);
             throw new Error(t('Invalid comment type'));
         }
-        const endpoint = `core/${apiPath}/${comment.id}/interact/`;
+        const endpoint = `${apiPath}/${comment.id}/interact/`;
 
         const response = await useAPI().post(endpoint);
         if (response && response.status.value === 'success') {
@@ -135,6 +144,7 @@ const interactComment = async (comment) => {
 const mappingForeignKey = {
     works: 'work',
     customers: 'customer',
+    social: 'post',
 }
 const writeComment = async() => {
     try {
@@ -143,7 +153,7 @@ const writeComment = async() => {
             console.error(`Invalid commentType: ${props.commentType}`);
             throw new Error(t('Invalid comment type'));
         }
-        const endpoint = `core/${apiPath}/`;
+        const endpoint = `${apiPath}/`;
         const payload = {
             text: newComment.value,
             user: userInfo.value.id,
@@ -155,6 +165,7 @@ const writeComment = async() => {
         if (response && response.status.value === 'success') {
             newComment.value = '';
             refresh()
+            emit('onAddComment')
             return true
         } else {
             throw new Error(t('Unexpected response status'));

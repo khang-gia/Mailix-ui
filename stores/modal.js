@@ -114,6 +114,14 @@ export const useModalStore = defineStore('modalStore', () => {
     workKanbanInitialStatus.value = status
   }
   
+  const socialCommentModal = ref(false)
+  const socialCommentPost = ref({})
+
+  function setSocialCommentModal(value, post = {}) {
+    console.log('setSocialCommentModal', value, post)
+    socialCommentModal.value = value
+    socialCommentPost.value = post
+  }
   return { 
     modalType, setModalType, setAlertModal, alertModal, alertProps, alertConfirm,
     setAuthModal, authModalMode, authModalOpen,
@@ -121,6 +129,6 @@ export const useModalStore = defineStore('modalStore', () => {
     setSearchModal, searchModal, draggableModal, toggleDraggableModal, draggableModalInfo, setDraggableModalInfo, setDraggableModal, isLive,
     setCreateArticleTypeModal, articleTypeModal, imageData, setExpandImageModal, expandImageModal,
     setImageData,setCreateModal, createModal, modalCreateType, setCalendarCreateModal, calendarCreateModal, calendarCreateType, calendarCreateInfo,
-    workKanbanModal, workKanbanInitialStatus, setWorkKanbanModal
+    workKanbanModal, workKanbanInitialStatus, setWorkKanbanModal, socialCommentModal, socialCommentPost, setSocialCommentModal
   }
 })

@@ -165,7 +165,10 @@ const workspaceSubmenu = ref([
     { link: '/schedules', label: t('Schedule'), click: () => {
         useRouter().push({ name: 'schedules' });
     } },
-    { link: '/dashboard-work', label: 'Dashboard', click: () => {} },]
+    { link: '/dashboard-work', label: 'Dashboard', click: () => {} },
+    {link: '/social', label: 'Social', click: () => {
+        useRouter().push({ name: 'social' });
+    }}]
 ])
 const companySubmenu = ref([
     [{
