@@ -122,6 +122,13 @@ export const useModalStore = defineStore('modalStore', () => {
     socialCommentModal.value = value
     socialCommentPost.value = post
   }
+
+  const socialCreatePostModal = ref(false)
+
+  function setSocialCreatePostModal(value) {
+    socialCreatePostModal.value = value
+  }
+
   return { 
     modalType, setModalType, setAlertModal, alertModal, alertProps, alertConfirm,
     setAuthModal, authModalMode, authModalOpen,
@@ -129,6 +136,7 @@ export const useModalStore = defineStore('modalStore', () => {
     setSearchModal, searchModal, draggableModal, toggleDraggableModal, draggableModalInfo, setDraggableModalInfo, setDraggableModal, isLive,
     setCreateArticleTypeModal, articleTypeModal, imageData, setExpandImageModal, expandImageModal,
     setImageData,setCreateModal, createModal, modalCreateType, setCalendarCreateModal, calendarCreateModal, calendarCreateType, calendarCreateInfo,
-    workKanbanModal, workKanbanInitialStatus, setWorkKanbanModal, socialCommentModal, socialCommentPost, setSocialCommentModal
+    workKanbanModal, workKanbanInitialStatus, setWorkKanbanModal, socialCommentModal, socialCommentPost, setSocialCommentModal,
+    socialCreatePostModal, setSocialCreatePostModal
   }
 })
