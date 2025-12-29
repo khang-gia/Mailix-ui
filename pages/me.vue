@@ -1,33 +1,41 @@
 <template>
-    <div v-if="isLoggedIn">
-        <CoreInfoProfile v-if="userInfo.profile_hr" :userInfo="userInfo.profile_hr"/>
-        <!-- <CoreInfoProfileSystem v-else :userInfo="userInfo" /> -->
-        <!-- <div class="dark:text-gray-400 text-gray-800 flex justify-center items-center space-x-2 text-lg h-screen">
+  <div v-if="isLoggedIn">
+    <CoreInfoProfile v-if="userInfo.profile_hr" :userInfo="userInfo.profile_hr" />
+    <!-- <CoreInfoProfileSystem v-else :userInfo="userInfo" /> -->
+    <!-- <div class="dark:text-gray-400 text-gray-800 flex justify-center items-center space-x-2 text-lg h-screen">
         <p>In progress </p>
         <Icon name="svg-spinners:3-dots-scale-middle" size="24" />
         </div> -->
-    </div>
+  </div>
 </template>
 <script setup>
 import { useModalStore } from '@/stores/modal'
 import { useUserStore } from '@/stores/user'
+import { setUserCookie } from '@/utils/userCookie'
+
 const modalStore = useModalStore()
-const { setAuthModal} = modalStore
+const { setAuthModal } = modalStore
 const { data: userInfo } = useAuth()
-// useUserStore().setInfo(userInfo.value)
+
 onMounted(() => {
+  // Set Pinia store (for Vue/Nuxt apps on this domain)
   useUserStore().setInfo(userInfo.value)
+
+  // Set plain cookie (for ANY framework on other domains)
+  setUserCookie(userInfo.value)
+
   console.log('User Info in Me.vue onMounted:', userInfo.value)
+  console.log('Plain cookie set for cross-framework access')
 })
 definePageMeta({
   title: 'Trang chủ'
 })
 console.log('logged in', useAuth())
 const openAuthModal = (mode) => {
-    setAuthModal(true, mode)
+  setAuthModal(true, mode)
 }
-const isLoggedIn = computedAsync( () => {
-  const data =  useAuth()
+const isLoggedIn = computedAsync(() => {
+  const data = useAuth()
   return data.status.value == 'authenticated'
 })
 // const userInfo = ref({})

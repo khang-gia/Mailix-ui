@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', () => {
   const dismissedTaskDate = ref(null) // Store the date when task was dismissed
   
   function setInfo(newInfo) {
+    console.log('set Info here:', newInfo)
     info.value = newInfo
   }
   
@@ -59,7 +60,8 @@ export const useUserStore = defineStore('user', () => {
 }, {
   persist: {
     storage: persistedState.cookiesWithOptions({
-      sameSite: 'strict',
+      sameSite: 'none',  // Allow cross-domain access
+      secure: true,      // Required for sameSite: 'none' (HTTPS only)
     }),
   },
 })
