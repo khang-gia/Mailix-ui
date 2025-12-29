@@ -567,13 +567,17 @@
     "Post created successfully": "Tạo bài viết thành công",
     "An error occurred while creating the post. Please try again.": "Đã xảy ra lỗi khi tạo bài viết. Vui lòng thử lại.",
     "Create Poll": "Tạo bình chọn",
-    "Poll title": "Tiêu đề bình chọn",
-    "Poll options": "Nội dung lựa chọn",
+    "Poll title": "Chủ đề bình chọn",
+    "Poll options": "Các lựa chọn",
     "Poll option": "Nội dung lựa chọn",
     "Add option": "Thêm lựa chọn",
+    "Poll start time": "Thời gian bắt đầu",
     "Poll end time": "Thời hạn bình chọn",
     "Time": "Giờ",
     "Poll created successfully": "Tạo bình chọn thành công",
     "Please enter post title": "Vui lòng nhập tiêu đề bài viết",
-    "Uploading post...": "Đang đăng bài..."
+    "Please enter poll title": "Vui lòng nhập chủ đề bình chọn",
+    "Uploading post...": "Đang đăng bài...",
+    "Failed to remove vote": "Không thể bỏ bình chọn",
+    "An error occurred while removing vote. Please try again.": "Đã xảy ra lỗi khi bỏ bình chọn. Vui lòng thử lại."
 }

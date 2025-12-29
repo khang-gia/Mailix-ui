@@ -124,9 +124,11 @@ export const useModalStore = defineStore('modalStore', () => {
   }
 
   const socialCreatePostModal = ref(false)
+  const socialCreatePostType = ref(1) // 1 = post, 2 = poll
 
-  function setSocialCreatePostModal(value) {
+  function setSocialCreatePostModal(value, postType = 1) {
     socialCreatePostModal.value = value
+    socialCreatePostType.value = postType
   }
 
   return { 
@@ -137,6 +139,6 @@ export const useModalStore = defineStore('modalStore', () => {
     setCreateArticleTypeModal, articleTypeModal, imageData, setExpandImageModal, expandImageModal,
     setImageData,setCreateModal, createModal, modalCreateType, setCalendarCreateModal, calendarCreateModal, calendarCreateType, calendarCreateInfo,
     workKanbanModal, workKanbanInitialStatus, setWorkKanbanModal, socialCommentModal, socialCommentPost, setSocialCommentModal,
-    socialCreatePostModal, setSocialCreatePostModal
+    socialCreatePostModal, setSocialCreatePostModal, socialCreatePostType
   }
 })

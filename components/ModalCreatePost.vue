@@ -4,7 +4,7 @@
             <template #header>
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold">{{ postData.post_type === 2 ? t('Create Poll') : t('Create Post')
-                    }}</h3>
+                        }}</h3>
                     <UButton icon="i-heroicons-x-mark" color="gray" variant="ghost" @click="closeModal"
                         :disabled="isSubmitting" />
                 </div>
@@ -37,15 +37,20 @@
                         <UInput v-model="postData.poll_options[index]"
                             :placeholder="t('Poll option') + ' ' + (index + 1)" class="flex-1" />
                         <UButton icon="i-heroicons-x-mark" color="gray" variant="ghost" size="sm"
-                            @click="removePollOption(index)" :disabled="postData.poll_options.length <= 2" />
+                            @click="removePollOption(index)" :disabled="postData.poll_options.length <= 1" />
                     </div>
 
                     <UButton icon="i-heroicons-plus-circle" :label="t('Add option')" color="gray" variant="soft"
                         size="sm" @click="addPollOption" />
                 </div>
 
-                <!-- Poll End Date/Time (only for polls) -->
-                <div v-if="postData.post_type === 2" class="space-y-3">
+                <!-- Poll Start & End Date/Time (only for polls) -->
+                <div v-if="postData.post_type === 2" class="grid grid-cols-2 gap-4">
+                    <UFormGroup :label="t('Poll start time')">
+                        <BaseDatePicker v-model="pollStartDateTime" :required="true" class="w-full" mode="datetime"
+                            buttonType="outline" :place-holder="t('Poll start time')" />
+                    </UFormGroup>
+
                     <UFormGroup :label="t('Poll end time')">
                         <BaseDatePicker v-model="pollEndDateTime" :required="true" class="w-full" mode="datetime"
                             buttonType="outline" :place-holder="t('Poll end time')" />
@@ -68,7 +73,8 @@
                 <div class="flex justify-end gap-3">
                     <UButton :label="t('Cancel')" color="gray" variant="ghost" @click="closeModal"
                         :disabled="isSubmitting" />
-                    <UButton :label="t('Post')" color="primary" @click="handleSubmit" :loading="isSubmitting" />
+                    <UButton :label="postData.post_type === 2 ? t('Create Poll') : t('Post')" color="primary"
+                        @click="handleSubmit" :loading="isSubmitting" />
                 </div>
             </template>
         </UCard>
@@ -84,18 +90,23 @@ import * as yup from 'yup'
 const { t } = useI18n()
 const modalStore = useModalStore()
 const { setSocialCreatePostModal } = modalStore
-const { socialCreatePostModal } = storeToRefs(modalStore)
+const { socialCreatePostModal, socialCreatePostType } = storeToRefs(modalStore)
 const dayjs = useDayjs()
 
 const postData = ref({
     title: '',
     content: '',
     post_type: 1, // 1 = post, 2 = poll
-    poll_options: ['', ''], // Default 2 empty options for polls
+    poll_options: [''], // Default empty option for polls
 })
 
-// Set default poll end time to current date + time
+// Set default poll start time to current date + time
+const defaultPollStartTime = new Date()
+const pollStartDateTime = ref(defaultPollStartTime)
+
+// Set default poll end time to current date + time + 1 day
 const defaultPollEndTime = new Date()
+defaultPollEndTime.setDate(defaultPollEndTime.getDate() + 1)
 defaultPollEndTime.setHours(17, 0, 0, 0)
 const pollEndDateTime = ref(defaultPollEndTime)
 
@@ -106,7 +117,15 @@ const emit = defineEmits(['postCreated'])
 
 // Yup validation schema
 const schema = yup.object({
-    title: yup.string().required(t('Please enter post title')),
+    title: yup.string().required(t('This field is required')),
+})
+
+// Watch for modal opening and set post_type from store
+watch(socialCreatePostModal, (newValue) => {
+    if (newValue) {
+        // When modal opens, set post_type from store
+        postData.value.post_type = socialCreatePostType.value
+    }
 })
 
 const togglePollMode = () => {
@@ -126,7 +145,7 @@ const addPollOption = () => {
 }
 
 const removePollOption = (index) => {
-    if (postData.value.poll_options.length > 2) {
+    if (postData.value.poll_options.length > 1) {
         postData.value.poll_options.splice(index, 1)
     }
 }
@@ -140,9 +159,12 @@ const closeModal = () => {
         post_type: 1,
         poll_options: ['', ''],
     }
-    const resetDateTime = new Date()
-    resetDateTime.setHours(17, 0, 0, 0)
-    pollEndDateTime.value = resetDateTime
+    const resetStartDateTime = new Date()
+    const resetEndDateTime = new Date()
+    resetEndDateTime.setDate(resetEndDateTime.getDate() + 1)
+    resetEndDateTime.setHours(17, 0, 0, 0)
+    pollStartDateTime.value = resetStartDateTime
+    pollEndDateTime.value = resetEndDateTime
     errors.value = {}
 }
 
@@ -183,8 +205,11 @@ const handleSubmit = async () => {
             const validOptions = postData.value.poll_options.filter(opt => opt.trim() !== '')
             submitData.poll_options = validOptions
 
-            // Format poll end datetime
-            submitData.poll_end_datetime = dayjs(pollEndDateTime.value).format('YYYY-MM-DDTHH:mm:ss')
+            // Set start_poll to user selected datetime
+            submitData.start_poll = dayjs(pollStartDateTime.value).format('YYYY-MM-DDTHH:mm:ss')
+
+            // Set end_poll to user selected datetime
+            submitData.end_poll = dayjs(pollEndDateTime.value).format('YYYY-MM-DDTHH:mm:ss')
         }
 
         const { data: response, error } = await useAPI().post('social/posts/', submitData)
