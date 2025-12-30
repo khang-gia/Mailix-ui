@@ -55,6 +55,11 @@
                     <!-- <DropdownHelp align="right" /> -->
 
                     <!-- <BaseLightDarkMode /> -->
+                    <UTooltip :text="$t('Mail')">
+                        <UButton icon="heroicons:envelope" color="gray" variant="ghost" size="sm"
+                            to="https://uat.mailix.vn/mail/" target="_blank"
+                            class="hover:bg-slate-100 dark:hover:bg-slate-800" />
+                    </UTooltip>
                     <hr class="w-px h-6 bg-slate-200 dark:bg-slate-600 border-slate-200 dark:border-slate-600 ml-2" />
                     <DropdownProfile v-if="isAuthenticated" />
                     <div v-else>
