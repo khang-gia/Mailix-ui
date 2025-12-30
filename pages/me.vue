@@ -11,7 +11,6 @@
 <script setup>
 import { useModalStore } from '@/stores/modal'
 import { useUserStore } from '@/stores/user'
-import { setUserCookie } from '@/utils/userCookie'
 
 const modalStore = useModalStore()
 const { setAuthModal } = modalStore
@@ -21,11 +20,8 @@ onMounted(() => {
   // Set Pinia store (for Vue/Nuxt apps on this domain)
   useUserStore().setInfo(userInfo.value)
 
-  // Set plain cookie (for ANY framework on other domains)
-  setUserCookie(userInfo.value)
-
+  // Note: user_data cookie is now set by the backend during login
   console.log('User Info in Me.vue onMounted:', userInfo.value)
-  console.log('Plain cookie set for cross-framework access')
 })
 definePageMeta({
   title: 'Trang chủ'
