@@ -1,9 +1,9 @@
 /**
- * Cross-domain user data cookie utility
+ * Cross-domain user session cookie utility
  * Works with ANY framework (Vue, React, Angular, vanilla JS, PHP, etc.)
  */
 
-const COOKIE_NAME = 'user_data'
+const COOKIE_NAME = 'mailix_session'
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7 // 7 days
 
 /**
