@@ -413,9 +413,7 @@ const suggestedGroups = computedAsync(async () => {
 
 // Navigate to group detail page
 const navigateToGroup = (groupId) => {
-    console.log('Navigate to group:', groupId)
-    // TODO: Implement navigation to group detail page
-    // navigateTo(`/social/groups/${groupId}`)
+    navigateTo(`/social/groups/${groupId}`)
 }
 
 // Join a group

@@ -125,10 +125,12 @@ export const useModalStore = defineStore('modalStore', () => {
 
   const socialCreatePostModal = ref(false)
   const socialCreatePostType = ref(1) // 1 = post, 2 = poll
+  const socialCreatePostGroupId = ref(null) // Track group context for posts
 
-  function setSocialCreatePostModal(value, postType = 1) {
+  function setSocialCreatePostModal(value, postType = 1, groupId = null) {
     socialCreatePostModal.value = value
     socialCreatePostType.value = postType
+    socialCreatePostGroupId.value = groupId
   }
 
   return { 
@@ -139,6 +141,6 @@ export const useModalStore = defineStore('modalStore', () => {
     setCreateArticleTypeModal, articleTypeModal, imageData, setExpandImageModal, expandImageModal,
     setImageData,setCreateModal, createModal, modalCreateType, setCalendarCreateModal, calendarCreateModal, calendarCreateType, calendarCreateInfo,
     workKanbanModal, workKanbanInitialStatus, setWorkKanbanModal, socialCommentModal, socialCommentPost, setSocialCommentModal,
-    socialCreatePostModal, setSocialCreatePostModal, socialCreatePostType
+    socialCreatePostModal, setSocialCreatePostModal, socialCreatePostType, socialCreatePostGroupId
   }
 })

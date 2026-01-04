@@ -7,10 +7,10 @@
                 <div>
                     <div class="flex items-center gap-1">
                         <span class="font-bold text-gray-900 dark:text-white">{{ post.author.display_name }}</span>
-                        <span v-if="post.social_group" class="text-gray-500 text-sm">đã chia sẻ trên</span>
+                        <span v-if="post.social_group" class="text-gray-500 text-sm">{{ $t('shared on') }}</span>
                         <span v-if="post.social_group"
-                            class="text-green-500 font-medium cursor-pointer hover:underline">{{ post.social_group.name
-                            }}</span>
+                            class="text-green-500 font-medium cursor-pointer hover:underline">{{
+                                post.social_group_name }}</span>
                     </div>
                     <div class="flex items-center gap-2 text-xs text-gray-500">
                         <span>{{ formatDate(post.created_at) }}</span>
@@ -36,8 +36,24 @@
         <!-- Content -->
         <div class="mb-4">
             <h3 class="text-lg font-bold mb-3">{{ post.title }}</h3>
-            <!-- <p class="text-gray-700 dark:text-gray-300 mb-3">{{ post.content }}</p> -->
-            <div class="mb-3 break-words overflow-wrap-anywhere" v-html="post.content"></div>
+            <!-- Post Content -->
+            <div v-if="post.content" class="relative mb-3">
+                <div ref="contentRef" :class="[
+                    'break-words overflow-wrap-anywhere transition-all duration-300',
+                    !isExpanded && isTruncated ? 'max-h-[300px] overflow-hidden' : ''
+                ]" v-html="post.content"></div>
+
+                <!-- Gradient overlay when truncated -->
+                <div v-if="!isExpanded && isTruncated"
+                    class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white dark:from-gray-800 to-transparent pointer-events-none">
+                </div>
+
+                <!-- See more / See less button -->
+                <button v-if="isTruncated" @click="isExpanded = !isExpanded"
+                    class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mt-2">
+                    {{ isExpanded ? t('See less') : t('See more') }}
+                </button>
+            </div>
 
             <img v-if="post.image" :src="post.image" class="w-full rounded-lg mb-3 object-cover max-h-96" />
 
@@ -140,6 +156,21 @@ const props = defineProps({
 const { t } = useI18n()
 const { data: userInfo } = useAuth()
 const dayjs = useDayjs()
+
+// Content expansion state
+const contentRef = ref(null)
+const isExpanded = ref(false)
+const isTruncated = ref(false)
+
+// Check if content needs truncation
+onMounted(() => {
+    if (contentRef.value) {
+        // Check if content height exceeds 300px
+        const contentHeight = contentRef.value.scrollHeight
+        isTruncated.value = contentHeight > 300
+    }
+})
+
 const formatDate = (date) => {
     if (!date) return ''
     return dayjs(date).format('HH:mm DD/MM/YYYY')

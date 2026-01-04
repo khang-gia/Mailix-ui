@@ -3,8 +3,11 @@
         <UCard :ui="{ body: { padding: 'p-6' }, header: { padding: 'px-6 py-4' } }">
             <template #header>
                 <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-semibold">{{ postData.post_type === 2 ? t('Create Poll') : t('Create Post')
-                        }}</h3>
+                    <h3 class="text-lg font-semibold">
+                        {{ postData.post_type === 2 ? t('Create Poll') :
+                            postData.post_type === 3 ? t('Create Announcement') :
+                                t('Create Post') }}
+                    </h3>
                     <UButton icon="i-heroicons-x-mark" color="gray" variant="ghost" @click="closeModal"
                         :disabled="isSubmitting" />
                 </div>
@@ -20,8 +23,9 @@
                         :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined" />
                 </UFormGroup>
 
-                <!-- Post Content (only for regular posts) -->
-                <UFormGroup v-if="postData.post_type === 1" :label="t('Content')" name="content">
+                <!-- Post Content (for regular posts and announcements) -->
+                <UFormGroup v-if="postData.post_type === 1 || postData.post_type === 3" :label="t('Content')"
+                    name="content">
                     <client-only>
                         <RickTextEditor v-model="postData.content" :placeholder="t('What\'s on your mind?')" />
                     </client-only>
@@ -66,6 +70,18 @@
                     <UButton icon="i-heroicons-chart-bar" :label="t('Poll')"
                         :color="postData.post_type === 2 ? 'orange' : 'orange'"
                         :variant="postData.post_type === 2 ? 'solid' : 'ghost'" size="sm" @click="togglePollMode" />
+                    <UButton icon="i-heroicons-megaphone" :label="t('Announcement')"
+                        :color="postData.post_type === 3 ? 'red' : 'red'"
+                        :variant="postData.post_type === 3 ? 'solid' : 'ghost'" size="sm"
+                        @click="toggleAnnouncementMode" />
+                </div>
+
+                <!-- Pin Toggle (only for announcements) -->
+                <div v-if="postData.post_type === 3" class="flex items-center gap-2 pt-3">
+                    <UToggle v-model="postData.is_pinned" />
+                    <label class="text-sm font-medium cursor-pointer" @click="postData.is_pinned = !postData.is_pinned">
+                        {{ t('Pin this announcement') }}
+                    </label>
                 </div>
             </UForm>
 
@@ -73,8 +89,9 @@
                 <div class="flex justify-end gap-3">
                     <UButton :label="t('Cancel')" color="gray" variant="ghost" @click="closeModal"
                         :disabled="isSubmitting" />
-                    <UButton :label="postData.post_type === 2 ? t('Create Poll') : t('Post')" color="primary"
-                        @click="handleSubmit" :loading="isSubmitting" />
+                    <UButton :label="postData.post_type === 2 ? t('Create Poll') :
+                        postData.post_type === 3 ? t('Create Announcement') :
+                            t('Post')" color="primary" @click="handleSubmit" :loading="isSubmitting" />
                 </div>
             </template>
         </UCard>
@@ -90,14 +107,15 @@ import * as yup from 'yup'
 const { t } = useI18n()
 const modalStore = useModalStore()
 const { setSocialCreatePostModal } = modalStore
-const { socialCreatePostModal, socialCreatePostType } = storeToRefs(modalStore)
+const { socialCreatePostModal, socialCreatePostType, socialCreatePostGroupId } = storeToRefs(modalStore)
 const dayjs = useDayjs()
 
 const postData = ref({
     title: '',
     content: '',
-    post_type: 1, // 1 = post, 2 = poll
+    post_type: 1, // 1 = post, 2 = poll, 3 = announcement
     poll_options: [''], // Default empty option for polls
+    is_pinned: false // For announcements
 })
 
 // Set default poll start time to current date + time
@@ -140,6 +158,17 @@ const togglePollMode = () => {
     }
 }
 
+const toggleAnnouncementMode = () => {
+    if (postData.value.post_type === 3) {
+        // Switch back to regular post
+        postData.value.post_type = 1
+        postData.value.is_pinned = false
+    } else {
+        // Switch to announcement
+        postData.value.post_type = 3
+    }
+}
+
 const addPollOption = () => {
     postData.value.poll_options.push('')
 }
@@ -152,6 +181,7 @@ const removePollOption = (index) => {
 
 const closeModal = () => {
     setSocialCreatePostModal(false)
+    socialCreatePostGroupId.value = null // Reset group context
     // Reset form
     postData.value = {
         title: '',
@@ -196,8 +226,18 @@ const handleSubmit = async () => {
             post_type: postData.value.post_type,
         }
 
-        if (postData.value.post_type === 1) {
-            // Regular post
+        // Include group ID if creating post in a group
+        if (socialCreatePostGroupId.value) {
+            submitData.social_group = socialCreatePostGroupId.value
+        }
+
+        // Include is_pinned for announcements
+        if (postData.value.post_type === 3) {
+            submitData.is_pinned = postData.value.is_pinned
+        }
+
+        if (postData.value.post_type === 1 || postData.value.post_type === 3) {
+            // Regular post or announcement
             submitData.content = postData.value.content
         } else {
             // Poll

@@ -45,7 +45,7 @@ const menuItems = computed(() => [
         icon: 'i-heroicons-newspaper',
         page: 'news',
         click: () => {
-            emit('update:page', 'news')
+            navigateTo('/social')
         }
     },
     {
@@ -66,7 +66,7 @@ const menuItems = computed(() => [
         icon: 'i-heroicons-users',
         page: 'groups',
         click: () => {
-            emit('update:page', 'groups')
+            navigateTo('/social/groups')
         }
     },
     {
@@ -80,7 +80,13 @@ const menuItems = computed(() => [
     // { label: t('Process Page'), icon: 'i-heroicons-flag' },
 ])
 
+const route = useRoute()
+
 const isActive = (item) => {
+    // For groups, check if we're on the /social/groups route
+    if (item.page === 'groups') {
+        return route.path.startsWith('/social/groups')
+    }
     return item.page === props.currentPage
 }
 </script>
