@@ -63,8 +63,8 @@
 
                 <!-- Action Buttons -->
                 <div class="flex gap-4 pt-2">
-                    <UButton icon="i-heroicons-photo" :label="t('Photo/File')" color="green" variant="ghost"
-                        size="sm" />
+                    <UButton icon="i-heroicons-photo" :label="t('Photo/File')" color="green" variant="ghost" size="sm"
+                        @click="triggerFileInput" />
                     <UButton icon="i-heroicons-document-text" :label="t('Note')" color="blue" variant="ghost"
                         size="sm" />
                     <UButton icon="i-heroicons-chart-bar" :label="t('Poll')"
@@ -83,6 +83,18 @@
                         {{ t('Pin this announcement') }}
                     </label>
                 </div>
+
+                <!-- Image Preview -->
+                <div v-if="imagePreview" class="mt-4 relative">
+                    <img :src="imagePreview" class="w-full rounded-lg max-h-96 object-cover" />
+                    <button @click="removeImage"
+                        class="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-full p-2 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <UIcon name="i-heroicons-x-mark" class="w-5 h-5" />
+                    </button>
+                </div>
+
+                <!-- Hidden file input -->
+                <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleImageSelect" />
             </UForm>
 
             <template #footer>
@@ -117,6 +129,31 @@ const postData = ref({
     poll_options: [''], // Default empty option for polls
     is_pinned: false // For announcements
 })
+
+// Image upload state
+const fileInput = ref(null)
+const selectedImage = ref(null)
+const imagePreview = ref(null)
+
+const triggerFileInput = () => {
+    fileInput.value?.click()
+}
+
+const handleImageSelect = (event) => {
+    const file = event.target.files[0]
+    if (file && file.type.startsWith('image/')) {
+        selectedImage.value = file
+        imagePreview.value = URL.createObjectURL(file)
+    }
+}
+
+const removeImage = () => {
+    selectedImage.value = null
+    imagePreview.value = null
+    if (fileInput.value) {
+        fileInput.value.value = ''
+    }
+}
 
 // Set default poll start time to current date + time
 const defaultPollStartTime = new Date()
@@ -195,6 +232,14 @@ const closeModal = () => {
     resetEndDateTime.setHours(17, 0, 0, 0)
     pollStartDateTime.value = resetStartDateTime
     pollEndDateTime.value = resetEndDateTime
+
+    // Reset image state
+    selectedImage.value = null
+    imagePreview.value = null
+    if (fileInput.value) {
+        fileInput.value.value = ''
+    }
+
     errors.value = {}
 }
 
@@ -252,7 +297,51 @@ const handleSubmit = async () => {
             submitData.end_poll = dayjs(pollEndDateTime.value).format('YYYY-MM-DDTHH:mm:ss')
         }
 
-        const { data: response, error } = await useAPI().post('social/posts/', submitData)
+        // Use FormData if image is selected
+        let response, error
+        if (selectedImage.value) {
+            const formData = new FormData()
+            formData.append('title', submitData.title)
+            formData.append('post_type', submitData.post_type)
+
+            if (submitData.social_group) {
+                formData.append('social_group', submitData.social_group)
+            }
+
+            if (submitData.is_pinned !== undefined) {
+                formData.append('is_pinned', submitData.is_pinned)
+            }
+
+            if (submitData.content) {
+                formData.append('content', submitData.content)
+            }
+
+            if (submitData.poll_options) {
+                formData.append('poll_options', JSON.stringify(submitData.poll_options))
+            }
+
+            if (submitData.start_poll) {
+                formData.append('start_poll', submitData.start_poll)
+            }
+
+            if (submitData.end_poll) {
+                formData.append('end_poll', submitData.end_poll)
+            }
+
+            formData.append('image', selectedImage.value)
+
+            const result = await useAPI().post('social/posts/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            response = result.data
+            error = result.error
+        } else {
+            const result = await useAPI().post('social/posts/', submitData)
+            response = result.data
+            error = result.error
+        }
 
         if (error.value) {
             throw new Error(error.value.message || 'Failed to create post')
