@@ -8,9 +8,10 @@
                     <div class="flex items-center gap-1">
                         <span class="font-bold text-gray-900 dark:text-white">{{ post.author.display_name }}</span>
                         <span v-if="post.social_group" class="text-gray-500 text-sm">{{ $t('shared on') }}</span>
-                        <span v-if="post.social_group"
-                            class="text-green-500 font-medium cursor-pointer hover:underline">{{
-                                post.social_group_name }}</span>
+                        <NuxtLink v-if="post.social_group" :to="`/social/groups/${post.social_group}`"
+                            class="text-green-500 font-medium cursor-pointer hover:underline">
+                            {{ post.social_group_name }}
+                        </NuxtLink>
                     </div>
                     <div class="flex items-center gap-2 text-xs text-gray-500">
                         <span>{{ formatDate(post.created_at) }}</span>
@@ -55,7 +56,36 @@
                 </button>
             </div>
 
-            <img v-if="post.image" :src="post.image" class="w-full rounded-lg mb-3 object-cover max-h-96" />
+            <!-- Attachments -->
+            <div v-if="post.attachments && post.attachments.length > 0">
+                <!-- Single image - full width -->
+                <img v-if="post.attachments.length === 1 && post.attachments[0].file_type === 'image'"
+                    :src="post.attachments[0].file" class="w-full rounded-lg object-cover max-h-96 mb-3" />
+
+                <!-- Multiple images - grid -->
+                <div v-else-if="imageAttachments.length > 0" :class="getGridClass(imageAttachments.length)"
+                    class="gap-1 mb-3">
+                    <img v-for="attachment in imageAttachments" :key="attachment.id" :src="attachment.file"
+                        class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90" />
+                </div>
+
+                <!-- Files list -->
+                <div v-if="fileAttachments.length > 0" class="space-y-2 mb-3">
+                    <a v-for="attachment in fileAttachments" :key="attachment.id" :href="attachment.file"
+                        target="_blank"
+                        class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
+                        <UIcon :name="getFileIcon(attachment.file_type)" class="w-6 h-6" />
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">{{ attachment.file_name }}</p>
+                            <p class="text-xs text-gray-500">{{ formatFileSize(attachment.file_size) }}</p>
+                        </div>
+                        <UIcon name="i-heroicons-arrow-down-tray" class="w-5 h-5" />
+                    </a>
+                </div>
+            </div>
+
+            <!-- Legacy single image support (backward compatibility) -->
+            <img v-else-if="post.image" :src="post.image" class="w-full rounded-lg mb-3 object-cover max-h-96" />
 
             <!-- Poll -->
             <div v-if="post.post_type === 2 && post.poll_options" class="space-y-2">
@@ -170,6 +200,38 @@ onMounted(() => {
         isTruncated.value = contentHeight > 300
     }
 })
+
+// Attachments computed properties
+const imageAttachments = computed(() => {
+    return props.post.attachments?.filter(a => a.file_type === 'image') || []
+})
+
+const fileAttachments = computed(() => {
+    return props.post.attachments?.filter(a => a.file_type !== 'image') || []
+})
+
+const getGridClass = (count) => {
+    if (count === 2) return 'grid grid-cols-2'
+    if (count === 3) return 'grid grid-cols-3'
+    if (count === 4) return 'grid grid-cols-2'
+    return 'grid grid-cols-3'
+}
+
+const getFileIcon = (type) => {
+    const icons = {
+        'pdf': 'i-heroicons-document-text',
+        'document': 'i-heroicons-document',
+        'video': 'i-heroicons-film',
+        'image': 'i-heroicons-photo'
+    }
+    return icons[type] || 'i-heroicons-document'
+}
+
+const formatFileSize = (bytes) => {
+    if (bytes < 1024) return bytes + ' B'
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
+}
 
 const formatDate = (date) => {
     if (!date) return ''

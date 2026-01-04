@@ -1,17 +1,37 @@
 <template>
-    <div class="flex gap-2 overflow-x-auto pb-2">
-        <UButton v-for="filter in filters" :key="filter.label" :label="filter.label" size="sm"
-            :variant="filter.active ? 'solid' : 'ghost'" :color="filter.active ? 'white' : 'gray'"
-            class="rounded-full px-4" :class="{ 'bg-white shadow-sm text-primary-500': filter.active }" />
+    <div class="flex gap-2 mb-4">
+        <button v-for="(filter, index) in filters" :key="index" @click="selectFilter(filter)" :class="[
+            'px-4 py-2 rounded-full text-sm font-medium transition-colors',
+            filter.value === activeFilter
+                ? 'bg-green-500 text-white'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+        ]">
+            {{ filter.label }}
+        </button>
     </div>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+const emit = defineEmits(['filter-change'])
+
+const props = defineProps({
+    activeFilter: {
+        type: String,
+        default: 'all'
+    }
+})
+
 const filters = [
-    { label: 'Tất cả', active: true },
-    { label: 'Liên quan', active: false },
-    { label: 'Công ty', active: false },
-    { label: 'Từ nhóm', active: false },
-    { label: 'Bình chọn', active: false },
+    { label: t('All'), value: 'all' },
+    { label: t('From group'), value: 'group' },
+    { label: t('Poll'), value: 'poll' },
 ]
+
+const selectFilter = (filter) => {
+    emit('filter-change', filter.value)
+}
 </script>

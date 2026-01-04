@@ -2,7 +2,7 @@
     <div v-if="currentPage === 'news'" class="col-span-12 lg:col-span-6 space-y-6">
         <SocialCreatePost />
 
-        <SocialFeedFilter />
+        <SocialFeedFilter :active-filter="activeFilter" @filter-change="handleFilterChange" />
 
         <div class="space-y-4">
             <!-- Uploading Posts (with loading spinner) -->
@@ -22,7 +22,8 @@
             </UCard>
 
             <!-- Regular Posts -->
-            <SocialPostItem v-for="post in posts" :key="post.id" :post="post" @postDeleted="handlePostDeleted" />
+            <SocialPostItem v-for="post in filteredPosts" :key="post.id" :post="post"
+                @postDeleted="handlePostDeleted" />
         </div>
         <ModalOpenPost />
         <ModalCreatePost @postCreated="handlePostCreated" />
@@ -54,6 +55,29 @@ const posts = computedAsync(async () => {
         _refresh: postsKey.value, // Include key in params to trigger refetch
     })
     return data.value.results
+})
+
+// Filter state
+const activeFilter = ref('all')
+
+const handleFilterChange = (filterValue) => {
+    activeFilter.value = filterValue
+}
+
+// Filtered posts based on active filter
+const filteredPosts = computed(() => {
+    if (!posts.value) return []
+
+    if (activeFilter.value === 'group') {
+        // Show only posts from groups
+        return posts.value.filter(post => post.social_group !== null)
+    } else if (activeFilter.value === 'poll') {
+        // Show only poll posts (post_type = 2)
+        return posts.value.filter(post => post.post_type === 2)
+    }
+
+    // Show all posts
+    return posts.value
 })
 
 const handlePostDeleted = (postId) => {

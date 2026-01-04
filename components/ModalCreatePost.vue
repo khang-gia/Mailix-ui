@@ -84,17 +84,32 @@
                     </label>
                 </div>
 
-                <!-- Image Preview -->
-                <div v-if="imagePreview" class="mt-4 relative">
-                    <img :src="imagePreview" class="w-full rounded-lg max-h-96 object-cover" />
-                    <button @click="removeImage"
-                        class="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-full p-2 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <UIcon name="i-heroicons-x-mark" class="w-5 h-5" />
-                    </button>
+                <!-- Files Preview Grid -->
+                <div v-if="filePreviews.length > 0" class="mt-4 grid grid-cols-2 gap-2">
+                    <div v-for="(preview, index) in filePreviews" :key="index" class="relative">
+                        <!-- Image preview -->
+                        <img v-if="preview.type === 'image'" :src="preview.url"
+                            class="w-full h-40 object-cover rounded-lg" />
+
+                        <!-- File preview -->
+                        <div v-else
+                            class="w-full h-40 bg-gray-100 dark:bg-gray-700 rounded-lg flex flex-col items-center justify-center p-4">
+                            <UIcon :name="getFileIcon(preview.type)" class="w-12 h-12 text-gray-400 mb-2" />
+                            <p class="text-xs text-center truncate w-full">{{ preview.name }}</p>
+                            <p class="text-xs text-gray-500">{{ formatFileSize(preview.size) }}</p>
+                        </div>
+
+                        <!-- Remove button -->
+                        <button @click="removeFile(index)"
+                            class="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-full p-1.5 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <UIcon name="i-heroicons-x-mark" class="w-4 h-4" />
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Hidden file input -->
-                <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleImageSelect" />
+                <input ref="fileInput" type="file" accept="image/*,video/*,.pdf,.doc,.docx" multiple class="hidden"
+                    @change="handleFilesSelect" />
             </UForm>
 
             <template #footer>
@@ -130,29 +145,66 @@ const postData = ref({
     is_pinned: false // For announcements
 })
 
-// Image upload state
+// Multiple files upload state
 const fileInput = ref(null)
-const selectedImage = ref(null)
-const imagePreview = ref(null)
+const selectedFiles = ref([])
+const filePreviews = ref([])
 
 const triggerFileInput = () => {
     fileInput.value?.click()
 }
 
-const handleImageSelect = (event) => {
-    const file = event.target.files[0]
-    if (file && file.type.startsWith('image/')) {
-        selectedImage.value = file
-        imagePreview.value = URL.createObjectURL(file)
-    }
+const handleFilesSelect = (event) => {
+    const files = Array.from(event.target.files)
+    files.forEach(file => {
+        selectedFiles.value.push(file)
+        if (file.type.startsWith('image/')) {
+            filePreviews.value.push({
+                url: URL.createObjectURL(file),
+                type: 'image',
+                name: file.name,
+                size: file.size
+            })
+        } else {
+            filePreviews.value.push({
+                url: null,
+                type: getFileType(file.type),
+                name: file.name,
+                size: file.size
+            })
+        }
+    })
 }
 
-const removeImage = () => {
-    selectedImage.value = null
-    imagePreview.value = null
-    if (fileInput.value) {
-        fileInput.value.value = ''
+const removeFile = (index) => {
+    if (filePreviews.value[index].url) {
+        URL.revokeObjectURL(filePreviews.value[index].url)
     }
+    selectedFiles.value.splice(index, 1)
+    filePreviews.value.splice(index, 1)
+}
+
+const getFileType = (contentType) => {
+    if (contentType.startsWith('image/')) return 'image'
+    if (contentType.startsWith('video/')) return 'video'
+    if (contentType === 'application/pdf') return 'pdf'
+    return 'document'
+}
+
+const getFileIcon = (type) => {
+    const icons = {
+        'pdf': 'i-heroicons-document-text',
+        'document': 'i-heroicons-document',
+        'video': 'i-heroicons-film',
+        'image': 'i-heroicons-photo'
+    }
+    return icons[type] || 'i-heroicons-document'
+}
+
+const formatFileSize = (bytes) => {
+    if (bytes < 1024) return bytes + ' B'
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
 }
 
 // Set default poll start time to current date + time
@@ -233,9 +285,14 @@ const closeModal = () => {
     pollStartDateTime.value = resetStartDateTime
     pollEndDateTime.value = resetEndDateTime
 
-    // Reset image state
-    selectedImage.value = null
-    imagePreview.value = null
+    // Reset files state
+    filePreviews.value.forEach(preview => {
+        if (preview.url) {
+            URL.revokeObjectURL(preview.url)
+        }
+    })
+    selectedFiles.value = []
+    filePreviews.value = []
     if (fileInput.value) {
         fileInput.value.value = ''
     }
@@ -299,7 +356,7 @@ const handleSubmit = async () => {
 
         // Use FormData if image is selected
         let response, error
-        if (selectedImage.value) {
+        if (selectedFiles.value.length > 0) {
             const formData = new FormData()
             formData.append('title', submitData.title)
             formData.append('post_type', submitData.post_type)
@@ -328,7 +385,9 @@ const handleSubmit = async () => {
                 formData.append('end_poll', submitData.end_poll)
             }
 
-            formData.append('image', selectedImage.value)
+            selectedFiles.value.forEach(file => {
+                formData.append('attachments', file)
+            })
 
             const result = await useAPI().post('social/posts/', formData, {
                 headers: {
