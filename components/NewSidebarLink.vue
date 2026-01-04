@@ -138,7 +138,9 @@ const customerSubmenu= ref([
     { link: '/hr', label: 'Nhân sự', click: () => {
         useRouter().push({ name: 'hr' });
     } },
-    { link: '/dashboard-hrm', label: 'Dashboard', click: () => {} },]
+    { link: '/dashboard-hrm', label: 'Dashboard', click: () => {
+        useRouter().push({ name: 'dashboard-hrm' });
+    } },]
 ])
 const crmSubmenu = ref([
     [{
@@ -165,7 +167,9 @@ const workspaceSubmenu = ref([
     { link: '/schedules', label: t('Schedule'), click: () => {
         useRouter().push({ name: 'schedules' });
     } },
-    { link: '/dashboard-work', label: 'Dashboard', click: () => {} },
+    { link: '/dashboard-work', label: 'Dashboard', click: () => {
+        useRouter().push({ name: 'dashboard-work' });
+    } },
     {link: '/social', label: 'Social', click: () => {
         useRouter().push({ name: 'social' });
     }}]

@@ -5,33 +5,34 @@
     }">
         <template #header>
             <div class="flex items-center justify-between">
-                <UBreadcrumb
-                    :ui="{ ol: 'gap-x-3', li: 'gap-x-3',active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
-                    :links="[{ label: $t('Customer List'), to: '/customers' }, { label: props.isUpdate ? cloneCustomerInfo.name: $t('Create customer'), to: props.isUpdate ? `/customers/${useRoute().params.id}` : ''}, { label: props.isUpdate ? $t('Update') : '' }]">
+                <UBreadcrumb :ui="{ ol: 'gap-x-3', li: 'gap-x-3', active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
+                    :links="[{ label: $t('Customer List'), to: '/customers' }, { label: props.isUpdate ? cloneCustomerInfo.name : $t('Create customer'), to: props.isUpdate ? `/customers/${useRoute().params.id}` : '' }, { label: props.isUpdate ? $t('Update') : '' }]">
                 </UBreadcrumb>
                 <div class="flex items-center space-x-2">
-                    <UDropdown :items="props.isUpdate ? updateItemDropdown: createItemDropdown" :popper="{ placement: 'bottom-start' }">
+                    <UDropdown :items="props.isUpdate ? updateItemDropdown : createItemDropdown"
+                        :popper="{ placement: 'bottom-start' }">
                         <UButton color="gray" variant="soft" icon="i-heroicons-ellipsis-vertical" />
                         <template #tip="{ item }">
                             <div class="text-left cursor-text">
                                 <p>
-                                {{$t('Choose view mode')}}
+                                    {{ $t('Choose view mode') }}
                                 </p>
                             </div>
                         </template>
                         <template #item="{ item }">
                             <span class="truncate">{{ item.label }}</span>
 
-                            <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
+                            <UIcon :name="item.icon"
+                                class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
                         </template>
                     </UDropdown>
                 </div>
             </div>
         </template>
-    
+
         <UCard :ui="{
-        rounded: 'rounded-sm',
-    }">
+            rounded: 'rounded-sm',
+        }">
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
                 {{ $t('Customer Information') }}
             </h2>
@@ -92,154 +93,71 @@
                 
             </UCard> -->
             <UForm :schema="schema" :state="customerInfo" class="mx-4 py-2  grid grid-cols-2 gap-4">
-                <UFormGroup
-                    v-slot="{error}"
-                    :label="$t('Full Name')" 
-                    name="name"
-                    :error="errors.name"
-
-                    required>
-                    <UInput
-                        v-model="customerInfo.name"
-                        :placeholder="$t('Full Name')"
+                <UFormGroup v-slot="{ error }" :label="$t('Full Name')" name="name" :error="errors.name" required>
+                    <UInput v-model="customerInfo.name" :placeholder="$t('Full Name')"
                         :ui="{ base: 'w-full rounded-lg' }"
-                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
+                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined" />
                 </UFormGroup>
-                <UFormGroup
-                    v-slot="{ error }"
-                    :label="$t('Customer Code')"
-                    name="customer_code"
-                    :error="errors.customer_code"
-                    required>
-                    <UInput
-                        v-model="customerInfo.customer_code"
-                        :disabled="props.isUpdate"
-                        :placeholder="$t('Customer Code')"
-                        :ui="{ base: 'w-full rounded-lg' }"
-                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
+                <UFormGroup v-slot="{ error }" :label="$t('Customer Code')" name="customer_code"
+                    :error="errors.customer_code" required>
+                    <UInput v-model="customerInfo.customer_code" :disabled="props.isUpdate"
+                        :placeholder="$t('Customer Code')" :ui="{ base: 'w-full rounded-lg' }"
+                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined" />
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Dob')"
-                    name='dob'>
-                    <BaseDatePicker
-                        v-model="customerInfo.dob"
-                        ref="dobpicker"
-                        :required="true"
-                        class="w-full"
-                        buttonType="outline"
-                        :place-holder="$t('Dob')"
-                    />
-                </UFormGroup>
-                
-                <UFormGroup
-                    :label="$t('Gender')"
-                    name='gender'>
-                    <USelectMenu
-                        class="w-full"
-                        v-model="customerInfo.gender"
-                        :options="genders"
-                        :placeholder="$t('Gender')"
-                        valueAttribute="value"
-                        option-attribute="label"
-                        :is-dark="colorMode.value === 'dark'"
-                    />
+                <UFormGroup :label="$t('Dob')" name='dob'>
+                    <BaseDatePicker v-model="customerInfo.dob" ref="dobpicker" :required="true" class="w-full"
+                        buttonType="outline" :place-holder="$t('Dob')" />
                 </UFormGroup>
 
-                <UFormGroup
-                    :label="$t('Phone')"
-                    name="phone">
-                    <UInput
-                        v-model="customerInfo.phone"
-                        :placeholder="$t('Phone')"
-                        icon="i-heroicons-phone"
-                        :ui="{ base: 'w-full rounded-lg' }"/>
+                <UFormGroup :label="$t('Gender')" name='gender'>
+                    <USelectMenu class="w-full" v-model="customerInfo.gender" :options="genders"
+                        :placeholder="$t('Gender')" valueAttribute="value" option-attribute="label"
+                        :is-dark="colorMode.value === 'dark'" />
                 </UFormGroup>
-                <UFormGroup
-                    label="Email"
-                    name="email">
-                    <UInput
-                        v-model="customerInfo.email"
-                        placeholder="Email"
-                        type="email"
-                        icon="i-heroicons-envelope"
-                        :ui="{ base: 'w-full rounded-lg' }"/>
+
+                <UFormGroup :label="$t('Phone')" name="phone">
+                    <UInput v-model="customerInfo.phone" :placeholder="$t('Phone')" icon="i-heroicons-phone"
+                        :ui="{ base: 'w-full rounded-lg' }" />
                 </UFormGroup>
-                <UFormGroup
-                    v-slot="{ error }"
-                    :label="$t('Tax Code')"
-                    name="tax_code"
-                    :error="errors.tax_code"
-                    >
-                    <UInput
-                        v-model="customerInfo.tax_code"
-                        :placeholder="$t('Tax Code')"
+                <UFormGroup label="Email" name="email">
+                    <UInput v-model="customerInfo.email" placeholder="Email" type="email" icon="i-heroicons-envelope"
+                        :ui="{ base: 'w-full rounded-lg' }" />
+                </UFormGroup>
+                <UFormGroup v-slot="{ error }" :label="$t('Tax Code')" name="tax_code" :error="errors.tax_code">
+                    <UInput v-model="customerInfo.tax_code" :placeholder="$t('Tax Code')"
                         :ui="{ base: 'w-full rounded-lg' }"
-                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
+                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined" />
                 </UFormGroup>
-                <UFormGroup
-                    v-slot="{ error }"
-                    :label="$t('Id Number')"
-                    name="id_number"
-                    :error="errors.id_number"
-                    >
-                    <UInput
-                        v-model="customerInfo.id_number"
-                        :placeholder="$t('Id Number')"
+                <UFormGroup v-slot="{ error }" :label="$t('Id Number')" name="id_number" :error="errors.id_number">
+                    <UInput v-model="customerInfo.id_number" :placeholder="$t('Id Number')"
                         :ui="{ base: 'w-full rounded-lg' }"
-                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
+                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined" />
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Address')"
-                    name="address">
-                    <UInput
-                        v-model="customerInfo.address"
-                        icon="i-heroicons-map"
-                        :placeholder="$t('Address')"
-                        :ui="{ base: 'w-full rounded-lg' }"/>
+                <UFormGroup :label="$t('Address')" name="address">
+                    <UInput v-model="customerInfo.address" icon="i-heroicons-map" :placeholder="$t('Address')"
+                        :ui="{ base: 'w-full rounded-lg' }" />
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Curators')"
-                    name="curators">
-                    <CustomerUserSelect v-model="customerInfo.curators" :placeholder="$t('Curators')" :multiple="true"/>
+                <UFormGroup :label="$t('Curators')" name="curators">
+                    <CustomerUserSelect v-model="customerInfo.curators" :placeholder="$t('Curators')"
+                        :multiple="true" />
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Type of customer')"
-                    name="type_of_customer">
-                    <USelectMenu
-                        class="w-full"
-                        v-model="customerInfo.type_of_customer"
-                        :options="type_of_customers"
-                        :placeholder="$t('Type of customer')"
-                        valueAttribute="value"
-                        option-attribute="label"
-                        :is-dark="colorMode.value === 'dark'"
-                    />
+                <UFormGroup :label="$t('Type of customer')" name="type_of_customer">
+                    <USelectMenu class="w-full" v-model="customerInfo.type_of_customer" :options="type_of_customers"
+                        :placeholder="$t('Type of customer')" valueAttribute="value" option-attribute="label"
+                        :is-dark="colorMode.value === 'dark'" />
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Customer Group')"
-                    name="customer_group">
-                    <USelectMenu
-                        class="w-full"
-                        v-model="customerInfo.customer_group"
-                        :options="customer_groups"
-                        :placeholder="$t('Customer Group')"
-                        valueAttribute="value"
-                        option-attribute="label"
-                        :is-dark="colorMode.value === 'dark'"
-                    />
+                <UFormGroup :label="$t('Customer Group')" name="customer_group">
+                    <USelectMenu class="w-full" v-model="customerInfo.customer_group" :options="customer_groups"
+                        :placeholder="$t('Customer Group')" valueAttribute="value" option-attribute="label"
+                        :is-dark="colorMode.value === 'dark'" />
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Customer Source')"
-                    name="customer_source">
-                    <USelectMenu
-                        class="w-full"
-                        v-model="customerInfo.customer_source"
-                        :options="customer_sources"
-                        :placeholder="$t('Customer Source')"
-                        valueAttribute="value"
-                        option-attribute="label"
-                        :is-dark="colorMode.value === 'dark'"
-                    />
+                <UFormGroup :label="$t('Customer Source')" name="customer_source">
+                    <USelectMenu class="w-full" v-model="customerInfo.customer_source" :options="customer_sources"
+                        :placeholder="$t('Customer Source')" valueAttribute="value" option-attribute="label"
+                        :is-dark="colorMode.value === 'dark'" />
+                </UFormGroup>
+                <UFormGroup :label="$t('Note')" name="note">
+                    <UTextarea v-model="customerInfo.note" :placeholder="$t('Note')" rows="1" resize />
                 </UFormGroup>
             </UForm>
         </UCard>
@@ -251,91 +169,47 @@
                 {{ $t('Company Information') }}
             </h2>
             <UForm :schema="schema" :state="customerInfo" class="mx-4 py-2  grid grid-cols-2 gap-4">
-                <UFormGroup
-                    v-slot="{error}"
-                    :label="$t('Company Name')" 
-                    name="company_name"
-                    :error="errors.name"
-
+                <UFormGroup v-slot="{ error }" :label="$t('Company Name')" name="company_name" :error="errors.name"
                     required>
-                    <UInput
-                        v-model="customerInfo.company_name"
-                        :placeholder="$t('Company Name')"
+                    <UInput v-model="customerInfo.company_name" :placeholder="$t('Company Name')"
                         :ui="{ base: 'w-full rounded-lg' }"
-                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
+                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined" />
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Phone')"
-                    name="company_phone">
-                    <UInput
-                        v-model="customerInfo.company_phone"
-                        :placeholder="$t('Phone')"
-                        icon="i-heroicons-phone"
-                        :ui="{ base: 'w-full rounded-lg' }"/>
+                <UFormGroup :label="$t('Phone')" name="company_phone">
+                    <UInput v-model="customerInfo.company_phone" :placeholder="$t('Phone')" icon="i-heroicons-phone"
+                        :ui="{ base: 'w-full rounded-lg' }" />
                 </UFormGroup>
-                <UFormGroup
-                    label="Email"
-                    name="company_email">
-                    <UInput
-                        v-model="customerInfo.company_email"
-                        placeholder="Email"
-                        type="email"
-                        icon="i-heroicons-envelope"
-                        :ui="{ base: 'w-full rounded-lg' }"/>
+                <UFormGroup label="Email" name="company_email">
+                    <UInput v-model="customerInfo.company_email" placeholder="Email" type="email"
+                        icon="i-heroicons-envelope" :ui="{ base: 'w-full rounded-lg' }" />
                 </UFormGroup>
-                <UFormGroup
-                    v-slot="{ error }"
-                    :label="$t('Tax Code')"
-                    name="company_tax_code"
-                    :error="errors.tax_code"
-                    >
-                    <UInput
-                        v-model="customerInfo.company_tax_code"
-                        :placeholder="$t('Tax Code')"
+                <UFormGroup v-slot="{ error }" :label="$t('Tax Code')" name="company_tax_code" :error="errors.tax_code">
+                    <UInput v-model="customerInfo.company_tax_code" :placeholder="$t('Tax Code')"
                         :ui="{ base: 'w-full rounded-lg' }"
-                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
+                        :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined" />
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Address')"
-                    name="company_address">
-                    <UInput
-                        v-model="customerInfo.company_address"
-                        icon="i-heroicons-map"
-                        :placeholder="$t('Address')"
-                        :ui="{ base: 'w-full rounded-lg' }"/>
+                <UFormGroup :label="$t('Address')" name="company_address">
+                    <UInput v-model="customerInfo.company_address" icon="i-heroicons-map" :placeholder="$t('Address')"
+                        :ui="{ base: 'w-full rounded-lg' }" />
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Company Type')"
-                    name="company_type">
-                    <USelectMenu
-                        class="w-full"
-                        v-model="customerInfo.company_type"
-                        :options="company_types"
-                        :placeholder="$t('Company Type')"
-                        valueAttribute="value"
-                        option-attribute="label"
-                        :is-dark="colorMode.value === 'dark'"
-                    />
+                <UFormGroup :label="$t('Company Type')" name="company_type">
+                    <USelectMenu class="w-full" v-model="customerInfo.company_type" :options="company_types"
+                        :placeholder="$t('Company Type')" valueAttribute="value" option-attribute="label"
+                        :is-dark="colorMode.value === 'dark'" />
                 </UFormGroup>
-                <UFormGroup
-                    :label="$t('Line of business')"
-                    name="line_of_business">
-                    <USelectMenu
-                        class="w-full"
-                        v-model="customerInfo.line_of_business"
-                        :options="LINE_OF_BUSINESS_CHOICES"
-                        :placeholder="$t('Line of business')"
-                        valueAttribute="value"
-                        option-attribute="label"
-                        :is-dark="colorMode.value === 'dark'"
-                    />
+                <UFormGroup :label="$t('Line of business')" name="line_of_business">
+                    <USelectMenu class="w-full" v-model="customerInfo.line_of_business"
+                        :options="LINE_OF_BUSINESS_CHOICES" :placeholder="$t('Line of business')" valueAttribute="value"
+                        option-attribute="label" :is-dark="colorMode.value === 'dark'" />
                 </UFormGroup>
             </UForm>
         </UCard>
         <template #footer>
             <div class="flex justify-end items-center space-x-2">
-                <UButton color="white" variant="solid" icon="i-heroicons-x-mark" :label="$t('Cancel')" size="sm" @click="useRouter().back()"/>
-                <UButton color="primary" variant="solid" icon="i-heroicons-check-circle" :label="$t('Save')" size="sm" @click="onSubmit"/>
+                <UButton color="white" variant="solid" icon="i-heroicons-x-mark" :label="$t('Cancel')" size="sm"
+                    @click="useRouter().back()" />
+                <UButton color="primary" variant="solid" icon="i-heroicons-check-circle" :label="$t('Save')" size="sm"
+                    @click="onSubmit" />
             </div>
         </template>
     </UCard>
@@ -396,17 +270,17 @@ const updateItemDropdown = ref([
         disabled: true
     }],
     [{
-      label: t('Basic'),
-      icon: 'bi:card-heading',
-      click: () => {
-        viewMode.value = 'basic'
-      }
-    },{
-      label: t('Full'),
-      icon: 'tdesign:frame-filled',
-      click: () => {
-        viewMode.value = 'full'
-      }
+        label: t('Basic'),
+        icon: 'bi:card-heading',
+        click: () => {
+            viewMode.value = 'basic'
+        }
+    }, {
+        label: t('Full'),
+        icon: 'tdesign:frame-filled',
+        click: () => {
+            viewMode.value = 'full'
+        }
     }]
 ])
 const createItemDropdown = ref([
@@ -415,17 +289,17 @@ const createItemDropdown = ref([
         disabled: true
     }],
     [{
-      label: t('Basic'),
-      icon: 'bi:card-heading',
-      click: () => {
-        viewMode.value = 'basic'
-      }
-    },{
-      label: t('Standard'),
-      icon: 'ant-design:fullscreen-outlined',
-      click: () => {
-        viewMode.value = 'standard'
-      }
+        label: t('Basic'),
+        icon: 'bi:card-heading',
+        click: () => {
+            viewMode.value = 'basic'
+        }
+    }, {
+        label: t('Standard'),
+        icon: 'ant-design:fullscreen-outlined',
+        click: () => {
+            viewMode.value = 'standard'
+        }
     }]
 ])
 const defaultUserInfo = {
@@ -436,21 +310,24 @@ const defaultUserInfo = {
     email: '',
     phone: '',
     dob: '',
-    phone:'',
-    email:'',
-    address:'',
+    phone: '',
+    email: '',
+    address: '',
     type_of_customer: 1,
-    customer_group: 5, 
-    customer_source: 7, 
+    customer_group: 5,
+    customer_source: 7,
     stage: 2,
     status: 1,
     curators: [],
+    description: '',
+    attachment: [],
+    note:''
 }
 const customerInfo = ref(defaultUserInfo)
 const genders = [
-    {label: t('Male'), value: 'Male'},
-    {label: t('Female'), value: 'Female'},
-    {label: t('Other'), value: 'Other'},
+    { label: t('Male'), value: 'Male' },
+    { label: t('Female'), value: 'Female' },
+    { label: t('Other'), value: 'Other' },
 ]
 const titles = ref([])
 const departments = ref([])
@@ -458,15 +335,22 @@ const cloneCustomerInfo = ref({})
 
 const loadData = async () => {
     try {
-        if (props.isUpdate){
-            const {data: response} = await useAPI().get(`core/customers/${useRoute().params.id}/`);
+        if (props.isUpdate) {
+            const { data: response } = await useAPI().get(`core/customers/${useRoute().params.id}/`);
             customerInfo.value = response.value
             customerInfo.value.dob = customerInfo.value.dob ? new Date(customerInfo.value.dob) : null
-            customerInfo.value.avatar = customerInfo.value.avatar 
-                ? [{ 
-                    preview: customerInfo.value.avatar, 
-                }] 
+            customerInfo.value.avatar = customerInfo.value.avatar
+                ? [{
+                    preview: customerInfo.value.avatar,
+                }]
                 : '';
+            // Format attachment for FileUpload component
+            customerInfo.value.attachment = customerInfo.value.attachment
+                ? [{
+                    preview: customerInfo.value.attachment,
+                    name: customerInfo.value.attachment.split('/').pop(),
+                }]
+                : [];
             cloneCustomerInfo.value = JSON.parse(JSON.stringify(customerInfo.value))
             console.log('response', customerInfo.value)
         }
@@ -476,29 +360,29 @@ const loadData = async () => {
 };
 loadData()
 const type_of_customers = [
-    {label: t('Personal'), value: 1},
-    {label: t('Organization'), value: 2},
+    { label: t('Personal'), value: 1 },
+    { label: t('Organization'), value: 2 },
 ]
 const customer_groups = [
-    {label: t('Loyal Customer'), value: 1},
-    {label: t('Former Customer'), value: 2},
-    {label: t('Potential Customer'), value: 3},
-    {label: t('Casual Customer'), value: 4},
-    {label: t('Newly acquired lead'), value: 5},
-    {label: t('Nurturing customer lead'), value: 6},
-    {label: 'VIP', value: 7},
-    {label: 'VVIP', value: 8},
+    { label: t('Loyal Customer'), value: 1 },
+    { label: t('Former Customer'), value: 2 },
+    { label: t('Potential Customer'), value: 3 },
+    { label: t('Casual Customer'), value: 4 },
+    { label: t('Newly acquired lead'), value: 5 },
+    { label: t('Nurturing customer lead'), value: 6 },
+    { label: 'VIP', value: 7 },
+    { label: 'VVIP', value: 8 },
 ]
 const customer_sources = [
-    {label: 'Facebook', value: 1},
-    {label: 'Instagram', value: 2},
-    {label: 'Google', value: 3},
-    {label: t('Old customer referral'), value: 4},
-    {label: t('Website'), value: 5},
-    {label: t('Self-searching'), value: 6},
-    {label: t('Switchboard'), value: 7},
-    {label: t('Broker'), value: 8},
-    {label: t('Sale data'), value: 9},
+    { label: 'Facebook', value: 1 },
+    { label: 'Instagram', value: 2 },
+    { label: 'Google', value: 3 },
+    { label: t('Old customer referral'), value: 4 },
+    { label: t('Website'), value: 5 },
+    { label: t('Self-searching'), value: 6 },
+    { label: t('Switchboard'), value: 7 },
+    { label: t('Broker'), value: 8 },
+    { label: t('Sale data'), value: 9 },
 ]
 const company_types = [
     { label: t('Limited Liability Company'), value: t('Limited Liability Company') },
@@ -511,22 +395,23 @@ const company_types = [
     { label: t('Non-profit Organization'), value: t('Non-profit Organization') },
 ];
 const LINE_OF_BUSINESS_CHOICES = [
-    { value: t('Retail') , label: t('Retail') },
-    { value: t('Wholesale') , label: t('Wholesale') },
-    { value: t('Manufacturing') , label: t('Manufacturing') },
-    { value: t('Service') , label: t('Service') },
-    { value: t('Technology') , label: t('Technology') },
-    { value: t('Healthcare') , label: t('Healthcare') },
-    { value: t('Education') , label: t('Education') },
-    { value: t('Finance') , label: t('Finance') },
-    { value: t('Real Estate') , label: t('Real Estate') },
-    { value: t('Transportation') , label: t('Transportation') },
-    { value: t('Construction') , label: t('Construction') },
-    { value: t('Hospitality') , label: t('Hospitality') },
-    { value: t('Entertainment') , label: t('Entertainment') },
-    { value: t('Agriculture') , label: t('Agriculture') },
-    { value: t('Other') , label: t('Other') },
+    { value: t('Retail'), label: t('Retail') },
+    { value: t('Wholesale'), label: t('Wholesale') },
+    { value: t('Manufacturing'), label: t('Manufacturing') },
+    { value: t('Service'), label: t('Service') },
+    { value: t('Technology'), label: t('Technology') },
+    { value: t('Healthcare'), label: t('Healthcare') },
+    { value: t('Education'), label: t('Education') },
+    { value: t('Finance'), label: t('Finance') },
+    { value: t('Real Estate'), label: t('Real Estate') },
+    { value: t('Transportation'), label: t('Transportation') },
+    { value: t('Construction'), label: t('Construction') },
+    { value: t('Hospitality'), label: t('Hospitality') },
+    { value: t('Entertainment'), label: t('Entertainment') },
+    { value: t('Agriculture'), label: t('Agriculture') },
+    { value: t('Other'), label: t('Other') },
 ];
+
 const formatData = () => {
     const formData = new FormData();
 
@@ -534,26 +419,40 @@ const formatData = () => {
         (item) => item.type_of_contact !== null
     );
     Object.entries(customerInfo.value).forEach(([key, value]) => {
+        // Handle file fields first (before null check)
+        if (['avatar'].includes(key)) {
+            if (value && value[0] instanceof File) {
+                formData.append(key, value[0])
+            }
+            else if (value && value.length == 0) {
+                formData.append(key, '')
+            }
+            return;
+        }
+
+        if (['attachment'].includes(key)) {
+            // CoreFileUpload returns an array
+            if (value && value.length > 0 && value[0] instanceof File) {
+                formData.append(key, value[0])
+            }
+            return;
+        }
+
+        // Skip null/undefined values for other fields
         if (!value) return;
-        if (['curators'].includes(key)){
+
+        if (['curators'].includes(key)) {
             if (value.length == 0) return;
             value.forEach((curator) => {
                 formData.append('curators', curator.id || curator);
             });
         }
-        else if(['additional_infos'].includes(key)){ 
+        else if (['additional_infos'].includes(key)) {
             if (value.length == 0) return;
             formData.append(key, JSON.stringify(value));
         }
         else if (['dob'].includes(key)) {
             formData.append(key, dayjs(value).format('YYYY-MM-DD'));
-        } else if (['avatar'].includes(key)) {
-            if (value[0] instanceof File) {
-                formData.append(key, value[0])
-            }
-            else if (value.length == 0){
-                formData.append(key, '')
-            }
         } else {
             formData.append(key, value);
         }
@@ -564,7 +463,7 @@ const formatData = () => {
 const createCustomer = async () => {
     const profileData = formatData()
     try {
-        const {data: response} = await useAPI().post(`core/customers/`, profileData);
+        const { data: response } = await useAPI().post(`core/customers/`, profileData);
         if (response.value && response.value.id) {
             return true;
         } else {
@@ -578,7 +477,7 @@ const createCustomer = async () => {
 const updateCustomer = async () => {
     const profileData = formatData()
     try {
-        const {data: response} = await useAPI().put(`core/customers/${useRoute().params.id}/`, profileData);
+        const { data: response } = await useAPI().put(`core/customers/${useRoute().params.id}/`, profileData);
         if (response.value && response.value.id) {
             return true;
         } else {
@@ -600,13 +499,13 @@ const validateSchema = async () => {
         validationError.inner.forEach((err) => {
             validationErrors[err.path] = err.message;
         });
-        errors.value = validationErrors; 
+        errors.value = validationErrors;
         return false;
     }
 };
 const onSubmit = async () => {
-    const isValid = await validateSchema(); 
-    console.log('isValid',isValid)
+    const isValid = await validateSchema();
+    console.log('isValid', isValid)
     if (!isValid) return;
     try {
         busy.value = true;

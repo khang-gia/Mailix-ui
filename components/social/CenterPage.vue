@@ -27,8 +27,10 @@
         <ModalOpenPost />
         <ModalCreatePost @postCreated="handlePostCreated" />
     </div>
-    <div v-else-if="currentPage === 'groups'">
-        <GroupList />
+
+    <!-- Groups Page -->
+    <div v-else-if="currentPage === 'groups'" class="col-span-12 lg:col-span-6">
+        <SocialGroupsPage />
     </div>
 </template>
 

@@ -66,14 +66,15 @@
             </div>
           </template>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
-            
+
             <ContactDetailItem label="Name" :value="customerInfo.name" />
             <ContactDetailItem label="Customer title" :value="customerInfo.title" />
-            
-            <ContactDetailItem label="Dob" :value="customerInfo.dob?dayjs(customerInfo.dob).format('YYYY-MM-DD'):''" />
+
+            <ContactDetailItem label="Dob"
+              :value="customerInfo.dob ? dayjs(customerInfo.dob).format('YYYY-MM-DD') : ''" />
             <ContactDetailItem label="Gender" :value="customerInfo.gender" />
             <ContactDetailItem label="Type of contact" :value="customerInfo.type_of_customer_display" />
-            
+
             <ContactDetailItem label="Curators" :value="customerInfo.curators_list" />
             <ContactDetailItem label="Contact Source" :value="customerInfo.customer_source_display" />
 
@@ -83,7 +84,7 @@
               class="md:col-span-1">
               <template #value>
                 <UBadge :color="statusMapping[customerInfo.status]" variant="subtle" class="font-semibold">{{
-                  $t(customerInfo.status_display)}}</UBadge>
+                  $t(customerInfo.status_display) }}</UBadge>
               </template>
             </ContactDetailItem>
             <!-- <WorkDetailItem v-if="customerInfo.priority" label="Priority" :value="customerInfo.priority"
@@ -100,7 +101,7 @@
             <ContactDetailItem label="Email" :value="customerInfo.email" />
             <ContactDetailItem label="Address" :value="customerInfo.address" />
             <UDivider class="md:col-span-2 lg:col-span-3 my-4" />
-            
+
           </div>
 
 
@@ -122,6 +123,22 @@
         </UCard>
       </div>
       <div class="col-span-2">
+        <!-- Activity Log Card (standalone) -->
+        <UCard class="mb-4">
+          <template #header>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+              {{ $t('Activity Log') }}
+            </h2>
+          </template>
+          <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
+            <div v-for="history in workHistory" :key="history.id"
+              class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
+              <ActivityLogItem :history="history" history-type="contact" />
+            </div>
+          </div>
+        </UCard>
+
+        <!-- Tabs Card (Discussion & Attachments) -->
         <UCard class="" :ui="{
           footer: {
             base: 'border-none', padding: 'px-4 py-4 sm:px-6'
@@ -133,10 +150,53 @@
                 <div v-if="item.key === 'discussions'" class="h-full overflow-x-hidden">
                   <CommentsSection comment-type="customers" />
                 </div>
-                <div v-else-if="item.key === 'activity_log'" class="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
-                  <div v-for="history in workHistory" :key="history.id"
-                    class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
-                    <ActivityLogItem :history="history" history-type="contact" />
+                <div v-else-if="item.key === 'attachments'" class="space-y-3">
+                  <div v-if="customerAttachments.length === 0"
+                    class="p-6 text-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 mb-2" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    {{ $t('No attachments yet') }}
+                  </div>
+
+                  <div v-for="attachment in customerAttachments" :key="attachment.id"
+                    class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                      <svg v-if="getFileType(attachment.filename) === 'pdf'" class="h-8 w-8 text-red-500 flex-shrink-0"
+                        fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                          d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                          clip-rule="evenodd" />
+                      </svg>
+                      <svg v-else-if="getFileType(attachment.filename) === 'image'"
+                        class="h-8 w-8 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                          d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                          clip-rule="evenodd" />
+                      </svg>
+                      <svg v-else class="h-8 w-8 text-gray-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                          d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                          clip-rule="evenodd" />
+                      </svg>
+                      <div class="flex-1 min-w-0">
+                        <a :href="attachment.file" target="_blank"
+                          class="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 truncate block">
+                          {{ attachment.filename || getFileName(attachment.file) }}
+                        </a>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          {{ attachment.uploaded_by.display_name }} - {{ formatDate(attachment.created_at) }}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <UButton icon="i-heroicons-arrow-down-tray" size="xs" color="gray" variant="ghost"
+                        :to="attachment.file" target="_blank" />
+                      <UButton icon="i-heroicons-trash" size="xs" color="red" variant="ghost"
+                        @click="deleteAttachment(attachment.id)" :loading="deletingAttachment === attachment.id" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -156,16 +216,20 @@
               </h2>
             </div>
           </template>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
-              <ContactDetailItem label="Tax Code" :value="customerInfo.tax_code" />
-              <ContactDetailItem label="Id Number" :value="customerInfo.id_number" />
-              
-            </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+            <ContactDetailItem label="Tax Code" :value="customerInfo.tax_code" />
+            <ContactDetailItem label="Id Number" :value="customerInfo.id_number" />
+
+          </div>
         </UCard>
       </div>
-      
+
     </div>
   </div>
+
+  <!-- Hidden file input for direct file selection -->
+  <input ref="fileInputRef" type="file" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="hidden"
+    @change="handleFileSelect" />
 </template>
 <script setup>
 import { useI18n } from "vue-i18n";
@@ -198,28 +262,45 @@ const tabs = [{
   label: t('Discussion'),
   key: 'discussions',
 }, {
-  label: t('Activity Log'),
-  key: 'activity_log',
+  label: t('Attachments'),
+  key: 'attachments',
 }]
 const customerInfo = ref({})
 const workHistory = ref([])
+const showDocumentModal = ref(false)
+const documentAttachment = ref([])
+const uploading = ref(false)
+const customerAttachments = ref([])
+const fileInputRef = ref(null)
+const deletingAttachment = ref(null)
 
 const fetchHistory = async () => {
   try {
     const { data: response } = await useAPI().get(`core/customers/${useRoute().params.id}/history/`);
+    console.log('Full response1:', response);
+    console.log('response.data1:', response.value);
     workHistory.value = response.value
   } catch (error) {
     console.error('Error loading history data:', error);
   }
 }
+
+const fetchAttachments = async () => {
+  try {
+    const { data: response } = await useAPI().get(`core/customer-attachments/`, {
+      customer: useRoute().params.id
+    });
+    customerAttachments.value = response.value.results || [];
+  } catch (error) {
+    console.error('Error loading attachments:', error);
+  }
+}
+
 const fetchCustomerInfo = async () => {
   try {
     const { data: response } = await useAPI().get(`core/customers/${useRoute().params.id}/`);
     customerInfo.value = response.value
     customerInfo.value.dob = customerInfo.value.dob ? new Date(customerInfo.value.dob) : null
-    // customerInfo.value.end_date = customerInfo.value.end_date ? new Date(customerInfo.value.end_date) : null
-    // customerInfo.value.actual_start_date = customerInfo.value.actual_start_date ? new Date(customerInfo.value.actual_start_date) : null
-    // customerInfo.value.related_work = customerInfo.value.related_work ? customerInfo.value.related_work.id : '',
     console.log('response', customerInfo.value)
   } catch (error) {
     console.error('Error loading data:', error);
@@ -229,6 +310,7 @@ const fetchData = async () => {
   try {
     await fetchCustomerInfo();
     await new Promise((resolve) => setTimeout(resolve, 300));
+    await fetchAttachments();
     await fetchHistory();
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -250,16 +332,96 @@ const actionDropdown = ref([
     label: t('Add document'),
     icon: 'i-heroicons-arrow-up-on-square',
     click: () => {
-      viewMode.value = 'new_tab'
+      fileInputRef.value?.click()
     }
   }]
 ])
+
+const handleFileSelect = async (event) => {
+  const files = Array.from(event.target.files || []);
+  if (files.length === 0) return;
+
+  await uploadFiles(files);
+
+  // Reset input
+  if (fileInputRef.value) {
+    fileInputRef.value.value = '';
+  }
+};
+
+const uploadFiles = async (files) => {
+  try {
+    uploading.value = true;
+
+    const uploadPromises = files.map(async (file) => {
+      const formData = new FormData();
+      formData.append('customer', useRoute().params.id);
+      formData.append('file', file);
+
+      return useAPI().post('core/customer-attachments/', formData);
+    });
+
+    await Promise.all(uploadPromises);
+
+    useToast().add({
+      title: t('Success'),
+      description: `${files.length} ${t('file(s) uploaded successfully')}`,
+      icon: 'i-heroicons-check-circle',
+      color: 'green',
+      timeout: 3000,
+    });
+
+    // Refresh attachments list
+    await fetchAttachments();
+  } catch (error) {
+    console.error('Error uploading files:', error);
+    useToast().add({
+      title: t('Error'),
+      description: error.message || t('Failed to upload files'),
+      icon: 'i-heroicons-exclamation-circle',
+      color: 'red',
+      timeout: 3000,
+    });
+  } finally {
+    uploading.value = false;
+  }
+};
+
+const deleteAttachment = async (attachmentId) => {
+  try {
+    deletingAttachment.value = attachmentId;
+
+    await useAPI().del(`core/customer-attachments/${attachmentId}/`);
+
+    useToast().add({
+      title: t('Success'),
+      description: t('Attachment deleted successfully'),
+      icon: 'i-heroicons-check-circle',
+      color: 'green',
+      timeout: 2000,
+    });
+
+    // Refresh attachments list
+    await fetchAttachments();
+  } catch (error) {
+    console.error('Error deleting attachment:', error);
+    useToast().add({
+      title: t('Error'),
+      description: error.message || t('Failed to delete attachment'),
+      icon: 'i-heroicons-exclamation-circle',
+      color: 'red',
+      timeout: 3000,
+    });
+  } finally {
+    deletingAttachment.value = null;
+  }
+};
+
 const copyToClipboard = async (text) => {
   try {
     await navigator.clipboard.writeText(text);
     useToast().add({
       description: 'Copied to clipboard!',
-      icon: 'i-heroicons-check-circle',
       color: 'green',
       timeout: 1000,
       position: 'top-0',
@@ -267,5 +429,25 @@ const copyToClipboard = async (text) => {
   } catch (err) {
     console.error('Failed to copy: ', err);
   }
+};
+
+const getFileName = (url) => {
+  if (!url) return '';
+  const parts = url.split('/');
+  return decodeURIComponent(parts[parts.length - 1]);
+};
+
+const getFileType = (filename) => {
+  if (!filename) return 'file';
+  const lower = filename.toLowerCase();
+  if (lower.endsWith('.pdf')) return 'pdf';
+  if (lower.match(/\.(jpg|jpeg|png|gif|webp)$/)) return 'image';
+  if (lower.match(/\.(doc|docx)$/)) return 'document';
+  return 'file';
+};
+
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  return dayjs(dateString).format('MMM D, YYYY');
 };
 </script>

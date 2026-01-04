@@ -74,6 +74,8 @@
     "@tiptap/vue-3": "^3.0.7",
     "@zadigetvoltaire/nuxt-gtm": "^0.0.13",
     "file-saver": "^2.0.5",
+    "inspirational-quotes": "^2.0.1",
+    "mental-support": "^1.0.0",
     "moment": "^2.30.1",
     "patternomaly": "^1.3.2",
     "vue-draggable-next": "^2.2.1",

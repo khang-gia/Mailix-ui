@@ -12,10 +12,10 @@
         <!-- Navigation Menu -->
         <div class="space-y-4">
             <div v-for="item in menuItems" :key="item.label">
-                <UButton :icon="item.icon" :label="item.label" variant="ghost"
-                    color="gray" block
+                <UButton :icon="item.icon" :label="item.label" variant="ghost" color="gray" block
                     class="justify-start text-base text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    :class="{ 'text-primary-500 bg-primary-50 dark:bg-primary-900/10': item.active }" v-if="!item.restricted" @click="item.click" />
+                    :class="{ 'text-primary-500 bg-primary-50 dark:bg-primary-900/10': isActive(item) }"
+                    v-if="!item.restricted" @click="item.click" />
             </div>
         </div>
     </div>
@@ -30,21 +30,57 @@ const props = defineProps({
     user: {
         type: Object,
         default: () => ({})
+    },
+    currentPage: {
+        type: String,
+        default: 'news'
     }
 })
 const emit = defineEmits(['update:page'])
 const userRole = props.user?.profile_hr?.role
-const menuItems = [
-    { label: t('News'), icon: 'i-heroicons-newspaper', active: true, click: () => {
-        emit('update:page', 'news')
-    } },
-    { label: t('Pending posts'), icon: 'i-heroicons-clock', restricted: userRole !== 'A' },
-    { label: t('Company Page'), icon: 'i-heroicons-building-office', restricted: userRole !== 'A' },
+
+const menuItems = computed(() => [
+    {
+        label: t('News'),
+        icon: 'i-heroicons-newspaper',
+        page: 'news',
+        click: () => {
+            emit('update:page', 'news')
+        }
+    },
+    {
+        label: t('Pending posts'),
+        icon: 'i-heroicons-clock',
+        page: 'pending',
+        restricted: userRole !== 'A'
+    },
+    {
+        label: t('Company Page'),
+        icon: 'i-heroicons-building-office',
+        page: 'company',
+        restricted: userRole !== 'A'
+    },
     // { label: t('Personal Page'), icon: 'i-heroicons-user' },
-    { label: t('Groups Social'), icon: 'i-heroicons-users' },
-    { label: t('Events'), icon: 'carbon:event', click: () => {console.log('Events') } },
+    {
+        label: t('Groups Social'),
+        icon: 'i-heroicons-users',
+        page: 'groups',
+        click: () => {
+            emit('update:page', 'groups')
+        }
+    },
+    {
+        label: t('Events'),
+        icon: 'carbon:event',
+        page: 'events',
+        click: () => { console.log('Events') }
+    },
     // { label: t('Progress Page'), icon: 'i-heroicons-chart-bar' },
     // { label: t('Organization Map'), icon: 'i-heroicons-user-group' },
     // { label: t('Process Page'), icon: 'i-heroicons-flag' },
-]
+])
+
+const isActive = (item) => {
+    return item.page === props.currentPage
+}
 </script>

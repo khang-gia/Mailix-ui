@@ -2,7 +2,7 @@
     <div class="grid grid-cols-12 gap-6 p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
         <!-- Left Sidebar (3 cols) -->
         <div class="col-span-12 lg:col-span-3">
-            <SocialSidebar :user="userInfo" @update:page="currentPage = $event" />
+            <SocialSidebar :user="userInfo" :current-page="currentPage" @update:page="currentPage = $event" />
         </div>
 
         <!-- Center Feed (6 cols) -->
@@ -17,8 +17,11 @@
         </div> -->
         <SocialCenterPage :current-page="currentPage" />
         <!-- Right Sidebar (3 cols) -->
-        <div class="col-span-12 lg:col-span-3 space-y-6">
+        <div class="col-span-12 lg:col-span-3 space-y-4">
             <SocialBirthdayWidget />
+            <SocialDailyInspiration />
+            <SocialTodayEvents />
+            <SocialUpcomingEvents />
             <SocialSystemNotifications />
         </div>
     </div>
