@@ -344,6 +344,7 @@ const searchQuery = ref('')
 const discoverSearchQuery = ref('')
 const sortBy = ref('default')
 const showCreateGroupModal = ref(false)
+const reload = ref(0) // Reload trigger for groups list
 
 // Loading and error states
 const loading = ref(false)
@@ -377,6 +378,7 @@ const sortOptions = computed(() => [
 
 // Your groups - groups where the user is a member (using computedAsync for reactivity)
 const yourGroups = computedAsync(async () => {
+    const _ = reload.value // Watch reload changes
     // Determine ordering based on sort option
     let ordering = '-membership_date' // Default: Latest join first
     if (sortBy.value === 'latest_join') {
@@ -530,6 +532,10 @@ const handleCreateGroup = async () => {
 
         showCreateGroupModal.value = false
         resetForm()
+
+        // Reload groups list
+        reload.value++
+
         // computedAsync will automatically refresh yourGroups
 
         console.log('Group created successfully')

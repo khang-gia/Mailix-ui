@@ -645,10 +645,7 @@
     "Members": "Thành viên",
     "Reports": "Báo cáo",
     "Joined": "Đã tham gia",
-    "What's on your mind?": "Bạn đang nghĩ gì?",
     "Photo/Video": "Ảnh/Video",
-    "Note": "Ghi chép",
-    "Poll": "Bình chọn",
     "Announcement": "Thông báo",
     "No posts yet": "Chưa có bài viết nào",
     "No announcements": "Chưa có thông báo nào",
@@ -660,10 +657,10 @@
     "Importants": "Quan trọng",
     "No important posts": "Chưa có bài viết quan trọng",
     "shared on": "đã chia sẻ trên",
-    "Announcement": "Thông báo",
     "Create Announcement": "Tạo thông báo",
     "Pin this announcement": "Ghim thông báo này",
     "See more": "Xem thêm",
     "See less": "Thu gọn",
-    "From group": "Từ nhóm"
+    "From group": "Từ nhóm",
+    "Are you sure you want to deactivate this employee?": "Bạn có chắc chắn muốn vô hiệu hóa nhân sự này?"
 }
