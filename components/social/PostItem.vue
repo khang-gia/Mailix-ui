@@ -161,7 +161,7 @@
         </div>
         <div v-if="openPostModal" class="pt-2">
             <CommentsSection comment-type="social" :id="post.id" placeholder="Write a comment..."
-                @onAddComment="post.comments_count++" />
+                @onAddComment="post.comments_count++" useTimeAgo="true"/>
         </div>
     </UCard>
 

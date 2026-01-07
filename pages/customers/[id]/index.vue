@@ -21,7 +21,7 @@
     </div>
   </div>
   <div class="p-4 space-y-6">
-    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
+    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 items-start">
       <!-- <div class="lg:col-span-2">
         <UCard class="p-4 h-full">
           <div class="flex flex-col items-center">
@@ -54,8 +54,8 @@
           </div>
         </UCard>
       </div> -->
-      <div class="lg:col-span-4 md:col-span-2 h-full">
-        <UCard class="h-full">
+      <div class="lg:col-span-4 md:col-span-2">
+        <UCard>
           <template #header>
             <div class="flex items-center justify-between">
               <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
@@ -127,6 +127,41 @@
             </div>
           </UCard>
 
+        </UCard>
+
+        <!-- Company Information Card -->
+        <UCard v-if="customerInfo.type_of_customer === 2" class="mt-4">
+          <template #header>
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                {{ $t('Company Information') }}
+              </h2>
+            </div>
+          </template>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+            <ContactDetailItem label="Company Name" :value="customerInfo.company_name" />
+            <ContactDetailItem label="Phone" :value="customerInfo.company_phone" />
+            <ContactDetailItem label="Email" :value="customerInfo.company_email" />
+            <ContactDetailItem label="Tax Code" :value="customerInfo.company_tax_code" />
+            <ContactDetailItem label="Address" :value="customerInfo.company_address" />
+            <ContactDetailItem label="Company Type" :value="customerInfo.company_type" />
+            <ContactDetailItem label="Line of business" :value="customerInfo.line_of_business" />
+          </div>
+        </UCard>
+
+        <!-- Additional Information Card -->
+        <UCard class="mt-4">
+          <template #header>
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                {{ $t('Additional Information') }}
+              </h2>
+            </div>
+          </template>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+            <ContactDetailItem label="Tax Code" :value="customerInfo.tax_code" />
+            <ContactDetailItem label="Id Number" :value="customerInfo.id_number" />
+          </div>
         </UCard>
       </div>
       <div class="col-span-2">
@@ -212,57 +247,6 @@
           </UTabs>
         </UCard>
       </div>
-    </div>
-    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
-
-      <div v-if="customerInfo.type_of_customer === 2" class="lg:col-span-4 md:col-span-2">
-        <UCard class="h-full">
-          <template #header>
-            <div class="flex items-center justify-between">
-              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                {{ $t('Company Information') }}
-              </h2>
-            </div>
-          </template>
-          <div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
-              <ContactDetailItem label="Company Name" :value="customerInfo.company_name" />
-              <ContactDetailItem label="Phone" :value="customerInfo.company_phone" />
-              <ContactDetailItem label="Email" :value="customerInfo.company_email" />
-              <ContactDetailItem label="Tax Code" :value="customerInfo.company_tax_code" />
-              <ContactDetailItem label="Address" :value="customerInfo.company_address" />
-              <ContactDetailItem label="Company Type" :value="customerInfo.company_type" />
-              <ContactDetailItem label="Line of business" :value="customerInfo.line_of_business" />
-
-            </div>
-          </div>
-        </UCard>
-      </div>
-      <div class="lg:col-span-2 md:col-span-2">
-        <UCard class="">
-          <template #header>
-            <div class="flex items-center justify-between">
-              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                {{ $t('Additional Information') }}
-              </h2>
-              <!-- <h2 class="text-xl font-semibold border-b pb-3 mb-4 text-gray-800 dark:text-gray-100">{{ $t('Descriptions & Accounting') }}</h2> -->
-
-            </div>
-          </template>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
-            <ContactDetailItem label="Tax Code" :value="customerInfo.tax_code" />
-            <ContactDetailItem label="Id Number" :value="customerInfo.id_number" />
-
-            <!-- <div class="md:col-span-2 lg:col-span-3">
-                  <ContactDetailItem label="Description" :value="customerInfo.description" />
-              </div> -->
-          </div>
-
-        </UCard>
-
-      </div>
-
-
     </div>
   </div>
 

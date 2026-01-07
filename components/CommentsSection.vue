@@ -20,14 +20,16 @@
                         </p>
                     </div>
                     <div class="flex justify-between items-center gap-x-4 mt-1 pl-2 text-xs w-fit">
-                        <span class=" text-gray-500">{{ dayjs(comment.created_at).fromNow() }}</span>
+                        <span class=" text-gray-500">
+                            {{ formatCommentTime(comment.created_at) }}
+                        </span>
                         <span class="cursor-pointer hover:underline"
                             :class="{ 'text-mailix-primary font-semibold': comment.is_liked_by_you }"
                             @click.prevent="interactComment(comment)">{{ $t('Like') }}</span>
                         <span class="cursor-pointer hover:underline">{{ $t('Reply') }}</span>
                         <div v-if="comment.likes && comment.like_count > 0">
-                            <UButton icon="i-heroicons-hand-thumb-up-solid" color="primary" size="xs" variant="ghost" square
-                                trailing :label="comment.like_count"></UButton>
+                            <UButton icon="i-heroicons-hand-thumb-up-solid" color="primary" size="xs" variant="ghost"
+                                square trailing :label="comment.like_count"></UButton>
                         </div>
                     </div>
 
@@ -39,10 +41,8 @@
     </div>
 
     <div class="mt-2">
-        <UInput v-model="newComment" type="text" :placeholder="$t(placeholder)" @keyup.enter="writeComment"
-            size="md" 
-            class="w-full"
-            :ui="{
+        <UInput v-model="newComment" type="text" :placeholder="$t(placeholder)" @keyup.enter="writeComment" size="md"
+            class="w-full" :ui="{
                 color: {
                     white: {
                         outline: 'shadow-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 dark:ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-gray-300 dark:focus:ring-gray-700'
@@ -61,7 +61,7 @@
             }">
             <template #trailing>
                 <UButton :padded="false" :disabled="!newComment" color="blue" variant="link"
-                    icon="i-heroicons-paper-airplane-20-solid" @click="writeComment"/>
+                    icon="i-heroicons-paper-airplane-20-solid" @click="writeComment" />
             </template>
         </UInput>
     </div>
@@ -87,26 +87,40 @@ const props = defineProps({
         required: false,
         default: 'Write a discussion...',
     },
+    useTimeAgo: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 })
 const emit = defineEmits(['onAddComment'])
 const apiUrl = computed(() => {
-  const id = props.id || useRoute().params.id
-  switch (props.commentType) {
-    case 'works':
-      return `core/works/${id}/comments/`
-    case 'contacts':
-      return `core/contacts/${id}/comments/`
-    case 'customers':
-      return `core/customers/${id}/comments/`
-    case 'social':
-      return `social/posts/${id}/comments/`
-    default:
-      console.warn(`Unknown commentType: ${props.commentType}`)
-      return null
-  }
+    const id = props.id || useRoute().params.id
+    switch (props.commentType) {
+        case 'works':
+            return `core/works/${id}/comments/`
+        case 'contacts':
+            return `core/contacts/${id}/comments/`
+        case 'customers':
+            return `core/customers/${id}/comments/`
+        case 'social':
+            return `social/posts/${id}/comments/`
+        default:
+            console.warn(`Unknown commentType: ${props.commentType}`)
+            return null
+    }
 })
 const { data: comments, refresh } = await useAPI().get(apiUrl);
 const newComment = ref('')
+
+// Format comment time based on useTimeAgo prop
+const formatCommentTime = (timestamp) => {
+    if (props.useTimeAgo) {
+        return dayjs(timestamp).fromNow()
+    }
+    return dayjs(timestamp).format('MMM D, YYYY h:mm A')
+}
+
 const typeMapping = {
     works: 'core/work_comments',
     customers: 'core/customer_comments',
@@ -140,13 +154,13 @@ const interactComment = async (comment) => {
         console.error('Error deleting fee:', error);
         throw error;
     }
-} 
+}
 const mappingForeignKey = {
     works: 'work',
     customers: 'customer',
     social: 'post',
 }
-const writeComment = async() => {
+const writeComment = async () => {
     try {
         const apiPath = typeMapping[props.commentType];
         if (!apiPath || !newComment.value) {

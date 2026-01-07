@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="p-4 space-y-6">
-    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
+    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 items-start">
       <!-- <div class="lg:col-span-2">
         <UCard class="p-4 h-full">
           <div class="flex flex-col items-center">
@@ -55,8 +55,8 @@
           </div>
         </UCard>
       </div> -->
-      <div class="lg:col-span-4 md:col-span-2 h-full">
-        <UCard class="h-full">
+      <div class="lg:col-span-4 md:col-span-2">
+        <UCard>
           <template #header>
             <div class="flex items-center justify-between">
               <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
@@ -120,6 +120,21 @@
             </div>
           </UCard>
 
+        </UCard>
+
+        <!-- Additional Information Card -->
+        <UCard class="mt-4">
+          <template #header>
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                {{ $t('Additional Information') }}
+              </h2>
+            </div>
+          </template>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+            <ContactDetailItem label="Tax Code" :value="customerInfo.tax_code" />
+            <ContactDetailItem label="Id Number" :value="customerInfo.id_number" />
+          </div>
         </UCard>
       </div>
       <div class="col-span-2">
@@ -205,25 +220,6 @@
           </UTabs>
         </UCard>
       </div>
-    </div>
-    <div class="grid grid-cols-1 lg:grid-cols-6 gap-4">
-      <div class="lg:col-span-4 md:col-span-2">
-        <UCard class="">
-          <template #header>
-            <div class="flex items-center justify-between">
-              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                {{ $t('Additional Information') }}
-              </h2>
-            </div>
-          </template>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
-            <ContactDetailItem label="Tax Code" :value="customerInfo.tax_code" />
-            <ContactDetailItem label="Id Number" :value="customerInfo.id_number" />
-
-          </div>
-        </UCard>
-      </div>
-
     </div>
   </div>
 
