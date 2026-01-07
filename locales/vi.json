@@ -662,5 +662,16 @@
     "See more": "Xem thêm",
     "See less": "Thu gọn",
     "From group": "Từ nhóm",
-    "Are you sure you want to deactivate this employee?": "Bạn có chắc chắn muốn vô hiệu hóa nhân sự này?"
+    "Are you sure you want to deactivate this employee?": "Bạn có chắc chắn muốn vô hiệu hóa nhân sự này?",
+    "Change Password": "Đổi mật khẩu",
+    "New Password": "Mật khẩu mới",
+    "Confirm Password": "Xác nhận mật khẩu",
+    "Enter new password": "Nhập mật khẩu mới",
+    "Confirm new password": "Xác nhận mật khẩu mới",
+    "Password changed successfully": "Đổi mật khẩu thành công",
+    "Please fill in all password fields": "Vui lòng điền đầy đủ thông tin mật khẩu",
+    "Passwords do not match": "Mật khẩu không khớp",
+    "Company Email": "Email công ty",
+    "Authentication email must be different from company email": "Email xác thực phải khác với email công ty",
+    "Authentication email must be different from company email.": "Email xác thực phải khác với email công ty."
 }

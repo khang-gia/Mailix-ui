@@ -79,5 +79,19 @@
     "Pin this announcement": "Pin this announcement",
     "See more": "See more",
     "See less": "See less",
-    "From group": "From group"
+    "From group": "From group",
+    "Change Password": "Change Password",
+    "New Password": "New Password",
+    "Confirm Password": "Confirm Password",
+    "Enter new password": "Enter new password",
+    "Confirm new password": "Confirm new password",
+    "Password changed successfully": "Password changed successfully",
+    "Please fill in all password fields": "Please fill in all password fields",
+    "Passwords do not match": "Passwords do not match",
+    "This field is required": "This field is required",
+    "Password must be at least 12 characters long": "Password must be at least 12 characters long",
+    "Password must contain at least one lowercase letter": "Password must contain at least one lowercase letter",
+    "Password must contain at least one uppercase letter": "Password must contain at least one uppercase letter",
+    "Password must contain at least one number": "Password must contain at least one number",
+    "Password must contain at least one special character": "Password must contain at least one special character"
 }
