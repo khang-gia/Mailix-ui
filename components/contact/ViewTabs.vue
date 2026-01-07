@@ -387,4 +387,9 @@ const exportContactList = async () => {
       throw error;
   }
 } 
+// Reset page to 1 when search changes
+watch(search, () => {
+  page.value = 1
+})
+
 </script>

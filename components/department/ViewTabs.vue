@@ -87,11 +87,13 @@ const { t } = useI18n();
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 import { useFilterStore } from '@/stores/filter'
+import { useSearchStore } from '@/stores/search';
 // const filterStore = useFilterStore()
 // const { setFilterModal, clearFilter} = filterStore
 
 // const { customerFilter } = storeToRefs(filterStore)
-
+const searchStore = useSearchStore();
+const { search } = storeToRefs(searchStore);
 const modalStore = useModalStore()
 const { alertConfirm, alertModal } = storeToRefs(modalStore)
 const { setAlertModal } = modalStore
@@ -113,6 +115,7 @@ const mainFilter = computed({
     group: undefined,
     page: page.value,
     pageSize: pageSize.value,
+    search: search.value,
     ...props.filters
   }),
   set: (filterValue) => {
@@ -341,5 +344,7 @@ const actionSelected = [
   //   }
   // ]
 ]
-
+watch(search, () => {
+  page.value = 1
+})
 </script>

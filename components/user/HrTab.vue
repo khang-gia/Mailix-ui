@@ -1,99 +1,95 @@
 <template>
-    <div class="py-2 px-4 grid grid-flow-col bg-white dark:bg-[#1E1E2E] space-x-2 w-full">
-      <div class="flex items-center">
-        <UDropdown :items="listViewDropdown" :popper="{ placement: 'bottom-start' }" 
-        :ui="{
-            container:'w-fit',
-            item:{
-                padding: 'px-2 py-3',
-            }
-        }"
-        >
-            <UButton color="gray" variant="ghost" icon="i-heroicons-adjustments-vertical" />
-            <!-- <template #unsort="{item}">
+  <div class="py-2 px-4 grid grid-flow-col bg-white dark:bg-[#1E1E2E] space-x-2 w-full">
+    <div class="flex items-center">
+      <UDropdown :items="listViewDropdown" :popper="{ placement: 'bottom-start' }" :ui="{
+        container: 'w-fit',
+        item: {
+          padding: 'px-2 py-3',
+        }
+      }">
+        <UButton color="gray" variant="ghost" icon="i-heroicons-adjustments-vertical" />
+        <!-- <template #unsort="{item}">
                 <UIcon :name="item.icon" class="h-4 w-4 ml-1" />
                 <span class="px-2 font-averta font-medium">{{ item.label }}</span>
             </template>
-            <template #ungroup="{item}">
+<template #ungroup="{item}">
                 <UIcon :name="item.icon" class="h-4 w-4 ml-1"/>
                 <span class="px-2 font-averta font-medium">{{ item.label }}</span>
             </template>
-            <template #remove_column="{item}">
+<template #remove_column="{item}">
                 <UIcon :name="item.icon" class="h-4 w-4 ml-1" />
                 <span class="px-2 font-averta font-medium">{{ item.label }}</span>
             </template> -->
-        </UDropdown>
-        <UDropdown :items="detailViewDropDown" :popper="{ placement: 'bottom-start' }">
-            <UButton color="gray" variant="ghost" icon="hugeicons:file-view" />
-            <template #tip="{ item }">
-                <div class="text-left cursor-text">
-                    <p>
-                    {{$t('Choose view type detail')}}
-                    </p>
-                </div>
-            </template>
-            <template #item="{ item }">
-                <span class="truncate" :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }">{{ item.label }} </span>
-
-                <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }"/>
-            </template>
-        </UDropdown>
-        <div class="px-2 flex items-center gap-1.5 border-l border-slate-300">
-            <span class="text-sm leading-5">{{$t('profile rows per page')}}:</span>
-            <USelect
-                v-model="pageSize"
-                :options="[3, 5, 10, 20, 50, 80, 100]"
-                class="me-2 w-fit"
-                size="xs"
-                @change="page = 1"
-            />
-        </div>
-
-        <div class="flex items-center gap-3 border-l border-slate-300 pr-3">
-            <span class="text-sm leading-5 pl-2">
-                {{$t('Showing')}}
-                <span class="font-medium">{{ pageFrom }}</span>
-                {{$t('to')}}
-                <span class="font-medium">{{ pageTo }}</span>
-                {{$t('of')}}
-                <span class="font-medium">{{ pageTotal }}</span>
-                {{$t('profiles')}}
-            </span>
-        </div>
-        <UDropdown v-if="selectedUsers.length > 0" :items="actionSelected" :ui="{
-            container:'w-fit',
-            item:{
-                padding: 'px-2 py-3',
-            }
-        }">
-          <UButton
-            icon="i-heroicons-chevron-down"
-            color="gray"
-            size="xs"
-          >
-          </UButton>
-        </UDropdown>
-      </div>
-      <div class="flex justify-end">
-          
-          <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'hr-upload'}"/>
-          <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs" @click.prevent="exportHRList"/>
-          <!-- <UButton disabled color="gray" variant="ghost" icon="i-heroicons-cog-6-tooth" :label="$t('Setting')" size="xs" :to="{name: 'hr-setting'}"/> -->
-      </div>
-    </div>
-    
-    <div class="p-2">
-      <UCard :ui="{body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700'}, divide: 'divide-y divide-gray-200 dark:divide-gray-700',}">
-        <!-- {{ useFilterStore }} -->
-        <UserTable :users="users" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedUsers=$event" :viewMode="viewMode"/>
-        <template #footer>
-          <div class="flex justify-end items-center space-x-2">
-            <UPagination :max="3" :page-count="pageSize" :total="pageTotal" v-model="page"/>
+      </UDropdown>
+      <UDropdown :items="detailViewDropDown" :popper="{ placement: 'bottom-start' }">
+        <UButton color="gray" variant="ghost" icon="hugeicons:file-view" />
+        <template #tip="{ item }">
+          <div class="text-left cursor-text">
+            <p>
+              {{ $t('Choose view type detail') }}
+            </p>
           </div>
         </template>
-      </UCard>
+        <template #item="{ item }">
+          <span class="truncate" :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }">{{
+            item.label }} </span>
+
+          <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
+            :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }" />
+        </template>
+      </UDropdown>
+      <div class="px-2 flex items-center gap-1.5 border-l border-slate-300">
+        <span class="text-sm leading-5">{{ $t('profile rows per page') }}:</span>
+        <USelect v-model="pageSize" :options="[3, 5, 10, 20, 50, 80, 100]" class="me-2 w-fit" size="xs"
+          @change="page = 1" />
+      </div>
+
+      <div class="flex items-center gap-3 border-l border-slate-300 pr-3">
+        <span class="text-sm leading-5 pl-2">
+          {{ $t('Showing') }}
+          <span class="font-medium">{{ pageFrom }}</span>
+          {{ $t('to') }}
+          <span class="font-medium">{{ pageTo }}</span>
+          {{ $t('of') }}
+          <span class="font-medium">{{ pageTotal }}</span>
+          {{ $t('profiles') }}
+        </span>
+      </div>
+      <UDropdown v-if="selectedUsers.length > 0" :items="actionSelected" :ui="{
+        container: 'w-fit',
+        item: {
+          padding: 'px-2 py-3',
+        }
+      }">
+        <UButton icon="i-heroicons-chevron-down" color="gray" size="xs">
+        </UButton>
+      </UDropdown>
     </div>
-    <AdditionFilters v-model="isOpenFilter" :filters="additionalFilters" @update:addtion-filters="additionalFilters=$event" view="profile_hrs"/>
+    <div class="flex justify-end">
+
+      <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs"
+        :to="{ name: 'hr-upload' }" />
+      <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs"
+        @click.prevent="exportHRList" />
+      <!-- <UButton disabled color="gray" variant="ghost" icon="i-heroicons-cog-6-tooth" :label="$t('Setting')" size="xs" :to="{name: 'hr-setting'}"/> -->
+    </div>
+  </div>
+
+  <div class="p-2">
+    <UCard
+      :ui="{ body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' }, divide: 'divide-y divide-gray-200 dark:divide-gray-700', }">
+      <!-- {{ useFilterStore }} -->
+      <UserTable :users="users" :page-total="pageTotal" :page="page" @update:page="page = $event"
+        @update:selected="selectedUsers = $event" :viewMode="viewMode" />
+      <template #footer>
+        <div class="flex justify-end items-center space-x-2">
+          <UPagination :max="3" :page-count="pageSize" :total="pageTotal" v-model="page" />
+        </div>
+      </template>
+    </UCard>
+  </div>
+  <AdditionFilters v-model="isOpenFilter" :filters="additionalFilters"
+    @update:addtion-filters="additionalFilters = $event" view="profile_hrs" />
 </template>
 
 <script setup>
@@ -116,7 +112,7 @@ import { useDisplayColStore } from '@/stores/column'
 const filterStore = useFilterStore()
 const columnStore = useDisplayColStore()
 
-const { setFilterModal, clearFilter} = filterStore
+const { setFilterModal, clearFilter } = filterStore
 const { setColumnModal, clearColumn } = columnStore
 
 const { hrFilter } = storeToRefs(filterStore)
@@ -127,7 +123,7 @@ const pageFrom = computed(() => (page.value - 1) * pageSize.value + 1)
 const pageTo = computed(() => Math.min(page.value * pageSize.value, pageTotal.value))
 const selectedUsers = ref([])
 const props = defineProps({
-  
+
   filters: {
     type: String,
     default: ''
@@ -159,7 +155,7 @@ const users = computedAsync(async () => {
     ...userFilter.value,
     ...processedAdditionalFilter
   }
-  const {data:data } = await useAPI().get('core/profile_hrs/', { 
+  const { data: data } = await useAPI().get('core/profile_hrs/', {
     // customer_company_id: userStore.company.id, 
     // search: userStore.search, 
     ...params,
@@ -171,9 +167,7 @@ const users = computedAsync(async () => {
   pageTotal.value = data.value.count
   return data.value.results
 })
-const displayColumns = ref([
-])
-const listViewDropdown = ref([ 
+const listViewDropdown = ref([
   [
     // {
     //   label: t('Sort'),
@@ -186,7 +180,7 @@ const listViewDropdown = ref([
     {
       label: t('Filter by'),
       icon: 'i-heroicons-funnel',
-      slot:"group",
+      slot: "group",
       click: () => {
         setFilterModal(true, 'profile_hrs')
       }
@@ -198,7 +192,7 @@ const listViewDropdown = ref([
         setColumnModal(true, 'profile_hrs')
       }
     }]
-    , [
+  , [
     //   {
     //   label: t('Unsort'),
     //   icon: 'i-heroicons-x-mark',
@@ -225,135 +219,135 @@ const listViewDropdown = ref([
       }
     }]
 ])
-const displayColumnsDropdown = ref([ 
+const displayColumnsDropdown = ref([
   [{
-      label: t('Employee code'),
-    },{
-      label: t('TK code'),
-    },{
-      label: t('Fullname'),
-    },{
-      label: t('Department'),
-    },{
-      label: t('Department code'),
-    },{
-      label: t('Position'),
-    },{
-      label: t('Title'),
-    },{
-      label: t('Level'),
-    },{
-      label: t('Join Date'),
-    },{
-      label: t('Dob'),
-    },{
-      label: t('Gender'),
-    },{
-      label: t('Date create account'),
-    },{
-      label: t('ID Profile hr'),
-    }]
+    label: t('Employee code'),
+  }, {
+    label: t('TK code'),
+  }, {
+    label: t('Fullname'),
+  }, {
+    label: t('Department'),
+  }, {
+    label: t('Department code'),
+  }, {
+    label: t('Position'),
+  }, {
+    label: t('Title'),
+  }, {
+    label: t('Level'),
+  }, {
+    label: t('Join Date'),
+  }, {
+    label: t('Dob'),
+  }, {
+    label: t('Gender'),
+  }, {
+    label: t('Date create account'),
+  }, {
+    label: t('ID Profile hr'),
+  }]
 ])
-const viewMode=ref('default')
+const viewMode = ref('default')
 const detailViewDropDown = ref([
-    [{
-        label:t('Choose view type detail'),
-        slot: 'tip',
-        disabled: true
-    }],
-    [{
-      label: t('Default'),
-      selectedName:'default',
-      icon: 'flowbite:window-outline',
-      click: () => {
-        viewMode.value = 'default'
-      }
-    },
-    // {
-    //   label: t('Slide'),
-    //   icon: 'material-symbols:transition-slide-outline',
-    //   click: () => {
-    //     console.log('hi')
-    //   }
-    // },
-    {
-      label: t('New tab'),
-      selectedName:'new_tab',
-      icon: 'cuida:open-in-new-tab-outline',
-      click: () => {
-        viewMode.value = 'new_tab'
-      }
-    }]
+  [{
+    label: t('Choose view type detail'),
+    slot: 'tip',
+    disabled: true
+  }],
+  [{
+    label: t('Default'),
+    selectedName: 'default',
+    icon: 'flowbite:window-outline',
+    click: () => {
+      viewMode.value = 'default'
+    }
+  },
+  // {
+  //   label: t('Slide'),
+  //   icon: 'material-symbols:transition-slide-outline',
+  //   click: () => {
+  //     console.log('hi')
+  //   }
+  // },
+  {
+    label: t('New tab'),
+    selectedName: 'new_tab',
+    icon: 'cuida:open-in-new-tab-outline',
+    click: () => {
+      viewMode.value = 'new_tab'
+    }
+  }]
 ])
 const deleteProfile = async () => {
   try {
-      const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
-        profiles: selectedUsers.value.map(user => user.id)
-      });
-      console.log('response', response)
-      if (response && response.status.value === 'success') {
-          return true;
-      } else {
-          throw new Error(t('Unexpected response status'));
-      }
+    const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
+      profiles: selectedUsers.value.map(user => user.id)
+    });
+    console.log('response', response)
+    if (response && response.status.value === 'success') {
+      return true;
+    } else {
+      throw new Error(t('Unexpected response status'));
+    }
   } catch (error) {
-      console.error('Error deleting fee:', error);
-      throw error;
+    console.error('Error deleting fee:', error);
+    throw error;
   }
-} 
+}
 const deactivateProfile = async () => {
   try {
-      const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
-          profiles: selectedUsers.value.map(user => user.id)
-      });
-      if (response && response.status.value === 'success') {
-          return true;
-      } else {
-          throw new Error(t('Unexpected response status'));
-      }
+    const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
+      profiles: selectedUsers.value.map(user => user.id)
+    });
+    if (response && response.status.value === 'success') {
+      return true;
+    } else {
+      throw new Error(t('Unexpected response status'));
+    }
   } catch (error) {
-      console.error('Error deleting fee:', error);
-      throw error;
+    console.error('Error deleting fee:', error);
+    throw error;
   }
-} 
+}
 const exportHRList = async () => {
   try {
-      const processedAdditionalFilter = {};
-      for (const key in hrFilter.value) {
-        if (Array.isArray(hrFilter.value[key])) {
-          processedAdditionalFilter[key] = hrFilter.value[key].map(item => item.id || item).join(',');
-        } else {
-          processedAdditionalFilter[key] = hrFilter.value[key];
-        }
-      }
-      const params = {
-        ...userFilter.value,
-        ...processedAdditionalFilter
-      }
-      const response = await useAPI().get(`core/profile_hrs/export_profile_hrs/`, { 
-        ...params,
-        search: search,
-        page: page.value,
-        page_size: pageSize.value,
-      });
-      if (response && response.data.value) {
-          if (typeof window !== 'undefined') { 
-              saveAs(
-                  response.data.value, 
-                  `DANH_SACH_NHAN_SU_${moment().format('DDMMYYYY')}.xlsx`
-              );
-              return true;
-          }
-          console.warn('file-saver attempted to run outside of a browser environment.');
-          return true;
+    const processedAdditionalFilter = {};
+    for (const key in hrFilter.value) {
+      if (Array.isArray(hrFilter.value[key])) {
+        processedAdditionalFilter[key] = hrFilter.value[key].map(item => item.id || item).join(',');
       } else {
-          throw new Error(t('Download failed. Please check and try again'));
+        processedAdditionalFilter[key] = hrFilter.value[key];
       }
+    }
+    const params = {
+      ...userFilter.value,
+      ...processedAdditionalFilter
+    }
+    const response = await useAPI().get(`core/profile_hrs/export_profile_hrs/`, {
+      ...params,
+      search: search,
+      page: page.value,
+      page_size: pageSize.value,
+    });
+    if (response && response.data.value) {
+      if (typeof window !== 'undefined') {
+        saveAs(
+          response.data.value,
+          `DANH_SACH_NHAN_SU_${moment().format('DDMMYYYY')}.xlsx`
+        );
+        return true;
+      }
+      console.warn('file-saver attempted to run outside of a browser environment.');
+      return true;
+    } else {
+      throw new Error(t('Download failed. Please check and try again'));
+    }
   } catch (error) {
-      console.error('Error deleting fee:', error);
-      throw error;
+    console.error('Error deleting fee:', error);
+    throw error;
   }
-} 
+}
 const actionSelected = [
   [{
     key: 'delete',
@@ -365,7 +359,7 @@ const actionSelected = [
         message: t('Are you sure you want to delete these profiles?'),
         confirmButton: t('OK'),
         denyButton: t('Cancel'),
-      }) 
+      })
       const unwatch = watch(
         () => alertModal.value,
         async (newVal) => {
@@ -394,7 +388,7 @@ const actionSelected = [
         }
       )
     }
-  }],[
+  }], [
     {
       key: 'deactivate',
       label: t('Deactivate'),
@@ -405,7 +399,7 @@ const actionSelected = [
           message: t('Are you sure you want to deactivate these profiles?'),
           confirmButton: t('OK'),
           denyButton: t('Cancel'),
-        }) 
+        })
         const unwatch = watch(
           () => alertModal.value,
           async (newVal) => {
@@ -437,5 +431,10 @@ const actionSelected = [
     }
   ]
 ]
+
+// Reset page to 1 when search changes
+watch(search, () => {
+  page.value = 1
+})
 
 </script>
