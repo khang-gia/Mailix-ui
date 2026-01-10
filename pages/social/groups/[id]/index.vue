@@ -5,11 +5,11 @@
             <SocialSidebar :user="currentUser" current-page="groups" />
         </div>
 
-        <!-- Center Content (6 cols) -->
-        <div class="col-span-12 lg:col-span-9 grid grid-cols-12">
+        <!-- Center Content (9 cols) -->
+        <div class="col-span-12 lg:col-span-9 space-y-0">
             <!-- Cover Image Section -->
             <div
-                class="col-span-12 relative w-full h-[300px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-t-lg overflow-hidden">
+                class="relative w-full h-[300px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-t-lg overflow-hidden">
                 <img v-if="group?.cover" :src="group.cover" alt="Group Cover" class="w-full h-full object-cover" />
                 <div class="absolute inset-0 bg-black bg-opacity-30"></div>
 
@@ -29,7 +29,7 @@
                                 <span v-if="group?.members_count !== undefined"> · {{ group.members_count }} {{
                                     $t('members') }}</span>
                                 <span v-if="group?.posts_count !== undefined"> · {{ group.posts_count }} {{ $t('posts')
-                                    }}</span>
+                                }}</span>
                             </p>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
             </div>
 
             <!-- Tabs -->
-            <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 pt-1 col-span-12">
+            <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex items-center justify-between px-4">
                     <div class="flex gap-1">
                         <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key"
@@ -58,7 +58,7 @@
             </div>
 
             <!-- Content -->
-            <div class='col-span-12 lg:col-span-9 px-4 mt-4'>
+            <div class='col-span-12 lg:col-span-9 px-4 pt-4'>
                 <!-- Feed Tab -->
                 <div v-if="activeTab === 'feed'">
                     <!-- Post Creation -->
@@ -84,7 +84,6 @@
                             </div>
                         </UCard>
 
-                        <!-- Regular Posts -->
                         <SocialPostItem v-for="post in posts" :key="post.id" :post="post"
                             @postDeleted="handlePostDeleted" />
 
@@ -95,10 +94,8 @@
                     </div>
                 </div>
 
-                <!-- Importants Tab -->
                 <div v-else-if="activeTab === 'importants'" class="mb-5">
                     <div class="space-y-4">
-                        <!-- Important Posts -->
                         <SocialPostItem v-for="post in importantPosts" :key="post.id" :post="post"
                             @postDeleted="handlePostDeleted" />
 
@@ -109,7 +106,6 @@
                     </div>
                 </div>
 
-                <!-- Members Tab -->
                 <div v-else-if="activeTab === 'members'" class="mb-5">
                     <UCard>
                         <div class="space-y-4">
