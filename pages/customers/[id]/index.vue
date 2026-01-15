@@ -7,7 +7,18 @@
         </h1>
       </div>
     </div>
-    <div class="flex justify-end">
+    <div class="flex justify-end gap-2 items-center">
+      <!-- Status Dropdown -->
+      <UDropdown :items="statusDropdownItems" :popper="{ placement: 'bottom-end' }">
+        <UButton color="gray" variant="soft" size="sm" icon="i-heroicons-arrow-path">
+          {{ $t('Change Status') }}
+        </UButton>
+        <template #item="{ item }">
+          <span class="truncate">{{ item.label }}</span>
+        </template>
+      </UDropdown>
+
+      <!-- Action Dropdown -->
       <UDropdown :items="actionDropdown" :popper="{ placement: 'bottom-start' }">
         <UButton color="gray" variant="ghost" size="sm" icon="i-heroicons-chevron-double-down" class="border" />
         <template #item="{ item }">
@@ -281,6 +292,47 @@ const statusMapping = [
   "red",
   "purple"
 ];
+
+// Status options for customer (excluding 2 and 3)
+const statusOptions = [
+  { value: 1, label: t('New') },
+  { value: 4, label: t('Consulting') },
+  { value: 5, label: t('Negotiating') },
+  { value: 6, label: t('Contracted') },
+  { value: 7, label: t('Quoted') },
+  { value: 8, label: t('Old Customer') },
+];
+
+// Status dropdown items for UDropdown
+const statusDropdownItems = [[
+  {
+    label: t('New'),
+    click: () => updateStatus(1)
+  },
+  {
+    label: t('Consulting'),
+    click: () => updateStatus(4)
+  },
+  {
+    label: t('Negotiating'),
+    click: () => updateStatus(5)
+  },
+  {
+    label: t('Contracted'),
+    click: () => updateStatus(6)
+  },
+  {
+    label: t('Quoted'),
+    click: () => updateStatus(7)
+  },
+  {
+    label: t('Old Customer'),
+    click: () => updateStatus(8)
+  }
+]];
+
+const selectedStatus = ref(null);
+
 const tabs = [{
   label: t('Discussion'),
   key: 'discussions',
@@ -320,9 +372,41 @@ const fetchCustomerInfo = async () => {
     const { data: response } = await useAPI().get(`core/customers/${useRoute().params.id}/`);
     customerInfo.value = response.value
     customerInfo.value.dob = customerInfo.value.dob ? new Date(customerInfo.value.dob) : null
+    selectedStatus.value = customerInfo.value.status; // Initialize selected status
     console.log('response', customerInfo.value)
   } catch (error) {
     console.error('Error loading data:', error);
+  }
+};
+
+// Update customer status
+const updateStatus = async (newStatus) => {
+  try {
+    const response = await useAPI().patch(`core/customers/${customerInfo.value.id}/`, {
+      status: newStatus
+    });
+
+    if (response.status.value === 'success') {
+      customerInfo.value.status = newStatus;
+      // Update the display value
+      const statusOption = statusOptions.find(opt => opt.value === newStatus);
+      if (statusOption) {
+        customerInfo.value.status_display = statusOption.label;
+      }
+
+      useToast().add({
+        title: t('Success'),
+        description: t('Status updated successfully'),
+        color: 'green',
+      });
+    }
+  } catch (error) {
+    console.error('Error updating status:', error);
+    useToast().add({
+      title: t('Error'),
+      description: t('Failed to update status'),
+      color: 'red',
+    });
   }
 };
 

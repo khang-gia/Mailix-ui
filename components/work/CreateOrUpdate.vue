@@ -367,6 +367,7 @@ const schema = yup.object({
     code: yup.string()
     .nullable()
     .test('check-work-code-exists', t('Work code already exists'), async (value) => {
+            if (props.isUpdate && value == workInfo.value.code) return true;
             if (!value) return true;
             try {
                 const { data: exists } = await useAPI().get('core/works/', { code: value });

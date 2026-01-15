@@ -99,13 +99,6 @@
             <template #actions-data="{ row }">
               <UDropdown :items="actionDropdown(row)" :popper="{ placement: 'bottom-start' }">
                 <UButton color="gray" variant="soft" size="sm" icon="i-heroicons-ellipsis-vertical" />
-                <!-- <template #tip="{ item }">
-                      <div class="text-left cursor-text">
-                          <p>
-                          {{$t('Choose view mode')}}
-                          </p>
-                      </div>
-                  </template> -->
                 <template #item="{ item }">
                   <span class="truncate">{{ item.label }}</span>
 
@@ -137,6 +130,10 @@
         </UCard>
       </div>
     </UContainer>
+
+    <!-- Change Password Modal -->
+    <ModalChangePassword v-model="showChangePasswordModal" :user-id="selectedUserForPassword"
+      @submit="handlePasswordChange" />
   </div>
 </template>
 <style scoped></style>
@@ -154,6 +151,11 @@ const { alertConfirm, alertModal } = storeToRefs(modalStore)
 const { setAlertModal } = modalStore
 const searchStore = useSearchStore();
 const { search } = storeToRefs(searchStore);
+
+// Change password modal state
+const showChangePasswordModal = ref(false)
+const selectedUserForPassword = ref(null)
+
 // 1. Define Table Columns
 const columns = [
   {
@@ -250,8 +252,46 @@ const deactivateUser = async (userId) => {
     throw error;
   }
 }
+
+const handlePasswordChange = async ({ userId, newPassword }) => {
+  try {
+    const response = await useAPI().post(`core/profile_hrs/change_password/`, {
+      profile_id: userId,
+      new_password: newPassword
+    });
+
+    if (response && response.status.value === 'success') {
+      showChangePasswordModal.value = false
+      useToast().add({
+        title: t('Success'),
+        description: t('Password changed successfully'),
+        icon: 'i-heroicons-check-circle',
+        color: 'green',
+      });
+    } else {
+      throw new Error(t('Unexpected response status'));
+    }
+  } catch (error) {
+    console.error('Error changing password:', error);
+    useToast().add({
+      title: t('Error'),
+      description: t('Failed to change password'),
+      icon: 'i-heroicons-x-circle',
+      color: 'red',
+    });
+  }
+}
+
 const actionDropdown = (row) => [
   [{
+    label: t('Change password'),
+    icon: 'mdi:password-reset',
+    click: () => {
+      selectedUserForPassword.value = row.id
+      showChangePasswordModal.value = true
+    }
+  },
+  {
     label: t('Deactivate'),
     icon: 'mingcute:lock-fill',
     click: () => {

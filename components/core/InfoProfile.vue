@@ -1,6 +1,7 @@
 <template>
-    <div class="flex w-full">
-        <div class="m-4 w-4/6 space-y-4">
+    <div class="p-4 space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 items-start">
+            <div class="lg:col-span-4 space-y-4">
             <UCard>
                 <template #header>
                     <div class="flex items-center justify-between">
@@ -201,17 +202,19 @@
                     </div>
                 </div>
             </UCard>
-        </div>
+            </div>
 
-        <UCard class="my-4 mr-4 w-2/6">
+        <UCard class="lg:col-span-2">
             <div class="h-full -m-2">
-                <div class="rounded-lg w-full h-1/2 bg-blue-100 flex items-center py-16">
-                    <div class="flex flex-col items-center">
-                        <img 
-                            :src="userInfo.avatar ? userInfo.avatar : '/images/default-user-img.png'" 
-                            alt="Avatar" 
-                            class="border-4 border-white w-1/2 h-1/2 rounded-full "
-                        />
+                <div class="rounded-lg w-full h-1/2 bg-blue-100 flex items-center justify-center py-16">
+                    <div class="flex flex-col items-center justify-center w-full">
+                        <div class="w-32 h-32 rounded-full overflow-hidden border-3 border-white mx-auto">
+                            <img 
+                                :src="userInfo.avatar ? userInfo.avatar : '/images/default-user-img.png'" 
+                                alt="Avatar" 
+                                class="w-full h-full object-cover"
+                            />
+                        </div>
                         <h3 class="text-xl font-medium text-gray-700 dark:text-gray-200 p-2">
                             {{ userInfo.full_name }} 
                         </h3>
@@ -374,7 +377,7 @@
                     
 
         </UCard>
-        
+        </div>
     </div>
 </template>
 <script setup>

@@ -7,9 +7,35 @@
         </h1>
       </div>
     </div>
-    <div class="flex justify-end">
-      <!-- <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'works-upload'}"/> -->
-      <!-- <UButton icon="i-heroicons-pencil-square" label="Cập nhật" @click="editcustomerInfo" /> -->
+    <div class="flex justify-end gap-2 items-center">
+      <!-- Status Select Menu -->
+      <!-- <USelectMenu v-model="selectedStatus" :options="statusOptions" value-attribute="value" option-attribute="label"
+        @update:model-value="updateStatus" :uiMenu="{ width: 'w-auto', option: { base: 'whitespace-nowrap' } }"
+        :popper="{ placement: 'bottom-end' }">
+        <template #label>
+          <UBadge :color="statusMapping[customerInfo.status]" variant="subtle" class="font-semibold">
+            {{ customerInfo.status_display || 'Select Status' }}
+          </UBadge>
+        </template>
+</USelectMenu> -->
+
+      <!-- Status Dropdown -->
+      <UDropdown :items="statusDropdownItems" :popper="{ placement: 'bottom-end' }">
+        <UButton color="gray" variant="soft" size="sm" icon="i-heroicons-arrow-path">
+          {{ $t('Change Status') }}
+        </UButton>
+        <template #item="{ item }">
+          <span class="truncate">{{ item.label }}</span>
+        </template>
+      </UDropdown>
+
+      <!-- Promote to Customer Button -->
+      <UButton color="blue" variant="soft" size="sm" icon="i-heroicons-arrow-up-circle"
+        @click="handlePromoteToCustomer">
+        {{ $t('Promote to Customer') }}
+      </UButton>
+
+      <!-- Action Dropdown -->
       <UDropdown :items="actionDropdown" :popper="{ placement: 'bottom-start' }">
         <UButton color="gray" variant="ghost" size="sm" icon="i-heroicons-chevron-double-down" class="border" />
         <template #item="{ item }">
@@ -231,6 +257,11 @@
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const dayjs = useDayjs()
+import { useModalStore } from '@/stores/modal'
+import { storeToRefs } from 'pinia'
+const modalStore = useModalStore()
+const { alertConfirm, alertModal } = storeToRefs(modalStore)
+const { setAlertModal } = modalStore
 
 definePageMeta({
   title: 'Chi tiết liên hệ',
@@ -254,6 +285,44 @@ const statusMapping = [
   "red",
   "purple"
 ];
+
+// Status options for select menu
+const statusOptions = [
+  { value: 1, label: t('New') },
+  { value: 2, label: t('1st Contacted') },
+  { value: 3, label: t('2nd Contacted') },
+  { value: 4, label: t('Consulting') },
+  // { value: 5, label: t('Negotiating') },
+  // { value: 6, label: t('Contracted') },
+  // { value: 7, label: t('Quoted') },
+  { value: 8, label: t('Old Customer') },
+];
+
+// Status dropdown items for UDropdown
+const statusDropdownItems = [[
+  {
+    label: t('New'),
+    click: () => updateStatus(1)
+  },
+  {
+    label: t('1st Contacted'),
+    click: () => updateStatus(2)
+  },
+  {
+    label: t('2nd Contacted'),
+    click: () => updateStatus(3)
+  },
+  {
+    label: t('Consulting'),
+    click: () => updateStatus(4)
+  },
+  {
+    label: t('Old Customer'),
+    click: () => updateStatus(8)
+  }
+]];
+
+const selectedStatus = ref(null);
 const tabs = [{
   label: t('Discussion'),
   key: 'discussions',
@@ -297,11 +366,99 @@ const fetchCustomerInfo = async () => {
     const { data: response } = await useAPI().get(`core/customers/${useRoute().params.id}/`);
     customerInfo.value = response.value
     customerInfo.value.dob = customerInfo.value.dob ? new Date(customerInfo.value.dob) : null
+    selectedStatus.value = customerInfo.value.status; // Initialize selected status
+
+    // Check if this is a customer (stage 2), redirect to customer page
+    if (customerInfo.value.stage === 2) {
+      useRouter().push(`/customers/${customerInfo.value.id}`);
+      return;
+    }
+
     console.log('response', customerInfo.value)
   } catch (error) {
     console.error('Error loading data:', error);
   }
 };
+
+// Update customer status
+const updateStatus = async (newStatus) => {
+  try {
+    const response = await useAPI().patch(`core/customers/${customerInfo.value.id}/`, {
+      status: newStatus
+    });
+
+    if (response.status.value === 'success') {
+      customerInfo.value.status = newStatus;
+      // Update the display value
+      const statusOption = statusOptions.find(opt => opt.value === newStatus);
+      if (statusOption) {
+        customerInfo.value.status_display = statusOption.label;
+      }
+
+      useToast().add({
+        title: t('Success'),
+        description: t('Status updated successfully'),
+        color: 'green',
+      });
+    }
+  } catch (error) {
+    console.error('Error updating status:', error);
+    useToast().add({
+      title: t('Error'),
+      description: t('Failed to update status'),
+      color: 'red',
+    });
+  }
+};
+
+// Handle promote to customer
+const handlePromoteToCustomer = () => {
+  setAlertModal(true, {
+    message: t('Are you sure you want to promote this contact to customer?'),
+    confirmButton: t('OK'),
+    denyButton: t('Cancel'),
+  });
+
+  const unwatch = watch(
+    () => alertModal.value,
+    async (newVal) => {
+      if (!newVal) {
+        if (alertConfirm.value) {
+          try {
+            const response = await useAPI().patch(`core/customers/${customerInfo.value.id}/`, {
+              stage: 2,
+              status: 1
+            });
+
+            if (response.status.value === 'success') {
+              customerInfo.value.stage = 2;
+
+              useToast().add({
+                title: t('Success'),
+                description: t('Contact promoted to customer successfully'),
+                icon: 'i-heroicons-check-circle',
+                color: 'green',
+              });
+
+              // Navigate to customer page
+              useRouter().push(`/customers/${customerInfo.value.id}`);
+            }
+          } catch (error) {
+            console.error('Error promoting to customer:', error);
+            useToast().add({
+              title: t('Error'),
+              description: t('Failed to promote contact to customer'),
+              icon: 'i-heroicons-x-circle',
+              color: 'red',
+            });
+          }
+        }
+        unwatch();
+      }
+    }
+  );
+};
+
 const fetchData = async () => {
   try {
     await fetchCustomerInfo();
