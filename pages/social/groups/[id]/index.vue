@@ -29,7 +29,7 @@
                                 <span v-if="group?.members_count !== undefined"> · {{ group.members_count }} {{
                                     $t('members') }}</span>
                                 <span v-if="group?.posts_count !== undefined"> · {{ group.posts_count }} {{ $t('posts')
-                                    }}</span>
+                                }}</span>
                             </p>
                         </div>
                     </div>
@@ -147,6 +147,7 @@
         <ModalOpenPostFullscreen />
         <ModalCreatePost @postCreated="handlePostCreated" />
         <ModalPostReactions />
+        <ModalPollVoters />
     </div>
 </template>
 

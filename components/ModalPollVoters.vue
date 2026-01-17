@@ -1,0 +1,120 @@
+<template>
+    <UModal v-model="pollVotersModal" :ui="{ width: 'max-w-lg' }">
+        <UCard class="font-averta">
+            <template #header>
+                <div class="flex items-center gap-3">
+                    <!-- <UButton icon="i-heroicons-arrow-left" color="gray" variant="ghost" size="lg" class="-my-1"
+                        @click="pollVotersModal = false" /> -->
+                    <h3 class="text-lg font-semibold">{{ $t('Poll details') }}</h3>
+                    <div class="flex-1"></div>
+                    <UButton icon="i-heroicons-x-mark" color="gray" variant="ghost" size="lg" class="-my-1"
+                        @click="pollVotersModal = false" />
+                </div>
+            </template>
+
+            <!-- Poll Options List -->
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                <div v-for="(option, index) in pollOptions" :key="option.id" class="bg-white dark:bg-gray-800">
+                    <!-- Option Header (Clickable to expand/collapse) -->
+                    <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
+                        @click="toggleOption(index)">
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-900 dark:text-white">
+                                {{ option.option }} ({{ option.votes_count || 0 }})
+                            </p>
+                        </div>
+                        <UIcon :name="expandedOptions[index] ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'"
+                            class="w-5 h-5 text-gray-500" />
+                    </div>
+
+                    <!-- Voters List (Expandable) -->
+                    <div v-if="expandedOptions[index]" class="px-4 pb-4">
+                        <!-- Grid layout for 2 columns -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <div v-for="(voter, voterIndex) in getVisibleVoters(option, index)" :key="voter.id"
+                                class="flex items-center gap-2 py-2 rounded-lg cursor-pointer"
+                                @click="navigateToUserProfile(voter.user?.id)">
+                                <UAvatar :src="voter.user?.avatar" :alt="voter.user?.display_name" size="md" />
+                                <p class="text-sm font-normal text-gray-900 dark:text-white truncate">
+                                    {{ voter.user?.display_name }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- See More Button -->
+                        <UButton v-if="option.votes_count > 6 && !showAllVoters[index]" :label="$t('See more')"
+                            variant="ghost" color="gray" block class="mt-2" @click.stop="showAllVoters[index] = true" />
+                    </div>
+                </div>
+            </div>
+        </UCard>
+    </UModal>
+</template>
+
+<script setup>
+import { useI18n } from "vue-i18n"
+import { useModalStore } from '@/stores/modal'
+import { storeToRefs } from 'pinia'
+
+const { t } = useI18n()
+const modalStore = useModalStore()
+const { pollVotersModal, pollVotersData } = storeToRefs(modalStore)
+
+const expandedOptions = ref([])
+const showAllVoters = ref([])
+const pollOptions = ref([])
+
+// Watch for modal open to initialize data
+watch(pollVotersModal, async (newVal) => {
+    if (newVal && pollVotersData.value.pollOptions) {
+        pollOptions.value = pollVotersData.value.pollOptions
+        // Initialize all options as expanded by default
+        expandedOptions.value = pollOptions.value.map(() => true)
+        showAllVoters.value = pollOptions.value.map(() => false)
+
+        // Fetch detailed voter data for each option
+        await fetchVotersForAllOptions()
+    }
+})
+
+// Fetch voters for all poll options
+const fetchVotersForAllOptions = async () => {
+    const postId = pollVotersData.value.postId
+    if (!postId) return
+
+    try {
+        // Fetch poll options with votes from voters endpoint
+        const { data: response } = await useAPI().get(`social/posts/${postId}/voters/`)
+        console.log(response.value)
+        if (response.value) {
+            pollOptions.value = response.value
+        }
+    } catch (error) {
+        console.error('Error fetching poll voters:', error)
+    }
+}
+
+// Toggle option expansion
+const toggleOption = (index) => {
+    expandedOptions.value[index] = !expandedOptions.value[index]
+}
+
+// Get visible voters (first 6 or all if expanded)
+const getVisibleVoters = (option, index) => {
+    if (!option.poll_votes) return []
+
+    if (showAllVoters.value[index]) {
+        return option.poll_votes
+    }
+
+    return option.poll_votes.slice(0, 6)
+}
+
+// Navigate to user profile
+const navigateToUserProfile = (userId) => {
+    if (userId) {
+        pollVotersModal.value = false
+        navigateTo(`/hr/${userId}`)
+    }
+}
+</script>

@@ -111,6 +111,10 @@
                 <UAlert v-else icon="pajamas:expire" color="yellow" variant="solid"
                     :title="$t('This poll has ended. You can no longer vote.')">
                 </UAlert>
+
+                <!-- See all options button -->
+                <UButton :label="$t('See all options')" variant="ghost" color="gray" size="sm" block
+                    @click="setPollVotersModal(true, post.id, post.poll_options)" />
             </div>
         </div>
         <!-- Reactions Count & Comments Count -->
@@ -176,7 +180,7 @@ import { useI18n } from "vue-i18n";
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 const modalStore = useModalStore()
-const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen, setPostReactionsModal } = modalStore
+const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen, setPostReactionsModal, setPollVotersModal } = modalStore
 const props = defineProps({
     post: {
         type: Object,

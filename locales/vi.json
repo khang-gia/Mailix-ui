@@ -705,8 +705,9 @@
     "Failed to upload files": "Tải lên tệp thất bại",
     "The work was successfully updated.": "Cập nhật công việc thành công",
     "Reactions": "Cảm xúc",
-    "All": "Tất cả",
     "No reactions yet": "Chưa có cảm xúc nào",
     "mutual friends": "bạn chung",
-    "Message": "Nhắn tin"
+    "Message": "Nhắn tin",
+    "Poll details": "Chi tiết bình chọn",
+    "See all options": "Xem tất cả các bình chọn"
 }
