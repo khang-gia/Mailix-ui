@@ -147,6 +147,14 @@ export const useModalStore = defineStore("modalStore", () => {
     socialCreatePostGroupId.value = groupId;
   }
 
+  const postReactionsModal = ref(false);
+  const postReactionsData = ref({ postId: null, selectedTab: "all" });
+
+  function setPostReactionsModal(value, postId = null, tab = "all") {
+    postReactionsModal.value = value;
+    postReactionsData.value = { postId, selectedTab: tab };
+  }
+
   return {
     modalType,
     setModalType,
@@ -196,5 +204,8 @@ export const useModalStore = defineStore("modalStore", () => {
     setSocialCreatePostModal,
     socialCreatePostType,
     socialCreatePostGroupId,
+    postReactionsModal,
+    postReactionsData,
+    setPostReactionsModal,
   };
 });

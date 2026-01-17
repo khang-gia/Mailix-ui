@@ -28,6 +28,7 @@
         <ModalOpenPost />
         <ModalOpenPostFullscreen />
         <ModalCreatePost @postCreated="handlePostCreated" />
+        <ModalPostReactions />
     </div>
 </template>
 

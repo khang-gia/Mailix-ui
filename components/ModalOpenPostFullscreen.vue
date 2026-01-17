@@ -92,7 +92,8 @@
                     <!-- Reactions summary -->
                     <div class="flex items-center justify-between py-2 border-y border-gray-200 dark:border-gray-700">
                         <div v-if="post.top_interaction_types && post.top_interaction_types.length > 0"
-                            class="flex items-center gap-1">
+                            class="flex items-center gap-1 cursor-pointer hover:underline"
+                            @click="setPostReactionsModal(true, post.id)">
                             <div class="flex items-center -space-x-1">
                                 <div v-for="interaction in post.top_interaction_types.slice(0, 3)"
                                     :key="interaction.interaction_type"
@@ -157,6 +158,7 @@ const dayjs = useDayjs()
 
 const modalStore = useModalStore()
 const { socialCommentModalFullscreen, socialCommentPost: post } = storeToRefs(modalStore)
+const { setPostReactionsModal } = modalStore
 
 // Image carousel state
 const currentImageIndex = ref(0)

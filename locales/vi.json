@@ -703,5 +703,10 @@
     "Failed to delete document": "Xóa tài liệu thất bại",
     "Upload": "Tải lên",
     "Failed to upload files": "Tải lên tệp thất bại",
-    "The work was successfully updated.": "Cập nhật công việc thành công"
+    "The work was successfully updated.": "Cập nhật công việc thành công",
+    "Reactions": "Cảm xúc",
+    "All": "Tất cả",
+    "No reactions yet": "Chưa có cảm xúc nào",
+    "mutual friends": "bạn chung",
+    "Message": "Nhắn tin"
 }

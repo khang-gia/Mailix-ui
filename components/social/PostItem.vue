@@ -60,13 +60,16 @@
             <div v-if="post.attachments && post.attachments.length > 0">
                 <!-- Single image - full width -->
                 <img v-if="post.attachments.length === 1 && post.attachments[0].file_type === 'image'"
-                    :src="post.attachments[0].file" class="w-full rounded-lg object-cover max-h-96 mb-3 cursor-pointer hover:opacity-90" @click="setSocialCommentModalFullscreen(true, post)"/>
+                    :src="post.attachments[0].file"
+                    class="w-full rounded-lg object-cover max-h-96 mb-3 cursor-pointer hover:opacity-90"
+                    @click="setSocialCommentModalFullscreen(true, post)" />
 
                 <!-- Multiple images - grid -->
                 <div v-else-if="imageAttachments.length > 0" :class="getGridClass(imageAttachments.length)"
                     class="gap-1 mb-3">
                     <img v-for="attachment in imageAttachments" :key="attachment.id" :src="attachment.file"
-                        class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90" @click="setSocialCommentModalFullscreen(true, post)"/>
+                        class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90"
+                        @click="setSocialCommentModalFullscreen(true, post)" />
                 </div>
 
                 <!-- Files list -->
@@ -113,7 +116,8 @@
         <!-- Reactions Count & Comments Count -->
         <div class="flex items-center justify-between pb-1">
             <div v-if="post.top_interaction_types && post.top_interaction_types.length > 0"
-                class="flex items-center gap-1">
+                class="flex items-center gap-1 cursor-pointer hover:underline"
+                @click="setPostReactionsModal(true, post.id)">
                 <!-- Display top 3 interaction types with icons -->
                 <div class="flex items-center -space-x-1">
                     <div v-for="interaction in post.top_interaction_types.slice(0, 3)"
@@ -161,7 +165,7 @@
         </div>
         <div v-if="openPostModal" class="pt-2">
             <CommentsSection comment-type="social" :id="post.id" placeholder="Write a comment..."
-                @onAddComment="post.comments_count++" useTimeAgo="true"/>
+                @onAddComment="post.comments_count++" useTimeAgo="true" />
         </div>
     </UCard>
 
@@ -172,7 +176,7 @@ import { useI18n } from "vue-i18n";
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 const modalStore = useModalStore()
-const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen } = modalStore
+const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen, setPostReactionsModal } = modalStore
 const props = defineProps({
     post: {
         type: Object,
