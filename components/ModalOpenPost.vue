@@ -7,6 +7,5 @@
 import { useModalStore } from '@/stores/modal'
 const modalStore = useModalStore()
 import { storeToRefs } from 'pinia'
-const { setSocialCommentModal } = modalStore
 const {socialCommentModal, socialCommentPost: post} = storeToRefs(modalStore)
 </script>

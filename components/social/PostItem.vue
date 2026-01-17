@@ -60,13 +60,13 @@
             <div v-if="post.attachments && post.attachments.length > 0">
                 <!-- Single image - full width -->
                 <img v-if="post.attachments.length === 1 && post.attachments[0].file_type === 'image'"
-                    :src="post.attachments[0].file" class="w-full rounded-lg object-cover max-h-96 mb-3" />
+                    :src="post.attachments[0].file" class="w-full rounded-lg object-cover max-h-96 mb-3 cursor-pointer hover:opacity-90" @click="setSocialCommentModalFullscreen(true, post)"/>
 
                 <!-- Multiple images - grid -->
                 <div v-else-if="imageAttachments.length > 0" :class="getGridClass(imageAttachments.length)"
                     class="gap-1 mb-3">
                     <img v-for="attachment in imageAttachments" :key="attachment.id" :src="attachment.file"
-                        class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90" />
+                        class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90" @click="setSocialCommentModalFullscreen(true, post)"/>
                 </div>
 
                 <!-- Files list -->
@@ -172,7 +172,7 @@ import { useI18n } from "vue-i18n";
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 const modalStore = useModalStore()
-const { setSocialCommentModal, setAlertModal } = modalStore
+const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen } = modalStore
 const props = defineProps({
     post: {
         type: Object,

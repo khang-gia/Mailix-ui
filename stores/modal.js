@@ -127,10 +127,13 @@ export const useModalStore = defineStore("modalStore", () => {
 
   const socialCommentModal = ref(false);
   const socialCommentPost = ref({});
-
+  const socialCommentModalFullscreen = ref(false);
   function setSocialCommentModal(value, post = {}) {
-    console.log("setSocialCommentModal", value, post);
     socialCommentModal.value = value;
+    socialCommentPost.value = post;
+  }
+  function setSocialCommentModalFullscreen(value, post = {}) {
+    socialCommentModalFullscreen.value = value;
     socialCommentPost.value = post;
   }
 
@@ -187,6 +190,8 @@ export const useModalStore = defineStore("modalStore", () => {
     socialCommentModal,
     socialCommentPost,
     setSocialCommentModal,
+    socialCommentModalFullscreen,
+    setSocialCommentModalFullscreen,
     socialCreatePostModal,
     setSocialCreatePostModal,
     socialCreatePostType,

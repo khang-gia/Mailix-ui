@@ -144,6 +144,7 @@
 
         <!-- Modals -->
         <ModalOpenPost />
+        <ModalOpenPostFullscreen />
         <ModalCreatePost @postCreated="handlePostCreated" />
     </div>
 </template>
