@@ -8,7 +8,7 @@
         </UCard> -->
         <div class="flex">
           <UCard :ui="{}" class="relative rounded-xl shadow-lg
-              bg-[linear-gradient(to_bottom_right,#eba8fe,#3f21ea)]
+              bg-[linear-gradient(to_bottom_right,#1e40af,#3b82f6)]
               text-white pr-4 -mr-4 z-10">
             <p class="text-lg mb-2">{{ $t('Total Employee') }}</p>
 
@@ -25,7 +25,7 @@
           </UCard>
 
           <div
-            class="pr-4 pl-8 flex items-center justify-between space-x-6 border-2 border-dashed border-fuchsia-300 dark:border-gray-600 shadow-none ring-0 z-0 rounded-lg bg-white">
+            class="pr-4 pl-8 flex items-center justify-between space-x-6 border-2 border-dashed border-indigo-300 dark:border-gray-600 shadow-none ring-0 z-0 rounded-lg bg-white">
             <div class="">
               <div class="flex space-x-2">
                 <UIcon name="f7:waveform-path-ecg" class="w-6 h-6 opacity-80" />
@@ -47,7 +47,7 @@
         </div>
 
         <div
-          class="overflow-hidden flex items-center rounded-xl border-[2px] border- border-dashed border-indigo-300 shadow-none ring-0 px-3 bg-white">
+          class="overflow-hidden flex items-center rounded-xl border-[2px] border-indigo-300 border-dashed shadow-none ring-0 px-3 bg-white">
           <div>
             <div class="flex space-x-2">
               <UIcon name="tabler:clock-pause" class="w-6 h-6 opacity-80" />
