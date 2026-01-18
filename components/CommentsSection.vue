@@ -25,7 +25,7 @@
                             <img v-if="comment.attachment.file_type === 'image'" :src="comment.attachment.file"
                                 :alt="comment.attachment.filename"
                                 class="max-w-xs rounded cursor-pointer hover:opacity-90"
-                                @click="window.open(comment.attachment.file, '_blank')" />
+                                @click="openImageModal(comment.attachment.file)" />
                             <!-- File Attachment -->
                             <a v-else :href="comment.attachment.file" target="_blank"
                                 class="flex items-center gap-2 text-sm text-blue-600 hover:underline">
@@ -79,7 +79,7 @@
                                         <img v-if="reply.attachment.file_type === 'image'" :src="reply.attachment.file"
                                             :alt="reply.attachment.filename"
                                             class="max-w-xs rounded cursor-pointer hover:opacity-90"
-                                            @click="window.open(reply.attachment.file, '_blank')" />
+                                            @click="openImageModal(reply.attachment.file)" />
                                         <!-- File Attachment -->
                                         <a v-else :href="reply.attachment.file" target="_blank"
                                             class="flex items-center gap-2 text-sm text-blue-600 hover:underline">
@@ -116,7 +116,7 @@
                                 <div v-else class="flex items-center gap-2">
                                     <UIcon :name="getFileIcon(selectedReplyFile.name)" class="w-6 h-6 text-gray-500" />
                                     <span class="text-xs text-gray-700 dark:text-gray-300">{{ selectedReplyFile.name
-                                        }}</span>
+                                    }}</span>
                                 </div>
                                 <UButton icon="i-heroicons-x-mark" size="2xs" color="red" variant="ghost"
                                     @click="removeReplyFile" />
@@ -539,5 +539,19 @@ const writeComment = async () => {
         console.error('Error creating comment:', error);
         throw error;
     }
+}
+
+// Image modal functionality
+import { useModalStore } from '@/stores/modal'
+const { setExpandImageModal } = useModalStore()
+
+const openImageModal = (imageUrl) => {
+    const imageData = {
+        src: imageUrl,
+        title: '',
+        imageWidth: 1000,
+        imageHeight: 600
+    }
+    setExpandImageModal(true, imageData)
 }
 </script>
