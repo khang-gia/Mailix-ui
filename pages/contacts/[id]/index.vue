@@ -174,7 +174,30 @@
           <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
             <div v-for="history in workHistory" :key="history.id"
               class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
-              <ActivityLogItem :history="history" history-type="contact" />
+              <!-- Attachment history items -->
+              <div v-if="history.type === 'attachment'">
+                <div class="pt-2 space-y-1">
+                  <p class="font-semibold text-gray-900 dark:text-gray-100 text-sm">
+                    {{ history.user.display_name }}
+                    <span class="text-gray-500 text-sm font-medium">
+                      {{ history.action === 'uploaded' ? $t('has uploaded attachment') : $t('has deleted attachment') }}
+                    </span>
+                  </p>
+                  <span class="text-xs text-gray-500 dark:text-gray-400 items-center flex">
+                    <UIcon name="i-heroicons-clock" class="w-3 h-3 inline-block mr-1 shrink-0" />
+                    {{ dayjs(history.created_at).format('HH:mm DD/MM/YYYY') }}
+                  </span>
+                  <p class="text-sm text-gray-700 dark:text-gray-300 ml-2">
+                    <span class="font-semibold"
+                      :class="history.action === 'uploaded' ? 'text-green-600' : 'text-red-600'">{{ $t('Filename')
+                      }}:</span>
+                    <span class="ml-2">{{ history.filename }}</span>
+                  </p>
+                </div>
+                <UDivider orientation="horizontal" class="my-2" />
+              </div>
+              <!-- Regular work history items -->
+              <ActivityLogItem v-else :history="history" history-type="contact" />
             </div>
           </div>
         </UCard>
@@ -338,6 +361,8 @@ const uploading = ref(false)
 const customerAttachments = ref([])
 const fileInputRef = ref(null)
 const deletingAttachment = ref(null)
+
+
 
 const fetchHistory = async () => {
   try {

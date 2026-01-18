@@ -709,5 +709,8 @@
     "mutual friends": "bạn chung",
     "Message": "Nhắn tin",
     "Poll details": "Chi tiết bình chọn",
-    "See all options": "Xem tất cả các bình chọn"
+    "See all options": "Xem tất cả các bình chọn",
+    "Filename": "Tên tệp",
+    "has uploaded attachment": "đã tải lên tệp",
+    "has deleted attachment": "đã xóa tệp"
 }
