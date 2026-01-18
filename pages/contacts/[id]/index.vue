@@ -148,8 +148,81 @@
 
         </UCard>
 
+        
+        <div class="mt-4">
+          
+
+          <!-- Tabs Card (Discussion & Attachments) -->
+          <UCard class="" :ui="{
+            footer: {
+              base: 'border-none', padding: 'px-4 py-4 sm:px-6'
+            }
+          }">
+            <UTabs :items="tabs" class="w-full h-full">
+              <template #item="{ item }">
+                <div class="mt-4">
+                  <div v-if="item.key === 'discussions'" class="h-full overflow-x-hidden">
+                    <CommentsSection comment-type="customers" />
+                  </div>
+                  <div v-else-if="item.key === 'attachments'" class="space-y-3">
+                    <div v-if="customerAttachments.length === 0"
+                      class="p-6 text-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                      <svg class="mx-auto h-12 w-12 text-gray-400 mb-2" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
+                      {{ $t('No attachments yet') }}
+                    </div>
+
+                    <div v-for="attachment in customerAttachments" :key="attachment.id"
+                      class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                      <div class="flex items-center gap-3 flex-1 min-w-0">
+                        <svg v-if="getFileType(attachment.filename) === 'pdf'" class="h-8 w-8 text-red-500 flex-shrink-0"
+                          fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd"
+                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                            clip-rule="evenodd" />
+                        </svg>
+                        <svg v-else-if="getFileType(attachment.filename) === 'image'"
+                          class="h-8 w-8 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd"
+                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                            clip-rule="evenodd" />
+                        </svg>
+                        <svg v-else class="h-8 w-8 text-gray-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd"
+                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                            clip-rule="evenodd" />
+                        </svg>
+                        <div class="flex-1 min-w-0">
+                          <a :href="attachment.file" target="_blank"
+                            class="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 truncate block">
+                            {{ attachment.filename || getFileName(attachment.file) }}
+                          </a>
+                          <p class="text-xs text-gray-500 dark:text-gray-400">
+                            {{ attachment.uploaded_by.display_name }} - {{ formatDate(attachment.created_at) }}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <UButton icon="i-heroicons-arrow-down-tray" size="xs" color="gray" variant="ghost"
+                          :to="attachment.file" target="_blank" />
+                        <UButton icon="i-heroicons-trash" size="xs" color="red" variant="ghost"
+                          @click="deleteAttachment(attachment.id)" :loading="deletingAttachment === attachment.id" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </template>
+            </UTabs>
+          </UCard>
+        </div>
+      </div>
+      <div class="col-span-2">
         <!-- Additional Information Card -->
-        <UCard class="mt-4">
+        <UCard class="">
           <template #header>
             <div class="flex items-center justify-between">
               <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
@@ -162,112 +235,43 @@
             <ContactDetailItem label="Id Number" :value="customerInfo.id_number" />
           </div>
         </UCard>
-      </div>
-      <div class="col-span-2">
         <!-- Activity Log Card (standalone) -->
-        <UCard class="mb-4">
-          <template #header>
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-              {{ $t('Activity Log') }}
-            </h2>
-          </template>
-          <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
-            <div v-for="history in workHistory" :key="history.id"
-              class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
-              <!-- Attachment history items -->
-              <div v-if="history.type === 'attachment'">
-                <div class="pt-2 space-y-1">
-                  <p class="font-semibold text-gray-900 dark:text-gray-100 text-sm">
-                    {{ history.user.display_name }}
-                    <span class="text-gray-500 text-sm font-medium">
-                      {{ history.action === 'uploaded' ? $t('has uploaded attachment') : $t('has deleted attachment') }}
-                    </span>
-                  </p>
-                  <span class="text-xs text-gray-500 dark:text-gray-400 items-center flex">
-                    <UIcon name="i-heroicons-clock" class="w-3 h-3 inline-block mr-1 shrink-0" />
-                    {{ dayjs(history.created_at).format('HH:mm DD/MM/YYYY') }}
-                  </span>
-                  <p class="text-sm text-gray-700 dark:text-gray-300 ml-2">
-                    <span class="font-semibold"
-                      :class="history.action === 'uploaded' ? 'text-green-600' : 'text-red-600'">{{ $t('Filename')
-                      }}:</span>
-                    <span class="ml-2">{{ history.filename }}</span>
-                  </p>
-                </div>
-                <UDivider orientation="horizontal" class="my-2" />
-              </div>
-              <!-- Regular work history items -->
-              <ActivityLogItem v-else :history="history" history-type="contact" />
-            </div>
-          </div>
-        </UCard>
-
-        <!-- Tabs Card (Discussion & Attachments) -->
-        <UCard class="" :ui="{
-          footer: {
-            base: 'border-none', padding: 'px-4 py-4 sm:px-6'
-          }
-        }">
-          <UTabs :items="tabs" class="w-full h-full">
-            <template #item="{ item }">
-              <div class="mt-4">
-                <div v-if="item.key === 'discussions'" class="h-full overflow-x-hidden">
-                  <CommentsSection comment-type="customers" />
-                </div>
-                <div v-else-if="item.key === 'attachments'" class="space-y-3">
-                  <div v-if="customerAttachments.length === 0"
-                    class="p-6 text-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <svg class="mx-auto h-12 w-12 text-gray-400 mb-2" fill="none" stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                    {{ $t('No attachments yet') }}
-                  </div>
-
-                  <div v-for="attachment in customerAttachments" :key="attachment.id"
-                    class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                    <div class="flex items-center gap-3 flex-1 min-w-0">
-                      <svg v-if="getFileType(attachment.filename) === 'pdf'" class="h-8 w-8 text-red-500 flex-shrink-0"
-                        fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                          d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
-                          clip-rule="evenodd" />
-                      </svg>
-                      <svg v-else-if="getFileType(attachment.filename) === 'image'"
-                        class="h-8 w-8 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                          d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                          clip-rule="evenodd" />
-                      </svg>
-                      <svg v-else class="h-8 w-8 text-gray-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                          d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
-                          clip-rule="evenodd" />
-                      </svg>
-                      <div class="flex-1 min-w-0">
-                        <a :href="attachment.file" target="_blank"
-                          class="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 truncate block">
-                          {{ attachment.filename || getFileName(attachment.file) }}
-                        </a>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
-                          {{ attachment.uploaded_by.display_name }} - {{ formatDate(attachment.created_at) }}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <UButton icon="i-heroicons-arrow-down-tray" size="xs" color="gray" variant="ghost"
-                        :to="attachment.file" target="_blank" />
-                      <UButton icon="i-heroicons-trash" size="xs" color="red" variant="ghost"
-                        @click="deleteAttachment(attachment.id)" :loading="deletingAttachment === attachment.id" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+          <UCard class="mt-4">
+            <template #header>
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                {{ $t('Activity Log') }}
+              </h2>
             </template>
-          </UTabs>
-        </UCard>
+            <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
+              <div v-for="history in workHistory" :key="history.id"
+                class="border-l-2 border-gray-300 dark:border-gray-600 pl-3">
+                <!-- Attachment history items -->
+                <div v-if="history.type === 'attachment'">
+                  <div class="pt-2 space-y-1">
+                    <p class="font-semibold text-gray-900 dark:text-gray-100 text-sm">
+                      {{ history.user.display_name }}
+                      <span class="text-gray-500 text-sm font-medium">
+                        {{ history.action === 'uploaded' ? $t('has uploaded attachment') : $t('has deleted attachment') }}
+                      </span>
+                    </p>
+                    <span class="text-xs text-gray-500 dark:text-gray-400 items-center flex">
+                      <UIcon name="i-heroicons-clock" class="w-3 h-3 inline-block mr-1 shrink-0" />
+                      {{ dayjs(history.created_at).format('HH:mm DD/MM/YYYY') }}
+                    </span>
+                    <p class="text-sm text-gray-700 dark:text-gray-300 ml-2">
+                      <span class="font-semibold"
+                        :class="history.action === 'uploaded' ? 'text-green-600' : 'text-red-600'">{{ $t('Filename')
+                        }}:</span>
+                      <span class="ml-2">{{ history.filename }}</span>
+                    </p>
+                  </div>
+                  <UDivider orientation="horizontal" class="my-2" />
+                </div>
+                <!-- Regular work history items -->
+                <ActivityLogItem v-else :history="history" history-type="contact" />
+              </div>
+            </div>
+          </UCard>
       </div>
     </div>
   </div>
