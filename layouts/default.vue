@@ -32,6 +32,10 @@
     <ModalExpandImg />
     <ModalCreateEntities />
     <ScheduleDateSelectModal />
+    <ModalOpenPostFullscreen />
+    <ModalOpenPost />
+    <ModalPostReactions />
+    <ModalPollVoters />
     <AdditionFilters />
     <DisplayColumnSlide/>
   </div>

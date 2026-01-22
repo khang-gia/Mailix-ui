@@ -3,10 +3,16 @@
         <!-- Header -->
         <div class="flex justify-between items-start mb-3">
             <div class="flex gap-3">
-                <UAvatar :src="post.author.avatar" :alt="post.author.display_name" />
+                <NuxtLink :to="`/social/wall/${post.author.id}`">
+                    <UAvatar :src="post.author.avatar" :alt="post.author.display_name"
+                        class="cursor-pointer hover:opacity-80" />
+                </NuxtLink>
                 <div>
                     <div class="flex items-center gap-1">
-                        <span class="font-bold text-gray-900 dark:text-white">{{ post.author.display_name }}</span>
+                        <NuxtLink :to="`/social/wall/${post.author.id}`"
+                            class="font-bold text-gray-900 dark:text-white hover:underline cursor-pointer">
+                            {{ post.author.display_name }}
+                        </NuxtLink>
                         <span v-if="post.social_group" class="text-gray-500 text-sm">{{ $t('shared on') }}</span>
                         <NuxtLink v-if="post.social_group" :to="`/social/groups/${post.social_group}`"
                             class="text-green-500 font-medium cursor-pointer hover:underline">

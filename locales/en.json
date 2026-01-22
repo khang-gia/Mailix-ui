@@ -93,5 +93,15 @@
     "Password must contain at least one lowercase letter": "Password must contain at least one lowercase letter",
     "Password must contain at least one uppercase letter": "Password must contain at least one uppercase letter",
     "Password must contain at least one number": "Password must contain at least one number",
-    "Password must contain at least one special character": "Password must contain at least one special character"
+    "Password must contain at least one special character": "Password must contain at least one special character",
+    "Edit Cover Photo": "Edit Cover Photo",
+    "Edit Profile Photo": "Edit Profile Photo",
+    "Bio": "Bio",
+    "Edit Profile": "Edit Profile",
+    "Confirm": "Confirm",
+    "Please select an image file": "Please select an image file",
+    "Cover photo updated successfully": "Cover photo updated successfully",
+    "Failed to upload cover photo": "Failed to upload cover photo",
+    "Profile photo updated successfully": "Profile photo updated successfully",
+    "Failed to upload profile photo": "Failed to upload profile photo"
 }

@@ -92,11 +92,15 @@ export const useAPI = () => {
   }
 
   function patch(url: string, body: any = {}) {
+    const headers = getHeaders() as { [key: string]: string }
+    if (body instanceof FormData) {
+      delete headers['Content-Type']
+    }
     return useFetch(url, {
       baseURL: config.public.apiBaseUrl,
       method: 'PATCH',
       body,
-      headers: getHeaders(),
+      headers: headers,
     })
   }
 

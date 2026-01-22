@@ -25,11 +25,7 @@
             <SocialPostItem v-for="post in filteredPosts" :key="post.id" :post="post"
                 @postDeleted="handlePostDeleted" />
         </div>
-        <ModalOpenPost />
-        <ModalOpenPostFullscreen />
         <ModalCreatePost @postCreated="handlePostCreated" />
-        <ModalPostReactions />
-        <ModalPollVoters />
     </div>
 </template>
 
