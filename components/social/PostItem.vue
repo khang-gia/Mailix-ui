@@ -145,7 +145,18 @@
             </div>
         </div>
         <!-- Actions -->
-        <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-3 gap-2">
+        <div v-if="pending"
+            class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-3 gap-2">
+            <div class="w-full">
+                <UButton icon="i-heroicons-check" :label="$t('Approve')" color="green" variant="solid" block
+                    @click="handleApprove" :loading="isProcessing" />
+            </div>
+            <div class="w-full">
+                <UButton icon="i-heroicons-x-mark" :label="$t('Reject')" color="red" variant="outline" block
+                    @click="handleReject" :loading="isProcessing" />
+            </div>
+        </div>
+        <div v-else class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-3 gap-2">
             <div class="w-full">
                 <!-- <UButton icon="i-heroicons-hand-thumb-up" :label="$t('Like')" color="gray" variant="ghost" block="true" @click="interactPost(1)" /> -->
                 <UPopover :popper="{ placement: 'top' }" mode="hover">
@@ -196,6 +207,10 @@ const props = defineProps({
     openPostModal: {
         type: Boolean,
         default: false
+    },
+    pending: {
+        type: Boolean,
+        default: false
     }
 })
 const { t } = useI18n()
@@ -206,6 +221,65 @@ const dayjs = useDayjs()
 const contentRef = ref(null)
 const isExpanded = ref(false)
 const isTruncated = ref(false)
+const isProcessing = ref(false)
+
+const handleApprove = async () => {
+    if (isProcessing.value) return
+    isProcessing.value = true
+    try {
+        const { error } = await useAPI().post(`social/posts/${props.post.id}/approve/`)
+
+        if (error.value) {
+            throw new Error(error.value.message || t('Failed to approve post'))
+        }
+
+        useToast().add({
+            title: t('Success'),
+            description: t('Post approved successfully'),
+            color: 'green',
+            icon: 'i-heroicons-check-circle'
+        })
+        emit('postProcessed', props.post.id)
+    } catch (error) {
+        useToast().add({
+            title: t('Error'),
+            description: error.message || t('An error occurred'),
+            color: 'red',
+            icon: 'i-heroicons-exclamation-circle'
+        })
+    } finally {
+        isProcessing.value = false
+    }
+}
+
+const handleReject = async () => {
+    if (isProcessing.value) return
+    isProcessing.value = true
+    try {
+        const { error } = await useAPI().post(`social/posts/${props.post.id}/deny/`)
+
+        if (error.value) {
+            throw new Error(error.value.message || t('Failed to reject post'))
+        }
+
+        useToast().add({
+            title: t('Success'),
+            description: t('Post rejected'),
+            color: 'green',
+            icon: 'i-heroicons-check-circle'
+        })
+        emit('postProcessed', props.post.id)
+    } catch (error) {
+        useToast().add({
+            title: t('Error'),
+            description: error.message || t('An error occurred'),
+            color: 'red',
+            icon: 'i-heroicons-exclamation-circle'
+        })
+    } finally {
+        isProcessing.value = false
+    }
+}
 
 // Check if content needs truncation
 onMounted(() => {
@@ -254,8 +328,8 @@ const formatDate = (date) => {
 }
 const privacyIcons = {
     1: 'i-heroicons-globe-alt', // Public
-    2: 'i-heroicons-users', // Friends
-    3: 'i-heroicons-lock-closed', // Only me
+    2: 'i-heroicons-lock-closed', // Only me
+    3: 'i-heroicons-users', // Friends
 }
 const interactionOptions = ref([
     { id: 1, label: t('Like'), icon: 'streamline-plump-color:like-1-flat' },
@@ -551,7 +625,7 @@ const interactPost = async (interactionType) => {
     }
 };
 const { alertConfirm, alertModal } = storeToRefs(modalStore)
-const emit = defineEmits(['postDeleted']);
+const emit = defineEmits(['postDeleted', 'postProcessed']);
 const editPostDropdownItems = ref([
     [{
         label: t('Edit post'),

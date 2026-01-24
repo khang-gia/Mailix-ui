@@ -53,7 +53,8 @@ const menuItems = computed(() => [
         label: t('Pending posts'),
         icon: 'i-heroicons-clock',
         page: 'pending',
-        restricted: userRole !== 'A'
+        restricted: userRole !== 'A',
+        click: () => navigateTo('/social/pending')
     },
     {
         label: t('Company Page'),

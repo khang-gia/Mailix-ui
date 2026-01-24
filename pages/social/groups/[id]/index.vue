@@ -106,28 +106,62 @@
                     </div>
                 </div>
 
-                <div v-else-if="activeTab === 'members'" class="mb-5">
-                    <UCard>
-                        <div class="space-y-4">
-                            <div v-for="member in members" :key="member.id"
-                                class="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg">
-                                <div class="flex items-center gap-3">
-                                    <img v-if="member.user && member.user.avatar" :src="member.user.avatar" alt="Member"
-                                        class="w-12 h-12 rounded-full" />
-                                    <div v-else
-                                        class="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
-                                        <UIcon name="i-heroicons-user" class="w-6 h-6 text-gray-500" />
+                <div v-else-if="activeTab === 'members'" class="mb-5 space-y-6">
+                    <!-- Admins Section -->
+                    <div v-if="adminMembers.length > 0">
+                        <h3 class="font-bold text-gray-700 dark:text-gray-300 mb-3 ml-1">{{ $t('Administrator') }}</h3>
+                        <UCard>
+                            <div class="space-y-4">
+                                <div v-for="member in adminMembers" :key="member.id"
+                                    @click="navigateToProfile(member.user.id)"
+                                    class="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <img v-if="member.user && member.user.avatar" :src="member.user.avatar"
+                                            alt="Member" class="w-12 h-12 rounded-full" />
+                                        <div v-else
+                                            class="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
+                                            <UIcon name="i-heroicons-user" class="w-6 h-6 text-gray-500" />
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold">{{ member.user?.display_name || '' }}</p>
+                                            <p class="text-xs text-gray-500">{{ formatDate(member.created_at) }}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p class="font-semibold">{{ member.user?.display_name || '' }}</p>
-                                        <p class="text-xs text-gray-500">{{ member.role === 1 ? $t('Admin') :
-                                            $t('Member') }}</p>
-                                    </div>
+                                    <UBadge color="orange">{{ $t('Admin') }}</UBadge>
                                 </div>
-                                <UBadge v-if="member.role === 1" color="orange">{{ $t('Admin') }}</UBadge>
                             </div>
-                        </div>
-                    </UCard>
+                        </UCard>
+                    </div>
+
+                    <!-- Regular Members Section -->
+                    <div>
+                        <h3 class="font-bold text-gray-700 dark:text-gray-300 mb-3 ml-1">{{ $t('Members') }}</h3>
+                        <UCard>
+                            <div class="space-y-4">
+                                <template v-if="regularMembers.length > 0">
+                                    <div v-for="member in regularMembers" :key="member.id"
+                                        @click="navigateToProfile(member.user.id)"
+                                        class="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition-colors">
+                                        <div class="flex items-center gap-3">
+                                            <img v-if="member.user && member.user.avatar" :src="member.user.avatar"
+                                                alt="Member" class="w-12 h-12 rounded-full" />
+                                            <div v-else
+                                                class="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
+                                                <UIcon name="i-heroicons-user" class="w-6 h-6 text-gray-500" />
+                                            </div>
+                                            <div>
+                                                <p class="font-semibold">{{ member.user?.display_name || '' }}</p>
+                                                <p class="text-xs text-gray-500">{{ formatDate(member.created_at) }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <div v-else class="text-center py-4 text-gray-500">
+                                    {{ $t('No members found') }}
+                                </div>
+                            </div>
+                        </UCard>
+                    </div>
                 </div>
             </div>
 
@@ -210,6 +244,16 @@ const isMember = computed(() => {
     return members.value.some(m => m.user?.id === currentUser.value.id)
 })
 
+const adminMembers = computed(() => {
+    if (!members.value) return []
+    return members.value.filter(m => m.role === 1)
+})
+
+const regularMembers = computed(() => {
+    if (!members.value) return []
+    return members.value.filter(m => m.role !== 1)
+})
+
 const tabs = [
     { key: 'feed', label: t('Feed') },
     { key: 'importants', label: t('Importants') },
@@ -253,6 +297,10 @@ const handlePostCreated = () => {
 const handlePostDeleted = (postId) => {
     // Refresh all post lists (regular posts and important posts)
     reload.value++
+}
+
+const navigateToProfile = (userId) => {
+    navigateTo(`/social/wall/${userId}`)
 }
 
 const formatDate = (date) => {

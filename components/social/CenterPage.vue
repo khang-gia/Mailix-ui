@@ -45,12 +45,14 @@ const postsKey = ref(0) // Key to force refresh
 
 // State for uploading posts
 const uploadingPosts = ref([])
+const pollingStartTime = ref(0)
 let pollingInterval = null
 
 const posts = computedAsync(async () => {
     const { data: data } = await useAPI().get('social/posts/', {
         page: page.value,
         page_size: pageSize.value,
+        status: 3, // Only show Published posts
         _refresh: postsKey.value, // Include key in params to trigger refetch
     })
     return data.value.results
@@ -121,6 +123,7 @@ const fetchUploadingPosts = async () => {
             status: 2, // Posting state
             page: 1,
             page_size: 20,
+            author: userInfo.value?.id // Only fetch uploading posts for current user
         })
 
         if (data.value && data.value.results) {
@@ -136,6 +139,15 @@ const fetchUploadingPosts = async () => {
 
 // Poll for uploading posts (status=2)
 const pollUploadingPosts = async () => {
+    // Check for timeout (10 seconds)
+    if (Date.now() - pollingStartTime.value > 10000) {
+        console.log('Polling timeout reached, refreshing main feed')
+        stopPolling()
+        uploadingPosts.value = [] // Clear uploading state
+        postsKey.value++ // Refresh main feed
+        return
+    }
+
     // Fetch current status=2 posts
     await fetchUploadingPosts()
 
@@ -156,6 +168,8 @@ const startPolling = () => {
     if (pollingInterval) {
         clearInterval(pollingInterval)
     }
+
+    pollingStartTime.value = Date.now()
 
     // Start polling every 3 seconds
     pollingInterval = setInterval(pollUploadingPosts, 3000)
