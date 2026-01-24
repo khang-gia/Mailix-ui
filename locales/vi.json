@@ -722,5 +722,8 @@
     "Cover photo updated successfully": "Cập nhật ảnh bìa thành công",
     "Failed to upload cover photo": "Tải lên ảnh bìa thất bại",
     "Profile photo updated successfully": "Cập nhật ảnh đại diện thành công",
-    "Failed to upload profile photo": "Tải lên ảnh đại diện thất bại"
+    "Failed to upload profile photo": "Tải lên ảnh đại diện thất bại",
+    "Edit Post":"Chỉnh sửa bài viết",
+    "Post updated successfully":"Cập nhật bài viết thành công",
+    "Poll updated successfully":"Cập nhật bình chọn thành công"
 }

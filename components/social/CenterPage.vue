@@ -25,7 +25,7 @@
             <SocialPostItem v-for="post in filteredPosts" :key="post.id" :post="post"
                 @postDeleted="handlePostDeleted" />
         </div>
-        <ModalCreatePost @postCreated="handlePostCreated" />
+        <ModalCreatePost @postCreated="handlePostCreated" @postUpdated="handlePostUpdated" />
     </div>
 </template>
 
@@ -102,6 +102,16 @@ const handlePostCreated = async () => {
 
     // Start polling for status updates
     startPolling()
+}
+
+const handlePostUpdated = (updatedPost) => {
+    if (!posts.value) return
+
+    const index = posts.value.findIndex(p => p.id === updatedPost.id)
+    if (index !== -1) {
+        // Update the post in the list
+        posts.value[index] = { ...posts.value[index], ...updatedPost }
+    }
 }
 
 // Fetch uploading posts (status=2)

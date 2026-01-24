@@ -28,7 +28,8 @@
                 </div>
             </div>
             <!-- <UButton icon="i-heroicons-ellipsis-horizontal" color="gray" variant="ghost" size="sm" /> -->
-            <UDropdown :items="editPostDropdownItems" :popper="{ placement: 'bottom-end' }">
+            <UDropdown v-if="post.author.id === userInfo.id" :items="editPostDropdownItems"
+                :popper="{ placement: 'bottom-end' }">
                 <UButton color="gray" variant="ghost" size="sm" icon="i-heroicons-ellipsis-horizontal" />
                 <!-- <template #item="{ item }">
                     <span class="truncate" :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }">{{
@@ -186,7 +187,7 @@ import { useI18n } from "vue-i18n";
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 const modalStore = useModalStore()
-const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen, setPostReactionsModal, setPollVotersModal } = modalStore
+const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen, setPostReactionsModal, setPollVotersModal, setSocialCreatePostModal } = modalStore
 const props = defineProps({
     post: {
         type: Object,
@@ -556,7 +557,7 @@ const editPostDropdownItems = ref([
         label: t('Edit post'),
         icon: 'i-heroicons-pencil-square',
         click: () => {
-            console.log('edit post')
+            setSocialCreatePostModal(true, props.post.post_type, props.post.social_group, props.post)
         }
     },
     {

@@ -2,7 +2,7 @@
     <div class="grid grid-cols-12 gap-6 p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
         <!-- Left Sidebar (3 cols) -->
         <div class="col-span-12 lg:col-span-3">
-            <SocialSidebar :user="userInfo" :current-page="currentPage" @update:page="currentPage = $event" />
+        <SocialSidebar :user="userInfo" :current-page="currentPage" @update:page="currentPage = $event" />
         </div>
 
         <!-- Center Feed (6 cols) -->

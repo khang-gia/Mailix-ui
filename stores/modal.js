@@ -140,11 +140,18 @@ export const useModalStore = defineStore("modalStore", () => {
   const socialCreatePostModal = ref(false);
   const socialCreatePostType = ref(1); // 1 = post, 2 = poll
   const socialCreatePostGroupId = ref(null); // Track group context for posts
+  const socialCreatePostData = ref(null); // Data for editing
 
-  function setSocialCreatePostModal(value, postType = 1, groupId = null) {
+  function setSocialCreatePostModal(
+    value,
+    postType = 1,
+    groupId = null,
+    postData = null,
+  ) {
     socialCreatePostModal.value = value;
     socialCreatePostType.value = postType;
     socialCreatePostGroupId.value = groupId;
+    socialCreatePostData.value = postData;
   }
 
   const postReactionsModal = ref(false);
@@ -212,6 +219,7 @@ export const useModalStore = defineStore("modalStore", () => {
     setSocialCreatePostModal,
     socialCreatePostType,
     socialCreatePostGroupId,
+    socialCreatePostData,
     postReactionsModal,
     postReactionsData,
     setPostReactionsModal,

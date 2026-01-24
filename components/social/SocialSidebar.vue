@@ -1,13 +1,14 @@
 <template>
     <div class="space-y-6">
         <!-- User Profile Summary -->
-        <div class="flex items-center gap-3">
-            <UAvatar :src="user?.avatar" :alt="user?.display_name" size="lg" />
+        <NuxtLink :to="`/social/wall/${user?.id}`"
+            class="flex items-center gap-3 hover:opacity-80 hover:bg-gray-100 transition-opacity cursor-pointer rounded-md p-2">
+            <UAvatar :src="socialAvatar" :alt="user?.display_name" size="lg" />
             <div>
                 <h3 class="font-bold text-gray-900 dark:text-white">{{ user?.display_name }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ user?.job_title || 'Thành viên' }}</p>
             </div>
-        </div>
+        </NuxtLink>
 
         <!-- Navigation Menu -->
         <div class="space-y-4">
@@ -89,4 +90,21 @@ const isActive = (item) => {
     }
     return item.page === props.currentPage
 }
+
+// Fetch social profile to get avatar
+const { data: socialProfile } = await useAPI().get(`social/profiles/${props.user?.id}/`)
+
+// Computed property for avatar with priority: social avatar -> user avatar -> default
+const socialAvatar = computed(() => {
+    // Priority 1: Social profile avatar
+    if (socialProfile.value?.avatar) {
+        return socialProfile.value.avatar
+    }
+    // Priority 2: User avatar (from backend which checks social then HR)
+    if (props.user?.avatar) {
+        return props.user.avatar
+    }
+    // Priority 3: Default
+    return '/images/default-user-img.png'
+})
 </script>

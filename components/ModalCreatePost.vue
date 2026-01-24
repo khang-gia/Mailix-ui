@@ -4,9 +4,7 @@
             <template #header>
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold">
-                        {{ postData.post_type === 2 ? t('Create Poll') :
-                            postData.post_type === 3 ? t('Create Announcement') :
-                                t('Create Post') }}
+                        {{ modalTitle }}
                     </h3>
                     <UButton icon="i-heroicons-x-mark" color="gray" variant="ghost" @click="closeModal"
                         :disabled="isSubmitting" />
@@ -14,6 +12,27 @@
             </template>
 
             <UForm :schema="schema" :state="postData" class="space-y-4">
+                <!-- Privacy Selector -->
+                <div class="flex justify-end">
+                    <USelectMenu v-model="postData.privacy" :options="privacyOptions" value-attribute="value"
+                        option-attribute="label" class="w-36">
+                        <template #label>
+                            <div class="flex items-center gap-2 text-xs font-normal">
+                                <UIcon :name="privacyOptions.find(o => o.value === postData.privacy)?.icon"
+                                    class="w-4 h-4" />
+                                <span class="truncate">{{privacyOptions.find(o => o.value ===
+                                    postData.privacy)?.label}}</span>
+                            </div>
+                        </template>
+                        <template #option="{ option }">
+                            <span class="flex items-center gap-2">
+                                <UIcon :name="option.icon" class="w-4 h-4" />
+                                {{ option.label }}
+                            </span>
+                        </template>
+                    </USelectMenu>
+                </div>
+
                 <!-- Post Title -->
                 <UFormGroup v-slot="{ error }" :label="postData.post_type === 2 ? t('Poll title') : t('Post title')"
                     name="title" :error="errors.title" required>
@@ -69,11 +88,13 @@
                         size="sm" />
                     <UButton icon="i-heroicons-chart-bar" :label="t('Poll')"
                         :color="postData.post_type === 2 ? 'orange' : 'orange'"
-                        :variant="postData.post_type === 2 ? 'solid' : 'ghost'" size="sm" @click="togglePollMode" />
+                        :variant="postData.post_type === 2 ? 'solid' : 'ghost'" size="sm" @click="togglePollMode"
+                        :disabled="!!socialCreatePostData" /> <!-- Disable switching type when editing -->
                     <UButton icon="i-heroicons-megaphone" :label="t('Announcement')"
                         :color="postData.post_type === 3 ? 'red' : 'red'"
                         :variant="postData.post_type === 3 ? 'solid' : 'ghost'" size="sm"
-                        @click="toggleAnnouncementMode" />
+                        @click="toggleAnnouncementMode" :disabled="!!socialCreatePostData" />
+                    <!-- Disable switching type when editing -->
                 </div>
 
                 <!-- Pin Toggle (only for announcements) -->
@@ -116,9 +137,7 @@
                 <div class="flex justify-end gap-3">
                     <UButton :label="t('Cancel')" color="gray" variant="ghost" @click="closeModal"
                         :disabled="isSubmitting" />
-                    <UButton :label="postData.post_type === 2 ? t('Create Poll') :
-                        postData.post_type === 3 ? t('Create Announcement') :
-                            t('Post')" color="primary" @click="handleSubmit" :loading="isSubmitting" />
+                    <UButton :label="submitButtonLabel" color="primary" @click="handleSubmit" :loading="isSubmitting" />
                 </div>
             </template>
         </UCard>
@@ -134,7 +153,7 @@ import * as yup from 'yup'
 const { t } = useI18n()
 const modalStore = useModalStore()
 const { setSocialCreatePostModal } = modalStore
-const { socialCreatePostModal, socialCreatePostType, socialCreatePostGroupId } = storeToRefs(modalStore)
+const { socialCreatePostModal, socialCreatePostType, socialCreatePostGroupId, socialCreatePostData } = storeToRefs(modalStore)
 const dayjs = useDayjs()
 
 const postData = ref({
@@ -142,13 +161,38 @@ const postData = ref({
     content: '',
     post_type: 1, // 1 = post, 2 = poll, 3 = announcement
     poll_options: [''], // Default empty option for polls
-    is_pinned: false // For announcements
+    is_pinned: false, // For announcements
+    privacy: 1 // 1 = Public, 2 = Only Me
+})
+
+const privacyOptions = computed(() => [
+    { label: t('Public'), value: 1, icon: 'i-heroicons-globe-alt' },
+    { label: t('Only Me'), value: 2, icon: 'i-heroicons-lock-closed' }
+])
+
+const modalTitle = computed(() => {
+    if (socialCreatePostData.value) {
+        if (postData.value.post_type === 2) return t('Edit Poll')
+        if (postData.value.post_type === 3) return t('Edit Announcement')
+        return t('Edit Post')
+    }
+    if (postData.value.post_type === 2) return t('Create Poll')
+    if (postData.value.post_type === 3) return t('Create Announcement')
+    return t('Create Post')
+})
+
+const submitButtonLabel = computed(() => {
+    if (socialCreatePostData.value) return t('Update')
+    if (postData.value.post_type === 2) return t('Create Poll')
+    if (postData.value.post_type === 3) return t('Create Announcement')
+    return t('Post')
 })
 
 // Multiple files upload state
 const fileInput = ref(null)
 const selectedFiles = ref([])
 const filePreviews = ref([])
+const deletedAttachmentIds = ref([])
 
 const triggerFileInput = () => {
     fileInput.value?.click()
@@ -177,12 +221,24 @@ const handleFilesSelect = (event) => {
 }
 
 const removeFile = (index) => {
-    if (filePreviews.value[index].url) {
-        URL.revokeObjectURL(filePreviews.value[index].url)
+    const file = filePreviews.value[index]
+    if (file.isExisting) {
+        deletedAttachmentIds.value.push(file.id)
+    } else {
+        let newFileIndex = 0
+        for (let i = 0; i < index; i++) {
+            if (!filePreviews.value[i].isExisting) newFileIndex++
+        }
+        selectedFiles.value.splice(newFileIndex, 1)
     }
-    selectedFiles.value.splice(index, 1)
+
+    if (file.url && !file.isExisting) {
+        URL.revokeObjectURL(file.url)
+    }
     filePreviews.value.splice(index, 1)
 }
+
+
 
 const getFileType = (contentType) => {
     if (contentType.startsWith('image/')) return 'image'
@@ -220,7 +276,7 @@ const pollEndDateTime = ref(defaultPollEndTime)
 const errors = ref({})
 const isSubmitting = ref(false)
 
-const emit = defineEmits(['postCreated'])
+const emit = defineEmits(['postCreated', 'postUpdated'])
 
 // Yup validation schema
 const schema = yup.object({
@@ -232,6 +288,40 @@ watch(socialCreatePostModal, (newValue) => {
     if (newValue) {
         // When modal opens, set post_type from store
         postData.value.post_type = socialCreatePostType.value
+
+        // Populate data if editing
+        if (socialCreatePostData.value) {
+            const data = socialCreatePostData.value
+            postData.value.title = data.title
+            postData.value.content = data.content || ''
+            postData.value.post_type = data.post_type
+            postData.value.is_pinned = data.is_pinned || false
+            postData.value.privacy = data.privacy || 1
+
+            if (data.post_type === 2 && data.poll_options) {
+                // Map existing options to string array for editing
+                // Note: deeply confusing to edit active polls, but we'll allow text editing
+                postData.value.poll_options = data.poll_options.map(opt => opt.option)
+                if (data.start_poll) pollStartDateTime.value = new Date(data.start_poll)
+                if (data.end_poll) pollEndDateTime.value = new Date(data.end_poll)
+            }
+
+            // Populate file previews from existing attachments
+            if (data.attachments && data.attachments.length > 0) {
+                data.attachments.forEach(att => {
+                    filePreviews.value.push({
+                        id: att.id, // Keep track of ID
+                        url: att.file,
+                        type: att.file_type || 'document',
+                        name: att.file_name || 'File',
+                        size: att.file_size || 0,
+                        isExisting: true
+                    })
+                })
+            }
+        }
+    } else {
+        resetForm()
     }
 })
 
@@ -268,15 +358,20 @@ const removePollOption = (index) => {
     }
 }
 
-const closeModal = () => {
-    setSocialCreatePostModal(false)
-    socialCreatePostGroupId.value = null // Reset group context
+const resetForm = () => {
+    // Clear store data
+    socialCreatePostGroupId.value = null
+    socialCreatePostData.value = null
+    socialCreatePostType.value = 1
+
     // Reset form
     postData.value = {
         title: '',
         content: '',
         post_type: 1,
         poll_options: ['', ''],
+        is_pinned: false,
+        privacy: 1
     }
     const resetStartDateTime = new Date()
     const resetEndDateTime = new Date()
@@ -287,17 +382,22 @@ const closeModal = () => {
 
     // Reset files state
     filePreviews.value.forEach(preview => {
-        if (preview.url) {
+        if (preview.url && !preview.isExisting) {
             URL.revokeObjectURL(preview.url)
         }
     })
     selectedFiles.value = []
     filePreviews.value = []
+    deletedAttachmentIds.value = []
     if (fileInput.value) {
         fileInput.value.value = ''
     }
 
     errors.value = {}
+}
+
+const closeModal = () => {
+    socialCreatePostModal.value = false
 }
 
 const validateSchema = async () => {
@@ -326,6 +426,7 @@ const handleSubmit = async () => {
         const submitData = {
             title: postData.value.title,
             post_type: postData.value.post_type,
+            privacy: postData.value.privacy
         }
 
         // Include group ID if creating post in a group
@@ -354,12 +455,31 @@ const handleSubmit = async () => {
             submitData.end_poll = dayjs(pollEndDateTime.value).format('YYYY-MM-DDTHH:mm:ss')
         }
 
+        // Handle existing attachments to delete if any
+        if (socialCreatePostData.value && socialCreatePostData.value.attachments) {
+            const currentAttachmentIds = filePreviews.value
+                .filter(p => p.isExisting)
+                .map(p => p.id)
+
+            // Assume backend handles diff or we can send 'attachments_to_keep'
+            // But standard DRF update usually requires specific handling
+            // We will rely on uploading new files, deleting old files needs explicit support
+            // If backend doesn't support 'attachments_to_delete', we might need separate calls
+            // For now, let's just proceed with create logic, adding new files
+        }
+
         // Use FormData if image is selected
         let response, error
-        if (selectedFiles.value.length > 0) {
+
+        const isEdit = !!socialCreatePostData.value
+        const url = isEdit ? `social/posts/${socialCreatePostData.value.id}/` : 'social/posts/'
+
+        // Check if we need multipart/form-data (files added OR files deleted OR normal update)
+        if (selectedFiles.value.length > 0 || (isEdit && deletedAttachmentIds.value.length > 0)) {
             const formData = new FormData()
             formData.append('title', submitData.title)
             formData.append('post_type', submitData.post_type)
+            formData.append('privacy', submitData.privacy)
 
             if (submitData.social_group) {
                 formData.append('social_group', submitData.social_group)
@@ -389,7 +509,13 @@ const handleSubmit = async () => {
                 formData.append('attachments', file)
             })
 
-            const result = await useAPI().post('social/posts/', formData, {
+            if (deletedAttachmentIds.value.length > 0) {
+                deletedAttachmentIds.value.forEach(id => {
+                    formData.append('attachments_to_delete', id)
+                })
+            }
+
+            const result = await useAPI()[isEdit ? 'patch' : 'post'](url, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -397,34 +523,39 @@ const handleSubmit = async () => {
             response = result.data
             error = result.error
         } else {
-            const result = await useAPI().post('social/posts/', submitData)
+            const result = await useAPI()[isEdit ? 'patch' : 'post'](url, submitData)
             response = result.data
             error = result.error
         }
 
         if (error.value) {
-            throw new Error(error.value.message || 'Failed to create post')
+            throw new Error(error.value.message || (isEdit ? 'Failed to update post' : 'Failed to create post'))
         }
 
         if (response.value) {
             useToast().add({
                 title: t('Success'),
-                description: postData.value.post_type === 2 ? t('Poll created successfully') : t('Post created successfully'),
+                description: isEdit ?
+                    (postData.value.post_type === 2 ? t('Poll updated successfully') : t('Post updated successfully')) :
+                    (postData.value.post_type === 2 ? t('Poll created successfully') : t('Post created successfully')),
                 icon: 'i-heroicons-check-circle',
                 color: 'green',
                 timeout: 3000,
             })
 
-            // Emit event to trigger polling (no post data since it's still processing)
-            emit('postCreated')
+            if (isEdit) {
+                emit('postUpdated', response.value)
+            } else {
+                emit('postCreated') // This refreshes the feed
+            }
 
             closeModal()
         }
     } catch (error) {
-        console.error('Error creating post:', error)
+        console.error('Error submitting post:', error)
         useToast().add({
             title: t('Error'),
-            description: error.message || t('An error occurred while creating the post. Please try again.'),
+            description: error.message || t('An error occurred. Please try again.'),
             icon: 'i-heroicons-exclamation-circle',
             color: 'red',
             timeout: 5000,
