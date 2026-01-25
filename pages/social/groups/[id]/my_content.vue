@@ -119,7 +119,7 @@ const activeStatus = ref(3) // Default to Published
 const { data: userInfo } = useAuth()
 const page = ref(1)
 const hasMore = ref(true)
-const pageSize = 2
+const pageSize = 10
 
 const menuItems = computed(() => [
     { label: t('Pending'), status: 6, icon: 'i-heroicons-clock' },
