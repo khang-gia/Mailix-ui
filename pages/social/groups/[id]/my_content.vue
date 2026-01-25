@@ -30,7 +30,7 @@
                         </div>
 
                         <!-- Count -->
-                        <span v-if="counts[item.status]" :class="[
+                        <span v-if="counts[item.status] && [3, 6].includes(item.status)" :class="[
                             'text-xs py-0.5 px-2 rounded-md font-medium',
                             activeStatus === item.status
                                 ? 'bg-blue-200 text-blue-800 dark:bg-blue-800 dark:text-blue-200'
@@ -127,16 +127,21 @@ const fetchMyPosts = async () => {
     if (!userInfo.value) return
     loading.value = true
     try {
+        console.log('Fetching my posts...')
         // Fetch all my posts in this group
         // Backend filtering by social_group and author
         // We might need to iterate or fetch all and filter client side if endpoint is limited
         // Assuming PostViewSet supports filtering by social_group and author
-        const { data } = await useAPI().get('social/posts/', {
+        const response = await useAPI().$get('social/posts/', {
             social_group: groupId,
             author: userInfo.value.id,
             page_size: 100 // Fetch a reasonable amount
         })
-        posts.value = data.value.results || []
+
+        if (response) {
+            console.log('My posts fetched:', response.results?.length)
+            posts.value = response.results || []
+        }
     } catch (error) {
         console.error('Error fetching my posts:', error)
     } finally {

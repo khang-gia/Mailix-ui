@@ -76,11 +76,18 @@ const pageSize = ref(10)
 const fetchPendingPosts = async () => {
     loading.value = true
     try {
-        const { data } = await useAPI().get('social/posts/pending/', {
+        console.log('Fetching pending posts...')
+        const response = await useAPI().$get('social/posts/pending/', {
             page: page.value,
             page_size: pageSize.value
         })
-        pendingPosts.value = data.value.results || []
+
+        if (response) {
+            console.log('Pending posts fetched:', response.results?.length)
+            pendingPosts.value = response.results || []
+        } else {
+            console.warn('No data returned from API')
+        }
     } catch (error) {
         console.error('Error fetching pending posts:', error)
     } finally {
@@ -93,6 +100,7 @@ const handlePostDeleted = (postId) => {
 }
 
 watch(userInfo, (val) => {
+    console.log('UserInfo watcher triggered:', val ? 'User detected' : 'No user')
     if (val) {
         fetchPendingPosts()
     }
