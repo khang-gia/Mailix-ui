@@ -52,10 +52,10 @@
         <ModalCreatePost />
         <!-- Assuming ModalCreatePost is needed but maybe hidden? It's usually invoked by events. 
              If SocialPostItem uses it for editing, we need it. -->
-        <ModalOpenPost />
-        <ModalOpenPostFullscreen />
-        <ModalPostReactions />
-        <ModalPollVoters />
+        <!-- <ModalOpenPost />
+        <ModalOpenPostFullscreen /> -->
+        <!-- <ModalPostReactions />
+        <ModalPollVoters /> -->
     </div>
 </template>
 
