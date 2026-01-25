@@ -64,9 +64,9 @@
                         <div class="flex-1">
                             <div class="flex items-center gap-1">
                                 <span class="font-bold text-gray-900 dark:text-white">{{ post.author?.display_name
-                                }}</span>
+                                    }}</span>
                                 <span v-if="post.social_group" class="text-gray-500 text-sm">{{ $t('shared on')
-                                }}</span>
+                                    }}</span>
                                 <NuxtLink v-if="post.social_group" :to="`/social/groups/${post.social_group}`"
                                     class="text-green-500 font-medium hover:underline text-sm">
                                     {{ post.social_group_name }}
@@ -93,7 +93,7 @@
                     <div class="flex items-center justify-between py-2 border-y border-gray-200 dark:border-gray-700">
                         <div v-if="post.top_interaction_types && post.top_interaction_types.length > 0"
                             class="flex items-center gap-1 cursor-pointer hover:underline"
-                            @click="setPostReactionsModal(true, post.id)">
+                            @click="showReactionsModal = true">
                             <div class="flex items-center -space-x-1">
                                 <div v-for="interaction in post.top_interaction_types.slice(0, 3)"
                                     :key="interaction.interaction_type"
@@ -144,6 +144,7 @@
                 </div>
             </div>
         </div>
+        <ModalPostReactions v-model="showReactionsModal" :post-id="post.id" />
     </UModal>
 </template>
 
@@ -158,10 +159,11 @@ const dayjs = useDayjs()
 
 const modalStore = useModalStore()
 const { socialCommentModalFullscreen, socialCommentPost: post } = storeToRefs(modalStore)
-const { setPostReactionsModal } = modalStore
+// const { setPostReactionsModal } = modalStore
 
 // Image carousel state
 const currentImageIndex = ref(0)
+const showReactionsModal = ref(false)
 
 const imageAttachments = computed(() => {
     return post.value.attachments?.filter(a => a.file_type === 'image') || []

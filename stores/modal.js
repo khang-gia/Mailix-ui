@@ -154,16 +154,8 @@ export const useModalStore = defineStore("modalStore", () => {
     socialCreatePostData.value = postData;
   }
 
-  const postReactionsModal = ref(false);
-  const postReactionsData = ref({ postId: null, selectedTab: "all" });
-
   const pollVotersModal = ref(false);
   const pollVotersData = ref({ postId: null, pollOptions: [] });
-
-  function setPostReactionsModal(value, postId = null, tab = "all") {
-    postReactionsModal.value = value;
-    postReactionsData.value = { postId, selectedTab: tab };
-  }
 
   function setPollVotersModal(value, postId = null, pollOptions = []) {
     pollVotersModal.value = value;
@@ -220,9 +212,7 @@ export const useModalStore = defineStore("modalStore", () => {
     socialCreatePostType,
     socialCreatePostGroupId,
     socialCreatePostData,
-    postReactionsModal,
-    postReactionsData,
-    setPostReactionsModal,
+
     pollVotersModal,
     pollVotersData,
     setPollVotersModal,

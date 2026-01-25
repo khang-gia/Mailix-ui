@@ -127,8 +127,7 @@
         <!-- Reactions Count & Comments Count -->
         <div class="flex items-center justify-between pb-1">
             <div v-if="post.top_interaction_types && post.top_interaction_types.length > 0"
-                class="flex items-center gap-1 cursor-pointer hover:underline"
-                @click="setPostReactionsModal(true, post.id)">
+                class="flex items-center gap-1 cursor-pointer hover:underline" @click="showReactionsModal = true">
                 <!-- Display top 3 interaction types with icons -->
                 <div class="flex items-center -space-x-1">
                     <div v-for="interaction in post.top_interaction_types.slice(0, 3)"
@@ -189,6 +188,7 @@
             <CommentsSection comment-type="social" :id="post.id" placeholder="Write a comment..."
                 @onAddComment="post.comments_count++" useTimeAgo="true" />
         </div>
+        <ModalPostReactions v-model="showReactionsModal" :post-id="post.id" />
     </UCard>
 
 </template>
@@ -198,7 +198,7 @@ import { useI18n } from "vue-i18n";
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 const modalStore = useModalStore()
-const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen, setPostReactionsModal, setPollVotersModal, setSocialCreatePostModal } = modalStore
+const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen, setPollVotersModal, setSocialCreatePostModal } = modalStore
 const props = defineProps({
     post: {
         type: Object,
@@ -222,6 +222,7 @@ const contentRef = ref(null)
 const isExpanded = ref(false)
 const isTruncated = ref(false)
 const isProcessing = ref(false)
+const showReactionsModal = ref(false)
 
 const handleApprove = async () => {
     if (isProcessing.value) return

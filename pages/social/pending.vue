@@ -54,8 +54,7 @@
              If SocialPostItem uses it for editing, we need it. -->
         <!-- <ModalOpenPost />
         <ModalOpenPostFullscreen /> -->
-        <!-- <ModalPostReactions />
-        <ModalPollVoters /> -->
+
     </div>
 </template>
 

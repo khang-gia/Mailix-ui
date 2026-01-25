@@ -1,12 +1,12 @@
 <template>
-    <UModal v-model="postReactionsModal" :ui="{ width: 'max-w-md' }">
+    <UModal v-model="isOpen" :ui="{ width: 'max-w-md' }">
         <UCard>
             <template #header>
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold">{{ $t('Reactions') }}</h3>
 
                     <UButton icon="i-heroicons-x-mark" color="gray" variant="ghost" class="-my-1"
-                        @click="postReactionsModal = false" />
+                        @click="isOpen = false" />
                 </div>
             </template>
 
@@ -26,7 +26,7 @@
                 <template v-else>
                     <div v-for="reaction in filteredReactions" :key="reaction.id"
                         class="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg cursor-pointer"
-                        @click="navigateToUserProfile(reaction.user?.profile_hr?.id)">
+                        @click="navigateToUserProfile(reaction.user?.id)">
                         <div class="flex items-center gap-3">
                             <!-- Avatar with reaction badge -->
                             <div class="relative">
@@ -65,12 +65,31 @@
 
 <script setup>
 import { useI18n } from "vue-i18n"
-import { useModalStore } from '@/stores/modal'
-import { storeToRefs } from 'pinia'
+
+const props = defineProps({
+    modelValue: {
+        type: Boolean,
+        default: false
+    },
+    postId: {
+        type: [String, Number],
+        default: null
+    }
+})
+
+const emit = defineEmits(['update:modelValue'])
 
 const { t } = useI18n()
-const modalStore = useModalStore()
-const { postReactionsModal, postReactionsData } = storeToRefs(modalStore)
+
+// Computed property to handle local v-model
+const isOpen = computed({
+    get() {
+        return props.modelValue
+    },
+    set(value) {
+        emit('update:modelValue', value)
+    }
+})
 
 const selectedTab = ref(0)
 const reactions = ref([])
@@ -123,16 +142,18 @@ const buildReactionTabs = (postInteractions) => {
 }
 
 // Fetch reactions when modal opens
-watch(postReactionsModal, async (newVal) => {
-    if (newVal && postReactionsData.value.postId) {
-        currentPage.value = 1
-        hasMore.value = true
-        reactions.value = []
-        await fetchReactions()
-        // Build tabs once after initial fetch
-        buildReactionTabs(reactions.value)
+watch(isOpen, async (newVal) => {
+    if (newVal) {
+        if (props.postId) {
+            currentPage.value = 1
+            hasMore.value = true
+            reactions.value = []
+            await fetchReactions()
+            // Build tabs once after initial fetch
+            buildReactionTabs(reactions.value)
+        }
     }
-})
+}, { immediate: true })
 
 // Fetch reactions from API
 const fetchReactions = async (interactionType = null, page = 1) => {
@@ -144,7 +165,7 @@ const fetchReactions = async (interactionType = null, page = 1) => {
             loading.value = true
         }
 
-        const postId = postReactionsData.value.postId
+        const currentPostId = props.postId
 
         const params = {
             page: page,
@@ -154,7 +175,8 @@ const fetchReactions = async (interactionType = null, page = 1) => {
             params.interaction_type = interactionType
         }
 
-        const { data: response } = await useAPI().get(`social/posts/${postId}/interactions/`, params)
+        const { data: response } = await useAPI().get(`social/posts/${currentPostId}/interactions/`, params)
+
 
         if (response.value) {
             const newReactions = response.value.results || []
@@ -230,8 +252,9 @@ watch(selectedTab, async (newTabIndex) => {
 // Navigate to user profile
 const navigateToUserProfile = (userId) => {
     if (userId) {
-        postReactionsModal.value = false
-        navigateTo(`/hr/${userId}`)
+        isOpen.value = false
+        // navigateTo(`/hr/${userId}`) 
+        navigateTo(`/social/wall/${userId}`)
     }
 }
 </script>
