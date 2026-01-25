@@ -37,7 +37,7 @@
     <ModalOpenPostFullscreen />
     <ModalOpenPost />
 
-    <ModalPollVoters />
+
     <AdditionFilters />
     <DisplayColumnSlide />
   </div>

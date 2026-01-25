@@ -154,14 +154,6 @@ export const useModalStore = defineStore("modalStore", () => {
     socialCreatePostData.value = postData;
   }
 
-  const pollVotersModal = ref(false);
-  const pollVotersData = ref({ postId: null, pollOptions: [] });
-
-  function setPollVotersModal(value, postId = null, pollOptions = []) {
-    pollVotersModal.value = value;
-    pollVotersData.value = { postId, pollOptions };
-  }
-
   return {
     modalType,
     setModalType,
@@ -212,9 +204,5 @@ export const useModalStore = defineStore("modalStore", () => {
     socialCreatePostType,
     socialCreatePostGroupId,
     socialCreatePostData,
-
-    pollVotersModal,
-    pollVotersData,
-    setPollVotersModal,
   };
 });

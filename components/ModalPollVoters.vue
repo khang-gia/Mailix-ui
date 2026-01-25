@@ -1,20 +1,20 @@
 <template>
-    <UModal v-model="pollVotersModal" :ui="{ width: 'max-w-lg' }">
+    <UModal v-model="isOpen" :ui="{ width: 'max-w-lg' }">
         <UCard class="font-averta">
             <template #header>
                 <div class="flex items-center gap-3">
                     <!-- <UButton icon="i-heroicons-arrow-left" color="gray" variant="ghost" size="lg" class="-my-1"
-                        @click="pollVotersModal = false" /> -->
+                        @click="isOpen = false" /> -->
                     <h3 class="text-lg font-semibold">{{ $t('Poll details') }}</h3>
                     <div class="flex-1"></div>
                     <UButton icon="i-heroicons-x-mark" color="gray" variant="ghost" size="lg" class="-my-1"
-                        @click="pollVotersModal = false" />
+                        @click="isOpen = false" />
                 </div>
             </template>
 
             <!-- Poll Options List -->
             <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                <div v-for="(option, index) in pollOptions" :key="option.id" class="bg-white dark:bg-gray-800">
+                <div v-for="(option, index) in localPollOptions" :key="option.id" class="bg-white dark:bg-gray-800">
                     <!-- Option Header (Clickable to expand/collapse) -->
                     <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
                         @click="toggleOption(index)">
@@ -53,33 +53,67 @@
 
 <script setup>
 import { useI18n } from "vue-i18n"
-import { useModalStore } from '@/stores/modal'
-import { storeToRefs } from 'pinia'
+// import { useModalStore } from '@/stores/modal'
+// import { storeToRefs } from 'pinia'
 
-const { t } = useI18n()
-const modalStore = useModalStore()
-const { pollVotersModal, pollVotersData } = storeToRefs(modalStore)
-
-const expandedOptions = ref([])
-const showAllVoters = ref([])
-const pollOptions = ref([])
-
-// Watch for modal open to initialize data
-watch(pollVotersModal, async (newVal) => {
-    if (newVal && pollVotersData.value.pollOptions) {
-        pollOptions.value = pollVotersData.value.pollOptions
-        // Initialize all options as expanded by default
-        expandedOptions.value = pollOptions.value.map(() => true)
-        showAllVoters.value = pollOptions.value.map(() => false)
-
-        // Fetch detailed voter data for each option
-        await fetchVotersForAllOptions()
+const props = defineProps({
+    modelValue: {
+        type: Boolean,
+        default: false
+    },
+    postId: {
+        type: [String, Number],
+        default: null
+    },
+    pollOptions: {
+        type: Array,
+        default: () => []
     }
 })
 
+const emit = defineEmits(['update:modelValue'])
+
+const { t } = useI18n()
+// const modalStore = useModalStore()
+// const { pollVotersModal, pollVotersData } = storeToRefs(modalStore)
+
+const expandedOptions = ref([])
+const showAllVoters = ref([])
+const localPollOptions = ref([])
+
+// Computed property to handle local v-model
+const isOpen = computed({
+    get() {
+        return props.modelValue
+    },
+    set(value) {
+        emit('update:modelValue', value)
+    }
+})
+
+// Watch for modal open to initialize data
+watch(isOpen, async (newVal) => {
+    if (newVal) {
+        // Use props instead of store data
+        // Initialize with passed pollOptions if available, but fetch fresh data
+        if (props.pollOptions && props.pollOptions.length > 0) {
+            localPollOptions.value = props.pollOptions
+        }
+
+        // Initialize UI state
+        expandedOptions.value = (localPollOptions.value || []).map(() => true)
+        showAllVoters.value = (localPollOptions.value || []).map(() => false)
+
+        // Fetch detailed voter data for each option
+        if (props.postId) {
+            await fetchVotersForAllOptions()
+        }
+    }
+}, { immediate: true })
+
 // Fetch voters for all poll options
 const fetchVotersForAllOptions = async () => {
-    const postId = pollVotersData.value.postId
+    const postId = props.postId
     if (!postId) return
 
     try {
@@ -87,7 +121,12 @@ const fetchVotersForAllOptions = async () => {
         const { data: response } = await useAPI().get(`social/posts/${postId}/voters/`)
         console.log(response.value)
         if (response.value) {
-            pollOptions.value = response.value
+            localPollOptions.value = response.value
+            // Re-initialize UI state to match new data length if needed
+            if (expandedOptions.value.length !== localPollOptions.value.length) {
+                expandedOptions.value = localPollOptions.value.map(() => true)
+                showAllVoters.value = localPollOptions.value.map(() => false)
+            }
         }
     } catch (error) {
         console.error('Error fetching poll voters:', error)
@@ -113,8 +152,8 @@ const getVisibleVoters = (option, index) => {
 // Navigate to user profile
 const navigateToUserProfile = (userId) => {
     if (userId) {
-        pollVotersModal.value = false
-        navigateTo(`/hr/${userId}`)
+        isOpen.value = false
+        navigateTo(`/social/wall/${userId}`)
     }
 }
 </script>

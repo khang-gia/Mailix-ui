@@ -121,7 +121,7 @@
 
                 <!-- See all options button -->
                 <UButton :label="$t('See all options')" variant="ghost" color="gray" size="sm" block
-                    @click="setPollVotersModal(true, post.id, post.poll_options)" />
+                    @click="showPollVotersModal = true" />
             </div>
         </div>
         <!-- Reactions Count & Comments Count -->
@@ -189,6 +189,7 @@
                 @onAddComment="post.comments_count++" useTimeAgo="true" />
         </div>
         <ModalPostReactions v-model="showReactionsModal" :post-id="post.id" />
+        <ModalPollVoters v-model="showPollVotersModal" :post-id="post.id" :poll-options="post.poll_options" />
     </UCard>
 
 </template>
@@ -198,7 +199,7 @@ import { useI18n } from "vue-i18n";
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 const modalStore = useModalStore()
-const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen, setPollVotersModal, setSocialCreatePostModal } = modalStore
+const { setSocialCommentModal, setAlertModal, setExpandImageModal, setSocialCommentModalFullscreen, setSocialCreatePostModal } = modalStore
 const props = defineProps({
     post: {
         type: Object,
@@ -223,6 +224,7 @@ const isExpanded = ref(false)
 const isTruncated = ref(false)
 const isProcessing = ref(false)
 const showReactionsModal = ref(false)
+const showPollVotersModal = ref(false)
 
 const handleApprove = async () => {
     if (isProcessing.value) return
