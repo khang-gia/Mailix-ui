@@ -30,7 +30,7 @@
                         </div>
 
                         <!-- Count -->
-                        <span v-if="counts[item.status] && [3, 6].includes(item.status)" :class="[
+                        <span v-if="counts[item.status]" :class="[
                             'text-xs py-0.5 px-2 rounded-md font-medium',
                             activeStatus === item.status
                                 ? 'bg-blue-200 text-blue-800 dark:bg-blue-800 dark:text-blue-200'
@@ -79,9 +79,16 @@
                         </div>
                     </UCard>
                 </template>
-                <template v-else-if="filteredPosts.length > 0">
-                    <SocialGroupMyContentItem v-for="post in filteredPosts" :key="post.id" :post="post"
+                <template v-else-if="posts.length > 0">
+                    <SocialGroupMyContentItem v-for="post in posts" :key="post.id" :post="post"
                         @postDeleted="handlePostDeleted" />
+                    <!-- Load More Button -->
+                    <div v-if="hasMore" class="pt-8 flex justify-center items-center">
+                        <UButton v-if="!loadingMore" :label="$t('Load more')" color="gray" variant="soft"
+                            class="mx-auto" @click="loadMore" block icon="i-heroicons-arrow-path" />
+                        <UIcon v-else name="i-heroicons-arrow-path"
+                            class="w-6 h-6 animate-spin mx-auto text-gray-400" />
+                    </div>
                 </template>
                 <UCard v-else class="text-center py-12">
                     <UIcon name="i-heroicons-document-text" class="w-16 h-16 mx-auto text-gray-400 mb-4" />
@@ -90,8 +97,6 @@
             </div>
         </div>
 
-        <!-- Modals -->
-        <!-- Modals -->
         <ModalCreatePost @postCreated="fetchMyPosts" />
     </div>
 </template>
@@ -106,10 +111,15 @@ definePageMeta({
     title: 'Social'
 })
 
+
 const loading = ref(true)
+const loadingMore = ref(false)
 const posts = ref([])
 const activeStatus = ref(3) // Default to Published
 const { data: userInfo } = useAuth()
+const page = ref(1)
+const hasMore = ref(true)
+const pageSize = 2
 
 const menuItems = computed(() => [
     { label: t('Pending'), status: 6, icon: 'i-heroicons-clock' },
@@ -123,52 +133,90 @@ const getStatusTitle = (status) => {
     return item ? item.label : ''
 }
 
-const fetchMyPosts = async () => {
+const fetchMyPosts = async (isLoadMore = false) => {
     if (!userInfo.value) return
-    loading.value = true
+
+    if (isLoadMore) {
+        loadingMore.value = true
+    } else {
+        loading.value = true
+    }
+
     try {
-        console.log('Fetching my posts...')
-        // Fetch all my posts in this group
-        // Backend filtering by social_group and author
-        // We might need to iterate or fetch all and filter client side if endpoint is limited
-        // Assuming PostViewSet supports filtering by social_group and author
+        console.log(`Fetching my posts... status=${activeStatus.value} page=${page.value}`)
+
         const response = await useAPI().$get('social/posts/', {
             social_group: groupId,
             author: userInfo.value.id,
-            page_size: 100 // Fetch a reasonable amount
+            status: activeStatus.value,
+            page: page.value,
+            page_size: pageSize
         })
 
         if (response) {
-            console.log('My posts fetched:', response.results?.length)
-            posts.value = response.results || []
+            const newPosts = response.results || []
+            if (isLoadMore) {
+                posts.value = [...posts.value, ...newPosts]
+            } else {
+                posts.value = newPosts
+            }
+
+            // Check if there are more pages
+            hasMore.value = !!response.next
+            console.log(`Fetched ${newPosts.length} posts. Has more: ${hasMore.value}`)
         }
     } catch (error) {
         console.error('Error fetching my posts:', error)
     } finally {
         loading.value = false
+        loadingMore.value = false
     }
 }
 
-const filteredPosts = computed(() => {
-    return posts.value.filter(post => post.status === activeStatus.value)
-})
+const counts = ref({})
 
-const counts = computed(() => {
-    const c = {}
-    menuItems.value.forEach(item => {
-        c[item.status] = posts.value.filter(p => p.status === item.status).length
-    })
-    return c
-})
+const fetchCounts = async () => {
+    if (!userInfo.value) return
+    try {
+        const response = await useAPI().$get('social/posts/my_content_counts/', {
+            social_group: groupId
+        })
+        if (response) {
+            counts.value = response
+        }
+    } catch (error) {
+        console.error('Error fetching counts:', error)
+    }
+}
 
 const handlePostDeleted = (postId) => {
     posts.value = posts.value.filter(p => p.id !== postId)
+    // Reduce count for current status
+    if (counts.value[activeStatus.value] > 0) {
+        counts.value[activeStatus.value]--
+    }
+}
+
+const loadMore = () => {
+    if (loading.value || loadingMore.value || !hasMore.value) return
+    page.value++
+    fetchMyPosts(true)
 }
 
 watch(userInfo, (val) => {
     if (val) {
+        // Initial fetch
+        page.value = 1
+        hasMore.value = true
         fetchMyPosts()
+        fetchCounts()
     }
 }, { immediate: true })
 
+watch(activeStatus, () => {
+    posts.value = []
+    page.value = 1
+    hasMore.value = true
+    fetchMyPosts()
+})
 </script>
