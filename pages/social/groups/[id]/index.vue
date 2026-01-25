@@ -51,9 +51,14 @@
                     <UButton v-if="!isMember" color="primary" @click="joinGroup" :loading="joining" size="sm">
                         {{ $t('Join Group') }}
                     </UButton>
-                    <UButton v-else color="gray" variant="outline" size="sm">
-                        {{ $t('Joined') }}
-                    </UButton>
+                    <div class="flex gap-2" v-else>
+                        <UButton color="gray" variant="outline" size="sm">
+                            {{ $t('Joined') }}
+                        </UButton>
+                        <UDropdown :items="postFilterDropdownItems" :popper="{ placement: 'bottom-end' }">
+                            <UButton color="gray" variant="ghost" size="sm" icon="i-heroicons-ellipsis-horizontal" />
+                        </UDropdown>
+                    </div>
                 </div>
             </div>
 
@@ -177,11 +182,7 @@
         </div> -->
 
         <!-- Modals -->
-        <ModalOpenPost />
-        <ModalOpenPostFullscreen />
         <ModalCreatePost @postCreated="handlePostCreated" />
-        <ModalPostReactions />
-        <ModalPollVoters />
     </div>
 </template>
 
@@ -204,6 +205,18 @@ definePageMeta({
 const activeTab = ref('feed')
 const joining = ref(false)
 const reload = ref(0) // Dependency for refreshing data
+// State for uploading posts
+const uploadingPosts = ref([])
+
+const postFilterDropdownItems = computed(() => [
+    [{
+        label: t('Your content'),
+        icon: 'fluent:content-view-16-regular',
+        click: () => {
+            navigateTo(`/social/groups/${groupId}/my_content`)
+        }
+    }]
+])
 
 // Fetch group details with counts
 const group = computedAsync(async () => {

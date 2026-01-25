@@ -726,5 +726,16 @@
     "Edit Post":"Chỉnh sửa bài viết",
     "Post updated successfully":"Cập nhật bài viết thành công",
     "Poll updated successfully":"Cập nhật bình chọn thành công",
-    "Administrator":"Quản trị viên"
+    "Administrator":"Quản trị viên",
+    "Your Content":"Nội dung của bạn",
+    "Manage your posts in this group":"Quản lý bài viết của bạn trong nhóm này",
+    "Back to group":"Quay lại nhóm",
+    "Published":"Đã đăng",
+    "Denied":"Đã từ chối",
+    "Removed":"Đã gỡ",
+    "No posts to show":"Không có bài viết để hiển thị",
+    "Your content":"Nội dung của bạn",
+    "Approve":"Duyệt",
+    "Reject":"Từ chối",
+    "Edit Announcement":"Chỉnh sửa thông báo"
 }

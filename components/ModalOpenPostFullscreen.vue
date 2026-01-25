@@ -64,9 +64,9 @@
                         <div class="flex-1">
                             <div class="flex items-center gap-1">
                                 <span class="font-bold text-gray-900 dark:text-white">{{ post.author?.display_name
-                                    }}</span>
+                                }}</span>
                                 <span v-if="post.social_group" class="text-gray-500 text-sm">{{ $t('shared on')
-                                    }}</span>
+                                }}</span>
                                 <NuxtLink v-if="post.social_group" :to="`/social/groups/${post.social_group}`"
                                     class="text-green-500 font-medium hover:underline text-sm">
                                     {{ post.social_group_name }}
