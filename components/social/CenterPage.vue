@@ -24,6 +24,13 @@
             <!-- Regular Posts -->
             <SocialPostItem v-for="post in filteredPosts" :key="post.id" :post="post"
                 @postDeleted="handlePostDeleted" />
+
+            <!-- Load More Button -->
+            <div v-if="hasMore" class="pt-8 flex justify-center items-center">
+                <UButton v-if="!loadingMore" :label="$t('Load more')" color="gray" variant="soft" class="mx-auto"
+                    @click="loadMore" block icon="i-heroicons-arrow-path" />
+                <UIcon v-else name="i-heroicons-arrow-path" class="w-6 h-6 animate-spin mx-auto text-gray-400" />
+            </div>
         </div>
         <ModalCreatePost @postCreated="handlePostCreated" @postUpdated="handlePostUpdated" />
     </div>
@@ -43,43 +50,91 @@ const page = ref(1)
 const pageSize = ref(10)
 const postsKey = ref(0) // Key to force refresh
 
+// Pagination state
+const posts = ref([])
+const loading = ref(false)
+const loadingMore = ref(false)
+const hasMore = ref(true)
+
 // State for uploading posts
 const uploadingPosts = ref([])
 const pollingStartTime = ref(0)
 let pollingInterval = null
-
-const posts = computedAsync(async () => {
-    const { data: data } = await useAPI().get('social/posts/', {
-        page: page.value,
-        page_size: pageSize.value,
-        status: 3, // Only show Published posts
-        _refresh: postsKey.value, // Include key in params to trigger refetch
-    })
-    return data.value.results
-})
 
 // Filter state
 const activeFilter = ref('all')
 
 const handleFilterChange = (filterValue) => {
     activeFilter.value = filterValue
+    // Reset and refetch
+    posts.value = []
+    page.value = 1
+    hasMore.value = true
+    fetchPosts()
 }
 
-// Filtered posts based on active filter
-const filteredPosts = computed(() => {
-    if (!posts.value) return []
+// Fetch posts logic
+const fetchPosts = async (isLoadMore = false) => {
+    if (loading.value || (isLoadMore && loadingMore.value)) return
 
-    if (activeFilter.value === 'group') {
-        // Show only posts from groups
-        return posts.value.filter(post => post.social_group !== null)
-    } else if (activeFilter.value === 'poll') {
-        // Show only poll posts (post_type = 2)
-        return posts.value.filter(post => post.post_type === 2)
+    if (isLoadMore) {
+        loadingMore.value = true
+    } else {
+        loading.value = true
     }
 
-    // Show all posts
+    try {
+        const params = {
+            page: page.value,
+            page_size: pageSize.value,
+            status: 3, // Only show Published posts
+        }
+
+        // Apply filters
+        if (activeFilter.value === 'poll') {
+            params.post_type = 2
+        }
+
+        const { data: data } = await useAPI().get('social/posts/', params)
+
+        if (data.value && data.value.results) {
+            let newPosts = data.value.results
+
+            // Client-side filtering for 'group' (until backend supports 'has_group' filter)
+            // Note: This results in fewer than pageSize posts being shown if filtered
+            if (activeFilter.value === 'group') {
+                newPosts = newPosts.filter(p => p.social_group !== null)
+            }
+
+            if (isLoadMore) {
+                posts.value = [...posts.value, ...newPosts]
+            } else {
+                posts.value = newPosts
+            }
+
+            hasMore.value = !!data.value.next
+        } else {
+            if (!isLoadMore) posts.value = []
+            hasMore.value = false
+        }
+    } catch (error) {
+        console.error('Error fetching posts:', error)
+    } finally {
+        loading.value = false
+        loadingMore.value = false
+    }
+}
+
+// Filtered posts - now mostly handling just the array, as filtering is largely moved to backend/fetch
+const filteredPosts = computed(() => {
     return posts.value
 })
+
+const loadMore = () => {
+    if (loading.value || loadingMore.value || !hasMore.value) return
+    page.value++
+    fetchPosts(true)
+}
 
 const handlePostDeleted = (postId) => {
     posts.value = posts.value.filter(post => post.id !== postId)
@@ -97,7 +152,6 @@ const handlePostCreated = async () => {
 
     // If no uploading posts found (backend was too fast), refresh main feed
     if (uploadingPosts.value.length === 0) {
-        console.log('test post key')
         postsKey.value++ // Trigger refresh of main posts
         return
     }
@@ -107,11 +161,8 @@ const handlePostCreated = async () => {
 }
 
 const handlePostUpdated = (updatedPost) => {
-    if (!posts.value) return
-
     const index = posts.value.findIndex(p => p.id === updatedPost.id)
     if (index !== -1) {
-        // Update the post in the list
         posts.value[index] = { ...posts.value[index], ...updatedPost }
     }
 }
@@ -154,7 +205,6 @@ const pollUploadingPosts = async () => {
     // If no uploading posts found, refresh main feed and stop polling
     if (uploadingPosts.value.length === 0) {
         // Refresh the entire post list to show completed posts
-        console.log('test post key')
         postsKey.value++
         stopPolling()
         return
@@ -182,7 +232,27 @@ const stopPolling = () => {
     }
 }
 
-// Cleanup on component unmount
+// Watchers
+watch(postsKey, () => {
+    page.value = 1
+    hasMore.value = true
+    posts.value = []
+    fetchPosts()
+})
+
+watch(userInfo, (val) => {
+    if (val) {
+        fetchPosts()
+        fetchUploadingPosts() // Also check for any pending uploads
+    }
+}, { immediate: true })
+
+onMounted(() => {
+    if (userInfo.value) {
+        fetchPosts()
+    }
+})
+
 onUnmounted(() => {
     stopPolling()
 })
