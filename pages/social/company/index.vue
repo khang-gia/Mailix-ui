@@ -351,6 +351,7 @@ const saveCompanyInfo = async (field, value) => {
 const tabs = computed(() => [
     { key: 'all', label: t('All'), icon: 'i-heroicons-rss' },
     { key: 'about', label: t('About'), icon: 'i-heroicons-information-circle' },
+    { key: 'photos', label: t('Photos'), icon: 'i-heroicons-photo' },
     { key: 'members', label: t('Members'), icon: 'i-heroicons-users' }
 ])
 

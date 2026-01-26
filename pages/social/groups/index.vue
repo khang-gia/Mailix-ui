@@ -155,8 +155,8 @@
                 </div>
             </div>
 
-            <!-- Discover Groups Tab -->
-            <div v-if="activeTab === 'discover'" class="space-y-4">
+            <!-- All Groups Groups Tab -->
+            <div v-if="activeTab === 'all'" class="space-y-4">
                 <!-- Search -->
                 <UInput v-model="discoverSearchQuery" icon="i-heroicons-magnifying-glass"
                     :placeholder="t('Search groups...')" size="lg" />
@@ -365,10 +365,21 @@ const newGroup = ref({
 const avatarPreview = ref(null)
 const coverPreview = ref(null)
 
-const tabs = computed(() => [
-    { id: 'your-groups', label: t('Your Groups'), icon: 'i-heroicons-user-group', count: yourGroups.value.length },
-    { id: 'discover', label: t('Discover'), icon: 'i-heroicons-magnifying-glass' },
-])
+const isAdmin = computed(() => {
+    return userInfo.value?.profile_hr?.role === 'A' || userInfo.value?.is_superuser
+})
+
+const tabs = computed(() => {
+    const items = [
+        { id: 'your-groups', label: t('Your Groups'), icon: 'i-heroicons-user-group', count: yourGroups.value.length },
+    ]
+
+    if (isAdmin.value) {
+        items.push({ id: 'all', label: t('All Groups'), icon: 'i-heroicons-magnifying-glass' })
+    }
+
+    return items
+})
 
 const sortOptions = computed(() => [
     { label: t('Default'), value: 'default' },

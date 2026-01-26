@@ -146,15 +146,15 @@
             </div>
         </div>
 
-        <!-- Discover Groups Tab -->
-        <div v-if="activeTab === 'discover'" class="space-y-4">
+        <!-- All Groups Tab -->
+        <div v-if="activeTab === 'all'" class="space-y-4">
             <!-- Search -->
             <UInput v-model="discoverSearchQuery" icon="i-heroicons-magnifying-glass"
                 :placeholder="t('Search groups...')" size="lg" />
 
             <!-- Suggested Groups -->
             <div>
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ t('Suggested for you') }}</h2>
+                <!-- <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ t('Suggested for you') }}</h2> -->
 
                 <!-- Loading State -->
                 <div v-if="discoverLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -343,7 +343,7 @@ const coverPreview = ref(null)
 
 const tabs = computed(() => [
     { id: 'your-groups', label: t('Your Groups'), icon: 'i-heroicons-user-group', count: yourGroups.value.length },
-    { id: 'discover', label: t('Discover'), icon: 'i-heroicons-magnifying-glass' },
+    { id: 'all', label: t('All Groups'), icon: 'i-heroicons-magnifying-glass' },
 ])
 
 const sortOptions = computed(() => [
