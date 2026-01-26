@@ -22,7 +22,7 @@
                             <span v-if="group?.members_count !== undefined"> · {{ group.members_count }} {{
                                 $t('members') }}</span>
                             <span v-if="group?.posts_count !== undefined"> · {{ group.posts_count }} {{ $t('posts')
-                                }}</span>
+                            }}</span>
                         </p>
                     </div>
                 </div>
@@ -105,6 +105,12 @@
             </div>
 
             <div v-else-if="activeTab === 'members'" class="mb-5 space-y-6">
+                <!-- Add Members Button (Admin Only) -->
+                <div v-if="adminMembers.some(m => m.user?.id === currentUser?.id)" class="flex justify-end">
+                    <UButton icon="i-heroicons-user-plus" :label="$t('Add Members')" color="primary"
+                        @click="showAddMembersModal = true" />
+                </div>
+
                 <!-- Admins Section -->
                 <div v-if="adminMembers.length > 0">
                     <h3 class="font-bold text-gray-700 dark:text-gray-300 mb-3 ml-1">{{ $t('Administrator') }}</h3>
@@ -165,6 +171,7 @@
 
         <!-- Modals -->
         <ModalCreatePost @postCreated="handlePostCreated" />
+        <SocialModalAddGroupMembers v-model="showAddMembersModal" :groupId="groupId" @added="handleMembersAdded" />
     </div>
 </template>
 
@@ -189,6 +196,7 @@ const joining = ref(false)
 const reload = ref(0) // Dependency for refreshing data
 // State for uploading posts
 const uploadingPosts = ref([])
+const showAddMembersModal = ref(false)
 
 const postFilterDropdownItems = computed(() => [
     [{
@@ -304,6 +312,11 @@ const navigateToProfile = (userId) => {
 
 const formatDate = (date) => {
     return dayjs(date).format('MMM D, YYYY HH:mm')
+}
+
+const handleMembersAdded = () => {
+    // Refresh members list
+    reload.value++
 }
 
 // Watch for groupId changes to reload
