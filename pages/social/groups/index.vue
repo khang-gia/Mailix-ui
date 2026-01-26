@@ -163,8 +163,8 @@
 
                 <!-- Suggested Groups -->
                 <div>
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ t('Suggested for you') }}
-                    </h2>
+                    <!-- <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ t('Suggested for you') }}
+                    </h2> -->
 
                     <!-- Loading State -->
                     <div v-if="discoverLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -401,6 +401,7 @@ const yourGroups = computedAsync(async () => {
     // Build params object
     const params = {
         my_groups: true,
+        is_company: false,
         ordering: ordering
     }
 

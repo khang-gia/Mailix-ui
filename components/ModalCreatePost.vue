@@ -13,7 +13,8 @@
 
             <UForm :schema="schema" :state="postData" class="space-y-4">
                 <!-- Privacy Selector -->
-                <div class="flex justify-end" v-if="!socialCreatePostGroupId">
+                <div class="flex justify-end"
+                    v-if="socialCreatePostData ? !socialCreatePostData.social_group : !socialCreatePostGroupId">
                     <USelectMenu v-model="postData.privacy" :options="privacyOptions" value-attribute="value"
                         option-attribute="label" class="w-36">
                         <template #label>

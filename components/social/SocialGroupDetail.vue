@@ -41,13 +41,13 @@
                         {{ tab.label }}
                     </button>
                 </div>
-                <UButton v-if="!isMember" color="primary" @click="joinGroup" :loading="joining" size="sm">
+                <!-- <UButton v-if="!isMember" color="primary" @click="joinGroup" :loading="joining" size="sm">
                     {{ $t('Join Group') }}
-                </UButton>
-                <div class="flex gap-2" v-else>
-                    <UButton color="gray" variant="outline" size="sm">
+                </UButton> -->
+                <div class="flex gap-2">
+                    <!-- <UButton color="gray" variant="outline" size="sm">
                         {{ $t('Joined') }}
-                    </UButton>
+                    </UButton> -->
                     <UDropdown :items="postFilterDropdownItems" :popper="{ placement: 'bottom-end' }">
                         <UButton color="gray" variant="ghost" size="sm" icon="i-heroicons-ellipsis-horizontal" />
                     </UDropdown>

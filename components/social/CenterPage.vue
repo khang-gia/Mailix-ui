@@ -88,6 +88,7 @@ const fetchPosts = async (isLoadMore = false) => {
             page: page.value,
             page_size: pageSize.value,
             status: 3, // Only show Published posts
+            new_feed: true
         }
 
         // Apply filters
