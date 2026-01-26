@@ -60,7 +60,7 @@ const menuItems = computed(() => [
         label: t('Company Page'),
         icon: 'i-heroicons-building-office',
         page: 'company',
-        restricted: userRole !== 'A'
+        click: () => navigateTo('/social/company')
     },
     // { label: t('Personal Page'), icon: 'i-heroicons-user' },
     {
@@ -71,12 +71,12 @@ const menuItems = computed(() => [
             navigateTo('/social/groups')
         }
     },
-    {
-        label: t('Events'),
-        icon: 'carbon:event',
-        page: 'events',
-        click: () => { console.log('Events') }
-    },
+    // {
+    //     label: t('Events'),
+    //     icon: 'carbon:event',
+    //     page: 'events',
+    //     click: () => { console.log('Events') }
+    // },
     // { label: t('Progress Page'), icon: 'i-heroicons-chart-bar' },
     // { label: t('Organization Map'), icon: 'i-heroicons-user-group' },
     // { label: t('Process Page'), icon: 'i-heroicons-flag' },

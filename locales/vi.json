@@ -739,5 +739,16 @@
     "Reject":"Từ chối",
     "Edit Announcement":"Chỉnh sửa thông báo",
     "Pending Posts":"Bài viết chờ duyệt",
-    "Load more":"Xem thêm"
+    "Load more":"Xem thêm",
+    "The official company page has not been set up yet.":"Chưa có trang công ty chính thức.",
+    "As an administrator, you can create the official company page now.":"Là quản trị viên, bạn có thể tạo trang công ty chính thức ngay bây giờ.",
+    "Create Company Page":"Tạo trang công ty",
+    "Company page created successfully":"Tạo trang công ty thành công",
+    "Failed to create company page":"Tạo trang công ty thất bại",
+    "Post rejected successfully":"Từ chối bài viết thành công",
+    "Failed to reject post":"Từ chối bài viết thất bại",
+    "About":"Giới thiệu",
+    "Biography":"Tiểu sử",
+    "Established date": "Ngày thành lập",
+    "Information updated":"Cập nhật thông tin thành công"
 }
