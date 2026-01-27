@@ -194,8 +194,9 @@
                                                     variant="ghost" /> -->
                                             </div>
 
-                                            <div class=" grid grid-cols-1 gap-4 w-full text-gray-600 dark:text-gray-300">
-                                                
+                                            <div
+                                                class=" grid grid-cols-1 gap-4 w-full text-gray-600 dark:text-gray-300">
+
                                                 <SocialCompanyDetailItem label="Slogan" icon="ph:quotes-fill"
                                                     v-model="companyGroup.slogan" :is-admin="isAdmin" type="textarea"
                                                     :placeholder="$t('Slogan')"
@@ -219,8 +220,7 @@
                                             <!-- Name -->
                                             <SocialCompanyDetailItem label="Name" icon="i-heroicons-building-office-2"
                                                 v-model="companyGroup.name" :is-admin="isAdmin" type="text"
-                                                :placeholder="$t('Name')"
-                                                @save="saveCompanyInfo('name', $event)" />
+                                                :placeholder="$t('Name')" @save="saveCompanyInfo('name', $event)" />
                                             <!-- Address -->
                                             <SocialCompanyDetailItem label="Address" icon="i-heroicons-map-pin"
                                                 v-model="companyGroup.address" :is-admin="isAdmin"
@@ -272,11 +272,74 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Photos Tab -->
+                    <div v-else-if="activeTab === 'photos'">
+                        <h3 class="font-semibold text-lg text-gray-900 dark:text-white mb-4">{{ $t('Photos') }}</h3>
+
+                        <!-- Photos Grid -->
+                        <div v-if="photos.length > 0" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <div v-for="photo in photos" :key="photo.id"
+                                class="group relative aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 cursor-pointer hover:opacity-90 transition-opacity"
+                                @click="openPhotoModal(photo)">
+                                <img :src="photo.file" :alt="photo.file_name" class="w-full h-full object-cover" />
+
+                                <!-- Hover Overlay -->
+                                <div
+                                    class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-end p-3">
+                                    <div
+                                        class="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <p class="font-medium">{{ photo.author?.display_name }}</p>
+                                        <p class="text-gray-300">{{ formatDate(photo.created_at) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div v-else class="text-center py-12">
+                            <UIcon name="i-heroicons-photo"
+                                class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+                            <p class="text-gray-500">{{ $t('No photos yet') }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <ModalCreatePost @postCreated="reload++" />
+
+        <!-- Photo Modal -->
+        <UModal v-model="photoModalOpen">
+            <UCard v-if="selectedPhoto" :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <UAvatar :src="selectedPhoto.author?.avatar" :alt="selectedPhoto.author?.display_name"
+                                size="sm" />
+                            <div>
+                                <p class="font-semibold text-sm">{{ selectedPhoto.author?.display_name }}</p>
+                                <p class="text-xs text-gray-500">{{ formatDate(selectedPhoto.created_at) }}</p>
+                            </div>
+                        </div>
+                        <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid"
+                            @click="photoModalOpen = false" />
+                    </div>
+                </template>
+
+                <div class="max-h-[70vh] overflow-auto">
+                    <img :src="selectedPhoto.file" :alt="selectedPhoto.file_name" class="w-full h-auto" />
+                </div>
+
+                <template #footer>
+                    <div class="flex justify-end">
+                        <UButton icon="i-heroicons-arrow-top-right-on-square" @click="goToPost(selectedPhoto.post_id)">
+                            {{ $t('Go to post') }}
+                        </UButton>
+                    </div>
+                </template>
+            </UCard>
+        </UModal>
     </div>
 </template>
 
@@ -287,6 +350,7 @@ definePageMeta({
 })
 import { useI18n } from 'vue-i18n'
 import { useModalStore } from '@/stores/modal'
+import dayjs from 'dayjs'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -311,6 +375,8 @@ const isDragging = ref(false)
 const dragStart = ref({ x: 0, y: 0 })
 const isUploadingCover = ref(false)
 const aboutSection = ref('overview')
+const photoModalOpen = ref(false)
+const selectedPhoto = ref(null)
 
 // User permissions
 const isAdmin = computed(() => {
@@ -328,6 +394,67 @@ const isAdmin = computed(() => {
 
     return false
 })
+
+// Extract all photos from posts
+const photos = computed(() => {
+    if (!posts.value || posts.value.length === 0) return []
+
+    const allPhotos = []
+    posts.value.forEach(post => {
+        if (post.attachments && post.attachments.length > 0) {
+            post.attachments.forEach(attachment => {
+                if (attachment.file_type === 'image') {
+                    allPhotos.push({
+                        ...attachment,
+                        author: post.author,
+                        post_id: post.id
+                    })
+                }
+            })
+        }
+    })
+
+    return allPhotos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+})
+
+const openPhotoModal = (photo) => {
+    selectedPhoto.value = photo
+    photoModalOpen.value = true
+}
+
+const formatDate = (date) => {
+    return dayjs(date).format('MMM D, YYYY')
+}
+
+const goToPost = async (postId) => {
+    if (!postId) return
+
+    try {
+        // Fetch the full post data using $get for direct unwrapped data
+        const postData = await api.$get(`social/posts/${postId}/`)
+        if (postData) {
+            // Transform PostDetailSerializer format to PostListSerializer format for modal compatibility
+            const transformedPost = {
+                ...postData,
+                // Transform social_group from object to ID and add social_group_name
+                social_group: postData.social_group?.id || null,
+                social_group_name: postData.social_group?.name || null,
+                // Transform user_interaction to your_interaction
+                your_interaction: postData.user_interaction?.interaction_type || null,
+                // Add top_interaction_types (empty for PostDetailSerializer)
+                top_interaction_types: postData.top_interaction_types || []
+            }
+
+            // Close photo modal
+            photoModalOpen.value = false
+            // Open post in fullscreen modal with transformed data
+            modalStore.setSocialCommentModalFullscreen(true, transformedPost)
+        }
+    } catch (e) {
+        console.error('Error fetching post:', e)
+        toast.add({ title: t('Error'), description: t('Failed to load post'), color: 'red' })
+    }
+}
 
 const saveCompanyInfo = async (field, value) => {
     if (!companyGroup.value) return
