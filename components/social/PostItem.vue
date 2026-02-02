@@ -185,7 +185,7 @@
             </div> -->
         </div>
         <div v-if="openPostModal" class="pt-2">
-            <CommentsSection comment-type="social" :id="post.id" placeholder="Write a comment..."
+            <SocialCommentsSection comment-type="social" :id="post.id" placeholder="Write a comment..."
                 @onAddComment="post.comments_count++" useTimeAgo="true" />
         </div>
         <ModalPostReactions v-model="showReactionsModal" :post-id="post.id" />
