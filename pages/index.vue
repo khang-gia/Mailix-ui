@@ -11,5 +11,5 @@
   
   <script setup>
 
-  navigateTo('/me')
+  navigateTo('/social')
   </script>

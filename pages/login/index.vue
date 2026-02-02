@@ -122,7 +122,7 @@ const onPreLogin = async () => {
                 username: creds.value.username,
                 password: creds.value.password,
             },{
-                callbackUrl: '/me', // Redirect to /me after successful login
+                callbackUrl: '/social', // Redirect to /me after successful login
                 redirect: true,
             })
             // navigateTo('/me')
@@ -207,7 +207,7 @@ const onSubmitOTP = async () => {
         snackbar.success('Xác thực thành công.')
         resetCountdown()
         await ensureLogin()
-        navigateTo('/me')
+        navigateTo('/social')
     }
     catch (err) {
         console.log('## error', err)
@@ -225,7 +225,7 @@ const _signinNoOTP = async()=>{
         // snackbar.success('Xác thực thành công.')
         resetCountdown()
         await ensureLogin()
-        navigateTo('/me')
+        navigateTo('/social')
     }
     catch (err) {
         console.log('## error', err)

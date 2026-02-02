@@ -155,7 +155,7 @@ export default defineNuxtConfig({
             short_name: 'MAILIX',
             description: 'MAILIX.VN là 1 công cụ...',
             theme_color: '#ffffff',
-            start_url: '/me',
+            start_url: '/social',
             icons: [{
                 src: 'images/pwa-192x192.png',
                 sizes: '192x192',

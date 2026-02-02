@@ -70,14 +70,14 @@ export default defineNuxtRouteMiddleware((to, from) => {
         for (const mapping of pathMapping) {
             if (mapping.path.some(p => to.path.startsWith(p))) {
                 if (!resourceNames.includes(mapping.name)) {
-                    return navigateTo('/me');
+                    return navigateTo('/social');
                 }
             }
         }
     }
 
-    // Redirect authenticated users away from public routes to /hrm/me
+    // Redirect authenticated users away from public routes to /social
     if (publicRoutes.includes(to.path)) {
-        return navigateTo('/me');
+        return navigateTo('/social');
     }
 });
