@@ -283,14 +283,15 @@ const handlePasswordChange = async ({ userId, newPassword }) => {
 }
 
 const actionDropdown = (row) => [
-  [{
-    label: t('Change password'),
-    icon: 'mdi:password-reset',
-    click: () => {
-      selectedUserForPassword.value = row.id
-      showChangePasswordModal.value = true
-    }
-  },
+  [
+  //   {
+  //   label: t('Change password'),
+  //   icon: 'mdi:password-reset',
+  //   click: () => {
+  //     selectedUserForPassword.value = row.id
+  //     showChangePasswordModal.value = true
+  //   }
+  // },
   {
     label: t('Deactivate'),
     icon: 'mingcute:lock-fill',
