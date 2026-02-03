@@ -23,6 +23,14 @@ export default defineNuxtRouteMiddleware((to, from) => {
     ]
     console.log('Navigating to:', to.path);
     console.log('Authentication status:', status.value);
+    
+    // Handle root path and unmatched routes - redirect to /social
+    // This prevents 500 errors when users navigate to /hrm/ or invalid URLs
+    if (to.path === '/' || to.matched.length === 0) {
+        console.log('Root path or unmatched route detected, redirecting to /social');
+        return navigateTo('/social');
+    }
+    
     if (status.value !== 'authenticated') {
         // Allow access to public routes for unauthenticated users
         if (authRedirectRoutes.includes(to.path)) {
@@ -78,6 +86,13 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
     // Redirect authenticated users away from public routes to /social
     if (publicRoutes.includes(to.path)) {
+        return navigateTo('/social');
+    }
+
+    // Catch-all: if route doesn't exist (like /hrm/ without a valid page), redirect to /social
+    // This prevents 500 errors when users navigate to invalid routes
+    if (to.matched.length === 0) {
+        console.log('Invalid route detected, redirecting to /social');
         return navigateTo('/social');
     }
 });
