@@ -33,7 +33,7 @@
             </div>
 
             <!-- Scrollable Task Lists -->
-            <div class="overflow-y-auto" :style="matchHeight ? `max-height: calc(${matchHeight}px - 150px)` : 'auto'">
+            <div class="overflow-y-auto" :style="matchHeight ? `max-height: calc(${matchHeight}px - 180px)` : 'auto'">
                 <div v-if="selectedTab === 'high_priority'">
                     <div v-for="task in highPriorityTasks" :key="task.id"
                         class="px-4 py-2 rounded-lg cursor-pointer bg-red-50 mb-3">

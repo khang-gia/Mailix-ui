@@ -3,37 +3,39 @@
     <span class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
       {{ t("Hello") }}, {{ userInfo.display_name }}!
     </span>
-    <div class="grid grid-cols-7 gap-4 items-start">
-      <div class="col-span-5 flex gap-4">
-        <div class="flex-1">
-          <WorkTodayTask :todayTasks="todayTasks" />
-        </div>
-        <div v-if="allTasks" class="flex-1" id="overview-card">
-          <UCard
-            :ui="{ rounded: 'rounded-xl', divide: '', body: { padding: 'py-0' }, footer: { padding: 'px-0' }, header: { padding: 'pb-0' } }"
-            class="w-full h-full">
-            <template #header>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center justify-center space-x-2">
-                  <span class="rounded-full w-10 h-10 justify-center flex items-center bg-slate-100">
-                    <UIcon name="ix:doughnutchart-filled" class="w-5 h-5 text-black inline-block shrink-0" />
-                  </span>
-                  <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                    {{ $t('Overview') }}
-                  </h2>
+    <div class="max-w-[1800px] mx-auto">
+      <div class="grid grid-cols-7 gap-4 items-start">
+        <div class="col-span-5 flex gap-4">
+          <div class="flex-1">
+            <WorkTodayTask :todayTasks="todayTasks" />
+          </div>
+          <div v-if="allTasks" class="flex-1" id="overview-card">
+            <UCard
+              :ui="{ rounded: 'rounded-xl', divide: '', body: { padding: 'py-0' }, footer: { padding: 'px-0' }, header: { padding: 'pb-0' } }"
+              class="w-full h-full">
+              <template #header>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center justify-center space-x-2">
+                    <span class="rounded-full w-10 h-10 justify-center flex items-center bg-slate-100">
+                      <UIcon name="ix:doughnutchart-filled" class="w-5 h-5 text-black inline-block shrink-0" />
+                    </span>
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                      {{ $t('Overview') }}
+                    </h2>
+                  </div>
                 </div>
-              </div>
-            </template>
-            <ChartDoughnut v-if="DNChartData" :chartData="DNChartData" :chartOptions="DNChartOptions" />
-          </UCard>
+              </template>
+              <ChartDoughnut v-if="DNChartData" :chartData="DNChartData" :chartOptions="DNChartOptions" />
+            </UCard>
+          </div>
         </div>
-      </div>
 
-      <WorkOverviewCard :allTasks="allTasks" :matchHeight="overviewHeight" class="col-span-2" />
-       <!-- <WorkProjectTimeline :tasks="allTasks" /> -->
+        <WorkOverviewCard :allTasks="allTasks" :matchHeight="overviewHeight" class="col-span-2" />
+        <!-- <WorkProjectTimeline :tasks="allTasks" /> -->
+      </div>
     </div>
 
-    <div class="py-2">
+    <div class="py-2 max-w-[1800px] mx-auto">
       <!-- <div>
         <WorkActivityTimeline :tasks="allTasks" />
       </div> -->
@@ -70,7 +72,8 @@ const todayTasks = computedAsync(async () => {
     page: page.value,
     search: search.value,
     page_size: pageSize.value,
-    assigned_to_person: userInfo.value.id,
+    // assigned_to_person: userInfo.value.id,
+    related_task: userInfo.value.id,
     today_task: true,
   })
   pageTotal.value = data.value.count
@@ -82,23 +85,31 @@ const allTasks = computedAsync(async () => {
     page: page.value,
     search: search.value,
     page_size: pageSize.value,
-    assigned_to_person: userInfo.value.id,
+    // assigned_to_person: userInfo.value.id,
+    related_task: userInfo.value.id,
   })
   pageTotal.value = data.value.count
   return data.value.results
 })
 
+
 // Track the height of the overview card
+const updateOverviewHeight = () => {
+  nextTick(() => {
+    const overviewCard = document.getElementById('overview-card')
+    if (overviewCard) {
+      overviewHeight.value = overviewCard.offsetHeight
+    }
+  })
+}
+
 onMounted(() => {
   const overviewCard = document.getElementById('overview-card')
   if (overviewCard) {
-    const updateHeight = () => {
-      overviewHeight.value = overviewCard.offsetHeight
-    }
-    updateHeight()
+    updateOverviewHeight()
 
     // Use ResizeObserver to track height changes
-    const resizeObserver = new ResizeObserver(updateHeight)
+    const resizeObserver = new ResizeObserver(updateOverviewHeight)
     resizeObserver.observe(overviewCard)
 
     onUnmounted(() => {
@@ -106,6 +117,12 @@ onMounted(() => {
     })
   }
 })
+
+// Recalculate height when tasks data changes (important for navigation)
+watch(allTasks, () => {
+  updateOverviewHeight()
+})
+
 
 // Handle Kanban status update
 const handleStatusUpdate = async ({ taskId, oldStatus, newStatus }) => {
