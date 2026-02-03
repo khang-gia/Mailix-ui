@@ -94,7 +94,7 @@
                     <UButton icon="i-heroicons-megaphone" :label="t('Announcement')"
                         :color="postData.post_type === 3 ? 'red' : 'red'"
                         :variant="postData.post_type === 3 ? 'solid' : 'ghost'" size="sm"
-                        @click="toggleAnnouncementMode" :disabled="!!socialCreatePostData" />
+                        @click="toggleAnnouncementMode" :disabled="!!socialCreatePostData || isCenterPage" />
                     <!-- Disable switching type when editing -->
                 </div>
 
@@ -156,7 +156,12 @@ const modalStore = useModalStore()
 const { setSocialCreatePostModal } = modalStore
 const { socialCreatePostModal, socialCreatePostType, socialCreatePostGroupId, socialCreatePostData } = storeToRefs(modalStore)
 const dayjs = useDayjs()
-
+const props = defineProps({
+    isCenterPage: {
+        type: Boolean,
+        default: false
+    }
+})
 const postData = ref({
     title: '',
     content: '',

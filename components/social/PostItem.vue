@@ -14,9 +14,13 @@
                             {{ post.author.display_name }}
                         </NuxtLink>
                         <span v-if="post.social_group" class="text-gray-500 text-sm">{{ $t('shared on') }}</span>
-                        <NuxtLink v-if="post.social_group" :to="`/social/groups/${post.social_group}`"
+                        <NuxtLink v-if="post.social_group && !post.is_company_post" :to="`/social/groups/${post.social_group}`"
                             class="text-green-500 font-medium cursor-pointer hover:underline">
                             {{ post.social_group_name }}
+                        </NuxtLink>
+                        <NuxtLink v-else-if="post.is_company_post" :to="`/social/company`"
+                            class="text-green-500 font-medium cursor-pointer hover:underline">
+                            {{ $t('Company Page') }}
                         </NuxtLink>
                     </div>
                     <div class="flex items-center gap-2 text-xs text-gray-500">

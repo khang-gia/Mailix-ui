@@ -32,7 +32,7 @@
                 <UIcon v-else name="i-heroicons-arrow-path" class="w-6 h-6 animate-spin mx-auto text-gray-400" />
             </div>
         </div>
-        <ModalCreatePost @postCreated="handlePostCreated" @postUpdated="handlePostUpdated" />
+        <ModalCreatePost @postCreated="handlePostCreated" @postUpdated="handlePostUpdated" :isCenterPage="true"/>
     </div>
 </template>
 
