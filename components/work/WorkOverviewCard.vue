@@ -37,7 +37,7 @@
                 <div v-if="selectedTab === 'high_priority'">
                     <div v-for="task in highPriorityTasks" :key="task.id"
                         class="px-4 py-2 rounded-lg cursor-pointer bg-red-50 mb-3">
-                        <div class="">
+                        <div class="cursor-pointer" @click="navigateTo(`/works/${task.id}`)">
                             <div class="bg-red-50 flex items-center justify-between">
                                 <UAvatarGroup size="xs" :max="3" v-if="task.assigned_to && task.assigned_to.length"
                                     :ui="{ ring: '' }" class="pt-2">
@@ -71,7 +71,7 @@
                 <div v-if="selectedTab === 'time_sensitive'">
                     <div v-for="task in timeSensitiveTasks" :key="task.id"
                         class="px-4 py-2 rounded-lg cursor-pointer bg-slate-100 mb-3">
-                        <div class="">
+                        <div class="cursor-pointer" @click="navigateTo(`/works/${task.id}`)">
                             <div class="bg-slate-100 flex items-center justify-between">
                                 <UAvatarGroup size="xs" :max="3" v-if="task.assigned_to && task.assigned_to.length"
                                     :ui="{ ring: '' }" class="pt-2">
