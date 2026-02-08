@@ -1,5 +1,5 @@
 <template>
-    <UModal v-model="socialCommentModal" :ui="{ width: 'w-full sm:max-w-4xl' }">
+    <UModal v-model="socialCommentModal" :ui="{ width: 'w-full sm:max-w-4xl' }" class="font-averta">
         <SocialPostItem :post="post" :open-post-modal="true"/>
     </UModal>
 </template>

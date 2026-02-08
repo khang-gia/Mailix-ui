@@ -103,5 +103,7 @@
     "Cover photo updated successfully": "Cover photo updated successfully",
     "Failed to upload cover photo": "Failed to upload cover photo",
     "Profile photo updated successfully": "Profile photo updated successfully",
-    "Failed to upload profile photo": "Failed to upload profile photo"
+    "Failed to upload profile photo": "Failed to upload profile photo",
+    "Remarkable": "Remarkable",
+    "pinned posts": "pinned posts"
 }

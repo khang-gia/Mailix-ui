@@ -143,26 +143,28 @@
                 </div>
 
                 <!-- Tab Content -->
+                <!-- All Tab -->
                 <div v-if="activeTab === 'all'">
                     <SocialCreatePost v-if="isAdmin" class="mb-6" @click="openCreatePostModal" />
-                </div>
-                <div
-                    class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700 min-h-[400px]">
-                    <!-- All Tab -->
-                    <div v-if="activeTab === 'all'">
-                        <div class="space-y-6">
-                            <SocialPostItem v-for="post in posts" :key="post.id" :post="post" @postDeleted="reload++" />
 
-                            <div v-if="posts.length === 0" class="text-center py-12">
-                                <UIcon name="i-heroicons-document-text"
-                                    class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                                <p class="text-gray-500">{{ $t('No posts yet') }}</p>
-                            </div>
+                    <!-- Remarkable Pinned Posts Carousel -->
+                    <SocialRemarkablePosts :pinnedPosts="pinnedPosts" />
+
+                    <div class="space-y-6">
+                        <SocialPostItem v-for="post in posts" :key="post.id" :post="post" @postDeleted="reload++" />
+
+                        <div v-if="posts.length === 0" class="text-center py-12">
+                            <UIcon name="i-heroicons-document-text"
+                                class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+                            <p class="text-gray-500">{{ $t('No posts yet') }}</p>
                         </div>
                     </div>
+                </div>
 
+                <div v-else
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700 min-h-[400px]">
                     <!-- About Tab -->
-                    <div v-else-if="activeTab === 'about'">
+                    <div v-if="activeTab === 'about'">
                         <div class="min-h-[500px]">
                             <div class="grid grid-cols-1 md:grid-cols-12 min-h-[500px]">
                                 <!-- Left Sidebar menu -->
@@ -523,6 +525,12 @@ const posts = computedAsync(async () => {
     if (!companyGroup.value) return []
     const { data } = await api.get(`social/groups/${companyGroup.value.id}/posts/`)
     return data.value || []
+})
+
+// Fetch pinned posts for Remarkable section
+const pinnedPosts = computed(() => {
+    if (!posts.value || posts.value.length === 0) return []
+    return posts.value.filter(post => post.is_pinned === true)
 })
 
 // Fetch members
