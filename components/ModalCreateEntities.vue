@@ -107,7 +107,7 @@ const defaultEmail = async () => {
     console.log('userInfo', userInfo);
     // Generate a default email based on the user's name + dob with @imap.mailix.vn domain ex: Nguyễn Trần Gia Khiêng , dob is 2109-> ntgkhieng0921@imap.mailix.vn
     if (userInfo && userInfo.full_name) {
-        const email = normalizeName(userInfo.full_name) + (userInfo.dob ? userInfo.dob.replace(/-/g, '').slice(-4) : '') + '@imap.mailix.vn';
+        const email = normalizeName(userInfo.full_name) + (userInfo.dob ? userInfo.dob.replace(/-/g, '').slice(-4) : '') + '@mailix.vn';
         entityInfo.value.personal_email = userInfo.personal_email;
         entityInfo.value.email = email;
     }
