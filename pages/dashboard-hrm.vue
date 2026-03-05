@@ -284,53 +284,53 @@ const handlePasswordChange = async ({ userId, newPassword }) => {
 
 const actionDropdown = (row) => [
   [
-  //   {
-  //   label: t('Change password'),
-  //   icon: 'mdi:password-reset',
-  //   click: () => {
-  //     selectedUserForPassword.value = row.id
-  //     showChangePasswordModal.value = true
-  //   }
-  // },
-  {
-    label: t('Deactivate'),
-    icon: 'mingcute:lock-fill',
-    click: () => {
-      setAlertModal(true, {
-        message: t('Are you sure you want to deactivate this employee?'),
-        confirmButton: t('OK'),
-        denyButton: t('Cancel'),
-      })
+    {
+      label: t('Change password'),
+      icon: 'mdi:password-reset',
+      click: () => {
+        selectedUserForPassword.value = row.id
+        showChangePasswordModal.value = true
+      }
+    },
+    {
+      label: t('Deactivate'),
+      icon: 'mingcute:lock-fill',
+      click: () => {
+        setAlertModal(true, {
+          message: t('Are you sure you want to deactivate this employee?'),
+          confirmButton: t('OK'),
+          denyButton: t('Cancel'),
+        })
 
-      const unwatch = watch(
-        () => alertModal.value,
-        async (newVal) => {
-          if (!newVal) {
-            if (alertConfirm.value) {
-              const isDeactivated = await deactivateUser(row.id);
-              if (isDeactivated) {
-                reload.value = !reload.value
-                useToast().add({
-                  title: t('Success'),
-                  description: t('Profile deactivated successfully'),
-                  icon: 'i-heroicons-check-circle',
-                  color: 'green',
-                });
-              } else {
-                useToast().add({
-                  title: t('Error'),
-                  description: t('Profile deactivation failed'),
-                  icon: 'i-heroicons-x-circle',
-                  color: 'red',
-                });
+        const unwatch = watch(
+          () => alertModal.value,
+          async (newVal) => {
+            if (!newVal) {
+              if (alertConfirm.value) {
+                const isDeactivated = await deactivateUser(row.id);
+                if (isDeactivated) {
+                  reload.value = !reload.value
+                  useToast().add({
+                    title: t('Success'),
+                    description: t('Profile deactivated successfully'),
+                    icon: 'i-heroicons-check-circle',
+                    color: 'green',
+                  });
+                } else {
+                  useToast().add({
+                    title: t('Error'),
+                    description: t('Profile deactivation failed'),
+                    icon: 'i-heroicons-x-circle',
+                    color: 'red',
+                  });
+                }
               }
+              unwatch();
             }
-            unwatch();
           }
-        }
-      )
-    }
-  }]
+        )
+      }
+    }]
 ]
 
 </script>
