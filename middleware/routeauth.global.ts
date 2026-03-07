@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const pathMapping = [
         {
             name: 'customer',
-            path: ['/me','/hr','/dashboard-hrm']
+            path: ['/hr','/dashboard-hrm']
         },
         {
             name: 'crm',
