@@ -69,7 +69,7 @@
                             </template>
                         </UInput>
                     </UFormGroup>
-                    <UButton type="submit" class="w-full flex items-center justify-center">
+                    <UButton type="submit" :loading="busy" class="w-full flex items-center justify-center">
                         {{ $t('Change password') }}
                     </UButton>
                 </UForm>
@@ -98,6 +98,7 @@ const resetPassInfo = ref({
     new_pw: '',
     new_pw_confirm:''
 })
+const busy = ref(false)
 const passwordValidate = [
     'Minimum characters 12',
     'One uppercase character',
@@ -176,6 +177,7 @@ const onSubmit = async () => {
     const isValid = await validateSchema(); 
     if (!isValid) return;
     try {
+        busy.value = true;
         const isSuccess = await changePassword()
         if (isSuccess) {
             useToast().add({
@@ -197,6 +199,8 @@ const onSubmit = async () => {
             duration: 7000,
             position: 'top-right',
         });
+    } finally {
+        busy.value = false;
     }
 }
 </script>
