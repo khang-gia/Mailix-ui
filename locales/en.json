@@ -1,4 +1,9 @@
 {
+    "Restore": "Restore",
+    "Are you sure you want to restore these profiles?": "Are you sure you want to restore these profiles?",
+    "Profile restored successfully": "Profile restored successfully",
+    "Failed to restore profile": "Failed to restore profile",
+    "Deleted": "Deleted",
     "Working": "Working",
     "Sign in": "Sign in",
     "Sign up": "Sign up",

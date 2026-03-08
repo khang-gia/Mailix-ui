@@ -1,16 +1,8 @@
- <template>
-    <UAccordion
-        v-if="isSidebarOpen"
-        default-open
-        color="white"
-        variant="soft"
-        size="sm"
-        multiple
-        :items="items"
-        :ui="{
-            base: 'w-full',
-            wrapper: 'pt-4 px-2 ',
-        }">
+<template>
+    <UAccordion v-if="isSidebarOpen" default-open color="white" variant="soft" size="sm" multiple :items="items" :ui="{
+        base: 'w-full',
+        wrapper: 'pt-4 px-2 ',
+    }">
         <!-- <template #default="{ item, index, open }">
             <UButton :to="item.noSub ? item.link : undefined" color="gray" variant="ghost" class="border-b border-gray-200 dark:border-gray-700" :ui="{ rounded: 'rounded-none', padding: { sm: 'p-3' } }">
                 <template #leading>
@@ -18,8 +10,8 @@
                         <UIcon :name="item.icon" class="w-4 h-4" />
                     </div>
                 </template>
-                <span class="truncate">{{ item.label }}</span>
-                <template #trailing>
+<span class="truncate">{{ item.label }}</span>
+<template #trailing>
                     <UIcon
                         v-if="!item.noSub"
                         name="i-heroicons-chevron-right-20-solid"
@@ -27,50 +19,53 @@
                         :class="[open && 'rotate-90']"
                     />
                 </template>
-            </UButton>
-        </template>
-         -->
-        <template v-for="slotName in ['customer', 'workspace', 'crm', 'company','task','guide']" v-slot:[slotName]>
+</UButton>
+</template>
+-->
+        <template v-for="slotName in ['customer', 'workspace', 'crm', 'company', 'task', 'guide']" v-slot:[slotName]>
             <div v-for="(item, index) in submenuMap[slotName]?.value.slice(1)" :key="item.label">
                 <div v-for="subItem in item" :key="subItem.label">
-                    <UButton :to="subItem.link" :target="subItem.target" color="white" variant="soft" :label="$t(subItem.label)" class="pl-9 my-0.5 w-full" :class="useRoute().path.startsWith(subItem.link) ? 'text-[#0313B0] bg-[#e3e5f5] dark:bg-[#34344A] dark:text-[#E0E0E0]' : 'text-[#707070] dark:text-[#E0E0E0] hover:text-[#0313B0] hover:bg-[#e3e5f5]'" >
+                    <UButton :to="subItem.link" :target="subItem.target" color="white" variant="soft"
+                        :label="$t(subItem.label)" class="pl-9 my-0.5 w-full"
+                        :class="useRoute().path.startsWith(subItem.link) ? 'text-[#0313B0] bg-[#e3e5f5] dark:bg-[#34344A] dark:text-[#E0E0E0]' : 'text-[#707070] dark:text-[#E0E0E0] hover:text-[#0313B0] hover:bg-[#e3e5f5]'">
                         {{ $t(subItem.label) }}
                     </UButton>
                 </div>
-                <UDivider class="pl-9 py-1" v-if="submenuMap[slotName]?.value.slice(1).length !== 1 && index + 1 !== submenuMap[slotName]?.value.slice(1).length"/>
+                <UDivider class="pl-9 py-1"
+                    v-if="submenuMap[slotName]?.value.slice(1).length !== 1 && index + 1 !== submenuMap[slotName]?.value.slice(1).length" />
             </div>
         </template>
 
     </UAccordion>
-    <div v-else >
+    <div v-else>
         <div v-for="item in items" :key="item.name" class="flex justify-center items-center py-4">
             <UDropdown :items="getDropdownItems(item.slot)" mode="hover" :popper="{ placement: 'right-start' }">
-                <UButton color="gray" variant="soft" size="xl" :icon="item.icon" class="text-slate-500"/>
+                <UButton color="gray" variant="soft" size="xl" :icon="item.icon" class="text-slate-500" />
                 <template #tip>
                     <div class="text-left cursor-text font-bold text-slate-900">
                         <p>
-                        {{ $t(item.label) }}
+                            {{ $t(item.label) }}
                         </p>
                     </div>
                 </template>
             </UDropdown>
         </div>
     </div>
-    
+
 </template>
 <script setup>
 
 import { storeToRefs } from 'pinia'
 import { useI18n } from "vue-i18n";
-import {useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/user'
 const { t } = useI18n();
 const userStore = useUserStore()
 const { isSidebarOpen } = storeToRefs(userStore)
-const {  data: userInfo } = useAuth()
+const { data: userInfo } = useAuth()
 
 const checkView = (slotName) => {
     let role = userInfo.value.profile_hr.role
-    if (role==='A' || userInfo.value.is_superuser){
+    if (role === 'A' || userInfo.value.is_superuser) {
         return false
     }
     let resource = userInfo.value.profile_hr.department?.group?.resources || [];
@@ -82,22 +77,22 @@ const items = computed(() => {
     const allItems = [
         {
             label: t('HR'),
-            icon:"ix:customer",
+            icon: "ix:customer",
             slot: 'customer',
         },
         {
             label: t('CRM'),
-            icon:"mdi:face-agent",
+            icon: "mdi:face-agent",
             slot: 'crm',
         },
         {
             label: t('Workspace'),
-            icon:"carbon:workspace",
+            icon: "carbon:workspace",
             slot: 'workspace',
         },
         {
             label: t('Company'),
-            icon:"mdi:company",
+            icon: "mdi:company",
             slot: 'company',
         },
         // {
@@ -107,7 +102,7 @@ const items = computed(() => {
         // },
         {
             label: t('Guide'),
-            icon:"ix:user-manual",
+            icon: "ix:user-manual",
             slot: 'guide',
         },
         // {
@@ -127,32 +122,35 @@ const items = computed(() => {
     return allItems.filter(item => !checkView(item.slot));
 });
 
-const customerSubmenu= ref([
-    [{
-            slot: 'tip',
-            disabled: true
-        }],
-    [{ link: '/me', label: 'Me', click: () => {
-        useRouter().push({ name: 'me' });
-    }},
-    { link: '/hr', label: 'Nhân sự', click: () => {
-        useRouter().push({ name: 'hr' });
-    } },
-    { link: '/dashboard-hrm', label: 'Dashboard', click: () => {
-        useRouter().push({ name: 'dashboard-hrm' });
-    } },]
+const customerSubmenu = ref([
+    [{ slot: 'tip', disabled: true }],
+    [
+        {
+            link: '/hr', label: 'Nhân sự', click: () => {
+                useRouter().push({ name: 'hr' });
+            }
+        },
+        {
+            link: '/dashboard-hrm', label: 'Dashboard', click: () => {
+                useRouter().push({ name: 'dashboard-hrm' });
+            }
+        },]
 ])
 const crmSubmenu = ref([
     [{
         slot: 'tip',
         disabled: true
     }],
-    [{ link: '/contacts', label: t('Contact'),click: () => {
-        useRouter().push({ name: 'contacts' });
-    } },
-    { link: '/customers', label: t('Customer'), click: () => {
-        useRouter().push({ name: 'customers' });
-    } }]
+    [{
+        link: '/contacts', label: t('Contact'), click: () => {
+            useRouter().push({ name: 'contacts' });
+        }
+    },
+    {
+        link: '/customers', label: t('Customer'), click: () => {
+            useRouter().push({ name: 'customers' });
+        }
+    }]
 ])
 
 
@@ -161,18 +159,26 @@ const workspaceSubmenu = ref([
         slot: 'tip',
         disabled: true
     }],
-    [{ link: '/works', label: t('Work'), click: () => {
-        useRouter().push({ name: 'works' });
-    } },
-    { link: '/schedules', label: t('Schedule'), click: () => {
-        useRouter().push({ name: 'schedules' });
-    } },
-    { link: '/dashboard-work', label: 'Dashboard', click: () => {
-        useRouter().push({ name: 'dashboard-work' });
-    } },
-    {link: '/social', label: 'Social', click: () => {
-        useRouter().push({ name: 'social' });
-    }}]
+    [{
+        link: '/works', label: t('Work'), click: () => {
+            useRouter().push({ name: 'works' });
+        }
+    },
+    {
+        link: '/schedules', label: t('Schedule'), click: () => {
+            useRouter().push({ name: 'schedules' });
+        }
+    },
+    {
+        link: '/dashboard-work', label: 'Dashboard', click: () => {
+            useRouter().push({ name: 'dashboard-work' });
+        }
+    },
+    {
+        link: '/social', label: 'Social', click: () => {
+            useRouter().push({ name: 'social' });
+        }
+    }]
 ])
 const companySubmenu = ref([
     [{
@@ -183,12 +189,16 @@ const companySubmenu = ref([
     //     link: '/company', label: t('Information'), click: () => {
     //     useRouter().push({ name: 'company' });
     // }}],
-    [{ link: '/groups', label: t('Groups'), click: () => {
-        useRouter().push({ name: 'groups' });
-    } },
-    { link: '/departments', label: t('Department'), click: () => {
-        useRouter().push({ name: 'departments' });
-    } }],
+    [{
+        link: '/groups', label: t('Groups'), click: () => {
+            useRouter().push({ name: 'groups' });
+        }
+    },
+    {
+        link: '/departments', label: t('Department'), click: () => {
+            useRouter().push({ name: 'departments' });
+        }
+    }],
     // [{
     //     link: '/company/config', label: t('Config'), click: () => {
     //     useRouter().push({ name: 'company/config' });
@@ -199,23 +209,23 @@ const taskSubmenu = ref([
         slot: 'tip',
         disabled: true
     }],
-    [{ link: 'https://app.mailix.vn/', label: 'Mail', click: () => {}, target:'_blank'  },]
-]) 
+    [{ link: 'https://app.mailix.vn/', label: 'Mail', click: () => { }, target: '_blank' },]
+])
 const guideMenu = ref([
     [{
         slot: 'tip',
         disabled: true
     }],
-    [{ link: '/guide-mail', label: t('Mail'), click: () => {} },
-    { link: '/guide-app', label: t('App'), click: () => {} }],
-]) 
+    [{ link: '/guide-mail', label: t('Mail'), click: () => { } },
+    { link: '/guide-app', label: t('App'), click: () => { } }],
+])
 const submenuMap = {
-  crm: crmSubmenu,
-  workspace: workspaceSubmenu,
-  customer: customerSubmenu,
-  company:companySubmenu,
-  task:taskSubmenu,
-  guide:guideMenu
+    crm: crmSubmenu,
+    workspace: workspaceSubmenu,
+    customer: customerSubmenu,
+    company: companySubmenu,
+    task: taskSubmenu,
+    guide: guideMenu
 };
 const getDropdownItems = (name) => {
     const submenuRef = submenuMap[name];

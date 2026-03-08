@@ -38,14 +38,11 @@ const { signOut: signOutFunc, data: userInfo } = useAuth()
 const items = ref([
   [{
     label: userInfo.value.display_name,
+    icon: 'i-heroicons-user-circle',
+    click: () => {
+      useRouter().push('/me')
+    }
   }],
-  //  [{
-  //   label: 'Góp ý',
-  //   icon: 'i-heroicons-hand-thumb-up',
-  //   click: () => {
-  //     setFeedbackModal(true)
-  //   }
-  // }],
   [{
     label: 'Đăng xuất',
     icon: 'i-heroicons-arrow-left-start-on-rectangle',
