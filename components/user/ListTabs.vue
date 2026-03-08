@@ -1,5 +1,6 @@
 <template>
-  <nav class="px-2 relative w-full flex items-center border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1E1E2E]">
+  <nav
+    class="px-2 relative w-full flex items-center border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1E1E2E]">
     <div>
       <!-- <UDropdown :items="sortItemDropDown" :popper="{ placement: 'bottom-start' }"
       :ui="{
@@ -11,10 +12,10 @@
         <template #item="{ item }">
           <span class="p-2">{{ item.label }}</span>
         </template>
-        <template #action="{ item }">
+<template #action="{ item }">
           <span class="fixed bottom-0 left-0 p-6 bg-white w-full">{{ item.label }}</span>
         </template>
-      </UDropdown> -->
+</UDropdown> -->
     </div>
     <ul class="flex items-center min-w-0">
       <li class="min-w-0" v-for="(link, index) in links" :key="index">
@@ -23,7 +24,7 @@
            focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2
             focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-75 before:absolute
              before:inset-x-0 before:inset-y-2 before:inset-px before:rounded-md after:absolute after:bottom-0 after:inset-x-2.5 after:block after:h-[2px] after:mt-2 text-gray-500 dark:text-gray-400"
-             :class="current === index ? 'active' : 'inactive'" @click="current = index">
+          :class="current === index ? 'active' : 'inactive'" @click="current = index">
           <UIcon v-if="link.icon" :name="link.icon" class="icon" :class="current === index ? 'active' : 'inactive'" />
           <span class="text-sm font-averta">{{ link.label }}</span>
           <!-- <UBadge color="gray" variant="solid" size="xs" class="px-1 py-0" :ui="{ rounded: 'rounded' }">{{ useUserStore() }}</UBadge> -->
@@ -45,87 +46,89 @@ const links = [{
   label: t('Working')
 }, {
   label: t('All'),
-  // userCount: true
 }, {
   label: t('Temporary leave'),
 }, {
   label: t('Resigned')
-},{
+}, {
   label: t('Providing service'),
 }, {
   label: t('Pending for recruitment')
+}, {
+  label: t('Deleted'),
+  icon: 'i-heroicons-trash'
 }]
 
-const sortItemDropDown = ref([ 
+const sortItemDropDown = ref([
   [{
-      label: t('Working'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Wait for approval'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Temporary leave'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Resigned'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Providing service'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Pending for recruitment'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Pending for recruitment'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Pending for recruitment'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Pending for recruitment'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Pending for recruitment'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Pending for recruitment'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Pending for recruitments'),
-      click: () => {
-        console.log('hehe')
-      }
-    },{
-      label: t('Customize'),
-      icon: 'fluent:column-triple-edit-24-regular',
-      slot: 'action',
-      click: () => {
-        console.log('hi')
-      }
-    }]
-  ])
+    label: t('Working'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Wait for approval'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Temporary leave'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Resigned'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Providing service'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Pending for recruitment'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Pending for recruitment'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Pending for recruitment'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Pending for recruitment'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Pending for recruitment'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Pending for recruitment'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Pending for recruitments'),
+    click: () => {
+      console.log('hehe')
+    }
+  }, {
+    label: t('Customize'),
+    icon: 'fluent:column-triple-edit-24-regular',
+    slot: 'action',
+    click: () => {
+      console.log('hi')
+    }
+  }]
+])
 </script>
 
 <style scoped>

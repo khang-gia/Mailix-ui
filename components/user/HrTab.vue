@@ -155,14 +155,15 @@ const users = computedAsync(async () => {
     ...userFilter.value,
     ...processedAdditionalFilter
   }
+  // If filters include `deleted`, pass it as a top-level param
+  const deletedParam = props.filters?.deleted
   const { data: data } = await useAPI().get('core/profile_hrs/', {
-    // customer_company_id: userStore.company.id, 
-    // search: userStore.search, 
     ...params,
     reload: reload.value,
     search: search,
     page: page.value,
     page_size: pageSize.value,
+    ...(deletedParam ? { deleted: deletedParam } : {}),
   })
   pageTotal.value = data.value.count
   return data.value.results
@@ -297,7 +298,7 @@ const deleteProfile = async () => {
 }
 const deactivateProfile = async () => {
   try {
-    const response = await useAPI().post(`core/profile_hrs/delete_users/`, {
+    const response = await useAPI().post(`core/profile_hrs/deactivate_users/`, {
       profiles: selectedUsers.value.map(user => user.id)
     });
     if (response && response.status.value === 'success') {
@@ -306,7 +307,22 @@ const deactivateProfile = async () => {
       throw new Error(t('Unexpected response status'));
     }
   } catch (error) {
-    console.error('Error deleting fee:', error);
+    console.error('Error deactivating profile:', error);
+    throw error;
+  }
+}
+const restoreProfile = async () => {
+  try {
+    const response = await useAPI().post(`core/profile_hrs/restore_users/`, {
+      profiles: selectedUsers.value.map(user => user.id)
+    });
+    if (response && response.status.value === 'success') {
+      return true;
+    } else {
+      throw new Error(t('Unexpected response status'));
+    }
+  } catch (error) {
+    console.error('Error restoring profile:', error);
     throw error;
   }
 }
@@ -348,55 +364,61 @@ const exportHRList = async () => {
     throw error;
   }
 }
-const actionSelected = [
-  [{
-    key: 'delete',
-    label: t('Delete'),
-    slot: 'delete',
-    icon: 'i-heroicons-trash',
-    click: () => {
-      setAlertModal(true, {
-        message: t('Are you sure you want to delete these profiles?'),
-        confirmButton: t('OK'),
-        denyButton: t('Cancel'),
-      })
-      const unwatch = watch(
-        () => alertModal.value,
-        async (newVal) => {
-          if (!newVal) {
-            if (alertConfirm.value) {
-              const isDeleted = await deleteProfile();
-              if (isDeleted) {
-                reload.value = !reload.value
-                useToast().add({
-                  title: t('Success'),
-                  description: t('Profile deleted successfully'),
-                  icon: 'i-heroicons-check-circle',
-                  color: 'green',
-                });
-              } else {
-                useToast().add({
-                  title: t('Error'),
-                  description: t('Profile deletion failed'),
-                  icon: 'i-heroicons-x-circle',
-                  color: 'red',
-                });
+const isDeletedTab = computed(() => props.filters?.deleted === 'true')
+
+const actionSelected = computed(() => {
+  if (isDeletedTab.value) {
+    return [[
+      {
+        key: 'restore',
+        label: t('Restore'),
+        icon: 'i-heroicons-arrow-uturn-left',
+        click: () => {
+          setAlertModal(true, {
+            message: t('Are you sure you want to restore these profiles?'),
+            confirmButton: t('OK'),
+            denyButton: t('Cancel'),
+          })
+          const unwatch = watch(
+            () => alertModal.value,
+            async (newVal) => {
+              if (!newVal) {
+                if (alertConfirm.value) {
+                  const isRestored = await restoreProfile();
+                  if (isRestored) {
+                    reload.value = !reload.value
+                    useToast().add({
+                      title: t('Success'),
+                      description: t('Profile restored successfully'),
+                      icon: 'i-heroicons-check-circle',
+                      color: 'green',
+                    });
+                  } else {
+                    useToast().add({
+                      title: t('Error'),
+                      description: t('Profile restoration failed'),
+                      icon: 'i-heroicons-x-circle',
+                      color: 'red',
+                    });
+                  }
+                }
+                unwatch();
               }
             }
-            unwatch();
-          }
+          )
         }
-      )
-    }
-  }], [
-    {
-      key: 'deactivate',
-      label: t('Deactivate'),
-      slot: 'deactivate',
-      icon: 'i-humbleicons:lock',
+      }
+    ]]
+  }
+  return [
+    [{
+      key: 'delete',
+      label: t('Delete'),
+      slot: 'delete',
+      icon: 'i-heroicons-trash',
       click: () => {
         setAlertModal(true, {
-          message: t('Are you sure you want to deactivate these profiles?'),
+          message: t('Are you sure you want to delete these profiles?'),
           confirmButton: t('OK'),
           denyButton: t('Cancel'),
         })
@@ -405,19 +427,19 @@ const actionSelected = [
           async (newVal) => {
             if (!newVal) {
               if (alertConfirm.value) {
-                const isDeactivated = await deactivateProfile();
-                if (isDeactivated) {
+                const isDeleted = await deleteProfile();
+                if (isDeleted) {
                   reload.value = !reload.value
                   useToast().add({
                     title: t('Success'),
-                    description: t('Profile deactivated successfully'),
+                    description: t('Profile deleted successfully'),
                     icon: 'i-heroicons-check-circle',
                     color: 'green',
                   });
                 } else {
                   useToast().add({
                     title: t('Error'),
-                    description: t('Profile deactivation failed'),
+                    description: t('Profile deletion failed'),
                     icon: 'i-heroicons-x-circle',
                     color: 'red',
                   });
@@ -428,9 +450,50 @@ const actionSelected = [
           }
         )
       }
-    }
+    }], [
+      {
+        key: 'deactivate',
+        label: t('Deactivate'),
+        slot: 'deactivate',
+        icon: 'i-humbleicons:lock',
+        click: () => {
+          setAlertModal(true, {
+            message: t('Are you sure you want to deactivate these profiles?'),
+            confirmButton: t('OK'),
+            denyButton: t('Cancel'),
+          })
+          const unwatch = watch(
+            () => alertModal.value,
+            async (newVal) => {
+              if (!newVal) {
+                if (alertConfirm.value) {
+                  const isDeactivated = await deactivateProfile();
+                  if (isDeactivated) {
+                    reload.value = !reload.value
+                    useToast().add({
+                      title: t('Success'),
+                      description: t('Profile deactivated successfully'),
+                      icon: 'i-heroicons-check-circle',
+                      color: 'green',
+                    });
+                  } else {
+                    useToast().add({
+                      title: t('Error'),
+                      description: t('Profile deactivation failed'),
+                      icon: 'i-heroicons-x-circle',
+                      color: 'red',
+                    });
+                  }
+                }
+                unwatch();
+              }
+            }
+          )
+        }
+      }
+    ]
   ]
-]
+})
 
 // Reset page to 1 when search changes
 watch(search, () => {

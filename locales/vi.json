@@ -1,4 +1,9 @@
 {
+    "Restore": "Khôi phục",
+    "Are you sure you want to restore these profiles?": "Bạn có chắc chắn muốn khôi phục các hồ sơ này không?",
+    "Profile restored successfully": "Khôi phục hồ sơ thành công",
+    "Failed to restore profile": "Khôi phục hồ sơ thất bại",
+    "Deleted": "Đã xóa",
     "Working": "Đang làm việc",
     "Temporary absent": "Tạm vắng",
     "Sign in": "Đăng nhập",
