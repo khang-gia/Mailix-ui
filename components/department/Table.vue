@@ -118,7 +118,8 @@ const _selected = computed({
 const selectCustomer =  (row) => {
   const departmentId = row.id
   if (props.viewMode === 'new_tab') {
-    window.open(`/departments/${departmentId}`, '_blank')
+    const routeData = useRouter().resolve({ name: 'departments-id', params: { id: departmentId } });
+    window.open(routeData.href, '_blank')
   } else {
     useRouter().push({ name: 'departments-id', params: { id:departmentId } });
   }

@@ -105,10 +105,11 @@ const _selected = computed({
     emit('update:selected', val); 
   }
 });
-const selectCustomer =  (row) => {
+const selectGroup =  (row) => {
   const groupId = row.id
   if (props.viewMode === 'new_tab') {
-    window.open(`/groups/${groupId}`, '_blank')
+    const routeData = useRouter().resolve({ name: 'groups-id', params: { id: groupId } });
+    window.open(routeData.href, '_blank')
   } else {
     useRouter().push({ name: 'groups-id', params: { id:groupId } });
   }
