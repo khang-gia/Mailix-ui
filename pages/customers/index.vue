@@ -19,7 +19,7 @@ const mappingStatus = {
   1: {'curator':userInfo.value.id},
   2: {'curator__isnull':false},
   3: {'curator__isnull':true},
-  4: {'type_of_customer':0},
-  5: {'type_of_customer':1},
+  4: {'type_of_customer':1},
+  5: {'type_of_customer':2},
 }
 </script>
