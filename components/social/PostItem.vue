@@ -108,7 +108,7 @@
                     @click="!isPollEnded && handleVote(option.id)">
                     <div class="flex items-center gap-3">
                         <UCheckbox :model-value="option.poll_vote_users?.includes(userInfo.id)" color="green"
-                            :disabled="isPollEnded" @click.stop />
+                            :disabled="isPollEnded" @click.stop="!isPollEnded && handleVote(option.id)" />
                         <span class="font-medium">{{ option.option }}</span>
                     </div>
                     <div class="flex items-center gap-2">
