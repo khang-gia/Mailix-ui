@@ -272,6 +272,12 @@ export const useDisplayColStore = defineStore('column', () => {
         sortable: true,
         is_show:true,
     },
+    {
+        key: 'status_display',
+        label: 'Status',
+        sortable: true,
+        is_show:true,
+    }
 ])
   const workKanbanColumn = ref([
     {
@@ -418,7 +424,8 @@ export const useDisplayColStore = defineStore('column', () => {
         { key: 'start_date', label: 'Start date', sortable: true, is_show: true },
         { key: 'end_date', label: 'End date', sortable: true, is_show: true },
         { key: 'actual_start_date', label: 'Actual start date', sortable: true, is_show: true },
-        { key: 'created_by', label: 'Created By', sortable: true, is_show: true }
+        { key: 'created_by', label: 'Created By', sortable: true, is_show: true },
+        { key: 'status_display', label: 'Status', sortable: true, is_show: true }
       ],
       work_kanban: [
         { key: 'not_started', label: 'Not Started', sortable: true, is_show: false },
