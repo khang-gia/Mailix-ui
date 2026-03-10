@@ -94,6 +94,12 @@
                 <span class="text-sm italic text-slate-400 dark:text-gray-500">{{$t('No creator information')}}</span>
             </div>
         </template>
+        <template #status_display-data="{row}">
+            <UBadge :color="statusBadge[row.status] || 'gray'"
+             variant="solid" size="xs" class="px-2 py-1" :ui="{ rounded: 'rounded' }">
+                {{ $t(row.status_display) }}
+            </UBadge>
+        </template>
         <template v-for="column in _workColumn.filter(item => !excludeColumns.includes(item.key))" :key="column.key" #[`${column.key}-data`]="{ row }">
           <span v-if="row[column.key] !== null && row[column.key] !== undefined && row[column.key] !== ''" class="text-sm font-medium text-gray-900 dark:text-white">
             {{ row[column.key] }}
@@ -142,7 +148,7 @@ const _page = computed({
     emit('update:page', val)
   }
 })
-const excludeColumns = ['start_date', 'end_date', 'actual_start_date', 'assigned_to','assigned_by','managers','created_by', 'progress', 'name']
+const excludeColumns = ['start_date', 'end_date', 'actual_start_date', 'assigned_to','assigned_by','managers','created_by', 'progress', 'name', 'status', 'status_display']
 const _workColumn = computed(() => {
   const cols = workColumn.value.filter(item => item.is_show === true)
   return cols.map(col => ({
@@ -150,6 +156,26 @@ const _workColumn = computed(() => {
     label: t(col.label)
   }))
 })
+const statusBadge = {
+    1: 'gray',       // Not Started
+    2: 'blue',       // Backlog
+    3: 'yellow',     // To Do
+    4: 'primary',    // In Progress
+    5: 'green',      // Completed
+    6: 'orange',     // On Hold
+    7: 'red',        // Cancelled
+    8: 'indigo',     // Deferred
+    9: 'purple',     // Waiting for Review
+    10: 'teal',      // Approved
+    11: 'red',       // Rejected
+    12: 'yellow',    // Pending
+    13: 'red',       // Failed
+    14: 'green',     // Success
+    15: 'gray',      // Archived
+    16: 'gray',      // Deleted
+    17: 'blue',      // Draft
+}
+
 const columns = [
     {   
         key: 'name',

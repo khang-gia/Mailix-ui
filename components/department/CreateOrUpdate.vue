@@ -102,7 +102,10 @@
                     </client-only>
                 </UFormGroup>
                 <UFormGroup
-                    :label="$t('Group')">
+                    :label="$t('Group')"
+                    name="group"
+                    :error="errors.group"
+                    required>
                     <SystemGroupSelectMulti v-model="departmentInfo.group" :placeholder="$t('Group')"/>
                 </UFormGroup>
                
@@ -141,6 +144,7 @@ const schema = yup.object({
                 return false;
             }
         }),
+    group: yup.mixed().required(t('This field is required')),
 })
 const items = [
     {
