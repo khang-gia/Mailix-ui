@@ -22,7 +22,7 @@
         >
         <template #name-data="{ row }">
             <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer" @click="selectCustomer(row)">{{ row.name }}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer" @click="selectGroup(row)">{{ row.name }}</span>
             </div>
         </template>
         <template #department_type_display-data="{ row }">
@@ -105,10 +105,11 @@ const _selected = computed({
     emit('update:selected', val); 
   }
 });
-const selectCustomer =  (row) => {
+const selectGroup =  (row) => {
   const groupId = row.id
   if (props.viewMode === 'new_tab') {
-    window.open(`/groups/${groupId}`, '_blank')
+    const routeData = useRouter().resolve({ name: 'groups-id', params: { id: groupId } });
+    window.open(routeData.href, '_blank')
   } else {
     useRouter().push({ name: 'groups-id', params: { id:groupId } });
   }

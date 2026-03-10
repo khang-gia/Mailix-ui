@@ -11,7 +11,7 @@
         </template>
 
         <div class="h-full space-y-6">
-          <UFormGroup
+          <!-- <UFormGroup
               v-if="checkView('type_of_customer')"
               :label="$t('Type of contact')"
               name="type_of_customer">
@@ -24,7 +24,7 @@
                   option-attribute="label"
                   :is-dark="colorMode.value === 'dark'"
               />
-            </UFormGroup>
+            </UFormGroup> -->
           <UFormGroup
               v-if="checkView('customer_source')"
               :label="$t('Contact Source')"

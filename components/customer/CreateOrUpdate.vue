@@ -415,7 +415,7 @@ const LINE_OF_BUSINESS_CHOICES = [
 const formatData = () => {
     const formData = new FormData();
 
-    customerInfo.value.additional_infos = customerInfo.value.additional_infos.filter(
+    customerInfo.value.additional_infos = (customerInfo.value.additional_infos || []).filter(
         (item) => item.type_of_contact !== null
     );
     Object.entries(customerInfo.value).forEach(([key, value]) => {

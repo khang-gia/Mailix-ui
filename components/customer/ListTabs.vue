@@ -54,7 +54,7 @@
     label: t('Personal'),
   }, {
     label: t('Organization')
-  }
+  } 
 ]
   
   const sortItemDropDown = ref([ 

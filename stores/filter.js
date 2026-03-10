@@ -7,12 +7,10 @@ export const useFilterStore = defineStore('filter', () => {
   const isOpenFilter = ref(false)
   const filterType = ref('')
   const contactFilter = ref({
-    type_of_customer: '',
     customer_source: [],
     curators: [],
   })
   const customerFilter = ref({
-    type_of_customer: '',
     customer_source: [],
     customer_group: [],
     curators: [],
@@ -45,14 +43,12 @@ export const useFilterStore = defineStore('filter', () => {
   function clearFilter(type) {
     if (type === 'contacts') {
       contactFilter.value = {
-        type_of_customer: '',
         customer_source: [],
         curators: [],
       }
     }
     if (type === 'customers') {
       customerFilter.value = {
-        type_of_customer: '',
         customer_source: [],
         customer_group: [],
         curators: [],

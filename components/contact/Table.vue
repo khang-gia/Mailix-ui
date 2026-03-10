@@ -221,7 +221,8 @@ const _selected = computed({
 const selectCustomer =  (row) => {
   const userId = row.id
   if (props.viewMode === 'new_tab') {
-    window.open(`/contacts/${userId}`, '_blank')
+    const routeData = useRouter().resolve({ name: 'contacts-id', params: { id: userId } });
+    window.open(routeData.href, '_blank')
   } else {
     useRouter().push({ name: 'contacts-id', params: { id:userId } });
   }

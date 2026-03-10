@@ -12,8 +12,8 @@
                 <div class="flex justify-start items-center space-x-4">
                     <span class="font-averta text-md text-slate-700 dark:text-slate-200">Template</span>
                     <UButton color="" variant="outline" class="w-fit dark:text-slate-200" icon="i-heroicons-arrow-down-tray" size="sm">
-                        <a href="/downloads/work/work_import_template_v1.xlsx" >
-                            work_import_template_v1.xlsx
+                        <a :href="`${useRuntimeConfig().app.baseURL}downloads/work/work_import_template_v1.xlsx`" target="_blank">
+                            working_import_template_v1.xlsx
                         </a>
                     </UButton>
                 </div>

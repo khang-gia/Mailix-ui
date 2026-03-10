@@ -45,8 +45,8 @@
                 </div>
                 <div class="flex justify-start items-center space-x-4">
                     <span class="font-averta text-md text-slate-700 dark:text-slate-200">Tải file mẫu
-                        <a href="/downloads/timekeeping/timekeeping_import_template_v1.xlsx" class="text-titaca-text-primary dark">
-                            tại đây
+                        <a :href="`${useRuntimeConfig().app.baseURL}downloads/timekeeping/timekeeping_import_template_v1.xlsx`" target="_blank" class="text-titaca-text-primary dark">
+                            {{ $t('Download Template') }}
                         </a>
                     </span>
                     
