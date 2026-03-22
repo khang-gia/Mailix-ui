@@ -105,10 +105,10 @@
             <div v-if="post.post_type === 2 && post.poll_options" class="space-y-2">
                 <div v-for="option in post.poll_options" :key="option.id"
                     class="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
-                    @click="!isPollEnded && handleVote(option.id)">
+                    @click="isPollStarted && !isPollEnded && handleVote(option.id)">
                     <div class="flex items-center gap-3">
                         <UCheckbox :model-value="option.poll_vote_users?.includes(userInfo.id)" color="green"
-                            :disabled="isPollEnded" @click.stop="!isPollEnded && handleVote(option.id)" />
+                            :disabled="!isPollStarted || isPollEnded" @click.stop="isPollStarted && !isPollEnded && handleVote(option.id)" />
                         <span class="font-medium">{{ option.option }}</span>
                     </div>
                     <div class="flex items-center gap-2">
@@ -117,7 +117,10 @@
                         <span class="text-xs text-gray-500">{{ option.votes_count }} {{ $t('votes') }}</span>
                     </div>
                 </div>
-                <p v-if="!isPollEnded" class="text-xs text-gray-500 mt-2">{{ $t('This poll will end on') }} {{
+                <UAlert v-if="!isPollStarted" icon="i-heroicons-clock" color="blue" variant="soft"
+                    :title="$t('This poll will start on') + ' ' + formatDate(post.start_poll)">
+                </UAlert>
+                <p v-else-if="!isPollEnded" class="text-xs text-gray-500 mt-2">{{ $t('This poll will end on') }} {{
                     formatDate(post.end_poll) }}</p>
                 <UAlert v-else icon="pajamas:expire" color="yellow" variant="solid"
                     :title="$t('This poll has ended. You can no longer vote.')">
@@ -376,6 +379,10 @@ const calculatePercent = (votes, options) => {
     if (total === 0) return 0
     return Math.round((votes / total) * 100)
 }
+const isPollStarted = computed(() => {
+    if (!props.post.start_poll) return true
+    return dayjs().isAfter(dayjs(props.post.start_poll)) || dayjs().isSame(dayjs(props.post.start_poll))
+})
 const isPollEnded = computed(() => {
     if (!props.post.end_poll) return false
     return dayjs().isAfter(dayjs(props.post.end_poll))

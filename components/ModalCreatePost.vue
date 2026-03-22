@@ -72,12 +72,12 @@
                 <div v-if="postData.post_type === 2" class="grid grid-cols-2 gap-4">
                     <UFormGroup :label="t('Poll start time')">
                         <BaseDatePicker v-model="pollStartDateTime" :required="true" class="w-full" mode="datetime"
-                            buttonType="outline" :place-holder="t('Poll start time')" />
+                            buttonType="outline" :place-holder="t('Poll start time')" :minDate="new Date()" />
                     </UFormGroup>
 
                     <UFormGroup :label="t('Poll end time')">
                         <BaseDatePicker v-model="pollEndDateTime" :required="true" class="w-full" mode="datetime"
-                            buttonType="outline" :place-holder="t('Poll end time')" />
+                            buttonType="outline" :place-holder="t('Poll end time')" :minDate="pollStartDateTime" />
                     </UFormGroup>
                 </div>
 
@@ -273,11 +273,19 @@ const formatFileSize = (bytes) => {
 const defaultPollStartTime = new Date()
 const pollStartDateTime = ref(defaultPollStartTime)
 
-// Set default poll end time to current date + time + 1 day
 const defaultPollEndTime = new Date()
 defaultPollEndTime.setDate(defaultPollEndTime.getDate() + 1)
 defaultPollEndTime.setHours(17, 0, 0, 0)
 const pollEndDateTime = ref(defaultPollEndTime)
+
+// If user modifies start date to be after end date, update end date to be 1 hour later
+watch(pollStartDateTime, (newStart) => {
+    if (newStart && pollEndDateTime.value && newStart > pollEndDateTime.value) {
+        const newEnd = new Date(newStart)
+        newEnd.setHours(newEnd.getHours() + 1)
+        pollEndDateTime.value = newEnd
+    }
+})
 
 const errors = ref({})
 const isSubmitting = ref(false)
