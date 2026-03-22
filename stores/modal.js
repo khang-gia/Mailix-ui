@@ -154,6 +154,15 @@ export const useModalStore = defineStore("modalStore", () => {
     socialCreatePostData.value = postData;
   }
 
+  // Event Detail Modal (read-only, from TodayEvents)
+  const eventDetailModal = ref(false);
+  const eventDetailData = ref(null);
+
+  function setEventDetailModal(value, event = null) {
+    eventDetailModal.value = value;
+    eventDetailData.value = event;
+  }
+
   return {
     modalType,
     setModalType,
@@ -204,5 +213,8 @@ export const useModalStore = defineStore("modalStore", () => {
     socialCreatePostType,
     socialCreatePostGroupId,
     socialCreatePostData,
+    eventDetailModal,
+    eventDetailData,
+    setEventDetailModal,
   };
 });

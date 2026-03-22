@@ -18,7 +18,8 @@
         <!-- Events list -->
         <div v-else class="space-y-3">
             <div v-for="event in todayEvents" :key="event.id"
-                class="group cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 p-3 rounded-lg transition-colors border border-gray-200 dark:border-gray-700">
+                class="group cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 p-3 rounded-lg transition-colors border border-gray-200 dark:border-gray-700"
+                @click="openEventDetail(event)">
                 <div class="flex gap-3">
                     <!-- Time badge -->
                     <div
@@ -60,13 +61,19 @@
             <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('No events today') }}</p>
         </div>
     </div>
+
+    <!-- Event Detail Modal -->
+    <SocialEventDetailModal />
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { useModalStore } from '@/stores/modal'
 
 const { t } = useI18n()
 const api = useAPI()
+const modalStore = useModalStore()
+const { setEventDetailModal } = modalStore
 
 const todayEvents = ref([])
 const loading = ref(false)
@@ -83,11 +90,20 @@ const transformEvent = (event) => {
         time: event.is_all_day
             ? t('All Day')
             : `${startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })} - ${endDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })}`,
+        dateLabel: startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }),
         location: event.location || '',
         date: event.start_datetime,
         color: event.color,
-        isHappening: now >= startDate && now <= endDate
+        isHappening: now >= startDate && now <= endDate,
+        participants: event.participants || [],
+        description: event.description || '',
+        priority: event.priority,
+        raw: event,  // keep original for edit
     }
+}
+
+const openEventDetail = (event) => {
+    setEventDetailModal(true, event)
 }
 
 const fetchTodayEvents = async () => {
@@ -105,6 +121,7 @@ const fetchTodayEvents = async () => {
         })
 
         todayEvents.value = response.results.map(transformEvent)
+        console.log('Today events:', todayEvents.value)
     } catch (err) {
         console.error('Failed to fetch today\'s events:', err)
         error.value = err
