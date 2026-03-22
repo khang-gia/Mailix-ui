@@ -18,7 +18,8 @@
         <!-- Events list -->
         <div v-else class="space-y-3">
             <div v-for="event in upcomingEvents" :key="event.id"
-                class="group cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 p-3 rounded-lg transition-colors">
+                class="group cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 p-3 rounded-lg transition-colors"
+                @click="openEventDetail(event)">
                 <div class="flex gap-3">
                     <!-- Date badge -->
                     <div
@@ -53,13 +54,19 @@
             <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('No upcoming events') }}</p>
         </div>
     </div>
+
+    <!-- Event Detail Modal -->
+    <SocialEventDetailModal />
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { useModalStore } from '@/stores/modal'
 
 const { t } = useI18n()
 const api = useAPI()
+const modalStore = useModalStore()
+const { setEventDetailModal } = modalStore
 
 const upcomingEvents = ref([])
 const loading = ref(false)
@@ -79,8 +86,16 @@ const transformEvent = (event) => {
             : `${startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })} - ${endDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })}`,
         location: event.location || '',
         date: event.start_datetime,
-        color: event.color
+        color: event.color,
+        participants: event.participants || [],
+        description: event.description || '',
+        priority: event.priority,
+        raw: event,  // keep original for edit
     }
+}
+
+const openEventDetail = (event) => {
+    setEventDetailModal(true, event)
 }
 
 const fetchUpcomingEvents = async () => {
