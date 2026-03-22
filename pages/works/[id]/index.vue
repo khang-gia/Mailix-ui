@@ -69,7 +69,7 @@
               class="md:col-span-1">
               <template #value>
                 <!-- Status Badge with Popover -->
-                <UPopover :popper="{ placement: 'bottom' }">
+                <UPopover :popper="{ placement: 'bottom-start' }">
                   <UBadge :color="statusMapping[workInfo.status]" variant="subtle" class="font-semibold cursor-pointer">
                     {{ $t(workInfo.status_display) }}
                     <template #trailing>
@@ -108,7 +108,7 @@
             <WorkDetailItem v-if="workInfo.priority" label="Priority" :value="workInfo.priority" class="md:col-span-1">
               <template #value>
                 <!-- Priority Badge with Popover -->
-                <UPopover :popper="{ placement: 'bottom' }">
+                <UPopover :popper="{ placement: 'bottom-start' }">
                   <UBadge :color="statusMapping[workInfo.priority]" variant="subtle"
                     class="font-semibold cursor-pointer">
                     {{ $t(workInfo.priority_display) }}
@@ -300,41 +300,41 @@ definePageMeta({
 const statusMapping = [
   "none",
   "gray",
-  "blue",
-  "green",
+  // "blue",
+  // "green",
   "amber",
   "slate",
   "indigo",
   "cyan",
-  "emerald",
-  "red",
-  "yellow",
-  "rose",
-  "lime",
-  "gray",
-  "red",
-  "purple"
+  // "emerald",
+  // "red",
+  // "yellow",
+  // "rose",
+  // "lime",
+  // "gray",
+  // "red",
+  // "purple"
 ];
 
 // Work status options (all 17 statuses)
 const statusOptions = [
   { value: 1, label: t('Not Started') },
-  { value: 2, label: 'Backlog' },
-  { value: 3, label: 'To Do' },
+  // { value: 2, label: 'Backlog' },
+  // { value: 3, label: 'To Do' },
   { value: 4, label: t('In Progress') },
   { value: 5, label: t('Completed') },
   { value: 6, label: t('On Hold') },
   { value: 7, label: t('Cancelled') },
-  { value: 8, label: t('Deferred') },
-  { value: 9, label: t('Waiting for Review') },
-  { value: 10, label: t('Approved') },
-  { value: 11, label: t('Rejected') },
-  { value: 12, label: t('Pending') },
-  { value: 13, label: t('Failed') },
-  { value: 14, label: t('Success') },
-  { value: 15, label: t('Archived') },
-  { value: 16, label: t('Deleted') },
-  { value: 17, label: t('Draft') },
+  // { value: 8, label: t('Deferred') },
+  // { value: 9, label: t('Waiting for Review') },
+  // { value: 10, label: t('Approved') },
+  // { value: 11, label: t('Rejected') },
+  // { value: 12, label: t('Pending') },
+  // { value: 13, label: t('Failed') },
+  // { value: 14, label: t('Success') },
+  // { value: 15, label: t('Archived') },
+  // { value: 16, label: t('Deleted') },
+  // { value: 17, label: t('Draft') },
 ];
 
 // Status dropdown items for UDropdown
@@ -364,22 +364,22 @@ const isUpdatingStatus = ref(false);
 // Status options for radio group in popover
 const statusDropdownOptions = computed(() => [
   { value: 1, label: t('Not Started') },
-  { value: 2, label: 'Backlog' },
-  { value: 3, label: 'To Do' },
+  // { value: 2, label: 'Backlog' },
+  // { value: 3, label: 'To Do' },
   { value: 4, label: t('In Progress') },
   { value: 5, label: t('Completed') },
   { value: 6, label: t('On Hold') },
   { value: 7, label: t('Cancelled') },
-  { value: 8, label: t('Deferred') },
-  { value: 9, label: t('Waiting for Review') },
-  { value: 10, label: t('Approved') },
-  { value: 11, label: t('Rejected') },
-  { value: 12, label: t('Pending') },
-  { value: 13, label: t('Failed') },
-  { value: 14, label: t('Success') },
-  { value: 15, label: t('Archived') },
-  { value: 16, label: t('Deleted') },
-  { value: 17, label: t('Draft') },
+  // { value: 8, label: t('Deferred') },
+  // { value: 9, label: t('Waiting for Review') },
+  // { value: 10, label: t('Approved') },
+  // { value: 11, label: t('Rejected') },
+  // { value: 12, label: t('Pending') },
+  // { value: 13, label: t('Failed') },
+  // { value: 14, label: t('Success') },
+  // { value: 15, label: t('Archived') },
+  // { value: 16, label: t('Deleted') },
+  // { value: 17, label: t('Draft') },
 ]);
 
 // Helper function to get status dot color class
