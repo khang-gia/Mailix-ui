@@ -1,6 +1,6 @@
 <template>
-    <div class="bg-white dark:bg-[#1E1E2E] rounded-md">
-        <UTable v-model="_selected" v-model:sort="sort" sort-mode="manual" @update:sort="page = 1" :columns="_workColumn" :rows="works" 
+    <div class="bg-white dark:bg-[#1E1E2E] rounded-md" :class="{ 'hide-table-header': isSub }">
+        <UTable v-model="_selected" v-model:sort="sort" v-model:expand="expand" sort-mode="manual" @update:sort="page = 1" :columns="_workColumn" :rows="displayWorks" 
         :sortButton="{icon:'none',type:'string', color: 'none', variant: 'ghost', size: '2xs', square: true } "
         :ui="{
             base: 'w-max',
@@ -108,12 +108,18 @@
             --
           </span>
         </template>
+
+        <template #expand="{ row }" >
+            <WorkSubWorkList :parentId="row.id" :allWorks="works" />
+        </template>
         </UTable>
     </div>
 
 </template>
 <style scoped>
-
+.hide-table-header :deep(thead) {
+    display: none;
+}
 </style>
 <script setup>
 import { useI18n } from "vue-i18n";
@@ -140,6 +146,10 @@ const props = defineProps({
   viewMode:{
     type: String,
     default: 'default'
+  },
+  isSub: {
+    type: Boolean,
+    default: false
   }
 })
 const _page = computed({
@@ -148,7 +158,13 @@ const _page = computed({
     emit('update:page', val)
   }
 })
-const excludeColumns = ['start_date', 'end_date', 'actual_start_date', 'assigned_to','assigned_by','managers','created_by', 'progress', 'name', 'status', 'status_display']
+
+const displayWorks = computed(() => {
+  if (props.isSub) return props.works;
+  return props.works.filter(w => !w.related_work);
+})
+
+const excludeColumns = ['start_date', 'end_date', 'actual_start_date', 'assigned_to','assigned_by','managers','created_by', 'progress', 'name', 'status', 'status_display', 'related_work']
 const _workColumn = computed(() => {
   const cols = workColumn.value.filter(item => item.is_show === true)
   return cols.map(col => ({
@@ -228,6 +244,11 @@ const columns = [
         sortable: true,
     },
 ]
+
+const expand = ref({
+  openedRows: [],
+  row: {}
+})
 
 const selected = ref([])
 const _selected = computed({
