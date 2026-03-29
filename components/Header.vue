@@ -51,7 +51,7 @@
                     </div>
                     <!-- <hr class="w-px h-6 bg-slate-200 dark:bg-slate-600 border-slate-200 dark:border-slate-600" /> -->
                     <!-- <Notifications /> -->
-                    <!-- <DropdownNotifications /> -->
+                    <DropdownNotifications />
                     <!-- <DropdownHelp align="right" /> -->
 
                     <!-- <BaseLightDarkMode /> -->
