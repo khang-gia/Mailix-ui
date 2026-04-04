@@ -6,7 +6,6 @@
         :placeholder="placeholder"
         :is-dark="colorMode.value === 'dark'"
         option-attribute="name"
-        value-attribute="id"
         trailing
         debounce=300
     >
@@ -15,11 +14,16 @@
 <script setup>
 const user = defineModel({ default: '' })
 const colorMode = useColorMode()
-const props = defineProps(['placeholder'])
+const props = defineProps(['placeholder', 'excludeId', 'parentOnly'])
 const loading = ref(false)
 async function search(q) {
     loading.value = true
-    const { data } = await useAPI().get('core/works/', { q })
+    const params = {
+        search: q,
+        exclude_id: props.excludeId,
+        related_work__isnull: props.parentOnly ? true : undefined
+    }
+    const { data } = await useAPI().get('core/works/', params)
     loading.value = false
     return data.value.results
 }

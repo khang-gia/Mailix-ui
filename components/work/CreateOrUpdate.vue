@@ -141,7 +141,7 @@
                 <UFormGroup
                     :label="$t('Related Work') + ' (' + $t('Parent work') + ')'"
                     name="Related Work">
-                    <WorkRelatedSelect v-model="workInfo.related_work" :placeholder="$t('Related Work')"/>
+                    <WorkRelatedSelect v-model="workInfo.related_work" :placeholder="$t('Related Work')" :exclude-id="useRoute().params.id" :parent-only="true"/>
                 </UFormGroup>
                 <UFormGroup
                     :label="$t('Description')">
@@ -498,7 +498,7 @@ const loadData = async () => {
             workInfo.value.start_date = workInfo.value.start_date ? new Date(workInfo.value.start_date) : null
             workInfo.value.end_date = workInfo.value.end_date ? new Date(workInfo.value.end_date) : null
             workInfo.value.actual_start_date = workInfo.value.actual_start_date ? new Date(workInfo.value.actual_start_date) : null
-            workInfo.value.related_work = workInfo.value.related_work ? workInfo.value.related_work.id : '',
+            workInfo.value.related_work = workInfo.value.related_work || ''
             console.log('response', workInfo.value)
         }
     } catch (error) {
@@ -531,7 +531,7 @@ const formatData2 = () => {
                 }
                 return item;
             });
-        } else if (typeof value === 'object' && value !== null && value.id) {
+        } else if (typeof value === 'object' && value !== null && value.id && key !== 'schedule') {
             formattedData[key] = value.id;
         } else if (['start_date','end_date','actual_start_date'].includes(key)) {
             formattedData[key] = dayjs(value).format('YYYY-MM-DD');
@@ -541,18 +541,18 @@ const formatData2 = () => {
             } else if (value.length == 0) {
                 formattedData[key] = '';
             }
-        }else if (key==='schedule' && !props.isUpdate && workInfo.value.is_create_schedule) {
+        } else if (key === 'schedule' && value && typeof value === 'object' && (workInfo.value.is_create_schedule || props.isUpdate)) {
             Object.entries(value).forEach(([subKey, subValue]) => {
                 formattedData[key] = formattedData[key] || {};
 
-                if (subKey === 'start_datetime' ) {
+                if (subKey === 'start_datetime') {
                     formattedData[key][subKey] = dayjs(subValue).startOf('day').tz(localTz).format();
                 }
                 else if (subKey === 'end_datetime') {
                     formattedData[key][subKey] = dayjs(subValue).endOf('day').tz(localTz).format();
                 } else if (['participants'].includes(subKey)) {
-                    formattedData[key][subKey] = subValue.map(item => item.id || item);
-                } else if (subKey === 'has_reminder'){
+                    formattedData[key][subKey] = (subValue || []).map(item => item.id || item);
+                } else if (subKey === 'has_reminder') {
                     let has_reminder = workInfo.value.schedule.notification_type !== 9 && workInfo.value.schedule.reminder_time_value > 0
                     formattedData[key][subKey] = has_reminder;
                 }
