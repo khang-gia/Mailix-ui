@@ -541,25 +541,27 @@ const formatData2 = () => {
             } else if (value.length == 0) {
                 formattedData[key] = '';
             }
-        } else if (key === 'schedule' && value && typeof value === 'object' && (workInfo.value.is_create_schedule || props.isUpdate)) {
-            Object.entries(value).forEach(([subKey, subValue]) => {
-                formattedData[key] = formattedData[key] || {};
+        } else if (key === 'schedule') {
+            if ((!props.isUpdate && workInfo.value.is_create_schedule && value) || (props.isUpdate && value)) {
+                Object.entries(value).forEach(([subKey, subValue]) => {
+                    formattedData[key] = formattedData[key] || {};
 
-                if (subKey === 'start_datetime') {
-                    formattedData[key][subKey] = dayjs(subValue).startOf('day').tz(localTz).format();
-                }
-                else if (subKey === 'end_datetime') {
-                    formattedData[key][subKey] = dayjs(subValue).endOf('day').tz(localTz).format();
-                } else if (['participants'].includes(subKey)) {
-                    formattedData[key][subKey] = (subValue || []).map(item => item.id || item);
-                } else if (subKey === 'has_reminder') {
-                    let has_reminder = workInfo.value.schedule.notification_type !== 9 && workInfo.value.schedule.reminder_time_value > 0
-                    formattedData[key][subKey] = has_reminder;
-                }
-                else {
-                    formattedData[key][subKey] = subValue;
-                }
-            });
+                    if (subKey === 'start_datetime') {
+                        formattedData[key][subKey] = dayjs(subValue).startOf('day').tz(localTz).format();
+                    }
+                    else if (subKey === 'end_datetime') {
+                        formattedData[key][subKey] = dayjs(subValue).endOf('day').tz(localTz).format();
+                    } else if (['participants'].includes(subKey)) {
+                        formattedData[key][subKey] = (subValue || []).map(item => item.id || item);
+                    } else if (subKey === 'has_reminder') {
+                        let has_reminder = workInfo.value.schedule.notification_type !== 9 && workInfo.value.schedule.reminder_time_value > 0
+                        formattedData[key][subKey] = has_reminder;
+                    }
+                    else {
+                        formattedData[key][subKey] = subValue;
+                    }
+                });
+            }
         }
          else {
             formattedData[key] = value;
