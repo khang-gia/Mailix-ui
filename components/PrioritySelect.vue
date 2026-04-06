@@ -1,32 +1,43 @@
 <template>
     <USelectMenu 
-        v-model="priorities" 
+        v-model="internalModel" 
         :options="priority_options" 
-        :placeholder="$t('Priority')"
+        :placeholder="placeholder"
         size="sm" 
         :ui="{ base: 'w-full' }" 
         option-attribute="label"
         by="id"
         :multiple="multiple"
         :is-dark="colorMode.value === 'dark'">
+        
         <template #label>
-            <div v-if="multiple && priorities.length" class="flex items-center" v-for="priority in priorities" :key="priority.id">
-                <UIcon
-                    :name="`i-heroicons-${priority_options.find(p => p.id === priority.id)?.id === 1 ? 'check-circle' : priority_options.find(p => p.id === priority.id)?.id === 2 ? 'exclamation-circle' : priority_options.find(p => p.id === priority.id)?.id === 3 ? 'exclamation-triangle' : priority_options.find(p => p.id === priority.id)?.id === 4 ? 'stop-circle' : priority_options.find(p => p.id === priority.id)?.id === 5 ? 'x-circle' : 'question-mark-circle'}`"
-                    class="inline-block mr-2 text-gray-500"
-                    :style="{ color: priorityColors[priority_options.find(p => p.id === priority.id)?.id] || '#9e9e9e' }"
-                />
-                <span>{{ priority.label }},</span>
+            <div v-if="multiple && internalModel?.length" class="flex items-center gap-1 overflow-hidden">
+                <div v-for="(p, index) in internalModel" :key="index" class="flex items-center shrink-0">
+                    <UIcon
+                        :name="getPriorityInfo(p)?.icon"
+                        class="inline-block mr-1"
+                        :style="{ color: getPriorityInfo(p)?.color }"
+                    />
+                    <span class="truncate">{{ getPriorityInfo(p)?.label }}<span v-if="index < internalModel.length - 1">,</span></span>
+                </div>
             </div>
-            <span v-else-if="!multiple">{{ priority_options.find(p => p.id === priorities)?.label }}</span>
-            <span v-else-if="multiple">{{placeholder }}</span>
+            <div v-else-if="!multiple && internalModel" class="flex items-center">
+                <UIcon
+                    :name="getPriorityInfo(internalModel)?.icon"
+                    class="inline-block mr-2"
+                    :style="{ color: getPriorityInfo(internalModel)?.color }"
+                />
+                <span>{{ getPriorityInfo(internalModel)?.label }}</span>
+            </div>
+            <span v-else>{{ placeholder || $t('Priority') }}</span>
         </template>
+
         <template #option="{ option }">
             <div class="flex items-center">
                  <UIcon
-                    :name="`i-heroicons-${priority_options.find(p => p.id === option.id)?.id === 1 ? 'check-circle' : priority_options.find(p => p.id === option.id)?.id === 2 ? 'exclamation-circle' : priority_options.find(p => p.id === option.id)?.id === 3 ? 'exclamation-triangle' : priority_options.find(p => p.id === option.id)?.id === 4 ? 'stop-circle' : priority_options.find(p => p.id === option.id)?.id === 5 ? 'x-circle' : 'question-mark-circle'}`"
-                    class="inline-block mr-2 text-gray-500"
-                    :style="{ color: priorityColors[priority_options.find(p => p.id === option.id)?.id] || '#9e9e9e' }"
+                    :name="option.icon"
+                    class="inline-block mr-2"
+                    :style="{ color: option.color }"
                 />
                 <span>{{ option.label }}</span>
             </div>
@@ -34,32 +45,40 @@
 
     </USelectMenu>
 </template>
+
 <script setup>
-const priorities = defineModel({ required: true, type: [Array, String] })
+const priorities = defineModel({ required: true, type: [Array, Object, Number, String] })
 const colorMode = useColorMode()
 const props = defineProps({
-    placeholder: String,
-    multiple: {
-        type: Boolean,
-        default: false
-    }
+    placeholder: { type: String, default: '' },
+    multiple: { type: Boolean, default: false }
 })
+
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+
 const priority_options = [
-    { label: t('Low'), id: 1 },
-    { label: t('Medium'), id: 2 },
-    { label: t('High'), id: 3 },
-    { label: t('Urgent'), id: 4 },
-    { label: t('Critical'), id: 5 },
-    { label: t('None'), id: 6 },
+    { label: t('Low'), id: 1, color: '#388e3c', icon: 'i-heroicons-check-circle' },
+    { label: t('Medium'), id: 2, color: '#fbc02d', icon: 'i-heroicons-exclamation-circle' },
+    { label: t('High'), id: 3, color: '#ff6d00', icon: 'i-heroicons-exclamation-triangle' },
+    { label: t('Urgent'), id: 4, color: '#d50000', icon: 'i-heroicons-stop-circle' },
+    { label: t('Critical'), id: 5, color: '#8b0000', icon: 'i-heroicons-x-circle' },
+    { label: t('None'), id: 6, color: '#9e9e9e', icon: 'i-heroicons-question-mark-circle' },
 ]
-const priorityColors = {
-    1: '#388e3c', // Green (Low)
-    2: '#fbc02d', // Yellow (Medium)
-    3: '#ff6d00', // Orange (High)
-    4: '#d50000', // Bright Red (Urgent)
-    5: '#8b0000', // Dark Red (Critical)
-    6: '#9e9e9e', // Grey (None)
+
+const getPriorityInfo = (p) => {
+    if (!p) return null
+    const id = typeof p === 'object' ? p.id : p
+    return priority_options.find(opt => opt.id === id)
 }
+
+const internalModel = computed({
+    get: () => {
+        if (props.multiple && Array.isArray(priorities.value)) {
+            return priorities.value.map(p => typeof p === 'object' ? p : getPriorityInfo(p)).filter(Boolean)
+        }
+        return typeof priorities.value === 'object' ? priorities.value : getPriorityInfo(priorities.value)
+    },
+    set: (val) => priorities.value = val
+})
 </script>

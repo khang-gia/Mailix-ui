@@ -128,14 +128,9 @@
                 <UFormGroup
                     :label="$t('Priority')"
                     name="priority">
-                    <USelectMenu
-                        class="w-full"
+                    <PrioritySelect
                         v-model="workInfo.priority"
-                        :options="priorities"
                         :placeholder="$t('Priority')"
-                        valueAttribute="value"
-                        option-attribute="label"
-                        :is-dark="colorMode.value === 'dark'"
                     />
                 </UFormGroup>
                 <UFormGroup
@@ -329,6 +324,7 @@
                     </UFormGroup>
                     <UFormGroup
                         :label="$t('Priority')">
+                        {{ workInfo.schedule.priority }}
                         <PrioritySelect v-model="workInfo.schedule.priority" :placeholder="$t('User')"/>
                     </UFormGroup>
                 </div>
@@ -509,14 +505,6 @@ loadData()
 const type_of_customers = [
     {label: t('Personal'), value: 1},
     {label: t('Organization'), value: 2},
-]
-const priorities = [
-    {label: t('Low'), value: 1},
-    {label: t('Medium'), value: 2},
-    {label: t('High'), value: 3},
-    {label: t('Urgent'), value: 4},
-    {label: t('Critical'), value: 5},
-    {label: t('None'), value: 6},
 ]
 const localTz = 'Asia/Ho_Chi_Minh';
 

@@ -200,6 +200,7 @@ const updateEvent = async () => {
                 : dayjs(calendarCreateInfo.value.end_datetime).tz(localTz).format(),
             participants: calendarCreateInfo.value.participants.map(p => p.id),
             user: calendarCreateInfo.value.user.id,
+            priority: calendarCreateInfo.value.priority?.id || calendarCreateInfo.value.priority,
         });
         console.log('response', response.value)
         if (response.value && response.value.id) {
@@ -225,6 +226,7 @@ const createEvent = async () => {
         // end_datetime: dayjs(calendarCreateInfo.value.end_datetime).tz(localTz).format(),
         participants: calendarCreateInfo.value.participants.map(p => p.id),
         user: userInfo.value.id,
+        priority: calendarCreateInfo.value.priority?.id || calendarCreateInfo.value.priority,
     }
     console.log('create event Data', data)
     try {
@@ -257,14 +259,6 @@ const createEvent = async () => {
 //         return false;
 //     }
 // }
-const priorities = [
-    {label: t('Low'), value: 1},
-    {label: t('Medium'), value: 2},
-    {label: t('High'), value: 3},
-    {label: t('Urgent'), value: 4},
-    {label: t('Critical'), value: 5},
-    {label: t('None'), value: 6},
-]
 const notification_types = [
     {label: t('Email'), value: 1},
     {label: t('Push notification'), value: 3},
