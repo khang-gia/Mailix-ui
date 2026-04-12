@@ -110,7 +110,7 @@
         </template>
 
         <template #expand="{ row }" >
-            <WorkSubWorkList :parentId="row.id" :allWorks="works" />
+            <WorkSubWorkList :parentId="row.id" />
         </template>
         </UTable>
     </div>
@@ -160,8 +160,8 @@ const _page = computed({
 })
 
 const displayWorks = computed(() => {
-  if (props.isSub) return props.works;
-  return props.works.filter(w => !w.related_work);
+  if (props.isSub) return props.works  // SubWorkList passes its own fetched data
+  return props.works ?? []             // API already returns parents only
 })
 
 const excludeColumns = ['start_date', 'end_date', 'actual_start_date', 'assigned_to','assigned_by','managers','created_by', 'progress', 'name', 'status', 'status_display', 'related_work']

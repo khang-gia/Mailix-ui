@@ -41,8 +41,12 @@
       </UDropdown>
       <div class="px-2 flex items-center gap-1.5 border-l border-slate-300">
         <span class="text-sm leading-5">{{ $t('records per page') }}:</span>
-        <USelect v-model="pageSize" :options="[3, 5, 10, 20, 50, 80, 100]" class="me-2 w-fit" size="xs"
-          @change="page = 1" />
+        <USelect
+          :model-value="pageSize"
+          @update:model-value="val => { pageSize = Number(val); page = 1 }"
+          :options="[3, 5, 10, 20, 50, 80, 100]"
+          class="me-2 w-fit" size="xs"
+        />
       </div>
 
       <div class="flex items-center gap-3 border-l border-slate-300 pr-3">
@@ -159,6 +163,7 @@ const works = computedAsync(async () => {
     page: page.value,
     search: search.value,
     page_size: pageSize.value,
+    related_work__isnull: true, // Only return parent works — SubWorkList fetches children independently
   })
   pageTotal.value = data.count
   return data.results
