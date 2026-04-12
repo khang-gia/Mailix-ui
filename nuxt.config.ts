@@ -15,7 +15,7 @@ export default defineNuxtConfig({
                 { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" }
             ],
             link: [
-                { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+                { key: 'favicon', rel: 'icon', type: 'image/png', href: '/favicon.png' },
                 { rel: 'apple-touch-icon', type: 'image/png', href: '/images/apple-touch-icon.png', sizes: "180x180" },
                 { rel: 'apple-touch-startup-image', href: '/images/splash/ios_portrait.png', media: "orientation: portrait" },
                 { rel: 'apple-touch-startup-image', href: '/images/splash/ios_landscape.png', media: "orientation: landscape" }

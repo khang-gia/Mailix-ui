@@ -22,7 +22,7 @@
 </UButton>
 </template>
 -->
-        <template v-for="slotName in ['customer', 'workspace', 'crm', 'company', 'task', 'guide']" v-slot:[slotName]>
+        <template v-for="slotName in ['customer', 'workspace', 'crm', 'company', 'task', 'guide', 'setting']" v-slot:[slotName]>
             <div v-for="(item, index) in submenuMap[slotName]?.value.slice(1)" :key="item.label">
                 <div v-for="subItem in item" :key="subItem.label">
                     <UButton :to="subItem.link" :target="subItem.target" color="white" variant="soft"
@@ -105,6 +105,12 @@ const items = computed(() => {
             icon: "ix:user-manual",
             slot: 'guide',
         },
+        {
+            label: t('Setting'),
+            icon: "i-heroicons-cog-6-tooth",
+            slot: 'setting',
+            adminOnly: true,
+        },
         // {
         //     label: t('Mail'),
         //     icon:"heroicons-envelope",
@@ -119,7 +125,13 @@ const items = computed(() => {
         // },
 
     ];
-    return allItems.filter(item => !checkView(item.slot));
+    return allItems.filter(item => {
+        if (item.adminOnly) {
+            const role = userInfo.value.profile_hr.role
+            return role === 'A' || userInfo.value.is_superuser
+        }
+        return !checkView(item.slot)
+    });
 });
 
 const customerSubmenu = ref([
@@ -199,10 +211,17 @@ const companySubmenu = ref([
             useRouter().push({ name: 'departments' });
         }
     }],
-    // [{
-    //     link: '/company/config', label: t('Config'), click: () => {
-    //     useRouter().push({ name: 'company/config' });
-    // }}]
+])
+const manageSubmenu = ref([
+    [{
+        slot: 'tip',
+        disabled: true
+    }],
+    [{
+        link: '/company/theme', label: t('Theme'), click: () => {
+            useRouter().push({ name: 'company-theme' });
+        }
+    }],
 ])
 const taskSubmenu = ref([
     [{
@@ -225,7 +244,8 @@ const submenuMap = {
     customer: customerSubmenu,
     company: companySubmenu,
     task: taskSubmenu,
-    guide: guideMenu
+    guide: guideMenu,
+    setting: manageSubmenu
 };
 const getDropdownItems = (name) => {
     const submenuRef = submenuMap[name];

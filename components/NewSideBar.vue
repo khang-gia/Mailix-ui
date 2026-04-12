@@ -11,8 +11,8 @@
     
         <div class="flex justify-center mb-2 pr-3 sm:px-2">
           <NuxtLink class="block" to="/">
-            <img v-if="sidebarOpen"  class="block max-h-12 h-auto" src="/images/tttmailserver-wide.webp" alt="Logo" />
-            <img v-else class="block max-h-12 h-auto" src="/images/logo/positive/logo.png" alt="Logo Small" />
+            <img v-if="isSidebarOpen"  class="block max-h-12 h-auto" :src="logoLink" alt="Logo" />
+            <img v-else class="block max-h-12 h-auto" :src="faviconLogoLink" alt="Logo Small" />
           </NuxtLink>
         </div>
   
@@ -44,7 +44,21 @@
     const userStore = useUserStore()
     const {setSidebar} = userStore
     import { storeToRefs } from 'pinia'
-    const { isSidebarOpen } = storeToRefs(userStore)
+    const { isSidebarOpen, company } = storeToRefs(userStore)
+
+    const logoLink = computed(() => {
+      if (!company.value?.logo) return '/images/logo/positive/logo_name.png'
+      const cacheBuster = company.value.updated_at ? new Date(company.value.updated_at).getTime() : new Date().getTime()
+      const sep = company.value.logo.includes('?') ? '&' : '?'
+      return `${company.value.logo}${sep}v=${cacheBuster}`
+    })
+
+    const faviconLogoLink = computed(() => {
+      if (!company.value?.favicon) return '/images/logo/positive/logo.png'
+      const cacheBuster = company.value.updated_at ? new Date(company.value.updated_at).getTime() : new Date().getTime()
+      const sep = company.value.favicon.includes('?') ? '&' : '?'
+      return `${company.value.favicon}${sep}v=${cacheBuster}`
+    })
 
     const trigger = ref(null)
     const sidebar = ref(null)
