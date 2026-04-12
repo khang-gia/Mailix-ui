@@ -6,7 +6,7 @@
         size="sm" 
         :ui="{ base: 'w-full' }" 
         option-attribute="label"
-        by="id"
+        :by="compareById"
         :multiple="multiple"
         :is-dark="colorMode.value === 'dark'">
         
@@ -72,12 +72,24 @@ const getPriorityInfo = (p) => {
     return priority_options.find(opt => opt.id === id)
 }
 
+const compareById = (a, b) => {
+    if (!a && !b) return true
+    if (!a || !b) return false
+    const aId = typeof a === 'object' ? a?.id : a
+    const bId = typeof b === 'object' ? b?.id : b
+    return aId === bId
+}
+
 const internalModel = computed({
     get: () => {
-        if (props.multiple && Array.isArray(priorities.value)) {
-            return priorities.value.map(p => typeof p === 'object' ? p : getPriorityInfo(p)).filter(Boolean)
+        const val = priorities.value
+        if (props.multiple) {
+            if (!Array.isArray(val)) return []
+            return val.map(p => typeof p === 'object' && p !== null ? p : getPriorityInfo(p)).filter(Boolean)
         }
-        return typeof priorities.value === 'object' ? priorities.value : getPriorityInfo(priorities.value)
+        // Single mode — guard against null explicitly (typeof null === 'object' in JS!)
+        if (val === null || val === undefined) return null
+        return typeof val === 'object' ? val : getPriorityInfo(val)
     },
     set: (val) => priorities.value = val
 })
