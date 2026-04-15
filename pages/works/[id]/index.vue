@@ -47,7 +47,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
 
             <WorkDetailItem label="Work Name" :value="workInfo.name" />
-            <WorkDetailItem label="Work Code" :value="workInfo.work_code" />
+            <WorkDetailItem label="Work Code" :value="workInfo.code" />
 
 
             <WorkDetailItem label="Progress" :value="progress">
