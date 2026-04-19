@@ -7,45 +7,32 @@
             </template>
             <div class="grid grid-flow-row ">
                 <div class="pb-4">
-                    <h2 class="text-titaca-text-primary font-bold text-lg font-averta">
-                    Hệ thống sẽ bắt đầu import từ dòng thứ 3. Các cột import của file excel bao gồm:
-                    </h2>
+                    <h2 class="text-titaca-text-primary font-bold text-lg font-averta">{{ $t('The system will start importing from the 3rd line. The import columns in the excel file include:') }}</h2>
                     <ul class="mt-4 space-y-2">
                         <li>
-                            <span class="font-medium text-slate-900 dark:text-slate-200">Cột A:</span> Số thứ tự của dòng import
-                        </li>
+                            <span class="font-medium text-slate-900 dark:text-slate-200">Cột A:</span>{{ $t('Import line number') }}</li>
                         <li>
-                            <span class="font-medium text-slate-900 dark:text-slate-200">Cột B:</span> Mã nhân sự
-                        </li>
+                            <span class="font-medium text-slate-900 dark:text-slate-200">Cột B:</span>{{ $t('Employee Code') }}</li>
                         <li>
-                            <span class="font-medium text-slate-900 dark:text-slate-200">Cột C:</span> Họ & tên nhân sự
-                        </li>
+                            <span class="font-medium text-slate-900 dark:text-slate-200">Cột C:</span>{{ $t('Employee Full Name') }}</li>
                         <!-- <li>
-                            <span class="font-medium">Cột D:</span> Phòng ban
-                        </li> -->
+                            <span class="font-medium">Cột D:</span>{{ $t('Department') }}</li> -->
                         <li>
-                            <span class="font-medium text-slate-900 dark:text-slate-200">Cột D trở đi:</span> Công làm việc tương ứng của từng ngày
-                        </li>
+                            <span class="font-medium text-slate-900 dark:text-slate-200">Cột D trở đi:</span>{{ $t('Daily working days') }}</li>
                         
                     </ul>
-                    <h2 class="text-red-600 font-averta font-bold text-md pt-4">
-                        Lưu ý: Công của từng ngày làm việc có thể nhập số, ký hiệu x hoặc bỏ trống:
-                    </h2>
+                    <h2 class="text-red-600 font-averta font-bold text-md pt-4">{{ $t("Note: Units for each working day can be a number, 'x', or left blank:") }}</h2>
                     <ul class="mt-4 pl-2 space-y-2">
                         <li>
-                            <span class="text-sm dark:text-slate-200">+</span> Nhập số, (1, 0.5, 0.75, ...) tương ứng tỉ lệ công trong ngày mà nhân viên đi làm dựa trên số giờ làm thực tế.
-                        </li>
+                            <span class="text-sm dark:text-slate-200">+</span>{{ $t('Enter a number (1, 0.5, 0.75, ...) corresponding to the ratio of work in the day the employee worked based on actual working hours.') }}</li>
                         <li>
-                            <span class="text-sm dark:text-slate-200">+</span> Nhập x, hệ thống cập nhật nhân sự nghỉ không lý do.
-                        </li>
+                            <span class="text-sm dark:text-slate-200">+</span>{{ $t("Enter 'x' for the system to update as unexcused absence.") }}</li>
                         <li>
-                            <span class="text-sm dark:text-slate-200">+</span> Bỏ trống, bỏ qua, không cập nhật ngày công.
-                        </li>
+                            <span class="text-sm dark:text-slate-200">+</span>{{ $t('Leave blank to skip and not update working days.') }}</li>
                     </ul>
                 </div>
                 <div class="flex justify-start items-center space-x-4">
-                    <span class="font-averta text-md text-slate-700 dark:text-slate-200">Tải file mẫu
-                        <a :href="`${useRuntimeConfig().app.baseURL}downloads/timekeeping/timekeeping_import_template_v1.xlsx`" target="_blank" class="text-titaca-text-primary dark">
+                    <span class="font-averta text-md text-slate-700 dark:text-slate-200">{{ $t('Download template') }}<a :href="`${useRuntimeConfig().app.baseURL}downloads/timekeeping/timekeeping_import_template_v1.xlsx`" target="_blank" class="text-titaca-text-primary dark">
                             {{ $t('Download Template') }}
                         </a>
                     </span>
@@ -55,7 +42,7 @@
                     <FileSelector 
                         :multiple="false" 
                         :readonly="busy"
-                        fileTypes=".xlsx, .xls, .csv,"
+                        fileTypes=".xlsx, .xls, .csv"
                         @on-select="onSelectFiles"
                         ref="fileSelectors"
                     />

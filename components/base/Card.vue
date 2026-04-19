@@ -12,8 +12,7 @@
             <div :class="bodyClass"> 
                 <div v-if="loginRequired && !isAuthenticated"> 
                     <slot name="fakeContent"></slot>
-                    <div class="text-center mt-3">Vui lòng
-                        <button class="rounded text-primary-500 hover:underline" @click.prevent.stop="emitLogin">đăng nhập</button> để xem {{ requiredLoginSuffix }}.
+                    <div class="text-center mt-3">{{ $t('Please') }}<button class="rounded text-primary-500 hover:underline" @click.prevent.stop="emitLogin">{{ $t('sign in') }}</button> để xem {{ requiredLoginSuffix }}.
                     </div>
                 </div>
                 <div v-else>

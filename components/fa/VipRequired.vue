@@ -5,8 +5,8 @@
                 <div class="inline-flex mb-8 text-orange-400">
                     <Icon name="heroicons:lock-closed" size="3em"></Icon>
                 </div>
-                <div class="mb-6">Đây là tính năng dành riêng, vui lòng quay lại sau.</div>
-                <NuxtLink to="/dashboard/" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">Trở lại trang chủ</NuxtLink>
+                <div class="mb-6">{{ $t('This is an exclusive feature, please come back later.') }}</div>
+                <NuxtLink to="/dashboard/" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">{{ $t('Back to Home') }}</NuxtLink>
             </div>
 
         </div>

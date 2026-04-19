@@ -1,12 +1,8 @@
 <template>
     <div>
         <div class="text-center py-12 relative">
-            <p class="text-green-600 font-bold font-averta tracking-widest uppercase">
-                Dịch Vụ Của Titaca
-            </p>
-            <h1 class="text-3xl md:text-4xl font-bold font-averta text-gray-900 mt-2 dark:text-white">
-                Giải Pháp Cho Doanh Nghiệp <br /> Trong Thời Đại 4.0
-            </h1>
+            <p class="text-green-600 font-bold font-averta tracking-widest uppercase">{{ $t('Titaca Services') }}</p>
+            <h1 class="text-3xl md:text-4xl font-bold font-averta text-gray-900 mt-2 dark:text-white">{{ $t('Solutions for Business') }}<br />{{ $t('In the 4.0 Era') }}</h1>
             <!-- <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-16 bg-gradient-to-t from-white to-transparent"></div> -->
         </div>
 
@@ -29,15 +25,11 @@
 
             <div class="mt-auto flex justify-between items-center pt-4 font-averta">
                 <NuxtLink :to="`/bai-viet/${item.slug}/${item.id}`">
-                    <UButton variant="solid" class="group rounded-full bg-emerald-400 hover:bg-emerald-600 transition-all duration-500 transform hover:scale-105">
-                        Liên hệ tư vấn
-                        <UIcon name="heroicons:arrow-right-solid" size="sm" class="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:w-6 transition-opacity" />
+                    <UButton variant="solid" class="group rounded-full bg-emerald-400 hover:bg-emerald-600 transition-all duration-500 transform hover:scale-105">{{ $t('Contact for consultation') }}<UIcon name="heroicons:arrow-right-solid" size="sm" class="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:w-6 transition-opacity" />
                     </UButton>
                 </NuxtLink>
                 <NuxtLink :to="`/bai-viet/${item.slug}/${item.id}`">
-                    <UButton color="gray" variant="ghost">
-                        Xem thêm
-                        <UIcon name="heroicons:chevron-right-solid"/>
+                    <UButton color="gray" variant="ghost">{{ $t('See more') }}<UIcon name="heroicons:chevron-right-solid"/>
                     </UButton>
                 </NuxtLink>
             </div>

@@ -134,25 +134,22 @@ const items = computed(() => {
     });
 });
 
-const customerSubmenu = ref([
+const customerSubmenu = computed(() => [
     [{ slot: 'tip', disabled: true }],
     [
         {
-            link: '/hr', label: 'Nhân sự', click: () => {
+            link: '/hr', label: t('HR'), click: () => {
                 useRouter().push({ name: 'hr' });
             }
         },
         {
-            link: '/dashboard-hrm', label: 'Dashboard', click: () => {
+            link: '/dashboard-hrm', label: t('Dashboard'), click: () => {
                 useRouter().push({ name: 'dashboard-hrm' });
             }
         },]
 ])
-const crmSubmenu = ref([
-    [{
-        slot: 'tip',
-        disabled: true
-    }],
+const crmSubmenu = computed(() => [
+    [{ slot: 'tip', disabled: true }],
     [{
         link: '/contacts', label: t('Contact'), click: () => {
             useRouter().push({ name: 'contacts' });
@@ -166,11 +163,8 @@ const crmSubmenu = ref([
 ])
 
 
-const workspaceSubmenu = ref([
-    [{
-        slot: 'tip',
-        disabled: true
-    }],
+const workspaceSubmenu = computed(() => [
+    [{ slot: 'tip', disabled: true }],
     [{
         link: '/works', label: t('Work'), click: () => {
             useRouter().push({ name: 'works' });
@@ -182,25 +176,18 @@ const workspaceSubmenu = ref([
         }
     },
     {
-        link: '/dashboard-work', label: 'Dashboard', click: () => {
+        link: '/dashboard-work', label: t('Dashboard'), click: () => {
             useRouter().push({ name: 'dashboard-work' });
         }
     },
     {
-        link: '/social', label: 'Social', click: () => {
+        link: '/social', label: t('Social'), click: () => {
             useRouter().push({ name: 'social' });
         }
     }]
 ])
-const companySubmenu = ref([
-    [{
-        slot: 'tip',
-        disabled: true
-    }],
-    // [{
-    //     link: '/company', label: t('Information'), click: () => {
-    //     useRouter().push({ name: 'company' });
-    // }}],
+const companySubmenu = computed(() => [
+    [{ slot: 'tip', disabled: true }],
     [{
         link: '/groups', label: t('Groups'), click: () => {
             useRouter().push({ name: 'groups' });
@@ -212,29 +199,20 @@ const companySubmenu = ref([
         }
     }],
 ])
-const manageSubmenu = ref([
-    [{
-        slot: 'tip',
-        disabled: true
-    }],
+const manageSubmenu = computed(() => [
+    [{ slot: 'tip', disabled: true }],
     [{
         link: '/company/theme', label: t('Theme'), click: () => {
             useRouter().push({ name: 'company-theme' });
         }
     }],
 ])
-const taskSubmenu = ref([
-    [{
-        slot: 'tip',
-        disabled: true
-    }],
-    [{ link: 'https://app.mailix.vn/', label: 'Mail', click: () => { }, target: '_blank' },]
+const taskSubmenu = computed(() => [
+    [{ slot: 'tip', disabled: true }],
+    [{ link: 'https://app.mailix.vn/', label: t('Mail'), click: () => { }, target: '_blank' },]
 ])
-const guideMenu = ref([
-    [{
-        slot: 'tip',
-        disabled: true
-    }],
+const guideMenu = computed(() => [
+    [{ slot: 'tip', disabled: true }],
     [{ link: '/guide-mail', label: t('Mail'), click: () => { } },
     { link: '/guide-app', label: t('App'), click: () => { } }],
 ])

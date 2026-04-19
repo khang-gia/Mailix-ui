@@ -8,7 +8,7 @@
         @dragleave.prevent="fileDragOver=false"
         @dragend.prevent="fileDragOver=false"
         @click.prevent="!readonly && fileInput.click()">
-        <h4 v-if="!filesCount && !readonly" class="block mt-4 text-center text-muted">Thả tệp vào đây hoặc bấm để chọn.</h4>
+        <h4 v-if="!filesCount && !readonly" class="block mt-4 text-center text-muted">{{ $t('Drop file here or click to select') }}</h4>
         <span v-if="filesCount" class="block">
           <span v-for="(selectedFile, $index) in selectedFiles" :key="$index"
             class="flex text-titaca-text-primary justify-center mt-3">
@@ -17,7 +17,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zM7 6h10v13H7zm2 2v9h2V8zm4 0v9h2V8z"/></svg>
             </span>
           </span>
-          <h4 class="d-block text-center mt-3 text-muted" v-if="!readonly && multiple">Thả tệp vào đây hoặc bấm để thêm tệp khác</h4>
+          <h4 class="d-block text-center mt-3 text-muted" v-if="!readonly && multiple">{{ $t('Drop file here or click to add more') }}</h4>
         </span>
       </div>
       <input

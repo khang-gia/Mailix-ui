@@ -1,13 +1,12 @@
 <template>
     <form class="space-y-4 md:space-y-6" @submit.prevent="onSubmit">
       <div class="text-slate-800 dark:text-white text-sm">
-        <p>
-          Mã OTP đã được gửi tới email <strong>{{ data.username }}</strong> của bạn.
+        <p>{{ $t('OTP code has been sent to email') }}<strong>{{ data.username }}</strong> của bạn.
           Vui lòng nhập OTP nhận được vào bên dưới
         </p>
       </div>
       <div>
-        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mật khẩu mới</label>
+        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t('New password') }}</label>
         <input type="password" name="password" id="password" placeholder="••••••••" v-model="password"
             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             required="">

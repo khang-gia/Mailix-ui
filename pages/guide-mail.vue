@@ -32,10 +32,8 @@ onMounted(() => {
       @load="handleIframeLoad" 
       :class="{'opacity-0': isLoading, 'opacity-100': !isLoading}"
       style="height: 100%; width: 100%; min-height: 100vh; transition: opacity 0.5s ease-out;"
-      title="Hướng Dẫn Dịch Vụ (HTML gốc)"
-    >
-      Trình duyệt của bạn không hỗ trợ iframe.
-    </iframe>
+      :title="$t('Service Guide (Original HTML)')"
+    >{{ $t('Your browser does not support iframes.') }}</iframe>
 
     <div v-if="isLoading" class="absolute inset-0 p-8 z-10 bg-mailix-bg">
         <USkeleton class="h-10 w-2/3 mb-10" />

@@ -22,9 +22,9 @@
             <SidebarLink link="/me" icon="weui:me-outlined" activeIcon="weui:me-filled" text="Me" />
 
             <SidebarLink link="/hr" icon="heroicons:users" activeIcon="heroicons-solid:users" text="Nhân sự"/>
-            <SidebarLink link="/customers" icon="ix:customer" activeIcon="ix:customer-filled" text="Khách hàng"/>
-            <SidebarLink link="/contacts" icon="heroicons:phone" activeIcon="heroicons-solid:phone" text="Liên hệ"/>
-            <SidebarLink link="/works" icon="heroicons:briefcase" activeIcon="heroicons-solid:briefcase" text="Công việc"/>
+            <SidebarLink link="/customers" icon="ix:customer" activeIcon="ix:customer-filled" :text="$t('Customer')"/>
+            <SidebarLink link="/contacts" icon="heroicons:phone" activeIcon="heroicons-solid:phone" :text="$t('Contact')"/>
+            <SidebarLink link="/works" icon="heroicons:briefcase" activeIcon="heroicons-solid:briefcase" :text="$t('Work')"/>
             <!-- <SidebarLink link="/projects" icon="heroicons:folder" activeIcon="heroicons-solid:folder" text="Dự án"/> -->
 
             <!-- <SidebarLink link="/hr-insurance" icon="healthicons:insurance-card-outline" activeIcon="healthicons:insurance-card" text="Bảo hiểm"/> -->

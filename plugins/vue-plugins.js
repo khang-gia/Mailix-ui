@@ -8,7 +8,6 @@ import { createVfm } from 'vue-final-modal'
 import {createI18n} from 'vue-i18n'
 import en from '~/locales/en.json'
 import vi from '~/locales/vi.json'
-import { useI18n } from "vue-i18n";
 
 export default defineNuxtPlugin(nuxtApp => {
     nuxtApp.vueApp.component('vue-tailwind-datepicker', VueTailwindDatepicker)
@@ -17,9 +16,13 @@ export default defineNuxtPlugin(nuxtApp => {
     nuxtApp.vueApp.component('VDatePicker', DatePicker)
     nuxtApp.vueApp.component('draggable', VueDraggableNext);
     const vfm = createVfm()
-    nuxtApp.vueApp.use(vfm)  
+    nuxtApp.vueApp.use(vfm)
+
+    // Restore saved locale from localStorage so it applies immediately on reload
+    const savedLocale = (typeof localStorage !== 'undefined' && localStorage.getItem('app_locale')) || 'vi'
+
     const i18n = createI18n({
-        locale: 'vi',
+        locale: savedLocale,
         fallbackLocale: 'vi',
         messages: {
             en,

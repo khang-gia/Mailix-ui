@@ -69,7 +69,7 @@
             <h1 class="text-lg text-black font-semibold text-center">{{ $t('Employees using domain email') }}</h1>
             <div class="flex space-x-2">
               <SearchInput v-model="search" />
-              <!-- <UButton label="DATE"></UButton> -->
+              <!-- <UButton :label="$t('Date')"></UButton> -->
             </div>
           </div>
           <UDivider orientation="horizontal" class="mt-2 mb-6 px-1" />
@@ -157,33 +157,33 @@ const showChangePasswordModal = ref(false)
 const selectedUserForPassword = ref(null)
 
 // 1. Define Table Columns
-const columns = [
+const columns = computed(() => [
   {
     key: 'full_name',
-    label: 'Người dùng',
+    label: t('User'),
     sortable: true
   },
   {
     key: 'email',
-    label: 'Email',
+    label: t('Email'),
     sortable: true
   },
   {
     key: 'department_name',
-    label: 'Phòng ban',
+    label: t('Department'),
     sortable: true
   },
   {
     key: 'title',
-    label: 'Chức vụ',
+    label: t('Position'),
     sortable: true
   },
-  // { key: 'status', label: 'Trạng thái' },
+  // { key: 'status', label: t('Status') },
   {
     key: 'actions',
     label: ''
   }
-]
+])
 const excludeColumns = ['full_name', 'system_date_joined', 'employee_code', 'actions']
 
 const reload = ref(false)

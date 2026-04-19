@@ -2,11 +2,24 @@
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import { computed, watch, onMounted } from 'vue'
+import { useI18n } from "vue-i18n";
 
 const userStore = useUserStore()
 const { company } = storeToRefs(userStore)
-const { status } = useAuth()
+
+const { locale } = useI18n()
+const { status, data: userData } = useAuth()
 const api = useAPI()
+
+const syncLocale = () => {
+  if (userData.value?.profile_hr?.locale) {
+    const lang = userData.value.profile_hr.locale
+    locale.value = lang
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('app_locale', lang)
+    }
+  }
+}
 
 const fetchCompany = async () => {
   if (status.value !== 'authenticated') return
@@ -21,14 +34,24 @@ const fetchCompany = async () => {
 }
 
 onMounted(() => {
-  fetchCompany()
+  if (status.value === 'authenticated') {
+    fetchCompany()
+    syncLocale()
+  }
 })
 
 watch(status, (newStatus) => {
   if (newStatus === 'authenticated') {
     fetchCompany()
+    syncLocale()
   }
 })
+
+watch(userData, () => {
+  if (status.value === 'authenticated') {
+    syncLocale()
+  }
+}, { deep: true })
 
 const faviconLink = computed(() => {
   if (!company.value?.favicon) return '/favicon.png'

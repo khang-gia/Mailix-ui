@@ -15,6 +15,16 @@
         <span v-if="multiple && selectDepartments.length" class="truncate">{{ selectDepartments.map(department => department.name).join(', ') }} </span>
         <span v-else-if="multiple">{{placeholder }}</span>
     </template>
+    <template #option-empty>
+        <span class="text-[#0313B0] dark:text-[#E0E0E0] cursor-pointer">
+            {{ $t('No results') }}
+        </span>
+    </template>
+    <template #empty>
+        <span class="text-[#0313B0] dark:text-[#E0E0E0] cursor-pointer">
+            {{ $t('No results') }}
+        </span>
+    </template>
     </USelectMenu>
 </template>
 

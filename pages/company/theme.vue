@@ -120,6 +120,49 @@
           </div>
         </div>
 
+        <!-- Preferences Section -->
+        <div>
+          <button
+            class="w-full flex items-center justify-between px-4 py-3.5 text-sm font-medium text-left text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors border-b border-gray-100 dark:border-gray-700/60"
+            @click="activeSection = activeSection === 'preferences' ? null : 'preferences'">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-md bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center shrink-0">
+                <UIcon name="i-heroicons-cog-8-tooth" class="w-4 h-4 text-primary-500" />
+              </div>
+              <span>{{ $t('Preferences') }}</span>
+            </div>
+            <UIcon name="i-heroicons-chevron-right" class="w-4 h-4 text-gray-400 transition-transform duration-200"
+              :class="activeSection === 'preferences' ? 'rotate-90' : ''" />
+          </button>
+
+          <div v-show="activeSection === 'preferences'"
+            class="px-4 py-4 space-y-5 bg-gray-50/50 dark:bg-gray-800/20 border-b border-gray-100 dark:border-gray-700">
+            
+            <!-- Theme Mode Toggle (Coming Soon)-->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ $t('Theme Mode') }}</p>
+                <UBadge size="xs" color="gray" variant="soft">{{ $t('Soon') }}</UBadge>
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <button
+                  v-for="mode in ['light', 'dark', 'system']"
+                  :key="mode"
+                  disabled
+                  @click="setColorMode(mode)"
+                  class="flex flex-col items-center justify-center py-2.5 px-2 rounded-lg border transition-all opacity-50 cursor-not-allowed"
+                  :class="$colorMode.preference === mode 
+                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400' 
+                    : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800'"
+                >
+                  <UIcon :name="mode === 'light' ? 'i-heroicons-sun' : mode === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-computer-desktop'" class="w-5 h-5 mb-1" />
+                  <span class="text-[10px] font-medium uppercase">{{ $t(mode) }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Placeholder sections (coming soon) -->
         <div v-for="section in comingSoonSections" :key="section.key">
           <div
@@ -233,11 +276,16 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const colorMode = useColorMode()
 const userStore = useUserStore()
 const { company } = storeToRefs(userStore)
 const toast = useToast()
 const api = useAPI()
+
+const setColorMode = (mode) => {
+  colorMode.preference = mode
+}
 
 definePageMeta({
   title: 'Theme',

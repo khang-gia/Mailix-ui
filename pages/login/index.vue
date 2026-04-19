@@ -3,12 +3,12 @@
         <!-- <div class="p-2">
             <img src="/images/logo/positive/name.png" alt="Logo" class="h-20">
         </div> -->
-        <h1 class="text-2xl font-medium text-left font-averta text-black">Đăng nhập.</h1>
+        <h1 class="text-2xl font-medium text-left font-averta text-black">{{ $t('Sign in') }}</h1>
         <p class="text-center text-gray-500 mb-5"></p>
         <form v-if="authMode === 'signin'" @submit.stop.prevent="onLoginSubmit" novalidate="novalidate" @submit="onPreLogin">
             <div class="relative mb-4">
                 <div class="relative">
-                    <input ref="usernameInput" v-model="creds.username" name="username" id="username" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0313B0] pl-10 dark:bg-white text-black" placeholder="Tên đăng nhập">
+                    <input ref="usernameInput" v-model="creds.username" name="username" id="username" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0313B0] pl-10 dark:bg-white text-black" :placeholder="$t('Username')">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <UIcon name="heroicons:user-circle" class="w-5 h-5 text-gray-400"></UIcon>
                     </div>
@@ -16,7 +16,7 @@
             </div>
             <div class="relative mt-4 mb-4">
                 <div class="relative text-black">
-                    <input v-model="creds.password" :type="showPassword ? 'text':'password'" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0313B0] pl-10 dark:bg-white text-black" placeholder="Mật khẩu">
+                    <input v-model="creds.password" :type="showPassword ? 'text':'password'" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0313B0] pl-10 dark:bg-white text-black" :placeholder="$t('Password')">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <UIcon name="heroicons:lock-closed" class="w-5 h-5 text-gray-400"></UIcon>
                     </div>
@@ -30,25 +30,18 @@
             <div class="flex justify-between items-center mt-4">
                 <div>
                     <!-- <input class="mr-2" type="checkbox" value="" id="flexCheckDefault">
-                    <label class="text-gray-600" for="flexCheckDefault">
-                        Ghi nhớ tôi
-                    </label> -->
+                    <label class="text-gray-600" for="flexCheckDefault">{{ $t('Remember me') }}</label> -->
                 </div>
                 <div>
-                    <!-- <button type="button" @click="onForgotPassword" class="text-sm text-blue-500 hover:underline">
-                        Quên mật khẩu?
-                    </button> -->
-                    <a href="/login/forgot-password" class="text-sm text-[#0313B0] hover:underline">
-                        Quên mật khẩu?
-                    </a>
+                    <!-- <button type="button" @click="onForgotPassword" class="text-sm text-blue-500 hover:underline">{{ $t('Forgot password?') }}</button> -->
+                    <a href="/login/forgot-password" class="text-sm text-[#0313B0] hover:underline">{{ $t('Forgot password?') }}</a>
                 </div>
             </div>
-            <button class="p-2 w-full text-white py-2 px-4 rounded-lg shadow-lg mt-10 bg-[#0313B0] hover:bg-[#020B51] transition duration-300">ĐĂNG NHẬP</button>
+            <button class="p-2 w-full text-white py-2 px-4 rounded-lg shadow-lg mt-10 bg-[#0313B0] hover:bg-[#020B51] transition duration-300">{{ $t('SIGN IN') }}</button>
         </form>
         <form  v-else-if="authMode === 'otp'" class="space-y-4 md:space-y-6" @submit.prevent="onSubmitOTP">
             <div class="text-slate-800 ">
-            <p>
-                Vui lòng nhập mã chúng tôi đã gửi cho bạn qua email <strong>{{ userEmail }}</strong>.
+            <p>{{ $t('Please enter the code we sent you via email') }}<strong>{{ userEmail }}</strong>.
                 Mã OTP có hiệu lực trong vòng 2 phút.
             </p>
             </div>

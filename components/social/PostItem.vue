@@ -27,7 +27,7 @@
                         <span>{{ formatDate(post.created_at) }}</span>
                         <span>•</span>
                         <UIcon :name="privacyIcons[post.privacy]" class="w-3 h-3" />
-                        <!-- <span>Đọc bài viết</span> -->
+                        <!-- <span>{{ $t('Read article') }}</span> -->
                     </div>
                 </div>
             </div>
@@ -188,7 +188,7 @@
                     block="true" @click="setSocialCommentModal(true, post)" />
             </div>
             <!-- <div class="w-full">
-                <UButton icon="i-heroicons-arrow-uturn-up" label="Chia sẻ" color="gray" variant="ghost" block="true"/>
+                <UButton icon="i-heroicons-arrow-uturn-up" :label="$t('Share')" color="gray" variant="ghost" block="true"/>
             </div> -->
         </div>
         <div v-if="openPostModal" class="pt-2">

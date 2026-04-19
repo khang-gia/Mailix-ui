@@ -49,8 +49,8 @@
           <div
             class="w-1/2 relative h-screen text-slate-900 flex flex-col justify-center items-start px-10 py-20 overflow-hidden space-y-6 bg-[#d1d2f0]">
             <img src="/images/logo/positive/logo_name_horizontal.png" alt="Mailix Logo" class="h-24 mb-6" />
-            <h1 class="text-3xl font-bold leading-snug text-[#020B51]">Email chuyên nghiệp & Nhân sự tinh gọn<br />
-              <p class="text-[#0313B0]">Tất cả ở một nơi.</p>
+            <h1 class="text-3xl font-bold leading-snug text-[#020B51]">{{ $t('Professional Email & Lean HR') }}<br />
+              <p class="text-[#0313B0]">{{ $t('All in one place.') }}</p>
             </h1>
             <p class="text-lg leading-relaxed opacity-90">
               "Nâng tầm thương hiệu qua email tên miền riêng và quản lý đội ngũ hiệu quả với công cụ nhân sự trực quan,

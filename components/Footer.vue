@@ -4,7 +4,7 @@
       &copy; {{ year }} <span class="text-primary-500">TITACA.COM</span>
     </div>
     <div>
-      <NuxtLink class="text-blue-500 hover:text-blue-400" to="/privacy-policy">Chính sách B.Mật</NuxtLink> | <NuxtLink class="text-blue-500 hover:text-blue-400" to="/terms-of-service">Điều khoản D.Vụ</NuxtLink> 
+      <NuxtLink class="text-blue-500 hover:text-blue-400" to="/privacy-policy">{{ $t('Privacy Policy') }}</NuxtLink> | <NuxtLink class="text-blue-500 hover:text-blue-400" to="/terms-of-service">{{ $t('Terms of Service') }}</NuxtLink> 
     </div>
   </div>
 </template>

@@ -4,7 +4,7 @@
         :searchable="search"
         :loading="loading"
         :placeholder="placeholder"
-        :searchable-placeholder="$t('Search department')"
+        :searchable-placeholder="$t('Search departments')"
         :is-dark="colorMode.value === 'dark'"
         @update:model-value="onSelectOption($event)"
         option-attribute="name"
@@ -19,6 +19,16 @@
                 {{ $t('Create department') }}
             </span>
         </div>
+    </template>
+    <template #option-empty>
+        <span class="text-[#0313B0] dark:text-[#E0E0E0] cursor-pointer">
+            {{ $t('No results') }}
+        </span>
+    </template>
+    <template #empty>
+        <span class="text-[#0313B0] dark:text-[#E0E0E0] cursor-pointer">
+            {{ $t('No results') }}
+        </span>
     </template>
     </USelectMenu>
 </template>

@@ -1,13 +1,13 @@
 <template>
     <form class="space-y-4 md:space-y-6" @submit.prevent="onSubmit">
         <div>
-            <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email của bạn</label>
+            <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t('Your email') }}</label>
             <input name="username" id="username" type="email" v-model="username"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Email" required="">
         </div>
         <div>
-            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mật khẩu</label>
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t('Password') }}</label>
             <input type="password" name="password" id="password" placeholder="••••••••" v-model="password"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required="">    
@@ -20,27 +20,21 @@
                 id="btnForgotPassword"
                 type="button"
                 @click.stop="onForgotPassword"
-                class="font-medium text-sm text-primary-600 hover:underline dark:text-primary-500">
-                Quên mật khẩu?
-            </button>
+                class="font-medium text-sm text-primary-600 hover:underline dark:text-primary-500">{{ $t('Forgot password?') }}</button>
         </div>
         <BaseButton
             :busy="busy"
             type="submit"
             class="w-full text-white bg-primary-600 enabled:hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm dark:bg-primary-600 enabled:dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            text="Đăng nhập"></BaseButton>
+            :text="$t('Sign in')"></BaseButton>
         
 
         <!-- <GoogleSigninButton /> -->
 
-        <div class="text-sm font-light text-gray-500 dark:text-gray-400">
-            Bạn chưa có tài khoản? 
-            <button
+        <div class="text-sm font-light text-gray-500 dark:text-gray-400">{{ $t("Don't have an account?") }}<button
                 type="button"
                 @click.stop="onSignup"
-                class="font-medium text-primary-600 hover:underline dark:text-primary-500">
-                Đăng ký
-            </button>
+                class="font-medium text-primary-600 hover:underline dark:text-primary-500">{{ $t('Sign up') }}</button>
         </div>
     </form>
 </template>

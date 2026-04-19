@@ -1,10 +1,10 @@
 <template>
     <div class=" h-full transition-all duration-500 hover:scale-[1.02] space-y-12">
-        <h1 class="text-2xl font-medium text-left font-averta text-black">Lấy lại mật khẩu.</h1>
+        <h1 class="text-2xl font-medium text-left font-averta text-black">{{ $t('Reset password.') }}</h1>
         <p class="text-center text-gray-500 mb-5"></p>
         <form v-if="viewMode ==='forgot-password'" novalidate="novalidate" class="space-y-4 md:space-y-6" @submit.prevent="onSubmitEmail">
             <div>
-                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nhập email của bạn</label>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t('Enter your email') }}</label>
                 <div class="relative">
                     <input name="email" id="email" type="email" v-model="email"
                         class="pl-10 py-2 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#0313B0] block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#0313B0] dark:focus:border-blue-500"
@@ -22,20 +22,17 @@
                     class="mb-2 w-full text-white bg-[#0313B0] hover:bg-[#020B51] disabled:hover:bg-[#0313B0] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm disabled:opacity-75"
                     text="Tiếp theo"></BaseButton>
             </div>
-            <a href="/login" class="text-sm text-[#0313B0] hover:underline">
-                Quay lai trang đăng nhập
-            </a>
+            <a href="/login" class="text-sm text-[#0313B0] hover:underline">{{ $t('Back to login') }}</a>
             
         </form>
         <form v-else-if="viewMode === 'reset-password'" class="space-y-4 md:space-y-6" @submit.prevent="onSubmitOtp">
             <div class="text-slate-800 dark:text-white text-sm">
-                <p>
-                Vui lòng nhập mã chúng tôi đã gửi cho bạn qua email <strong>{{ email }}</strong>.
+                <p>{{ $t('Please enter the code we sent you via email') }}<strong>{{ email }}</strong>.
                 Mã OTP có hiệu lực trong vòng 2 phút.
                 </p>
             </div>
             <div>
-                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mật khẩu mới</label>
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t('New password') }}</label>
                 <input type="password" name="password" id="password" placeholder="••••••••" v-model="password"
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required="">

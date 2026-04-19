@@ -20,6 +20,27 @@
             </span>
         </div>
     </template>
+    <template #option-empty="{ query }">
+        <!-- <div v-if="isCreate">
+            <span class="text-[#0313B0] dark:text-[#E0E0E0] cursor-pointer">
+                <UIcon name="heroicons:plus-solid"/>
+                {{ $t('Create title') }}
+            </span>
+        </div>
+        <div v-else>
+            <span class="text-[#0313B0] dark:text-[#E0E0E0] cursor-pointer">
+                {{ $t('No results') }}
+            </span>
+        </div> -->
+        <span class="text-[#0313B0] dark:text-[#E0E0E0] cursor-pointer">
+            {{ $t('No results') }}
+        </span>
+    </template>
+    <template #empty>
+        <span class="text-[#0313B0] dark:text-[#E0E0E0] cursor-pointer">
+            {{ $t('No results') }}
+        </span>
+    </template>
     </USelectMenu>
 </template>
 <script setup>

@@ -12,38 +12,34 @@
             <div class="flex">
               <UChip :show="hasNewContactNoti">
                 <a href="#" class="col-1" :class="{ 'text-primary-500': active == 2 }" @click.stop="showNotiWithType(2)"
-                  title="Liên hệ">
+                  :title="$t('Contact')">
                   <UIcon name="bxs:contact" class="w-4 h-4" />
                 </a>
               </UChip>
               <hr class="w-px h-4 bg-slate-200 dark:bg-slate-600 border-slate-200 dark:border-slate-600 mx-2" />
               <UChip :show="hasNewCustomerNoti">
                 <a href="#" class="col-1" :class="{ 'text-primary-500': active == 3 }" @click.stop="showNotiWithType(3)"
-                  title="Khách hàng">
+                  :title="$t('Customer')">
                   <UIcon name="ix:customer" class="w-4 h-4" />
                 </a>
               </UChip>
               <hr class="w-px h-4 bg-slate-200 dark:bg-slate-600 border-slate-200 dark:border-slate-600 mx-2" />
               <UChip :show="hasNewWorkNoti">
                 <a href="#" class="col-1" :class="{ 'text-primary-500': active == 1 }" @click.stop="showNotiWithType(1)"
-                  title="Công việc">
+                  :title="$t('Work')">
                   <UIcon name="i-heroicons-briefcase" class="w-4 h-4" />
                 </a>
               </UChip>
             </div>
             <div>
               <a href="#" class="font-normal" @click.stop="markAllRead">
-                <Icon name="tabler:checks"></Icon>
-                Đã đọc
-              </a>
+                <Icon name="tabler:checks"></Icon>{{ $t('Read') }}</a>
             </div>
           </div>
 
           <div class="p-2 overflow-y-auto" style="max-height: calc(100svh - 150px);">
             <!-- List Items -->
-            <div v-if="!filteredNotifications?.length">
-              Hiện tại chưa có thông báo nào!
-            </div>
+            <div v-if="!filteredNotifications?.length">{{ $t('No notifications yet!') }}</div>
             <div v-else>
               <div v-for="noti in filteredNotifications" :key="noti.id"
                 class="group border-b border-slate-200 dark:border-slate-600 last:border-0 mb-2 pb-1 last:mb-0 last:pb-0 p-1.5 rounded cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors relative"

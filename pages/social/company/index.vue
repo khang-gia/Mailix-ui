@@ -199,11 +199,11 @@
                                             <div
                                                 class=" grid grid-cols-1 gap-4 w-full text-gray-600 dark:text-gray-300">
 
-                                                <SocialCompanyDetailItem label="Slogan" icon="ph:quotes-fill"
+                                                <SocialCompanyDetailItem :label="$t('Slogan')" icon="ph:quotes-fill"
                                                     v-model="companyGroup.slogan" :is-admin="isAdmin" type="textarea"
                                                     :placeholder="$t('Slogan')"
                                                     @save="saveCompanyInfo('slogan', $event)" />
-                                                <SocialCompanyDetailItem label="Biography" icon="flat-color-icons:about"
+                                                <SocialCompanyDetailItem :label="$t('Biography')" icon="flat-color-icons:about"
                                                     v-model="companyGroup.biography" :is-admin="isAdmin" type="textarea"
                                                     :placeholder="$t('Biography')"
                                                     @save="saveCompanyInfo('biography', $event)" />
@@ -242,13 +242,13 @@
                                                 @save="(val) => saveCompanyInfo('email', val)" />
 
                                             <!-- Website -->
-                                            <SocialCompanyDetailItem label="Website" icon="i-heroicons-globe-alt"
+                                            <SocialCompanyDetailItem :label="$t('Website')" icon="i-heroicons-globe-alt"
                                                 v-model="companyGroup.website" :is-admin="isAdmin"
                                                 :placeholder="$t('Website')"
                                                 @save="(val) => saveCompanyInfo('website', val)" />
 
                                             <!-- Established -->
-                                            <SocialCompanyDetailItem label="Established date"
+                                            <SocialCompanyDetailItem :label="$t('Established date')"
                                                 icon="i-heroicons-calendar" v-model="companyGroup.established_date"
                                                 :is-admin="isAdmin" type="date"
                                                 @save="(val) => saveCompanyInfo('established_date', val)" />

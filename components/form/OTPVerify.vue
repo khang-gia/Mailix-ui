@@ -1,8 +1,7 @@
 <template>
   <form class="space-y-4 md:space-y-6" @submit.prevent="onSubmit">
     <div class="text-slate-800 dark:text-white text-sm">
-      <p>
-        Mã OTP đã được gửi tới email <strong>{{ data.username }}</strong> của bạn.
+      <p>{{ $t('OTP code has been sent to email') }}<strong>{{ data.username }}</strong> của bạn.
         Vui lòng nhập OTP nhận được vào bên dưới
       </p>
     </div>

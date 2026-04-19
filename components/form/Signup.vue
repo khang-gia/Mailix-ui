@@ -1,20 +1,20 @@
 <template>
     <form class="space-y-4 md:space-y-6" @submit.prevent="onSubmit">
         <div>
-            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên của bạn</label>
+            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t('Your name') }}</label>
             <input name="name" id="name" type="text" v-model="first_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Tên của bạn" required="">
+                :placeholder="$t('Your name')" required="">
         </div>
         <div class="flex flex-row space-x-4">
             <div class="w-1/2">
-                <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email của bạn</label>
+                <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t('Your email') }}</label>
                 <input name="username" id="username" type="email" v-model="username"
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Email" required="">
             </div>
             <div class="w-1/2">
-                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mật khẩu</label>
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $t('Password') }}</label>
                 <input type="password" name="password" id="password" placeholder="••••••••" v-model="password"
                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required="">
@@ -28,9 +28,8 @@
         
         <!-- <GoogleSigninButton /> -->
 
-        <div class="text-sm font-light text-gray-500 dark:text-gray-400">
-            Bạn đã có tài khoản? <button type="button" @click.stop="onSignin"
-                class="font-medium text-primary-600 hover:underline dark:text-primary-500">Đăng nhập</button>
+        <div class="text-sm font-light text-gray-500 dark:text-gray-400">{{ $t('Already have an account?') }}<button type="button" @click.stop="onSignin"
+                class="font-medium text-primary-600 hover:underline dark:text-primary-500">{{ $t('Sign in') }}</button>
         </div>
     </form>
 </template>
