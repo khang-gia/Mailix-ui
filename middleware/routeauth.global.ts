@@ -83,7 +83,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
         return;
     }
 
-    let resource = department.group?.resources || [];
+    let resource = department.resources || department.group?.resources || [];
     const resourceNames = resource.map((item: { code: string }) => item.code);
     
     // Determine the user's default safe dashboard based on permissions

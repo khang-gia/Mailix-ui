@@ -68,7 +68,7 @@ const checkView = (slotName) => {
     if (role === 'A' || userInfo.value.is_superuser) {
         return false
     }
-    let resource = userInfo.value.profile_hr.department?.group?.resources || [];
+    let resource = userInfo.value.profile_hr.department?.resources || userInfo.value.profile_hr.department?.group?.resources || [];
     const resourceNames = resource.map(item => item.code);
     return !resourceNames.includes(slotName);
 }
@@ -189,11 +189,6 @@ const workspaceSubmenu = computed(() => [
 const companySubmenu = computed(() => [
     [{ slot: 'tip', disabled: true }],
     [{
-        link: '/groups', label: t('Groups'), click: () => {
-            useRouter().push({ name: 'groups' });
-        }
-    },
-    {
         link: '/departments', label: t('Department'), click: () => {
             useRouter().push({ name: 'departments' });
         }
