@@ -66,9 +66,13 @@
                         :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
                 </UFormGroup>
 
-                <UFormGroup
+                <!-- <UFormGroup
                     :label="$t('Resources')">
                     <SystemResourceSelectMulti v-model="groupInfo.resources" :placeholder="$t('Resources')" :multiple="true"/>
+                </UFormGroup> -->
+                <UFormGroup
+                    :label="$t('Users')">
+                    <CustomerUserSelect v-model="groupInfo.users" :placeholder="$t('Select users')" :multiple="true"/>
                 </UFormGroup>
                 <UFormGroup
                     :label="$t('Description')">
@@ -181,7 +185,8 @@ const defaultUserInfo = {
     name: '',
     code: '',
     description:'',
-    resources:[]
+    resources:[],
+    users: []
 }
 const groupInfo = ref(defaultUserInfo)
 

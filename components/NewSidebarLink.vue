@@ -189,6 +189,11 @@ const workspaceSubmenu = computed(() => [
 const companySubmenu = computed(() => [
     [{ slot: 'tip', disabled: true }],
     [{
+        link: '/groups', label: t('Groups'), click: () => {
+            useRouter().push({ name: 'groups' });
+        }
+    },
+    {
         link: '/departments', label: t('Department'), click: () => {
             useRouter().push({ name: 'departments' });
         }

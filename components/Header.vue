@@ -124,6 +124,7 @@ const routeCreate = [
     'customers',
     'system',
     "departments",
+    "groups"
 ]
 const routeSearch = [
     'hr',
@@ -132,6 +133,7 @@ const routeSearch = [
     'customers',
     'system',
     "departments",
+    "groups"
     // "dashboard-hrm"
 ]
 const props = defineProps({

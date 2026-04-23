@@ -74,10 +74,23 @@
                         :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
                 </UFormGroup>
                 
-                <UFormGroup
-                    :label="$t('Work assigned to')"
-                    name="assigned_to">
-                    <CustomerUserSelect v-model="workInfo.assigned_to" :placeholder="$t('Work assigned to')" :multiple="true"/>
+                <UFormGroup :label="$t('Assignees')">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <UButton icon="i-heroicons-plus" size="sm" color="gray" variant="soft" @click="isAssignModalOpen = true" :label="workInfo.assigned_groups.length + workInfo.assigned_to.length === 0 ? $t('Manage Assignees') : $t('Edit')"/>
+                        <template v-for="(item, index) in visibleAssignees" :key="'assignee-'+index">
+                            <div v-if="item.type === 'group'" class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full px-3 py-1 flex items-center ring-1 ring-gray-200 dark:ring-gray-700">
+                                <UIcon name="i-heroicons-user-group" class="mr-1 h-4 w-4" />
+                                <span class="text-sm font-medium">{{ item.data.name || $t('Group') }}</span>
+                            </div>
+                            <div v-else class="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 rounded-full px-3 py-1 flex items-center">
+                                <UIcon name="i-heroicons-user" class="mr-1 h-4 w-4" />
+                                <span class="text-sm font-medium">{{ item.data.full_name || item.data.username || item.data.name || $t('User') }}</span>
+                            </div>
+                        </template>
+                        <div v-if="leftoverAssigneesCount > 0" class="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full h-7 px-2 flex items-center justify-center text-xs font-bold ring-1 ring-gray-200 dark:ring-gray-700">
+                            +{{ leftoverAssigneesCount }}
+                        </div>
+                    </div>
                 </UFormGroup>
                 <UFormGroup
                     :label="$t('Work assigned by')"
@@ -341,11 +354,31 @@
         </template>
     </UCard>
     <!-- <UserProfileStepFooter @on-submit="onSubmit"/> -->
+    <!-- Assignees Modal -->
+    <WorkAssigneeModal 
+        v-model="isAssignModalOpen" 
+        v-model:assignedGroups="workInfo.assigned_groups" 
+        v-model:assignedTo="workInfo.assigned_to" 
+    />
 </template>
 <script setup>
 import * as yup from 'yup'
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+
+const isAssignModalOpen = ref(false)
+
+const maxVisibleAssignees = 3;
+const visibleAssignees = computed(() => {
+    const groups = (workInfo.value?.assigned_groups || []).map(g => ({ type: 'group', data: g }));
+    const users = (workInfo.value?.assigned_to || []).map(u => ({ type: 'user', data: u }));
+    const combined = [...groups, ...users];
+    return combined.slice(0, maxVisibleAssignees);
+});
+const leftoverAssigneesCount = computed(() => {
+    return ((workInfo.value?.assigned_groups || []).length + (workInfo.value?.assigned_to || []).length) - maxVisibleAssignees;
+});
+
 const busy = ref(false)
 const colorMode = useColorMode()
 const dayjs = useDayjs()
@@ -454,6 +487,7 @@ const defaultWorkInfo = {
     name: '',
     code: '',
     assigned_to: [],
+    assigned_groups: [],
     assigned_by:[],
     status: 1,
     managers: [],
@@ -495,6 +529,7 @@ const loadData = async () => {
             workInfo.value.end_date = workInfo.value.end_date ? new Date(workInfo.value.end_date) : null
             workInfo.value.actual_start_date = workInfo.value.actual_start_date ? new Date(workInfo.value.actual_start_date) : null
             workInfo.value.related_work = workInfo.value.related_work || ''
+            workInfo.value.assigned_groups = workInfo.value.assigned_groups || []
             console.log('response', workInfo.value)
         }
     } catch (error) {
