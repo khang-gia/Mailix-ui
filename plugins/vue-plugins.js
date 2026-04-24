@@ -19,9 +19,11 @@ export default defineNuxtPlugin(nuxtApp => {
     nuxtApp.vueApp.use(vfm)
 
     // Restore saved locale from localStorage so it applies immediately on reload
-    const savedLocale = (typeof localStorage !== 'undefined' && localStorage.getItem('app_locale')) || 'vi'
+    const savedLocale = (import.meta.client && localStorage.getItem('app_locale')) || 'vi'
 
     const i18n = createI18n({
+        legacy: false,
+        globalInjection: true,
         locale: savedLocale,
         fallbackLocale: 'vi',
         messages: {
@@ -30,4 +32,17 @@ export default defineNuxtPlugin(nuxtApp => {
         },
     })
     nuxtApp.vueApp.use(i18n)
+    
+    // Explicitly inject into global properties for SSR template access
+    nuxtApp.vueApp.config.globalProperties.$t = i18n.global.t.bind(i18n.global)
+    nuxtApp.vueApp.config.globalProperties.$i18n = i18n.global
+
+    return {
+        provide: {
+            t: i18n.global.t.bind(i18n.global),
+            tc: i18n.global.tc?.bind(i18n.global),
+            n: i18n.global.n?.bind(i18n.global),
+            d: i18n.global.d?.bind(i18n.global)
+        }
+    }
 })

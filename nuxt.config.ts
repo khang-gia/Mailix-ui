@@ -192,5 +192,8 @@ export default defineNuxtConfig({
     compatibilityDate: '2025-02-08',
     icon: {
         localApiEndpoint: "/icons",
+    },
+    build: {
+        transpile: ['vue-i18n'],
     }
 })
