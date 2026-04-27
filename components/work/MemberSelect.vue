@@ -25,12 +25,29 @@
                 ref="inputRef"
                 v-model="searchQuery"
                 :placeholder="selectedUsers.length ? '' : placeholder"
-                class="flex-1 min-w-[120px] bg-transparent outline-none text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400"
+                class="flex-1 min-w-[50px] bg-transparent outline-none text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400"
                 @focus="openDropdown"
                 @input="onInput"
                 @keydown.escape="isOpen = false"
                 @keydown.backspace="onBackspace"
             />
+
+            <!-- Action icons -->
+            <div class="flex items-center gap-1 self-center ml-auto pl-2">
+                <button
+                    v-if="selectedUsers.length > 0"
+                    class="w-6 h-6 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors group"
+                    :title="$t('Clear all')"
+                    @click.stop="clearAll"
+                >
+                    <UIcon name="i-heroicons-x-mark-20-solid" class="h-4 w-4" />
+                </button>
+                <UIcon 
+                    name="i-heroicons-chevron-down-20-solid" 
+                    class="h-4 w-4 text-gray-400 transition-transform duration-200"
+                    :class="isOpen ? 'rotate-180' : ''"
+                />
+            </div>
         </div>
 
         <!-- Dropdown panel -->
@@ -44,60 +61,89 @@
         >
             <div
                 v-if="isOpen"
-                class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden max-h-72 overflow-y-auto"
+                class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl overflow-hidden flex flex-col max-h-80"
             >
-                <div v-if="loading" class="flex items-center justify-center py-6">
-                    <UIcon name="i-heroicons-arrow-path" class="animate-spin h-5 w-5 text-gray-400" />
+                <!-- Search tabs for large lists -->
+                <div class="flex items-center gap-1 p-1.5 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50">
+                    <button 
+                        v-for="tab in [{id: 'all', label: $t('All')}, {id: 'user', label: $t('Users')}, {id: 'group', label: $t('Groups')}]"
+                        :key="tab.id"
+                        @mousedown.prevent="activeTab = tab.id"
+                        class="flex-1 px-2 py-1 text-[11px] font-bold uppercase tracking-wider rounded transition-all"
+                        :class="activeTab === tab.id 
+                            ? 'bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm ring-1 ring-gray-200 dark:ring-gray-600' 
+                            : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'"
+                    >
+                        {{ tab.label }}
+                    </button>
                 </div>
-                <div v-else-if="userResults.length === 0 && groupResults.length === 0" class="py-4 text-center text-sm text-gray-400">
-                    {{ searchQuery ? $t('No results') : $t('Start typing to search...') }}
-                </div>
-                <template v-else>
-                    <!-- Users section -->
-                    <div v-if="userResults.length > 0">
-                        <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800/50">
-                            {{ $t('Users') }}
-                        </div>
-                        <div
-                            v-for="user in userResults"
-                            :key="'user-' + user.id"
-                            class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-950 transition-colors"
-                            :class="isUserSelected(user) ? 'bg-primary-50 dark:bg-primary-950' : ''"
-                            @mousedown.prevent="toggleUser(user)"
-                        >
-                            <UIcon name="i-heroicons-user-circle" class="h-5 w-5 text-blue-400 flex-shrink-0" />
-                            <div class="flex-1 min-w-0">
-                                <div class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
-                                    {{ user.full_name || user.username }}
-                                </div>
-                                <div v-if="user.subtitle" class="text-xs text-gray-400 truncate">{{ user.subtitle }}</div>
-                            </div>
-                            <UIcon v-if="isUserSelected(user)" name="i-heroicons-check" class="h-4 w-4 text-primary-500 flex-shrink-0" />
-                        </div>
+
+                <div class="overflow-y-auto flex-1 custom-scrollbar">
+                    <div v-if="loading" class="flex items-center justify-center py-8">
+                        <UIcon name="i-heroicons-arrow-path" class="animate-spin h-5 w-5 text-primary-500" />
+                    </div>
+                    
+                    <div v-else-if="userResults.length === 0 && groupResults.length === 0" class="py-6 text-center text-sm text-gray-400">
+                        <UIcon name="i-heroicons-magnifying-glass" class="h-8 w-8 mx-auto mb-2 opacity-20" />
+                        {{ searchQuery ? $t('No results found') : $t('Type to search...') }}
                     </div>
 
-                    <!-- Groups section -->
-                    <div v-if="groupResults.length > 0">
-                        <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800/50">
-                            {{ $t('Groups') }}
+                    <template v-else>
+                        <!-- Users section -->
+                        <div v-if="userResults.length > 0 && (activeTab === 'all' || activeTab === 'user')">
+                            <div class="sticky top-0 z-10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 bg-gray-50/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-700">
+                                {{ $t('Users') }} ({{ userResults.length }})
+                            </div>
+                            <div
+                                v-for="user in userResults"
+                                :key="'user-' + user.id"
+                                class="group flex items-center gap-3 px-3 py-2 cursor-pointer transition-colors"
+                                :class="isUserSelected(user) 
+                                    ? 'bg-primary-50 dark:bg-primary-900/40 border-l-2 border-primary-500' 
+                                    : 'hover:bg-gray-50 dark:hover:bg-gray-800 border-l-2 border-transparent'"
+                                @mousedown.prevent="toggleUser(user)"
+                            >
+                                <div class="relative">
+                                    <UAvatar :alt="user.full_name || user.username" size="sm" />
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate">
+                                        {{ user.full_name || user.username }}
+                                    </div>
+                                    <div v-if="user.subtitle" class="text-[11px] text-gray-400 truncate opacity-80">{{ user.subtitle }}</div>
+                                </div>
+                                <UIcon v-if="isUserSelected(user)" name="i-heroicons-check-circle-20-solid" class="h-5 w-5 text-primary-500 flex-shrink-0" />
+                            </div>
                         </div>
-                        <div
-                            v-for="group in groupResults"
-                            :key="'group-' + group.id"
-                            class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-950 transition-colors"
-                            @mousedown.prevent="expandGroup(group)"
-                        >
-                            <UIcon name="i-heroicons-user-group" class="h-5 w-5 text-orange-400 flex-shrink-0" />
-                            <div class="flex-1 min-w-0">
-                                <div class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{{ group.name }}</div>
-                                <div class="text-xs text-gray-400">
-                                    {{ (group.users || []).length }} {{ $t('members') }}
+
+                        <!-- Groups section -->
+                        <div v-if="groupResults.length > 0 && (activeTab === 'all' || activeTab === 'group')">
+                            <div class="sticky top-0 z-10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 bg-orange-50/95 dark:bg-orange-900/40 backdrop-blur-sm border-b border-orange-100 dark:border-orange-800">
+                                {{ $t('Groups') }} ({{ groupResults.length }})
+                            </div>
+                            <div
+                                v-for="group in groupResults"
+                                :key="'group-' + group.id"
+                                class="group flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-950/50 transition-colors border-b border-gray-50 dark:border-gray-800/50 last:border-0"
+                                @mousedown.prevent="expandGroup(group)"
+                            >
+                                <div class="h-8 w-8 rounded-lg bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center text-orange-600 dark:text-orange-400">
+                                    <UIcon name="i-heroicons-user-group" class="h-5 w-5" />
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-sm font-bold text-gray-800 dark:text-gray-100 truncate group-hover:text-orange-600 transition-colors">{{ group.name }}</div>
+                                    <div class="text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                        <UIcon name="i-heroicons-users" class="h-3 w-3" />
+                                        {{ (group.users || []).length }} {{ $t('members will be added') }}
+                                    </div>
+                                </div>
+                                <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <UIcon name="i-heroicons-plus-circle-20-solid" class="h-5 w-5 text-orange-500" />
                                 </div>
                             </div>
-                            <UIcon name="i-heroicons-arrow-right-circle" class="h-4 w-4 text-orange-400 flex-shrink-0" />
                         </div>
-                    </div>
-                </template>
+                    </template>
+                </div>
             </div>
         </Transition>
     </div>
@@ -116,6 +162,7 @@ const selectedUsers = defineModel('selectedUsers', { type: Array, default: () =>
 const isOpen = ref(false)
 const loading = ref(false)
 const searchQuery = ref('')
+const activeTab = ref('all')
 const userResults = ref([])
 const groupResults = ref([])
 const containerRef = ref(null)
@@ -165,6 +212,10 @@ function toggleUser(user) {
     } else {
         selectedUsers.value = [...selectedUsers.value, user]
     }
+}
+
+function clearAll() {
+    selectedUsers.value = []
 }
 
 function removeUser(user) {

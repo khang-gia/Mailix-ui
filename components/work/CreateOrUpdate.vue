@@ -75,7 +75,7 @@
                 </UFormGroup>
                 
                 <UFormGroup :label="$t('Assignees')" name="assigned_to">
-                    <WorkMemberSelect v-model:selectedUsers="workInfo.assigned_to" :placeholder="$t('Search users or groups...')"/>
+                    <WorkMemberSelect v-model:selectedUsers="workInfo.assigned_to" :placeholder="$t('Assignees')"/>
                 </UFormGroup>
                 <UFormGroup
                     :label="$t('Work assigned by')"
@@ -95,6 +95,7 @@
                         ref="startdatepicker"
                         :required="true"
                         class="w-full"
+                        mode="datetime"
                         buttonType="outline"
                         :place-holder="$t('Start date')"
                     />
@@ -107,6 +108,7 @@
                         ref="enddatepicker"
                         :required="true"
                         class="w-full"
+                        mode="datetime"
                         buttonType="outline"
                         :place-holder="$t('End date')"
                     />
@@ -116,9 +118,10 @@
                     name='actual_start_date'>
                     <BaseDatePicker
                         v-model="workInfo.actual_start_date"
-                        ref="startdatepicker"
+                        ref="actualstartdatepicker"
                         :required="true"
                         class="w-full"
+                        mode="datetime"
                         buttonType="outline"
                         :place-holder="$t('Actual start date')"
                     />
@@ -475,9 +478,9 @@ const defaultWorkInfo = {
     assigned_by:[],
     status: 1,
     managers: [],
-    start_date: '',
-    end_date: '',
-    actual_start_date: '',
+    start_date: new Date(),
+    end_date: new Date(new Date().setHours(new Date().getHours() + 1)),
+    actual_start_date: new Date(),
     priority: 2,
     related_work:'',
     created_by: userInfo.value.id,
@@ -541,7 +544,7 @@ const formatData2 = () => {
         } else if (typeof value === 'object' && value !== null && value.id && key !== 'schedule') {
             formattedData[key] = value.id;
         } else if (['start_date','end_date','actual_start_date'].includes(key)) {
-            formattedData[key] = dayjs(value).format('YYYY-MM-DD');
+            formattedData[key] = dayjs(value).tz(localTz).format();
         }else if (['avatar'].includes(key)){
             if (value[0] instanceof File) {
                 formattedData[key] = value[0];
@@ -554,10 +557,14 @@ const formatData2 = () => {
                     formattedData[key] = formattedData[key] || {};
 
                     if (subKey === 'start_datetime') {
-                        formattedData[key][subKey] = dayjs(subValue).startOf('day').tz(localTz).format();
+                        formattedData[key][subKey] = workInfo.value.schedule.is_all_day 
+                            ? dayjs(subValue).startOf('day').tz(localTz).format()
+                            : dayjs(subValue).tz(localTz).format();
                     }
                     else if (subKey === 'end_datetime') {
-                        formattedData[key][subKey] = dayjs(subValue).endOf('day').tz(localTz).format();
+                        formattedData[key][subKey] = workInfo.value.schedule.is_all_day 
+                            ? dayjs(subValue).endOf('day').tz(localTz).format()
+                            : dayjs(subValue).tz(localTz).format();
                     } else if (['participants'].includes(subKey)) {
                         formattedData[key][subKey] = (subValue || []).map(item => item.id || item);
                     } else if (subKey === 'has_reminder') {

@@ -14,8 +14,7 @@
                     hide-time-header
                     is24hr
                     locale="vi"
-                    @close="close"
-                    @update:model-value="close();dateValue = $event"
+                    @update:model-value="onUpdateModelValue($event, close)"
                 />
             </template>
         </UPopover>
@@ -62,7 +61,17 @@ const label = computed(() => {
         if (dateValue.value.toDateString() == new Date().toDateString()) return 'Hôm nay'
         return dateValue.value.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric' })
     } 
-    return dateValue.value ?dateValue.value.toLocaleDateString('vi-vi', { year: 'numeric', month: 'short', day: 'numeric' }): props.placeHolder
-    
+    const formatOptions = props.mode === 'datetime' 
+        ? { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }
+        : { year: 'numeric', month: 'short', day: 'numeric' };
+        
+    return dateValue.value ? dateValue.value.toLocaleString('vi-vn', formatOptions) : props.placeHolder
 })
+
+function onUpdateModelValue(val, close) {
+    dateValue.value = val
+    if (props.mode === 'date') {
+        close()
+    }
+}
 </script>

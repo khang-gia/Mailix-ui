@@ -1134,5 +1134,7 @@
     "Users": "Người dùng",
     "Manage Members": "Quản lý thành viên",
     "Members updated successfully": "Cập nhật thành viên thành công",
-    "Failed to update members": "Cập nhật thành viên thất bại"
+    "Failed to update members": "Cập nhật thành viên thất bại",
+    "Clear all": "Xóa tất cả",
+    "members will be added": "người dùng sẽ được thêm"
 }

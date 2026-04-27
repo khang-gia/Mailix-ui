@@ -1133,5 +1133,7 @@
     "Users": "Users",
     "Manage Members": "Manage Members",
     "Members updated successfully": "Members updated successfully",
-    "Failed to update members": "Failed to update members"
+    "Failed to update members": "Failed to update members",
+    "Clear all": "Clear all",
+    "members will be added": "members will be added"
 }
