@@ -74,33 +74,18 @@
                         :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined"/>
                 </UFormGroup>
                 
-                <UFormGroup :label="$t('Assignees')">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <UButton icon="i-heroicons-plus" size="sm" color="gray" variant="soft" @click="isAssignModalOpen = true" :label="workInfo.assigned_groups.length + workInfo.assigned_to.length === 0 ? $t('Manage Assignees') : $t('Edit')"/>
-                        <template v-for="(item, index) in visibleAssignees" :key="'assignee-'+index">
-                            <div v-if="item.type === 'group'" class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full px-3 py-1 flex items-center ring-1 ring-gray-200 dark:ring-gray-700">
-                                <UIcon name="i-heroicons-user-group" class="mr-1 h-4 w-4" />
-                                <span class="text-sm font-medium">{{ item.data.name || $t('Group') }}</span>
-                            </div>
-                            <div v-else class="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 rounded-full px-3 py-1 flex items-center">
-                                <UIcon name="i-heroicons-user" class="mr-1 h-4 w-4" />
-                                <span class="text-sm font-medium">{{ item.data.full_name || item.data.username || item.data.name || $t('User') }}</span>
-                            </div>
-                        </template>
-                        <div v-if="leftoverAssigneesCount > 0" class="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full h-7 px-2 flex items-center justify-center text-xs font-bold ring-1 ring-gray-200 dark:ring-gray-700">
-                            +{{ leftoverAssigneesCount }}
-                        </div>
-                    </div>
+                <UFormGroup :label="$t('Assignees')" name="assigned_to">
+                    <WorkMemberSelect v-model:selectedUsers="workInfo.assigned_to" :placeholder="$t('Search users or groups...')"/>
                 </UFormGroup>
                 <UFormGroup
                     :label="$t('Work assigned by')"
                     name="assigned_by">
-                    <CustomerUserSelect v-model="workInfo.assigned_by" :placeholder="$t('Work assigned by')" :multiple="true"/>
+                    <WorkMemberSelect v-model:selectedUsers="workInfo.assigned_by" :placeholder="$t('Work assigned by')"/>
                 </UFormGroup>
                 <UFormGroup
                     :label="$t('Work manage by')"
                     name="managers">
-                    <CustomerUserSelect v-model="workInfo.managers" :placeholder="$t('Work manage by')" :multiple="true"/>
+                    <WorkMemberSelect v-model:selectedUsers="workInfo.managers" :placeholder="$t('Work manage by')"/>
                 </UFormGroup>
                 <UFormGroup
                     :label="$t('Start date')"
@@ -354,30 +339,13 @@
         </template>
     </UCard>
     <!-- <UserProfileStepFooter @on-submit="onSubmit"/> -->
-    <!-- Assignees Modal -->
-    <WorkAssigneeModal 
-        v-model="isAssignModalOpen" 
-        v-model:assignedGroups="workInfo.assigned_groups" 
-        v-model:assignedTo="workInfo.assigned_to" 
-    />
 </template>
 <script setup>
 import * as yup from 'yup'
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
-const isAssignModalOpen = ref(false)
 
-const maxVisibleAssignees = 3;
-const visibleAssignees = computed(() => {
-    const groups = (workInfo.value?.assigned_groups || []).map(g => ({ type: 'group', data: g }));
-    const users = (workInfo.value?.assigned_to || []).map(u => ({ type: 'user', data: u }));
-    const combined = [...groups, ...users];
-    return combined.slice(0, maxVisibleAssignees);
-});
-const leftoverAssigneesCount = computed(() => {
-    return ((workInfo.value?.assigned_groups || []).length + (workInfo.value?.assigned_to || []).length) - maxVisibleAssignees;
-});
 
 const busy = ref(false)
 const colorMode = useColorMode()
@@ -590,6 +558,10 @@ const formatData2 = () => {
             formattedData[key] = value;
         }
     });
+
+    // Ensure assigned_groups is always an empty array to stop saving it directly
+    formattedData['assigned_groups'] = [];
+    
     return formattedData;
 };
 

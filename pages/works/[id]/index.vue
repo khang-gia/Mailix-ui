@@ -18,6 +18,9 @@
         </template>
 </UDropdown> -->
 
+      <UButton color="blue" variant="soft" size="sm" icon="i-heroicons-user-group" @click="isMemberModalOpen = true">
+        {{ $t('Members') }}
+      </UButton>
       <!-- Action Dropdown -->
       <UDropdown :items="actionDropdown" :popper="{ placement: 'bottom-start' }">
         <UButton color="gray" variant="ghost" size="sm" icon="i-heroicons-chevron-double-down" class="border" />
@@ -286,6 +289,10 @@
   <!-- Progress Edit Modal -->
   <ModalUpdateProgress v-model="showProgressModal" :work-id="workInfo.id" :progress="workInfo.progress"
     @updated="handleProgressUpdated" />
+
+  <!-- Member Modal -->
+  <WorkMemberModal v-model="isMemberModalOpen" v-model:assignedTo="workInfo.assigned_to"
+    v-model:assignedBy="workInfo.assigned_by" v-model:managers="workInfo.managers" @save="saveWorkMembers" />
 </template>
 
 <script setup>
@@ -525,6 +532,36 @@ const deletingDocument = ref(null)
 const fileInputRef = ref(null)
 const uploading = ref(false)
 const showProgressModal = ref(false)
+const isMemberModalOpen = ref(false)
+
+const saveWorkMembers = async () => {
+  try {
+    const payload = {
+      assigned_to: workInfo.value.assigned_to.map(u => u.id || u),
+      assigned_by: workInfo.value.assigned_by.map(u => u.id || u),
+      managers: workInfo.value.managers.map(u => u.id || u)
+    }
+
+    const response = await useAPI().patch(`core/works/${workInfo.value.id}/`, payload);
+
+    if (response.status.value === 'success') {
+      useToast().add({
+        title: t('Success'),
+        description: t('Members updated successfully'),
+        color: 'green',
+      });
+      // Refresh work info to update lists
+      await fetchWorkInfo();
+    }
+  } catch (error) {
+    console.error('Error updating members:', error);
+    useToast().add({
+      title: t('Error'),
+      description: t('Failed to update members'),
+      color: 'red',
+      });
+  }
+}
 
 // Handle progress update from modal
 const handleProgressUpdated = (newProgress) => {

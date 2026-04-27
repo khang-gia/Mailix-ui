@@ -1126,5 +1126,13 @@
     "{hours} hours ago": "{hours} giờ trước",
     "{hours} hours left": "Còn {hours} giờ",
     "{mins} minutes ago": "{mins} phút trước",
-    "No results": "Không có kết quả"
+    "No results": "Không có kết quả",
+    "Languages": "Ngôn ngữ",
+    "Account": "Tài khoản",
+    "Logout": "Đăng xuất",
+    "Manage Assignees": "Quản lý người thực hiện",
+    "Users": "Người dùng",
+    "Manage Members": "Quản lý thành viên",
+    "Members updated successfully": "Cập nhật thành viên thành công",
+    "Failed to update members": "Cập nhật thành viên thất bại"
 }

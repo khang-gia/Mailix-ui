@@ -1125,5 +1125,13 @@
     "{days} days {hours} hours left": "{days} days {hours} hours left",
     "{hours} hours ago": "{hours} hours ago",
     "{hours} hours left": "{hours} hours left",
-    "{mins} minutes ago": "{mins} minutes ago"
+    "{mins} minutes ago": "{mins} minutes ago",
+    "Languages": "Languages",
+    "Account": "Account",
+    "Logout": "Logout",
+    "Manage Assignees": "Manage Assignees",
+    "Users": "Users",
+    "Manage Members": "Manage Members",
+    "Members updated successfully": "Members updated successfully",
+    "Failed to update members": "Failed to update members"
 }
