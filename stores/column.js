@@ -283,18 +283,18 @@ export const useDisplayColStore = defineStore('column', () => {
     {
         key: 'not_started',
         label: 'Not Started',
-        is_show:false,
-    },
-    {
-        key: 'backlog',
-        label: 'Backlog',
         is_show:true,
     },
-    {
-        key: 'todo',
-        label: 'Todo',
-        is_show:true,
-    },
+    // {
+    //     key: 'backlog',
+    //     label: 'Backlog',
+    //     is_show:true,
+    // },
+    // {
+    //     key: 'todo',
+    //     label: 'Todo',
+    //     is_show:true,
+    // },
     {
         key: 'in_progress',
         label: 'In Progress',
@@ -308,63 +308,63 @@ export const useDisplayColStore = defineStore('column', () => {
     {
         key: 'on_hold',
         label: 'On Hold',
-        is_show:false,
+        is_show:true,
     },
     {
         key: 'cancelled',
         label: 'Cancelled',
-        is_show:false,
+        is_show:true,
     },
-    {
-        key: 'deferred',
-        label: 'Deferred',
-        is_show:false,
-    },
-    {
-        key: 'waiting_for_review',
-        label: 'Waiting for Review',
-        is_show:false,
-    },
-    {
-        key: 'approved',
-        label: 'Approved',
-        is_show:false,
-    },
-    {
-        key: 'rejected',
-        label: 'Rejected',
-        is_show:false,
-    },
-    {
-        key: 'pending',
-        label: 'Pending',
-        is_show:false,
-    },
-    {
-        key: 'failed',
-        label: 'Failed',
-        is_show:false,
-    },
-    {
-        key: 'success',
-        label: 'Success',
-        is_show:false,
-    },
-    {
-        key: 'archived',
-        label: 'Archived',
-        is_show:false,
-    },
-    {
-        key: 'deleted',
-        label: 'Deleted',
-        is_show:false,
-    },
-    {
-        key: 'draft',
-        label: 'Draft',
-        is_show:false,
-    },
+    // {
+    //     key: 'deferred',
+    //     label: 'Deferred',
+    //     is_show:false,
+    // },
+    // {
+    //     key: 'waiting_for_review',
+    //     label: 'Waiting for Review',
+    //     is_show:false,
+    // },
+    // {
+    //     key: 'approved',
+    //     label: 'Approved',
+    //     is_show:false,
+    // },
+    // {
+    //     key: 'rejected',
+    //     label: 'Rejected',
+    //     is_show:false,
+    // },
+    // {
+    //     key: 'pending',
+    //     label: 'Pending',
+    //     is_show:false,
+    // },
+    // {
+    //     key: 'failed',
+    //     label: 'Failed',
+    //     is_show:false,
+    // },
+    // {
+    //     key: 'success',
+    //     label: 'Success',
+    //     is_show:false,
+    // },
+    // {
+    //     key: 'archived',
+    //     label: 'Archived',
+    //     is_show:false,
+    // },
+    // {
+    //     key: 'deleted',
+    //     label: 'Deleted',
+    //     is_show:false,
+    // },
+    // {
+    //     key: 'draft',
+    //     label: 'Draft',
+    //     is_show:false,
+    // },
   ])
   const currentColumn = ref([])
   function setColumnModal(is_open, type){
@@ -428,23 +428,23 @@ export const useDisplayColStore = defineStore('column', () => {
         { key: 'status_display', label: 'Status', sortable: true, is_show: true }
       ],
       work_kanban: [
-        { key: 'not_started', label: 'Not Started', sortable: true, is_show: false },
-        { key: 'backlog', label: 'Backlog', sortable: true, is_show: true },
-        { key: 'todo', label: 'Todo', sortable: true, is_show: true },
+        { key: 'not_started', label: 'Not Started', sortable: true, is_show: true },
+        // { key: 'backlog', label: 'Backlog', sortable: true, is_show: true },
+        // { key: 'todo', label: 'Todo', sortable: true, is_show: true },
         { key: 'in_progress', label: 'In Progress', sortable: true, is_show: true },
         { key: 'completed', label: 'Completed', sortable: true, is_show: true },
-        { key: 'on_hold', label: 'On Hold', sortable: true, is_show: false },
-        { key: 'cancelled', label: 'Cancelled', sortable: true, is_show: false },
-        { key: 'deferred', label: 'Deferred', sortable: true, is_show: false },
-        { key: 'waiting_for_review', label: 'Waiting for Review', sortable: true, is_show: false },
-        { key: 'approved', label: 'Approved', sortable: true, is_show: false },
-        { key: 'rejected', label: 'Rejected', sortable: true, is_show: false },
-        { key: 'pending', label: 'Pending', sortable: true, is_show: false },
-        { key: 'failed', label: 'Failed', sortable: true, is_show: false },
-        { key: 'success', label: 'Success', sortable: true, is_show: false },
-        { key: 'archived', label: 'Archived', sortable: true, is_show: false },
-        { key: 'deleted', label: 'Deleted', sortable: true, is_show: false },
-        { key: 'draft', label: 'Draft', sortable: true, is_show: false }
+        { key: 'on_hold', label: 'On Hold', sortable: true, is_show: true },
+        { key: 'cancelled', label: 'Cancelled', sortable: true, is_show: true },
+        // { key: 'deferred', label: 'Deferred', sortable: true, is_show: false },
+        // { key: 'waiting_for_review', label: 'Waiting for Review', sortable: true, is_show: false },
+        // { key: 'approved', label: 'Approved', sortable: true, is_show: false },
+        // { key: 'rejected', label: 'Rejected', sortable: true, is_show: false },
+        // { key: 'pending', label: 'Pending', sortable: true, is_show: false },
+        // { key: 'failed', label: 'Failed', sortable: true, is_show: false },
+        // { key: 'success', label: 'Success', sortable: true, is_show: false },
+        // { key: 'archived', label: 'Archived', sortable: true, is_show: false },
+        // { key: 'deleted', label: 'Deleted', sortable: true, is_show: false },
+        // { key: 'draft', label: 'Draft', sortable: true, is_show: false }
       ]
     }
     return defaults[type] || []

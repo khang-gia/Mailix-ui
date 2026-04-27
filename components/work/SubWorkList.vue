@@ -31,8 +31,13 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { useSearchStore } from '@/stores/search'
+import { storeToRefs } from 'pinia'
 
 const { t } = useI18n()
+const searchStore = useSearchStore()
+const { search } = storeToRefs(searchStore)
+
 const props = defineProps({
     parentId: {
         type: [Number, String],
@@ -56,6 +61,7 @@ const fetchSubWorks = async () => {
             related_work: props.parentId,
             page: subPage.value,
             page_size: subPageSize,
+            search: search.value,
         })
         subWorks.value = data.results
         totalSubWorks.value = data.count
@@ -67,6 +73,10 @@ const fetchSubWorks = async () => {
 }
 
 watch(subPage, fetchSubWorks)
+watch(search, () => {
+    subPage.value = 1
+    fetchSubWorks()
+})
 
 onMounted(() => fetchSubWorks())
 </script>

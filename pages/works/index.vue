@@ -22,7 +22,7 @@ const viewMode = ref('list')
 
 const listFilterTabs = {
   0: null,
-  1: { 'status': 2 },
+  1: { 'status': 4 },
   2: { 'assigned_to__isnull': false },
   3: { 'assigned_to__isnull': true },
   4: { 'assigned_by': userInfo.value.id },
