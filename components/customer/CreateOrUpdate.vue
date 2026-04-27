@@ -5,8 +5,8 @@
     }">
         <template #header>
             <div class="flex items-center justify-between">
-                <UBreadcrumb :ui="{ ol: 'gap-x-3', li: 'gap-x-3', active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
-                    :links="[{ label: $t('Customer List'), to: '/customers' }, { label: props.isUpdate ? cloneCustomerInfo.name : $t('Create customer'), to: props.isUpdate ? `/customers/${useRoute().params.id}` : '' }, { label: props.isUpdate ? $t('Update') : '' }]">
+                <UBreadcrumb :ui="{ ol: 'gap-x-3', li: 'gap-x-3', active: 'text-[#0313B0] dark:text-[#E0E0E0]' }"
+                    :links="breadcrumbLinks">
                 </UBreadcrumb>
                 <div class="flex items-center space-x-2">
                     <UDropdown :items="props.isUpdate ? updateItemDropdown : createItemDropdown"
@@ -222,6 +222,23 @@ const { t } = useI18n();
 const busy = ref(false)
 const colorMode = useColorMode()
 const dayjs = useDayjs()
+
+const breadcrumbLinks = computed(() => {
+    const links = [{ label: t('Customer List'), to: '/customers' }];
+    
+    if (props.isUpdate) {
+        links.push({ 
+            label: cloneCustomerInfo.value.name || t('Loading...'), 
+            to: `/customers/${useRoute().params.id}` 
+        });
+        links.push({ label: t('Update') });
+    } else {
+        links.push({ label: t('Create customer') });
+    }
+    
+    return links;
+});
+
 const errors = ref({})
 const schema = yup.object({
     name: yup.string().required(t('This field is required')),

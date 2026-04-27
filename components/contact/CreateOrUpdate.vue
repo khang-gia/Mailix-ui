@@ -5,8 +5,8 @@
     }">
         <template #header>
             <div class="flex items-center justify-between">
-                <UBreadcrumb :ui="{ ol: 'gap-x-3', li: 'gap-x-3', active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
-                    :links="[{ label: $t('Contact List'), to: '/contacts' }, { label: props.isUpdate ? cloneContactInfo.name : $t('Create contact'), to: props.isUpdate ? `/contacts/${useRoute().params.id}` : '' }, { label: props.isUpdate ? $t('Update') : '' }]">
+                <UBreadcrumb :ui="{ ol: 'gap-x-3', li: 'gap-x-3', active: 'text-[#0313B0] dark:text-[#E0E0E0]' }"
+                    :links="breadcrumbLinks">
                     <!-- <template #divider>
                     <span class="w-8 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
                 </template> -->
@@ -260,6 +260,23 @@ const { t } = useI18n();
 const busy = ref(false)
 const colorMode = useColorMode()
 const dayjs = useDayjs()
+
+const breadcrumbLinks = computed(() => {
+    const links = [{ label: t('Contact List'), to: '/contacts' }];
+    
+    if (props.isUpdate) {
+        links.push({ 
+            label: cloneContactInfo.value.name || t('Loading...'), 
+            to: `/contacts/${useRoute().params.id}` 
+        });
+        links.push({ label: t('Update') });
+    } else {
+        links.push({ label: t('Create contact') });
+    }
+    
+    return links;
+});
+
 const errors = ref({})
 const schema = yup.object({
     name: yup.string().required(t('This field is required')),

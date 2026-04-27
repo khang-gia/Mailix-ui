@@ -10,8 +10,8 @@
                     :links="[{ label: $t('Work List'), to: '/works' }, { label: props.isUpdate ? workInfo.name : $t('Create work') }]">
                 </UBreadcrumb> -->
                 <UBreadcrumb
-                    :ui="{ ol: 'gap-x-3', li: 'gap-x-3',active: 'text-[#0313B0] dark:text-[#E0E0E0]', }"
-                    :links="[{ label: $t('Work List'), to: '/works' }, { label: props.isUpdate ? workInfo.name: $t('Create work'), to: props.isUpdate ? `/works/${useRoute().params.id}` : ''}, { label: props.isUpdate ? $t('Update') : '' }]">
+                    :ui="{ ol: 'gap-x-3', li: 'gap-x-3', active: 'text-[#0313B0] dark:text-[#E0E0E0]' }"
+                    :links="breadcrumbLinks">
                 </UBreadcrumb>
                 <div class="flex items-center space-x-2">
                     <UButton
@@ -359,6 +359,22 @@ const { setCalendarCreateModal } = modalStore
 const dateMode = computed(() => {
     return workInfo.value.schedule.is_all_day ? 'date' : 'datetime'
 })
+
+const breadcrumbLinks = computed(() => {
+    const links = [{ label: t('Work List'), to: '/works' }];
+    
+    if (props.isUpdate) {
+        links.push({ 
+            label: workInfo.value.name || t('Loading...'), 
+            to: `/works/${useRoute().params.id}` 
+        });
+        links.push({ label: t('Update') });
+    } else {
+        links.push({ label: t('Create work') });
+    }
+    
+    return links;
+});
 const schema = yup.object({
     name: yup.string().required(t('This field is required')),
     code: yup.string()
