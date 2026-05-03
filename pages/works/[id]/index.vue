@@ -65,9 +65,9 @@
               </template>
             </WorkDetailItem>
 
-            <WorkDetailItem label="Start date" :value="dayjs(workInfo.start_date).format('YYYY-MM-DD HH:mm')" />
-            <WorkDetailItem label="End date" :value="dayjs(workInfo.end_date).format('YYYY-MM-DD HH:mm')" />
-            <WorkDetailItem label="Actual start date" :value="dayjs(workInfo.actual_start_date).format('YYYY-MM-DD HH:mm')" />
+            <WorkDetailItem label="Start date" :value="workInfo.start_date ? dayjs(workInfo.start_date).format('YYYY-MM-DD HH:mm') : '--'" />
+            <WorkDetailItem label="End date" :value="workInfo.end_date ? dayjs(workInfo.end_date).format('YYYY-MM-DD HH:mm') : '--'" />
+            <WorkDetailItem label="Actual start date" :value="workInfo.actual_start_date ? dayjs(workInfo.actual_start_date).format('YYYY-MM-DD HH:mm') : '--'" />
             <WorkDetailItem v-if="workInfo.status" label="Status" :value="workInfo.status_display"
               class="md:col-span-1">
               <template #value>

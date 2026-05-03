@@ -86,7 +86,7 @@ const props = defineProps({
     default: 'work'
   }
 })
-const translateField = ['status', 'priority', 'type_of_customer', 'assigned_to', 'assigned_by', 'full_name', 'name', 'code', 'title','stage']
+const translateField = ['status', 'priority', 'type_of_customer', 'assigned_to', 'assigned_by', 'managers', 'assigned_groups', 'full_name', 'name', 'code', 'title','stage']
 const ignoreFields = ['avatar']
 const textFields = ['note', 'description']
 const historyAction = (type) => {
