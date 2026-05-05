@@ -205,6 +205,11 @@ const manageSubmenu = computed(() => [
         link: '/company/theme', label: t('Theme'), click: () => {
             useRouter().push({ name: 'company-theme' });
         }
+    },
+    {
+        link: '/company/config', label: t('System Config'), click: () => {
+            useRouter().push({ name: 'company-config' });
+        }
     }],
 ])
 const taskSubmenu = computed(() => [

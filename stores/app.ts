@@ -6,7 +6,8 @@ export const useAppStore = defineStore('app', {
     loading: false,
     sidebarExpanded: false,
     sidebarAutoClose: false,
-    appTitle: ''
+    appTitle: '',
+    systemConfig: {} as Record<string, any>
   }),
   getters: {
     isLoading: (state) => state.loading,
@@ -34,6 +35,9 @@ export const useAppStore = defineStore('app', {
     },
     setAppTitle (_newTitle: string) {
       this.appTitle = _newTitle
+    },
+    setSystemConfig(config: Record<string, any>) {
+      this.systemConfig = config
     }
 
   },

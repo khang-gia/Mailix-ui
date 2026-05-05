@@ -1,10 +1,12 @@
 <script setup>
 import { useUserStore } from '@/stores/user'
+import { useAppStore } from '@/stores/app'
 import { storeToRefs } from 'pinia'
 import { computed, watch, onMounted } from 'vue'
 import { useI18n } from "vue-i18n";
 
 const userStore = useUserStore()
+const appStore = useAppStore()
 const { company } = storeToRefs(userStore)
 
 const { locale } = useI18n()
@@ -33,9 +35,22 @@ const fetchCompany = async () => {
   }
 }
 
+const fetchConfig = async () => {
+  if (status.value !== 'authenticated') return
+  try {
+    const data = await api.$get('/system/config/')
+    if (data) {
+      appStore.setSystemConfig(data)
+    }
+  } catch (e) {
+    console.error('Failed to fetch system config', e)
+  }
+}
+
 onMounted(() => {
   if (status.value === 'authenticated') {
     fetchCompany()
+    fetchConfig()
     syncLocale()
   }
 })
@@ -43,6 +58,7 @@ onMounted(() => {
 watch(status, (newStatus) => {
   if (newStatus === 'authenticated') {
     fetchCompany()
+    fetchConfig()
     syncLocale()
   }
 })
