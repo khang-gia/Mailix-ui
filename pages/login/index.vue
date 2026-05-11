@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <!-- <button type="button" @click="onForgotPassword" class="text-sm text-blue-500 hover:underline">{{ $t('Forgot password?') }}</button> -->
-                    <a href="/login/forgot-password" class="text-sm text-[#0313B0] hover:underline">{{ $t('Forgot password?') }}</a>
+                    <NuxtLink to="/login/forgot-password" class="text-sm text-[#0313B0] hover:underline">{{ $t('Forgot password?') }}</NuxtLink>
                 </div>
             </div>
             <button class="p-2 w-full text-white py-2 px-4 rounded-lg shadow-lg mt-10 bg-[#0313B0] hover:bg-[#020B51] transition duration-300">{{ $t('SIGN IN') }}</button>

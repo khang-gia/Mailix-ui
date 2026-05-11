@@ -22,7 +22,7 @@
                     class="mb-2 w-full text-white bg-[#0313B0] hover:bg-[#020B51] disabled:hover:bg-[#0313B0] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm disabled:opacity-75"
                     text="Tiếp theo"></BaseButton>
             </div>
-            <a href="/login" class="text-sm text-[#0313B0] hover:underline">{{ $t('Back to login') }}</a>
+            <NuxtLink to="/login" class="text-sm text-[#0313B0] hover:underline">{{ $t('Back to login') }}</NuxtLink>
             
         </form>
         <form v-else-if="viewMode === 'reset-password'" class="space-y-4 md:space-y-6" @submit.prevent="onSubmitOtp">
