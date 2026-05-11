@@ -85,14 +85,17 @@
 
                 <!-- Description -->
                 <UFormGroup :label="$t('Description')">
-                    <UTextarea
+                    <!-- <UTextarea
                         class="w-full"
                         :model-value="event?.description"
                         autoresize
                         disabled
                         :rows="3"
                         :ui="{ base: 'disabled:opacity-100 disabled:cursor-auto' }"
-                    />
+                    /> -->
+                    <client-only>
+                        <RickTextEditor v-if="event" v-model="event.description" :readOnly="true" />
+                    </client-only>
                 </UFormGroup>
             </div>
         </UForm>
