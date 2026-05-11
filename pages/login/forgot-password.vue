@@ -81,8 +81,8 @@ const inputOtp = ref('')
 const username = ref('')
 const sendOtp = async (info) => {
     const { data, error } = await useAPI().post('/auth/otp/generate_email/', info)
-    console.log('## sendOtp', data)
-    if (data) {
+    console.log('## sendOtp', data.value, error.value)
+    if (data.value) {
         username.value = data.value.username
     }
     if (error.value) {
@@ -108,11 +108,17 @@ const onSubmitEmail = async () => {
     }
     catch (err) {
         console.log('## error', err)
-        const msg = Object.values(err.data).join(' | ')
-
+        let msg = 'Đã có lỗi xảy ra. Vui lòng thử lại.'
+        if (err && err.data) {
+            msg = Object.values(err.data).flat().join(' | ')
+        } else if (err && err.message) {
+            msg = err.message
+        }
         snackbar.error(msg, 'Tạo OTP thất bại!')
     }
-    busy.value = false
+    finally {
+        busy.value = false
+    }
 }
 
 const verify = async (email,username, password, code) => {
