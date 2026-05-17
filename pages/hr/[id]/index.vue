@@ -8,8 +8,10 @@
             <UButton color="gray" variant="ghost" icon="ph:user-circle-plus-light" :label="$t('Create account')"
                 size="sm" @click="setCreateModal(true, 'account')" v-if="!userInfo.user" />
             <UButton v-else color="gray" variant="ghost" icon="i-heroicons-envelope" :label="$t('Change Email')"
-                size="sm" @click="setCreateModal(true, 'change_email')" />
+                size="sm" @click="showChangeEmailModal = true" />
         </div>
+        
+        <ModalChangeEmail v-model="showChangeEmailModal" @email-changed="handleEmailChanged" />
 
     </div>
     <div class="p-4 space-y-6">
@@ -410,6 +412,12 @@ const userInfo = ref({});
 const userData = await useAPI().get(`core/profile_hrs/${useRoute().params.id}/`);
 userInfo.value = userData.data.value;
 console.log('userInfo', userData.data)
+
+const showChangeEmailModal = ref(false)
+const handleEmailChanged = (newEmail) => {
+    userInfo.value.email = newEmail
+}
+
 definePageMeta({
     title: userInfo.value.full_name || 'Hồ sơ nhân sự',
     // header: userInfo.value.full_name || '',
