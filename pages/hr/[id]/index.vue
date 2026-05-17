@@ -6,7 +6,9 @@
             <UButton color="gray" variant="ghost" icon="i-heroicons-pencil-square" :label="$t('Update')" size="sm"
                 :to="{ name: 'hr-id-update' }" />
             <UButton color="gray" variant="ghost" icon="ph:user-circle-plus-light" :label="$t('Create account')"
-                size="sm" @click="setCreateModal(true, 'account')" :disabled="userInfo.user" />
+                size="sm" @click="setCreateModal(true, 'account')" v-if="!userInfo.user" />
+            <UButton v-else color="gray" variant="ghost" icon="i-heroicons-envelope" :label="$t('Change Email')"
+                size="sm" @click="setCreateModal(true, 'change_email')" />
         </div>
 
     </div>

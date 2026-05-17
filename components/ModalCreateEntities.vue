@@ -1,5 +1,5 @@
 <template>
-    <BaseModal :title="$t('Create') + ' ' + $t(modalCreateType)" :modalOpen="createModal" :closeOnClick="false"
+    <BaseModal :title="modalCreateType === 'change_email' ? $t('Change Email') : $t('Create') + ' ' + $t(modalCreateType)" :modalOpen="createModal" :closeOnClick="false"
         :closeOnEsc="true" @close-modal="setCreateModal(false, '')">
         <UForm :schema="schema" :state="entityInfo" class="mx-4 py-2 space-y-4">
             <UFormGroup v-if="checkView('username')" v-slot="{ error }" :label="$t('Username')" name="username"
@@ -58,10 +58,29 @@
                     :placeholder="$t('Department type')" valueAttribute="value" option-attribute="label"
                     :is-dark="colorMode.value === 'dark'" />
             </UFormGroup>
+            <UFormGroup v-if="checkView('new_email')" v-slot="{ error }" :label="$t('New Company Email')" name="new_email"
+                :error="errors.new_email" required>
+                <UInput v-model="entityInfo.new_email" :placeholder="$t('New Company Email')" :ui="{ base: 'w-full rounded-lg' }"
+                    :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined" />
+            </UFormGroup>
+            <UFormGroup v-if="checkView('current_password')" v-slot="{ error }" :label="$t('Current Password')" name="current_password"
+                :error="errors.current_password" required>
+                <UInput v-model="entityInfo.current_password" type="password" :placeholder="$t('Current Password')"
+                    :ui="{ base: 'w-full rounded-lg' }"
+                    :trailing-icon="error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined" />
+            </UFormGroup>
+            <!-- Warning note shown only for change_email -->
+            <div v-if="modalCreateType === 'change_email'"
+                class="flex items-start gap-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 px-3 py-2 text-xs text-amber-700 dark:text-amber-300">
+                <UIcon name="i-heroicons-exclamation-triangle" class="w-4 h-4 mt-0.5 shrink-0" />
+                <span>{{ $t('change_email_warning') }}</span>
+            </div>
         </UForm>
         <div class="flex justify-end gap-2 p-4">
             <UButton color="gray" variant="outline" @click="setCreateModal(false, '')">{{ $t('Cancel') }}</UButton>
-            <UButton color="primary" @click="onSubmit" :disabled="!isFormValid || busy">{{ $t('Create') }}</UButton>
+            <UButton color="primary" @click="onSubmit" :disabled="!isFormValid || busy">
+                {{ modalCreateType === 'change_email' ? $t('Change') : $t('Create') }}
+            </UButton>
         </div>
     </BaseModal>
 </template>
@@ -78,7 +97,7 @@ const { createModal, modalCreateType } = storeToRefs(modalStore)
 const { setCreateModal } = modalStore
 const busy = ref(false)
 const props = defineProps(['id'])
-const emit = defineEmits(['close-modal', 'change-mode'])
+const emit = defineEmits(['close-modal', 'change-mode', 'email-changed'])
 
 // const modalTypeMapping = ref([
 //     'account','title','department'
@@ -87,6 +106,7 @@ const viewAllow = ref({
     account: ['username', 'password', 'email', 'phone', 'personal_email'],
     title: ['name', 'code', 'description'],
     department: ['name', 'code', 'description', 'parent', 'department_type', 'company', 'business_unit'],
+    change_email: ['new_email', 'current_password'],
 })
 const checkView = (key) => {
     return viewAllow.value[modalCreateType.value]?.includes(key);
@@ -127,6 +147,8 @@ watch(createModal, async (newVal) => {
     entityInfo.value.description = '';
     entityInfo.value.department_type = '';
     entityInfo.value.code = '';
+    entityInfo.value.new_email = '';
+    entityInfo.value.current_password = '';
 })
 
 const entityInfo = ref({
@@ -135,6 +157,8 @@ const entityInfo = ref({
     password: '',
     // confirm_password: '',
     email: '',
+    new_email: '',
+    current_password: '',
     personal_email: '',
     phone: '',
     description: '',
@@ -156,20 +180,24 @@ const isFormValid = computed(() => {
     }
 });
 
-const schema = yup.object({
-    username: yup.string().required(t('This field is required')),
-    // name: !checkView('name') ? yup.string().required(t('This field is required')) : yup.mixed().notRequired(),
-    email: yup.string().email(t('Invalid email format')).required(t('This field is required')),
-    personal_email: yup.string()
-        .email(t('Invalid email format'))
-        .required(t('This field is required'))
-        .test('different-from-email', t('Authentication email must be different from company email'), function (value) {
-            return value !== this.parent.email;
-        }),
-    password: yup.string().min(6, t('Password must be at least 6 characters')).required(t('This field is required')),
-    // confirm_password:  yup.string()
-    //     .oneOf([yup.ref('password'), null], t('Passwords must match'))
-    //     .required(t('This field is required')),
+const schema = computed(() => {
+    if (modalCreateType.value === 'change_email') {
+        return yup.object({
+            new_email: yup.string().email(t('Invalid email format')).required(t('This field is required')),
+            current_password: yup.string().min(1, t('This field is required')).required(t('This field is required')),
+        })
+    }
+    return yup.object({
+        username: yup.string().required(t('This field is required')),
+        email: yup.string().email(t('Invalid email format')).required(t('This field is required')),
+        personal_email: yup.string()
+            .email(t('Invalid email format'))
+            .required(t('This field is required'))
+            .test('different-from-email', t('Authentication email must be different from company email'), function (value) {
+                return value !== this.parent.email;
+            }),
+        password: yup.string().min(6, t('Password must be at least 6 characters')).required(t('This field is required')),
+    })
 })
 const createAccount = async () => {
     console.log('create account Data', entityInfo.value)
@@ -179,7 +207,6 @@ const createAccount = async () => {
             password: '',
             email: entityInfo.value.email,
             authen_email: entityInfo.value.personal_email,
-            // confirm_password: entityInfo.value.confirm_password,
         });
         console.log('response', response.value)
         if (response.value && response.value.id) {
@@ -195,6 +222,29 @@ const createAccount = async () => {
         }
     } catch (error) {
         console.error('Error creating account:', error);
+        throw error;
+    }
+}
+const changeEmail = async () => {
+    console.log('change email Data', entityInfo.value)
+    try {
+        const { data: response, error: errorVal } = await useAPI().post(
+            `core/profile_hrs/${useRoute().params.id}/change_email/`,
+            {
+                new_email: entityInfo.value.new_email,
+                current_password: entityInfo.value.current_password,
+            }
+        );
+        if (response.value && response.value.new_email) {
+            emit('email-changed', response.value.new_email);
+            return true;
+        }
+        if (errorVal.value?.statusCode === 400 && errorVal.value?.data) {
+            throw new Error(t(errorVal.value.data.detail));
+        }
+        throw new Error(t('Unexpected response status'));
+    } catch (error) {
+        console.error('Error changing email:', error);
         throw error;
     }
 }
@@ -240,7 +290,7 @@ const createDepartment = async () => {
 }
 const validateForm = async () => {
     try {
-        await schema.validate(entityInfo.value, { abortEarly: false });
+        await schema.value.validate(entityInfo.value, { abortEarly: false });
         errors.value = {};
         return true;
     } catch (validationError) {
@@ -263,6 +313,8 @@ const onSubmit = async () => {
 
         if (modalCreateType.value === 'account') {
             isCreated = await createAccount();
+        } else if (modalCreateType.value === 'change_email') {
+            isCreated = await changeEmail();
         } else if (modalCreateType.value === 'title') {
             isCreated = await createTitle();
         } else if (modalCreateType.value === 'department') {
