@@ -171,14 +171,7 @@ const department_types = [
 const errors = ref({})
 
 // Track if form is valid
-const isFormValid = computed(() => {
-    try {
-        schema.validateSync(entityInfo.value, { abortEarly: false });
-        return true;
-    } catch (validationError) {
-        return false;
-    }
-});
+
 
 const schema = computed(() => {
     if (modalCreateType.value === 'change_email') {
@@ -199,6 +192,14 @@ const schema = computed(() => {
         password: yup.string().min(6, t('Password must be at least 6 characters')).required(t('This field is required')),
     })
 })
+const isFormValid = computed(() => {
+    try {
+        schema.value.validateSync(entityInfo.value, { abortEarly: false });
+        return true;
+    } catch {
+        return false;
+    }
+});
 const createAccount = async () => {
     console.log('create account Data', entityInfo.value)
     try {
