@@ -122,7 +122,7 @@ const onSubmit = async () => {
         }
 
         const detail = errorVal.value?.data?.detail
-        throw new Error(t(detail || 'Failed to change email.'))
+        throw new Error(detail || t('Failed to change email.'))
     } catch (error) {
         useToast().add({
             title: t('Error'),
