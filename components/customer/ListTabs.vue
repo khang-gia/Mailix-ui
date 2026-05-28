@@ -54,6 +54,9 @@
     label: t('Personal'),
   }, {
     label: t('Organization')
+  }, {
+    label: t('Deleted'),
+    icon: 'i-heroicons-trash'
   } 
 ]
   

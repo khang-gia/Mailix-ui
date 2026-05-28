@@ -21,5 +21,6 @@ const mappingStatus = {
   3: {'curator__isnull':true},
   4: {'type_of_customer':1},
   5: {'type_of_customer':2},
+  6: {'deleted': 'true'},
 }
 </script>

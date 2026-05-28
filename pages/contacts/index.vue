@@ -25,8 +25,6 @@ const mappingStatus = {
   3: {'status':3},
   4: {'status':4},
   5: {'status':8},
-  // 6: {'status':6},
-  // 7: {'status':7},
-  // 8: {'status':8},
+  6: {'deleted': 'true'},
 }
 </script>

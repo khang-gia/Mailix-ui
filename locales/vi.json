@@ -148,7 +148,6 @@
     "Current Password": "Mật khẩu hiện tại",
     "Current password is required to sync the mail account.": "Mật khẩu hiện tại là bắt buộc để đồng bộ tài khoản mail.",
     "Current password is incorrect.": "Mật khẩu hiện tại không đúng.",
-
     "Change Status": "Thay đổi trạng thái",
     "Change password": "Đổi mật khẩu",
     "Change status": "Chuyển đổi trạng thái",
@@ -1159,5 +1158,19 @@
     "Members updated successfully": "Cập nhật thành viên thành công",
     "Failed to update members": "Cập nhật thành viên thất bại",
     "Clear all": "Xóa tất cả",
-    "members will be added": "người dùng sẽ được thêm"
+    "members will be added": "người dùng sẽ được thêm",
+    "File name": "Tên file",
+    "Imported at": "Ngày tải lên",
+    "Import by": "Người tải lên",
+    "Total": "Tổng số",
+    "Failure": "Thất bại",
+    "Action": "Hành động",
+    "Error Detail": "Chi tiết lỗi",
+    "Error Log": "Lỗi",
+    "Cancel Import": "Hủy tải",
+    "Copy Error Log": "Sao chép lỗi",
+    "No import history": "Không có lịch sử tải lên",
+    "Import History": "Lịch sử tải lên",
+    "Records": "Bản ghi",
+    "Permanently Delete": "Xóa vĩnh viễn"
 }

@@ -147,7 +147,6 @@
     "Current Password": "Current Password",
     "Current password is required to sync the mail account.": "Current password is required to sync the mail account.",
     "Current password is incorrect.": "Current password is incorrect.",
-
     "Change Status": "Change Status",
     "Change password": "Change password",
     "Change status": "Change status",
@@ -1156,5 +1155,19 @@
     "Members updated successfully": "Members updated successfully",
     "Failed to update members": "Failed to update members",
     "Clear all": "Clear all",
-    "members will be added": "members will be added"
+    "members will be added": "members will be added",
+    "File name": "File name",
+    "Imported at": "Imported at",
+    "Import by": "Import by",
+    "Total": "Total",
+    "Failure": "Failure",
+    "Action": "Action",
+    "Error Detail": "Error Detail",
+    "Error Log": "Error Log",
+    "Cancel Import": "Cancel Import",
+    "Copy Error Log": "Copy Error Log",
+    "No import history": "No import history",
+    "Import History": "Import History",
+    "Records": "Records",
+    "Permanently Delete": "Permanently Delete"
 }

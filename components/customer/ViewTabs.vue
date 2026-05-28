@@ -284,49 +284,168 @@ const deleteCustomer = async () => {
       throw error;
   }
 } 
-const actionSelected = [
-  [{
-    key: 'delete',
-    label: t('Delete'),
-    slot: 'delete',
-    icon: 'i-heroicons-trash',
-    click: () => {
-      setAlertModal(true, {
-        message: t('Are you sure you want to delete these customers?'),
-        confirmButton: t('OK'),
-        denyButton: t('Cancel'),
-      }) 
-      const unwatch = watch(
-        () => alertModal.value,
-        async (newVal) => {
-          if (!newVal) {
-            if (alertConfirm.value) {
-              const isDeleted = await deleteCustomer();
-              selectedCustomers.value = []
-              if (isDeleted) {
-                reload.value = !reload.value
-                useToast().add({
-                  title: t('Success'),
-                  description: t('Customer deleted successfully'),
-                  icon: 'i-heroicons-check-circle',
-                  color: 'green',
-                });
-              } else {
-                useToast().add({
-                  title: t('Error'),
-                  description: t('Customer deletion failed'),
-                  icon: 'i-heroicons-x-circle',
-                  color: 'red',
-                });
+const restoreCustomer = async () => {
+  try {
+      const response = await useAPI().post(`core/customers/restore_customers/`, {
+        customers: selectedCustomers.value.map(user => user.id)
+      });
+      if (response && response.status.value === 'success') {
+          return true;
+      } else {
+          throw new Error(t('Unexpected response status'));
+      }
+  } catch (error) {
+      console.error('Error restoring customer:', error);
+      throw error;
+  }
+}
+
+const hardDeleteCustomer = async () => {
+  try {
+      const response = await useAPI().post(`core/customers/hard_delete_customers/`, {
+        customers: selectedCustomers.value.map(user => user.id)
+      });
+      if (response && response.status.value === 'success') {
+          return true;
+      } else {
+          throw new Error(t('Unexpected response status'));
+      }
+  } catch (error) {
+      console.error('Error hard deleting customer:', error);
+      throw error;
+  }
+}
+
+const actionSelected = computed(() => {
+  if (props.filters && props.filters.deleted === 'true') {
+    return [
+      [{
+        key: 'restore',
+        label: t('Restore'),
+        icon: 'i-heroicons-arrow-path',
+        click: () => {
+          setAlertModal(true, {
+            message: t('Are you sure you want to restore these customers?'),
+            confirmButton: t('OK'),
+            denyButton: t('Cancel'),
+          }) 
+          const unwatch = watch(
+            () => alertModal.value,
+            async (newVal) => {
+              if (!newVal) {
+                if (alertConfirm.value) {
+                  const isRestored = await restoreCustomer();
+                  if (isRestored) {
+                    reload.value = !reload.value
+                    selectedCustomers.value= []
+                    useToast().add({
+                      title: t('Success'),
+                      description: t('Customers were restored successfully.'),
+                      icon: 'i-heroicons-check-circle',
+                      color: 'green',
+                    });
+                  } else {
+                    useToast().add({
+                      title: t('Error'),
+                      description: t('An error occurred while restoring customers, please try again later.'),
+                      icon: 'i-heroicons-x-circle',
+                      color: 'red',
+                    });
+                  }
+                }
+                unwatch();
               }
             }
-            unwatch();
-          }
+          )
         }
-      )
-    }
-  }]
-]
+      }],
+      [{
+        key: 'hard_delete',
+        label: t('Permanently Delete'),
+        icon: 'i-heroicons-trash',
+        click: () => {
+          setAlertModal(true, {
+            message: t('Are you sure you want to permanently delete these customers? This action cannot be undone.'),
+            confirmButton: t('Delete Permanently'),
+            denyButton: t('Cancel'),
+          }) 
+          const unwatch = watch(
+            () => alertModal.value,
+            async (newVal) => {
+              if (!newVal) {
+                if (alertConfirm.value) {
+                  const isDeleted = await hardDeleteCustomer();
+                  if (isDeleted) {
+                    reload.value = !reload.value
+                    selectedCustomers.value= []
+                    useToast().add({
+                      title: t('Success'),
+                      description: t('Customers were permanently deleted.'),
+                      icon: 'i-heroicons-check-circle',
+                      color: 'green',
+                    });
+                  } else {
+                    useToast().add({
+                      title: t('Error'),
+                      description: t('An error occurred while deleting customers, please try again later.'),
+                      icon: 'i-heroicons-x-circle',
+                      color: 'red',
+                    });
+                  }
+                }
+                unwatch();
+              }
+            }
+          )
+        }
+      }]
+    ]
+  }
+
+  return [
+    [{
+      key: 'delete',
+      label: t('Delete'),
+      slot: 'delete',
+      icon: 'i-heroicons-trash',
+      click: () => {
+        setAlertModal(true, {
+          message: t('Are you sure you want to delete these customers?'),
+          confirmButton: t('OK'),
+          denyButton: t('Cancel'),
+        }) 
+        const unwatch = watch(
+          () => alertModal.value,
+          async (newVal) => {
+            if (!newVal) {
+              if (alertConfirm.value) {
+                const isDeleted = await deleteCustomer();
+                selectedCustomers.value = []
+                if (isDeleted) {
+                  reload.value = !reload.value
+                  useToast().add({
+                    title: t('Success'),
+                    description: t('Customer deleted successfully'),
+                    icon: 'i-heroicons-check-circle',
+                    color: 'green',
+                  });
+                } else {
+                  useToast().add({
+                    title: t('Error'),
+                    description: t('Customer deletion failed'),
+                    icon: 'i-heroicons-x-circle',
+                    color: 'red',
+                  });
+                }
+              }
+              unwatch();
+            }
+          }
+        )
+      }
+    }]
+  ]
+})
 const exportCustomerList = async () => {
   try {
       const processedAdditionalFilter = {};

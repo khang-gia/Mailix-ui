@@ -78,6 +78,10 @@
   // },
   {
     label:t('Old Customer')
+  },
+  {
+    label: t('Deleted'),
+    icon: 'i-heroicons-trash'
   }
 ]
   
