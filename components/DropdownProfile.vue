@@ -23,6 +23,7 @@
               :alt="userInfo?.display_name"
               size="lg"
               class="ring-2 ring-primary-500/20"
+              :ui="{ rounded: 'rounded-md' }"
             />
             <div class="flex flex-col min-w-0">
               <span class="text-sm font-bold text-gray-900 dark:text-white truncate">{{ userInfo?.display_name }}</span>
