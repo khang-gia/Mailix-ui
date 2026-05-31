@@ -124,7 +124,27 @@
                 </div>
             </template>
             <div class="bg-slate-50 dark:bg-slate-900 rounded-md p-4 max-h-[60vh] overflow-y-auto select-text">
-                <pre class="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-mono leading-relaxed">{{ selectedRow?.errors_log }}</pre>
+                <template v-if="parseErrors(selectedRow?.errors_log)">
+                    <div class="space-y-3">
+                        <div v-for="(err, idx) in parseErrors(selectedRow?.errors_log)" :key="idx" class="text-sm">
+                            <span class="font-semibold text-slate-800 dark:text-slate-200">{{ $t('Row') }} {{ err.row }}:</span>
+                            <span v-if="err.type === 'invalid_choice'" class="text-red-600 dark:text-red-400 ml-1">
+                                {{ $t('error.invalid_choice', { value: err.value, field: $t('fields.' + err.field), allowed: err.allowed.join(', ') }) }}
+                            </span>
+                            <span v-else-if="err.type === 'validation'" class="text-red-600 dark:text-red-400 ml-1">
+                                <ul class="list-disc pl-5 mt-1">
+                                    <li v-for="(msgs, field) in err.details" :key="field">
+                                        <span class="font-medium">{{ $t('fields.' + field) || field }}:</span> {{ msgs.join(', ') }}
+                                    </li>
+                                </ul>
+                            </span>
+                            <span v-else class="text-red-600 dark:text-red-400 ml-1">
+                                {{ err.message }}
+                            </span>
+                        </div>
+                    </div>
+                </template>
+                <pre v-else class="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-mono leading-relaxed">{{ selectedRow?.errors_log }}</pre>
             </div>
         </UCard>
     </UModal>
@@ -133,6 +153,18 @@
 <script setup>
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+
+const parseErrors = (errStr) => {
+    if (!errStr) return null;
+    try {
+        const parsed = JSON.parse(errStr);
+        if (Array.isArray(parsed)) return parsed;
+        return null;
+    } catch (e) {
+        return null;
+    }
+};
+
 
 definePageMeta({
   title: 'Tải lên'

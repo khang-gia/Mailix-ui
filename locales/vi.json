@@ -1172,5 +1172,13 @@
     "No import history": "Không có lịch sử tải lên",
     "Import History": "Lịch sử tải lên",
     "Records": "Bản ghi",
-    "Permanently Delete": "Xóa vĩnh viễn"
+    "Permanently Delete": "Xóa vĩnh viễn",
+    "error.invalid_choice": "Giá trị không hợp lệ '{value}' cho trường '{field}'. Các giá trị cho phép: {allowed}",
+    "fields.customer_source": "Nguồn khách hàng",
+    "fields.type_of_customer": "Loại khách hàng",
+    "fields.customer_group": "Nhóm khách hàng",
+    "fields.priority": "Độ ưu tiên",
+    "fields.status": "Trạng thái",
+    "Row": "Dòng",
+    "fields.gender": "Giới tính"
 }

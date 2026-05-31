@@ -1169,5 +1169,13 @@
     "No import history": "No import history",
     "Import History": "Import History",
     "Records": "Records",
-    "Permanently Delete": "Permanently Delete"
+    "Permanently Delete": "Permanently Delete",
+    "error.invalid_choice": "Invalid value '{value}' for field '{field}'. Allowed values: {allowed}",
+    "fields.customer_source": "Customer Source",
+    "fields.type_of_customer": "Type of customer",
+    "fields.customer_group": "Customer Group",
+    "fields.priority": "Priority",
+    "fields.status": "Status",
+    "Row": "Row",
+    "fields.gender": "Gender"
 }
