@@ -1180,5 +1180,8 @@
     "fields.priority": "Độ ưu tiên",
     "fields.status": "Trạng thái",
     "Row": "Dòng",
-    "fields.gender": "Giới tính"
+    "fields.gender": "Giới tính",
+    "Import to Remove": "Tải lên để xóa",
+    "Remove": "Xóa",
+    "error.not_found": "Không tìm thấy bản ghi có mã: {code}"
 }

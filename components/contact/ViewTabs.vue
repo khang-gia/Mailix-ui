@@ -75,10 +75,12 @@
         </UDropdown>
       </div>
       <div class="flex justify-end">
-          
-          <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'contacts-upload'}"/>
-          <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs" @click.prevent="exportContactList"/>
-          <!-- <UButton disabled color="gray" variant="ghost" icon="i-heroicons-cog-6-tooth" :label="$t('Setting')" size="xs" :to="{name: 'hr-setting'}"/> -->
+          <UButtonGroup size="xs" orientation="horizontal">
+            <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'contacts-upload'}"/>
+            <UDropdown :items="importExportActions" :ui="{ item: { padding: 'px-2 py-2' } }">
+                <UButton color="gray" variant="ghost" icon="i-heroicons-chevron-down" size="xs"/>
+            </UDropdown>
+          </UButtonGroup>
       </div>
       <!-- <div class="flex justify-end">
           
@@ -103,6 +105,8 @@
 <script setup>
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+
+
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
 import { useFilterStore } from '@/stores/filter'
@@ -511,4 +515,17 @@ watch(search, () => {
   page.value = 1
 })
 
+
+const importExportActions = [
+  [{
+    label: t('Import to Remove'),
+    icon: 'i-heroicons-trash',
+    to: { name: 'contacts-remove' }
+  }],
+  [{
+    label: t('Export'),
+    icon: 'i-heroicons-arrow-down-tray',
+    click: exportContactList
+  }]
+]
 </script>

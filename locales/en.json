@@ -1177,5 +1177,8 @@
     "fields.priority": "Priority",
     "fields.status": "Status",
     "Row": "Row",
-    "fields.gender": "Gender"
+    "fields.gender": "Gender",
+    "Import to Remove": "Import to Remove",
+    "Remove": "Remove",
+    "error.not_found": "No record found with code: {code}"
 }
