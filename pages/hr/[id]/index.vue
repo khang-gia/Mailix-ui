@@ -3,11 +3,11 @@
         <div class="flex items-center">
         </div>
         <div class="flex justify-end">
-            <UButton color="gray" variant="ghost" icon="i-heroicons-pencil-square" :label="$t('Update')" size="sm"
+            <UButton v-if="can('core/profile_hrs/', 'update')" color="gray" variant="ghost" icon="i-heroicons-pencil-square" :label="$t('Update')" size="sm"
                 :to="{ name: 'hr-id-update' }" />
-            <UButton color="gray" variant="ghost" icon="ph:user-circle-plus-light" :label="$t('Create account')"
-                size="sm" @click="setCreateModal(true, 'account')" v-if="!userInfo.user" />
-            <UButton v-else color="gray" variant="ghost" icon="i-heroicons-envelope" :label="$t('Change Email')"
+            <UButton v-if="can('core/profile_hrs/', 'create') && !userInfo.user" color="gray" variant="ghost" icon="ph:user-circle-plus-light" :label="$t('Create account')"
+                size="sm" @click="setCreateModal(true, 'account')" />
+            <UButton v-else-if="can('core/profile_hrs/', 'update') && userInfo.user" color="gray" variant="ghost" icon="i-heroicons-envelope" :label="$t('Change Email')"
                 size="sm" @click="showChangeEmailModal = true" />
         </div>
         
@@ -234,8 +234,8 @@
                                 userInfo.department.name : '' }}
                         </p>
 
-                        <!-- Status Badge with Popover -->
-                        <UPopover :popper="{ placement: 'bottom' }">
+                        <!-- Status Badge with Popover — only shown if user can update -->
+                        <UPopover v-if="can('core/profile_hrs/', 'update')" :popper="{ placement: 'bottom' }">
                             <UBadge v-if="userInfo.status !== undefined" class="mt-2 cursor-pointer"
                                 :color="getStatusColor(userInfo.status)" variant="solid">
                                 {{ getStatusLabel(userInfo.status) }}
@@ -408,6 +408,9 @@ const { t } = useI18n();
 import { useModalStore } from '@/stores/modal'
 const modalStore = useModalStore()
 const { setExpandImageModal, setCreateModal } = modalStore
+
+const { can } = usePermission()
+
 const userInfo = ref({});
 const userData = await useAPI().get(`core/profile_hrs/${useRoute().params.id}/`);
 userInfo.value = userData.data.value;

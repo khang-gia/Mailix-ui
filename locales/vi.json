@@ -1183,5 +1183,13 @@
     "fields.gender": "Giới tính",
     "Import to Remove": "Tải lên để xóa",
     "Remove": "Xóa",
-    "error.not_found": "Không tìm thấy bản ghi có mã: {code}"
+    "error.not_found": "Không tìm thấy bản ghi có mã: {code}",
+    "Update permissions": "Cập nhật phân quyền",
+    "Permissions updated successfully!": "Cập nhật phân quyền thành công!",
+    "Failed to update permissions": "Không thể cập nhật phân quyền",
+    "Are you sure you want to save these permission changes?": "Bạn có chắc chắn muốn lưu các thay đổi phân quyền này?",
+    "View Detail": "Xem chi tiết",
+    "Customers/Contacts": "Khách hàng/Liên hệ",
+    "Permissions": "Phân quyền",
+    "Works": "Công việc"
 }

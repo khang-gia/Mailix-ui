@@ -1,7 +1,7 @@
 <template>
-    <div class="py-2 px-4 grid grid-flow-col bg-white dark:bg-[#1E1E2E] space-x-2 w-full">
-      <div class="flex items-center">
-        <!-- <UDropdown :items="listViewDropdown" :popper="{ placement: 'bottom-start' }" 
+  <div class="py-2 px-4 grid grid-flow-col bg-white dark:bg-[#1E1E2E] space-x-2 w-full">
+    <div class="flex items-center">
+      <!-- <UDropdown :items="listViewDropdown" :popper="{ placement: 'bottom-start' }" 
         :ui="{
             container:'w-fit',
             item:{
@@ -11,7 +11,7 @@
         >
             <UButton color="gray" variant="ghost" icon="i-heroicons-adjustments-vertical" />
         </UDropdown> -->
-        <!-- <UDropdown :items="detailViewDropDown" :popper="{ placement: 'bottom-start' }">
+      <!-- <UDropdown :items="detailViewDropDown" :popper="{ placement: 'bottom-start' }">
             <UButton color="gray" variant="ghost" icon="hugeicons:file-view" />
             <template #tip="{ item }">
                 <div class="text-left cursor-text">
@@ -20,65 +20,58 @@
                     </p>
                 </div>
             </template>
-            <template #item="{ item }">
+<template #item="{ item }">
                 <span class="truncate" :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }"> {{ item.label }}</span>
                 <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" :class="{ 'text-mailix-primary dark:text-white': viewMode === item.selectedName }" />
             </template>
-        </UDropdown> -->
-        <div class="pr-2 flex items-center gap-1.5">
-            <span class="text-sm leading-5">{{$t('records per page')}}:</span>
-            <USelect
-                v-model="pageSize"
-                :options="[3, 5, 10, 20, 50, 80, 100]"
-                class="me-2 w-fit"
-                size="xs"
-                @change="page = 1"
-            />
-        </div>
-
-        <div class="flex items-center gap-3 border-l border-slate-300 pr-3">
-            <span class="text-sm leading-5 pl-2">
-                {{$t('Showing')}}
-                <span class="font-medium">{{ pageFrom }}</span>
-                {{$t('to')}}
-                <span class="font-medium">{{ pageTo }}</span>
-                {{$t('of')}}
-                <span class="font-medium">{{ pageTotal }}</span>
-                {{$t('records')}}
-            </span>
-        </div>
-        <UDropdown v-if="selectedDepartments.length > 0" :items="actionSelected" :ui="{
-            container:'w-fit',
-            item:{
-                padding: 'px-2 py-3',
-            }
-        }">
-          <UButton
-            icon="i-heroicons-chevron-down"
-            color="gray"
-            size="xs"
-          >
-          </UButton>
-        </UDropdown>
+</UDropdown> -->
+      <div class="pr-2 flex items-center gap-1.5">
+        <span class="text-sm leading-5">{{ $t('records per page') }}:</span>
+        <USelect v-model="pageSize" :options="[3, 5, 10, 20, 50, 80, 100]" class="me-2 w-fit" size="xs"
+          @change="page = 1" />
       </div>
-      <!-- <div class="flex justify-end">
+
+      <div class="flex items-center gap-3 border-l border-slate-300 pr-3">
+        <span class="text-sm leading-5 pl-2">
+          {{ $t('Showing') }}
+          <span class="font-medium">{{ pageFrom }}</span>
+          {{ $t('to') }}
+          <span class="font-medium">{{ pageTo }}</span>
+          {{ $t('of') }}
+          <span class="font-medium">{{ pageTotal }}</span>
+          {{ $t('records') }}
+        </span>
+      </div>
+      <UDropdown v-if="selectedDepartments.length > 0" :items="actionSelected" :ui="{
+        container: 'w-fit',
+        item: {
+          padding: 'px-2 py-3',
+        }
+      }">
+        <UButton icon="i-heroicons-chevron-down" color="gray" size="xs">
+        </UButton>
+      </UDropdown>
+    </div>
+    <!-- <div class="flex justify-end">
           
           <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'hr-upload'}"/>
           <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs"/>
           <UButton color="gray" variant="ghost" icon="i-heroicons-cog-6-tooth" :label="$t('Setting')" size="xs" :to="{name: 'hr-setting'}"/>
       </div> -->
-    </div>
-    
-    <div class="p-2">
-      <UCard :ui="{body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700'}, divide: 'divide-y divide-gray-200 dark:divide-gray-700',}">
-        <GroupTable :groups="groups" :page-total="pageTotal" :page="page" @update:page="page=$event" @update:selected="selectedDepartments=$event" :viewMode="viewMode"/>
-        <template #footer>
-          <div class="flex justify-end items-center space-x-2">
-            <UPagination :max="3" :page-count="pageSize" :total="pageTotal" v-model="page"/>
-          </div>
-        </template>
-      </UCard>
-    </div>
+  </div>
+
+  <div class="p-2">
+    <UCard
+      :ui="{ body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' }, divide: 'divide-y divide-gray-200 dark:divide-gray-700', }">
+      <GroupTable :groups="groups" :page-total="pageTotal" :page="page" @update:page="page = $event"
+        @update:selected="selectedDepartments = $event" :viewMode="viewMode" />
+      <template #footer>
+        <div class="flex justify-end items-center space-x-2">
+          <UPagination :max="3" :page-count="pageSize" :total="pageTotal" v-model="page" />
+        </div>
+      </template>
+    </UCard>
+  </div>
 </template>
 
 <script setup>
@@ -136,7 +129,7 @@ const groups = computedAsync(async () => {
   const params = {
     ...mainFilter.value,
   }
-  const data = await useAPI().$get('system/groups/', { 
+  const data = await useAPI().$get('system/groups/', {
     ...params,
     reload: reload.value,
     page: page.value,
@@ -184,44 +177,44 @@ const displayColumns = ref([
 //       }
 //     }]
 // ])
-const viewMode=ref('default')
+const viewMode = ref('default')
 const detailViewDropDown = ref([
-    [{
-        label:t('Choose view type detail'),
-        slot: 'tip',
-        disabled: true
-    }],
-    [{
-      label: t('Default'),
-      selectedName:'default',
-      icon: 'flowbite:window-outline',
-      click: () => {
-        viewMode.value='default'
-      }
-    },
-    {
-      label: t('New tab'),
-      selectedName:'new_tab',
-      icon: 'cuida:open-in-new-tab-outline',
-      click: () => {
-        viewMode.value = 'new_tab'
-      }
-    }]
+  [{
+    label: t('Choose view type detail'),
+    slot: 'tip',
+    disabled: true
+  }],
+  [{
+    label: t('Default'),
+    selectedName: 'default',
+    icon: 'flowbite:window-outline',
+    click: () => {
+      viewMode.value = 'default'
+    }
+  },
+  {
+    label: t('New tab'),
+    selectedName: 'new_tab',
+    icon: 'cuida:open-in-new-tab-outline',
+    click: () => {
+      viewMode.value = 'new_tab'
+    }
+  }]
 ])
 const deleteGroup = async () => {
   try {
-      const response = await useAPI().post(`system/groups/delete_groups/`, {groups: selectedDepartments.value.map(user => user.id)});
-      console.log('response', response)
-      if (response && response.status.value === 'success') {
-          return true;
-      } else {
-          throw new Error(t('Unexpected response status'));
-      }
+    const response = await useAPI().post(`system/groups/delete_groups/`, { groups: selectedDepartments.value.map(user => user.id) });
+    console.log('response', response)
+    if (response && response.status.value === 'success') {
+      return true;
+    } else {
+      throw new Error(t('Unexpected response status'));
+    }
   } catch (error) {
-      console.error('Error deleting fee:', error);
-      throw error;
+    console.error('Error deleting fee:', error);
+    throw error;
   }
-} 
+}
 const actionSelected = [
   [{
     key: 'delete',
@@ -233,7 +226,7 @@ const actionSelected = [
         message: t('Are you sure you want to delete these groups?'),
         confirmButton: t('OK'),
         denyButton: t('Cancel'),
-      }) 
+      })
       const unwatch = watch(
         () => alertModal.value,
         async (newVal) => {

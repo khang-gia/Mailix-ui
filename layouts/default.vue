@@ -83,8 +83,12 @@
 </style>
 <script setup>
 import { ModalsContainer } from 'vue-final-modal'
+import { usePermissionsStore } from '@/stores/permissions'
+
 const { status } = useAuth();
 const route = useRoute()
+const permissionsStore = usePermissionsStore()
+
 const pageTitle = computed(() => {
   return `${route.meta.title} | MAILIX.VN`
 })
@@ -92,6 +96,21 @@ const pageTitle = computed(() => {
 useHead({
   title: pageTitle
 })
+
+// Load RBAC permissions once the user is authenticated.
+// This runs on initial page load (SSR/CSR) AND after login.
+// Clears the cache on logout.
+watch(
+  status,
+  async (newStatus) => {
+    if (newStatus === 'authenticated') {
+      await permissionsStore.load()
+    } else {
+      permissionsStore.clear()
+    }
+  },
+  { immediate: true }
+)
 
 </script>
 <style scoped>

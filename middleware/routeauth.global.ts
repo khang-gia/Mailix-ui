@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const authRedirectRoutes = ['/login', '/login/otp-verify', '/login/forgot-password'];
     const pathMapping = [
         {
-            name: 'customer',
+            name: 'hrm',
             path: ['/hr','/dashboard-hrm']
         },
         {
@@ -19,7 +19,15 @@ export default defineNuxtRouteMiddleware((to, from) => {
         {
             name: 'company',
             path: ['/groups','/departments']
-        }
+        },
+        {
+            name: 'guide_mail',
+            path: ['/guide-mail']
+        },
+        {
+            name: 'guide_app',
+            path: ['/guide-app']
+        },
     ]
     console.log('Navigating to:', to.path);
     console.log('Authentication status:', status.value);
@@ -90,10 +98,12 @@ export default defineNuxtRouteMiddleware((to, from) => {
     let defaultDashboard = '/social';
     if (role !== 'A') {
         const fallbackPaths: Record<string, string> = {
-            'workspace': '/social',
-            'customer': '/hr',
-            'crm': '/contacts',
-            'company': '/groups'
+            'workspace':  '/social',
+            'hrm':        '/hr',
+            'crm':        '/contacts',
+            'company':    '/groups',
+            'guide_mail': '/guide-mail',
+            'guide_app':  '/guide-app',
         };
         const firstAllowed = resourceNames.find((name: string) => fallbackPaths[name]);
         if (firstAllowed) {

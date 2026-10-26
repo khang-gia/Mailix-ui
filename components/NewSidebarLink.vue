@@ -198,6 +198,11 @@ const companySubmenu = computed(() => [
             useRouter().push({ name: 'departments' });
         }
     }],
+    [{
+        link: '/company/permissions', label: 'Phân quyền', click: () => {
+            useRouter().push({ name: 'company-permissions' });
+        }
+    }],
 ])
 const manageSubmenu = computed(() => [
     [{ slot: 'tip', disabled: true }],

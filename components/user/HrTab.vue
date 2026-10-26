@@ -55,7 +55,7 @@
           {{ $t('profiles') }}
         </span>
       </div>
-      <UDropdown v-if="selectedUsers.length > 0" :items="actionSelected" :ui="{
+      <UDropdown v-if="selectedUsers.length > 0 && canAny('core/profile_hrs/', ['destroy', 'update'])" :items="actionSelected" :ui="{
         container: 'w-fit',
         item: {
           padding: 'px-2 py-3',
@@ -66,12 +66,14 @@
       </UDropdown>
     </div>
     <div class="flex justify-end">
-          <UButtonGroup size="xs" orientation="horizontal">
+          <UButtonGroup v-if="can('core/profile_hrs/', 'create')" size="xs" orientation="horizontal">
             <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-up-tray" :label="$t('Import')" size="xs" :to="{name: 'hr-upload'}"/>
             <UDropdown :items="importExportActions" :ui="{ item: { padding: 'px-2 py-2' } }">
                 <UButton color="gray" variant="ghost" icon="i-heroicons-chevron-down" size="xs"/>
             </UDropdown>
           </UButtonGroup>
+          <!-- Always show export button -->
+          <UButton v-else color="gray" variant="ghost" icon="i-heroicons-arrow-down-tray" :label="$t('Export')" size="xs" @click="exportHRList" />
       </div>
   </div>
 
@@ -96,6 +98,7 @@
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
+const { can, canAny } = usePermission()
 
 import { useModalStore } from '@/stores/modal'
 import { storeToRefs } from 'pinia'
